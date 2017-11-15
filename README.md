@@ -1,14 +1,7 @@
-[![Build Status](https://travis-ci.org/E2OpenPlugins/e2openplugin-OpenWebif.svg?branch=master)](https://travis-ci.org/E2OpenPlugins/e2openplugin-OpenWebif)
+[![Build Status](https://travis-ci.org/doubleO8/e2openplugin-OpenWebif.svg?branch=master)](https://travis-ci.org/doubleO8/e2openplugin-OpenWebif)
 
 # OpenWebif
 OpenWebif is an open source web interface for Enigma2 based set-top boxes (STBs).
-
-## Screenshots
-[Link](screenshots/SCREENSHOTS.md)
-
-## Latest [Bandit](https://wiki.openstack.org/wiki/Security/Projects/Bandit) Report
-[Link](http://e2openplugins.github.io/e2openplugin-OpenWebif/bandit.html) 
-
 
 ## License
 Licensed under the GNU General Public License, Version 3. See [LICENSE](https://github.com/E2OpenPlugins/e2openplugin-OpenWebif/blob/master/LICENSE.txt) for more details.
@@ -34,7 +27,7 @@ init 3                        # start enigma2 again
 
 ## Development Information
 
-The **Changelog** is available [here](CHANGES.md).
+See  [commit log](https://github.com/doubleO8/e2openplugin-OpenWebif/commits/master).
 
 ### Dependencies
 The following additional packages need to be installed:

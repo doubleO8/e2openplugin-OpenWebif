@@ -1,0 +1,3 @@
+[submodule "opkg-utils"]
+	path = opkg-utils
+	url = https://github.com/doubleO8/opkg-utils.git

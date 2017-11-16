@@ -8,3 +8,4 @@ Maintainer: {{ maintainer|default('nobody@localhost') }}
 Homepage: {{ homepage|default('https://doubleo8.github.io/e2openplugin-OpenWebif/') }}
 Depends: {{ depends|default('python-json, python-cheetah, python-pyopenssl, python-unixadmin, python-misc, python-twisted-web, python-pprint, python-compression, python-ipaddress') }}
 Source: {{ source|default('https://github.com/doubleO8/e2openplugin-OpenWebif') }}
+

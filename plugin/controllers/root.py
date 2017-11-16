@@ -19,7 +19,6 @@ from models.grab import grabScreenshot
 from base import BaseController
 from web import WebController
 from ajax import AjaxController
-from ipkg import IpkgController
 from AT import ATController
 from SR import SRController
 from ER import ERController
@@ -72,7 +71,6 @@ class RootController(BaseController):
 			self.putChild("webtv", static.File(getPublicPath() + "/webtv"))
 		if os.path.exists('/usr/bin/shellinaboxd'):
 			self.putChild("terminal", proxy.ReverseProxyResource('::1', 4200, '/'))
-		self.putChild("ipkg", IpkgController(session))
 		self.putChild("autotimer", ATController(session))
 		self.putChild("serienrecorder", SRController(session))
 		self.putChild("epgrefresh", ERController(session))

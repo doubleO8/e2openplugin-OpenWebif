@@ -17,7 +17,9 @@ COMPILE_CHEETAH_CALL_FMT = '{binary} compile -R "{target}"'
 def source_files(top):
     for root, _, files in os.walk(top):
         for filename in files:
-            if filename.endswith("~"):
+            _, ext = os.path.splitext(filename)
+            if filename.endswith("~") or ext[1:] in ('pyc', 'pyo'):
+                print "SKIPPING {!r}".format(filename)
                 continue
             abs_path = os.path.abspath(os.path.join(root, filename))
             yield os.path.relpath(abs_path, start=top)
@@ -103,5 +105,10 @@ if __name__ == '__main__':
     compile_locales(os.path.abspath('locale'),
                     os.path.join(target_path, 'locale'))
     compile_cheetah(target_path)
+    try:
+        os.environ["PYTHONOPTIMIZE"]
+    except KeyError as keks:
+        print("Please set PYTHONOPTIMIZE environment variable!")
+        raise
     compileall.compile_dir(target_path, maxlevels=100, force=True)
     create_control()

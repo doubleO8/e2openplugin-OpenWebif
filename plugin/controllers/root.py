@@ -19,7 +19,6 @@ from models.grab import grabScreenshot
 from base import BaseController
 from web import WebController
 from ajax import AjaxController
-from mobile import MobileController
 from ipkg import IpkgController
 from AT import ATController
 from SR import SRController
@@ -62,9 +61,6 @@ class RootController(BaseController):
 
 		self.putChild("file", FileController())
 		self.putChild("grab", grabScreenshot(session))
-		if os.path.exists(getPublicPath('mobile')):
-			self.putChild("mobile", MobileController(session))
-			self.putChild("m", static.File(getPublicPath() + "/mobile"))
 		self.putChild("js", static.File(getPublicPath() + "/js"))
 		self.putChild("css", static.File(getPublicPath() + "/css"))
 		self.putChild("static", static.File(getPublicPath() + "/static"))
@@ -97,13 +93,4 @@ class RootController(BaseController):
 	# the "pages functions" must be called P_pagename
 	# example http://boxip/index => P_index
 	def P_index(self, request):
-		mode = ''
-		if "mode" in request.args.keys():
-			mode = request.args["mode"][0]
-		uagent = request.getHeader('User-Agent')
-		if uagent and mode != 'fullpage' and os.path.exists(getPublicPath('mobile')):
-			if uagent.lower().find("iphone") != -1 or uagent.lower().find("ipod") != -1 or uagent.lower().find("blackberry") != -1 or uagent.lower().find("mobile") != -1:
-				request.setHeader("Location", "/mobile/")
-				request.setResponseCode(http.FOUND)
-				return ""
 		return {}

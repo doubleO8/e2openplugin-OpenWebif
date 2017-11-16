@@ -66,7 +66,6 @@ class BaseController(resource.Resource):
 			isJson: responses shall be JSON encoded
 			isCustom: (?)
 			isGZ: responses shall be GZIP compressed
-			isMobile: (?) responses shall be optimised for mobile devices
 		"""
 		resource.Resource.__init__(self)
 
@@ -76,7 +75,6 @@ class BaseController(resource.Resource):
 		self.isJson = kwargs.get("isJson", False)
 		self.isCustom = kwargs.get("isCustom", False)
 		self.isGZ = kwargs.get("isGZ", False)
-		self.isMobile = kwargs.get("isMobile", False)
 
 	def error404(self, request):
 		request.setHeader("content-type", "text/html")
@@ -114,7 +112,6 @@ class BaseController(resource.Resource):
 		isJson = self.isJson
 		isCustom = self.isCustom
 		isGZ = self.isGZ
-		isMobile = self.isMobile
 
 		if self.path == "":
 			self.path = "index"
@@ -186,10 +183,7 @@ class BaseController(resource.Resource):
 					print "[OpenWebif] ERROR! Template not found for page '%s'" % request.uri
 					self.error404(request)
 				else:
-					if self.isMobile:
-						head = self.loadTemplate('mobile/head', 'head', [])
-						out = head + out
-					elif self.withMainTemplate:
+					if self.withMainTemplate:
 						args = self.prepareMainTemplate(request)
 						args["content"] = out
 						nout = self.loadTemplate("main", "main", args)
@@ -224,7 +218,6 @@ class BaseController(resource.Resource):
 		self.isJson = isJson
 		self.isCustom = isCustom
 		self.isGZ = isGZ
-		self.isMobile = isMobile
 
 		return server.NOT_DONE_YET
 

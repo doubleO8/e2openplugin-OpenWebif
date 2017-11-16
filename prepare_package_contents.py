@@ -17,6 +17,8 @@ COMPILE_CHEETAH_CALL_FMT = '{binary} compile -R "{target}"'
 def source_files(top):
     for root, _, files in os.walk(top):
         for filename in files:
+            if filename.endswith("~"):
+                continue
             abs_path = os.path.abspath(os.path.join(root, filename))
             yield os.path.relpath(abs_path, start=top)
 

@@ -8,21 +8,18 @@ Licensed under the GNU General Public License, Version 3. See [LICENSE](https://
 
 ## Latest Package
 
-The most recent package may be downloaded [here](https://doubleo8.github.io/e2openplugin-OpenWebif/).
+The most recent package may be downloaded [here](https://doubleo8.github.io/e2openplugin-OpenWebif/latest.opk).
 
 ### Installation
 
 ```bash
 # Remotely logged in via Telnet/SSH to enigma2 device
+
 cd /tmp
-init 4                        # graceful enigma2 shutdown
-# fetching -- wget '<URL of .ipk file>'
-# example:
-wget 'https://github.com/E2OpenPlugins/e2openplugin-OpenWebif/blob/gh-pages/enigma2-plugin-extensions-openwebif_1.2.7-e2openpluginsgit20171014_all.ipk'
-# installing -- opkg install <.ipk file>
-# example:
-opkg install ./enigma2-plugin-extensions-openwebif_1.2.7-e2openpluginsgit20171014_all.ipk
-init 3                        # start enigma2 again
+init 4                                                              # graceful enigma2 shutdown
+wget 'https://doubleo8.github.io/e2openplugin-OpenWebif/latest.opk' # fetching latest package
+opkg install ./latest.opk                                           # installing latest package
+init 3                                                              # start enigma2 again
 ```
 
 ## Development Information

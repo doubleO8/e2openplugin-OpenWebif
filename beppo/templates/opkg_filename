@@ -1,0 +1,1 @@
+{{ output_path|default('.')}}/{{ package|default('travis-test') }}_{{ upstream_version|default('42') }}-{{ debian_revision|default('1') }}_{{ architecture|default('all') }}.{{ extension|default('opk') }}

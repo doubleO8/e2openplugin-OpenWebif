@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+<h1>Items of {{ meta.package }} {{ meta.upstream_version }}</h1>
+<ul>
+    {% for item in files %}
+    <li><a href="{{ item.filename|e }}">{{ item.description|e }}</a></li>
+    {% else %}
+    <li><em>no items ?!</em></li>
+    {% endfor %}
+</ul>
+</body>
+
+</html>

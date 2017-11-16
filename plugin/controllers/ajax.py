@@ -308,27 +308,3 @@ class AjaxController(BaseController):
 
 	def P_epgr(self, request):
 		return {}
-
-	def P_webtv(self, request):
-		if config.OpenWebif.auth_for_streaming.value:
-			session = GetSession()
-			if session.GetAuth(request) is not None:
-				auth = ':'.join(session.GetAuth(request)) + "@"
-			else:
-				auth = '-sid:' + str(session.GetSID(request)) + "@"
-		else:
-			auth=''
-		vxgenabled = False
-		if fileExists(getPublicPath("/vxg/media_player.pexe")):
-			vxgenabled = True
-		transcoding = getTranscodingSupport()
-		transcoder_port = 0
-		if transcoding:
-			try:
-				transcoder_port = int(config.plugins.transcodingsetup.port.value)
-				if getMachineBuild() in ('inihdp', 'hd2400', 'et10000', 'et13000', 'sf5008','ew7356','formuler1tc', 'tiviaraplus', '8100s'):
-					transcoder_port = int(config.OpenWebif.streamport.value)
-			except StandardError:
-				transcoder_port = 0
-		return {"transcoder_port" : transcoder_port, "vxgenabled" : vxgenabled, "auth" : auth}
-

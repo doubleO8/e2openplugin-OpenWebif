@@ -70,8 +70,6 @@ class RootController(BaseController):
 			self.putChild("themes", static.File(getPublicPath() + "/themes"))
 		if os.path.exists(getPublicPath('webtv')):
 			self.putChild("webtv", static.File(getPublicPath() + "/webtv"))
-		if os.path.exists(getPublicPath('vxg')):
-			self.putChild("vxg", static.File(getPublicPath() + "/vxg"))
 		if os.path.exists('/usr/bin/shellinaboxd'):
 			self.putChild("terminal", proxy.ReverseProxyResource('::1', 4200, '/'))
 		self.putChild("ipkg", IpkgController(session))

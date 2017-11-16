@@ -2,10 +2,12 @@
 ._*
 *.py[cod]
 *.swp
-*.ipk
+*.[io]pk
 /.idea
 *~
 /contrib/model_movies/folder
 .sass-cache/
 .vscode/
 *.css.map
+/pack
+/pages_out

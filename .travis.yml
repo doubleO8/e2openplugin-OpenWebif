@@ -3,31 +3,39 @@ language: python
 python:
 - "2.7"
 
-install:
-- pip install cheetah
-- pip install twisted
-- pip install pyopenssl
-- pip install bandit
+before_install:
+- sudo apt-get -qq update
+- sudo apt-get install -y closure-compiler nodejs npm
+- sudo npm install -g jshint
 
-script: 
-- python -m compileall -l . -l plugin -l plugin/backport -l plugin/controllers -l plugin/controllers/models
-- cheetah compile -R plugin
+install:
+- mkdir -p ./pages_out
+- pip install -r requirements-test.txt
+- pip install -r requirements.txt
+
+script:
+- python ./prepare_package_contents.py
+- sh ./build.sh
 - python testsuite/evil_eval.py
 
 after_success:
-- bandit -r plugin -f html -o bandit.html
-- ./create_ipk.sh
-- export PKG=$(ls -1 *.ipk)
-- mkdir Rel
-- mv "${PKG}" ./Rel
-- mv bandit.html ./Rel
+- python -m flake8 pack/ --output-file ./pages_out/flake8_report.txt
+- jshint pack/ | tee ./pages_out/jshint_report.txt
+- python ./harvest.py
+
+after_failure:
+- python -m flake8 pack/ --output-file ./pages_out/flake8_report.txt
+- jshint pack/ | tee ./pages_out/jshint_report.txt
+- python ./harvest.py
+
+before_deploy:
+- find ./pages_out
 
 deploy:
   provider: pages
-  local_dir: Rel
+  local_dir: ./pages_out
   github_token: $GITHUB_TOKEN
   skip_cleanup: true
   target_branch: gh-pages
   on:
     branch: master
-    

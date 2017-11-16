@@ -1,4 +1,5 @@
 #!/bin/sh
+export PYTHONOPTIMIZE=yeah
 rm -rf ./pages_out
 mkdir -p ./pages_out
 python ./prepare_package_contents.py

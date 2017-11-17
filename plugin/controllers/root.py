@@ -24,7 +24,6 @@ from SR import SRController
 from ER import ERController
 from BQE import BQEController
 from transcoding import TranscodingController
-from wol import WOLSetupController, WOLClientController
 from file import FileController
 import rest_fs_access
 import rest_api_controller
@@ -78,8 +77,6 @@ class RootController(BaseController):
         self.putChild("epgrefresh", ERController(session))
         self.putChild("bouqueteditor", BQEController(session))
         self.putChild("transcoding", TranscodingController())
-        self.putChild("wol", WOLClientController())
-        self.putChild("wolsetup", WOLSetupController(session))
         if piconpath:
             self.putChild("picon", static.File(piconpath))
 

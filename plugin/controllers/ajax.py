@@ -21,15 +21,17 @@ from models.info import getInfo, getPublicPath, getOpenWebifVer, \
     getTranscodingSupport, getLanguage
 from models.movies import getMovieList
 from models.timers import getTimers
-from models.config import getConfigs, getConfigsSections, getZapStream, getShowChPicon
+from models.config import getConfigs, getConfigsSections, getZapStream, \
+    getShowChPicon
 from base import BaseController
 from models.locations import getLocations
 
 try:
-    from boxbranding import getBoxType, getMachineName, getMachineBrand, getMachineBuild
+    from boxbranding import getBoxType, getMachineName, \
+        getMachineBrand, getMachineBuild
 except BaseException:
-    from models.owibranding import getBoxType, getMachineName, getMachineBrand, getMachineBuild
-
+    from models.owibranding import getBoxType, getMachineName, \
+        getMachineBrand, getMachineBuild
 
 
 class AjaxController(BaseController):
@@ -78,8 +80,10 @@ class AjaxController(BaseController):
 
     def P_event(self, request):
         event = getEvent(request.args["sref"][0], request.args["idev"][0])
-        event['event']['recording_margin_before'] = config.recording.margin_before.value
-        event['event']['recording_margin_after'] = config.recording.margin_after.value
+        event['event'][
+            'recording_margin_before'] = config.recording.margin_before.value
+        event['event'][
+            'recording_margin_after'] = config.recording.margin_after.value
         at = False
         try:
             from Plugins.Extensions.AutoTimer.AutoTimer import AutoTimer
@@ -215,7 +219,7 @@ class AjaxController(BaseController):
             epgmode = request.args["epgmode"][0]
             if epgmode not in ["tv", "radio"]:
                 epgmode = "tv"
-        return{"epgmode": epgmode}
+        return {"epgmode": epgmode}
 
     def P_config(self, request):
         section = "usage"
@@ -271,7 +275,9 @@ class AjaxController(BaseController):
                 if day > 0 or wadd > 0:
                     now = localtime()
                     begintime = mktime(
-                        (now.tm_year, now.tm_mon, now.tm_mday + day + wadd, 0, 0, 0, -1, -1, -1))
+                        (
+                        now.tm_year, now.tm_mon, now.tm_mday + day + wadd, 0, 0,
+                        0, -1, -1, -1))
             except ValueError:
                 pass
         mode = 1
@@ -313,7 +319,8 @@ class AjaxController(BaseController):
         except ImportError as ie:
             pass
         try:
-            from Plugins.Extensions.AutoTimer.AutoTimerResource import AutoTimerTestResource
+            from Plugins.Extensions.AutoTimer.AutoTimerResource import \
+                AutoTimerTestResource
             ret['test'] = 1
         except ImportError:
             pass

@@ -8,8 +8,9 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
-from Components.config import config
 import os
+
+from Components.config import config
 
 
 def getLocations():

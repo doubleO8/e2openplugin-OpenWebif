@@ -10,7 +10,7 @@
 ##############################################################################
 import os
 
-from twisted.web import static, http, proxy
+from twisted.web import static, proxy
 from twisted.web.resource import EncodingResourceWrapper
 from twisted.web.server import GzipEncoderFactory
 

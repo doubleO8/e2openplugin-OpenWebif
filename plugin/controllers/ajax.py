@@ -21,18 +21,16 @@ from models.info import getInfo, getPublicPath, getOpenWebifVer, \
     getTranscodingSupport, getLanguage
 from models.movies import getMovieList
 from models.timers import getTimers
-from models.config import getConfigs, getConfigsSections, getZapStream, \
-    getShowChPicon
+from models.config import getConfigs, getConfigsSections, getZapStream, getShowChPicon
 from base import BaseController
 from models.locations import getLocations
 
 try:
-    import boxbranding as _branding
-except ImportError:
-    import models.owibranding as _branding
+    from boxbranding import getBoxType, getMachineName, getMachineBrand, getMachineBuild
+except BaseException:
+    from models.owibranding import getBoxType, getMachineName, getMachineBrand, getMachineBuild
 
-from _branding import getBoxType
-from _branding import getMachineName, getMachineBrand, getMachineBuild
+
 
 class AjaxController(BaseController):
     def __init__(self, session, path=""):

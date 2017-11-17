@@ -8,26 +8,31 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
+import os
+from time import mktime, localtime
+
 from Tools.Directories import fileExists
 from Components.config import config
 
-from models.services import getCurrentService, getBouquets, getChannels, getSatellites, getProviders, getEventDesc, getChannelEpg, getSearchEpg, getCurrentFullInfo, getMultiEpg, getEvent
-from models.info import getInfo, getPublicPath, getOpenWebifVer, getTranscodingSupport, getLanguage
+from models.services import getBouquets, getChannels, getSatellites, \
+    getProviders, getEventDesc, getChannelEpg, getSearchEpg, \
+    getCurrentFullInfo, getMultiEpg, getEvent
+from models.info import getInfo, getPublicPath, getOpenWebifVer, \
+    getTranscodingSupport, getLanguage
 from models.movies import getMovieList
 from models.timers import getTimers
-from models.config import getConfigs, getConfigsSections, getZapStream, getShowChPicon
-from models.stream import GetSession
+from models.config import getConfigs, getConfigsSections, getZapStream, \
+    getShowChPicon
 from base import BaseController
-from time import mktime, localtime
 from models.locations import getLocations
-from twisted.web.resource import Resource
-import os
 
 try:
-    from boxbranding import getBoxType, getMachineName, getMachineBrand, getMachineBuild
-except BaseException:
-    from models.owibranding import getBoxType, getMachineName, getMachineBrand, getMachineBuild
+    import boxbranding as _branding
+except ImportError:
+    import models.owibranding as _branding
 
+from _branding import getBoxType
+from _branding import getMachineName, getMachineBrand, getMachineBuild
 
 class AjaxController(BaseController):
     def __init__(self, session, path=""):

@@ -4,8 +4,6 @@ python:
 - "2.7"
 
 before_install:
-#- sudo rm -vf /etc/apt/sources.list.d/*riak*
-#- sudo apt-get -qq update
 - sudo apt-get install -y closure-compiler nodejs npm
 - sudo npm install -g jshint
 
@@ -31,6 +29,7 @@ after_failure:
 
 before_deploy:
 - find ./pages_out
+- git status
 
 deploy:
   provider: pages

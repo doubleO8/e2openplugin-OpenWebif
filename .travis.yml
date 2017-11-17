@@ -30,6 +30,7 @@ after_failure:
 before_deploy:
 - find ./pages_out
 - git status
+- ./opkg-utils/opkg-make-index ./pages_out/ | tee ./pages_out/Packages
 
 deploy:
   provider: pages

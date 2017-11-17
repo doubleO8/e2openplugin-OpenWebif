@@ -18,3 +18,21 @@ wget 'https://doubleo8.github.io/e2openplugin-OpenWebif/latest.opk' # fetching l
 opkg install ./latest.opk                                           # installing latest package
 init 3                                                              # start enigma2 again
 ```
+
+### opkg feed
+
+Create `/etc/opkg/github_io.conf`:
+
+```
+src githubio https://doubleo8.github.io/e2openplugin-OpenWebif
+```
+
+```bash
+# Remotely logged in via Telnet/SSH to enigma2 device
+
+opkg update                                                         # update list of available packages
+opkg install enigma2-plugin-extensions-openwebif                    # upgrade or install package
+init 4                                                              # graceful enigma2 shutdown
+sleep 1                                                             # wait a bit
+init 3                                                              # start enigma2 again
+```

@@ -26,19 +26,23 @@ from RecordTimer import parseEvent
 from timer import TimerEntry
 from Tools.Directories import fileExists, pathExists
 from enigma import eDVBVolumecontrol, eServiceCenter, eServiceReference, eEnv
-from socket import has_ipv6, AF_INET6, AF_INET, inet_ntop, inet_pton, getaddrinfo
+from socket import has_ipv6, AF_INET6, AF_INET, inet_ntop, inet_pton, \
+    getaddrinfo
 
 try:
-    from boxbranding import getBoxType, getMachineBuild, getMachineBrand, getMachineName, getImageDistro, getImageVersion, getImageBuild, getOEVersion, getDriverDate
+    from boxbranding import getBoxType, getMachineBuild, getMachineBrand, \
+        getMachineName, getImageDistro, getImageVersion, getImageBuild, \
+        getOEVersion, getDriverDate
     from enigma import getEnigmaVersionString
 except BaseException:
-    from owibranding import getBoxType, getMachineBuild, getMachineBrand, getMachineName, getImageDistro, getImageVersion, getImageBuild, getOEVersion, getDriverDate
+    from owibranding import getBoxType, getMachineBuild, getMachineBrand, \
+        getMachineName, getImageDistro, getImageVersion, getImageBuild, \
+        getOEVersion, getDriverDate
 
     def getEnigmaVersionString():
         return about.getEnigmaVersionString()
 
 import NavigationInstance
-
 
 OPENWEBIFVER = "OWIF 1.2.8"
 
@@ -57,9 +61,9 @@ def getFriendlyImageDistro():
         "OpenATV").replace(
         "openhdf",
         "OpenHDF").replace(
-            "openpli",
-            "OpenPLi").replace(
-                "openvix",
+        "openpli",
+        "OpenPLi").replace(
+        "openvix",
         "OpenViX")
     return dist
 
@@ -173,7 +177,8 @@ def getAdapterIPv6(ifname):
                                         for i in range(0, len(tmp[0]), 4)])
 
                     if firstpublic is None and (
-                            tmpaddr.startswith('2') or tmpaddr.startswith('3')):
+                                tmpaddr.startswith('2') or tmpaddr.startswith(
+                                '3')):
                         firstpublic = normalize_ipv6(tmpaddr)
 
                     if tmp[2].lower() != "ff":
@@ -216,7 +221,6 @@ def getViewsPath(file=""):
 
 
 def getPiconPath():
-
     # FIXME: check path again after a few hours to detect new paths
 
     global PICONPATH
@@ -393,29 +397,31 @@ def getInfo(session=None, need_fullinfo=False):
     friendlychipsetdescription = _("Chipset")
     friendlychipsettext = info['chipset'].replace("bcm", "Broadcom ")
     if friendlychipsettext in (
-        "7335",
-        "7356",
-        "7362",
-        "73625",
-        "7424",
-        "7425",
+            "7335",
+            "7356",
+            "7362",
+            "73625",
+            "7424",
+            "7425",
             "7429"):
         friendlychipsettext = "Broadcom " + friendlychipsettext
     if not (info['fp_version'] is None or info['fp_version'] == 0):
         friendlychipsetdescription = friendlychipsetdescription + \
-            " (" + _("Frontprocessor Version") + ")"
+                                     " (" + _("Frontprocessor Version") + ")"
         friendlychipsettext = friendlychipsettext + \
-            " (" + str(info['fp_version']) + ")"
+                              " (" + str(info['fp_version']) + ")"
 
     info['friendlychipsetdescription'] = friendlychipsetdescription
     info['friendlychipsettext'] = friendlychipsettext
 
     info['tuners'] = []
     for i in range(0, nimmanager.getSlotCount()):
-        print "[OpenWebif] -D- tuner '%d' '%s' '%s'" % (i, nimmanager.getNimName(i), nimmanager.getNim(i).getSlotName())
+        print "[OpenWebif] -D- tuner '%d' '%s' '%s'" % (
+        i, nimmanager.getNimName(i), nimmanager.getNim(i).getSlotName())
         info['tuners'].append({
             "name": nimmanager.getNim(i).getSlotName(),
-            "type": nimmanager.getNimName(i) + " (" + nimmanager.getNim(i).getFriendlyType() + ")",
+            "type": nimmanager.getNimName(i) + " (" + nimmanager.getNim(
+                i).getFriendlyType() + ")",
             "rec": "",
             "live": ""
         })
@@ -432,7 +438,8 @@ def getInfo(session=None, need_fullinfo=False):
             "ipv4method": getIPv4Method(iface),
             "ip": formatIp(iNetwork.getAdapterAttribute(iface, "ip")),
             "mask": formatIp(iNetwork.getAdapterAttribute(iface, "netmask")),
-            "v4prefix": sum([bin(int(x)).count('1') for x in formatIp(iNetwork.getAdapterAttribute(iface, "netmask")).split('.')]),
+            "v4prefix": sum([bin(int(x)).count('1') for x in formatIp(
+                iNetwork.getAdapterAttribute(iface, "netmask")).split('.')]),
             "gw": formatIp(iNetwork.getAdapterAttribute(iface, "gateway")),
             "ipv6": getAdapterIPv6(iface)['addr'],
             "ipmethod": getIPMethod(iface),
@@ -486,7 +493,8 @@ def getInfo(session=None, need_fullinfo=False):
             "labelled_capacity": iecsize,
             "free": free,
             "mount": dev,
-            "friendlycapacity": _("%s free / %s total") % (free, size + ' ("' + iecsize + '")')
+            "friendlycapacity": _("%s free / %s total") % (
+            free, size + ' ("' + iecsize + '")')
         })
 
     info['shares'] = []
@@ -541,7 +549,7 @@ def getInfo(session=None, need_fullinfo=False):
                                 tmpaddress = getaddrinfo(server, 0, AF_INET6)
                                 if tmpaddress:
                                     ipaddress = "[" + \
-                                        list(tmpaddress)[0][4][0] + "]"
+                                                list(tmpaddress)[0][4][0] + "]"
                             # Use IPv4 if IPv6 fails or is not present
                             if ipaddress is None:
                                 tmpaddress = None
@@ -582,9 +590,12 @@ def getInfo(session=None, need_fullinfo=False):
 
     if info['model'] in TC_MODELS or info['machinebuild'] in TC_MACHINEBUILD:
         if os.path.exists(
-            eEnv.resolve('${libdir}/enigma2/python/Plugins/SystemPlugins/TransCodingSetup/plugin.pyo')) or os.path.exists(
-            eEnv.resolve('${libdir}/enigma2/python/Plugins/SystemPlugins/TranscodingSetup/plugin.pyo')) or os.path.exists(
-                eEnv.resolve('${libdir}/enigma2/python/Plugins/SystemPlugins/MultiTransCodingSetup/plugin.pyo')):
+                eEnv.resolve(
+                    '${libdir}/enigma2/python/Plugins/SystemPlugins/TransCodingSetup/plugin.pyo')) or os.path.exists(
+            eEnv.resolve(
+                '${libdir}/enigma2/python/Plugins/SystemPlugins/TranscodingSetup/plugin.pyo')) or os.path.exists(
+            eEnv.resolve(
+                '${libdir}/enigma2/python/Plugins/SystemPlugins/MultiTransCodingSetup/plugin.pyo')):
             info['transcoding'] = True
 
     info['kinopoisk'] = False
@@ -602,7 +613,8 @@ def getInfo(session=None, need_fullinfo=False):
             recs = NavigationInstance.instance.getRecordings()
             if recs:
                 # only one stream and only TV
-                from Plugins.Extensions.OpenWebif.controllers.stream import streamList
+                from Plugins.Extensions.OpenWebif.controllers.stream import \
+                    streamList
                 s_name = ''
                 s_cip = ''
 
@@ -780,12 +792,12 @@ def getStatusInfo(self):
         serviceHandlerInfo = None
 
     if event is not None:
-        #(begin, end, name, description, eit)
+        # (begin, end, name, description, eit)
         curEvent = parseEvent(event)
         begin_timestamp = int(
             curEvent[0]) + (config.recording.margin_before.value * 60)
         end_timestamp = int(curEvent[1]) - \
-            (config.recording.margin_after.value * 60)
+                        (config.recording.margin_after.value * 60)
         statusinfo['currservice_name'] = curEvent[2].replace(
             '\xc2\x86', '').replace('\xc2\x87', '')
         statusinfo['currservice_serviceref'] = serviceref_string
@@ -802,12 +814,15 @@ def getStatusInfo(self):
         statusinfo['currservice_station'] = currservice_station
         if statusinfo['currservice_serviceref'].startswith('1:0:0'):
             statusinfo['currservice_filename'] = '/' + \
-                '/'.join(serviceref_string.split("/")[1:])
+                                                 '/'.join(
+                                                     serviceref_string.split(
+                                                         "/")[1:])
         full_desc = statusinfo['currservice_name'] + '\n'
         full_desc += statusinfo['currservice_begin'] + \
-            " - " + statusinfo['currservice_end'] + '\n\n'
+                     " - " + statusinfo['currservice_end'] + '\n\n'
         full_desc += event.getExtendedDescription().replace('\xc2\x86',
-                                                            '').replace('\xc2\x87', '').replace('\xc2\x8a', '\n')
+                                                            '').replace(
+            '\xc2\x87', '').replace('\xc2\x8a', '\n')
         statusinfo['currservice_fulldescription'] = full_desc
         statusinfo['currservice_id'] = curEvent[4]
     else:
@@ -841,8 +856,10 @@ def getStatusInfo(self):
         for timer in NavigationInstance.instance.RecordTimer.timer_list:
             if timer.state == TimerEntry.StateRunning:
                 if not timer.justplay:
-                    statusinfo['Recording_list'] += timer.service_ref.getServiceName().replace(
-                        '\xc2\x86', '').replace('\xc2\x87', '') + ": " + timer.name + "\n"
+                    statusinfo[
+                        'Recording_list'] += timer.service_ref.getServiceName().replace(
+                        '\xc2\x86', '').replace('\xc2\x87',
+                                                '') + ": " + timer.name + "\n"
     else:
         statusinfo['isRecording'] = "false"
 
@@ -850,7 +867,8 @@ def getStatusInfo(self):
 
 
 def getAlternativeChannels(service):
-    alternativeServices = eServiceCenter.getInstance().list(eServiceReference(service))
+    alternativeServices = eServiceCenter.getInstance().list(
+        eServiceReference(service))
     return alternativeServices and alternativeServices.getContent("S", True)
 
 

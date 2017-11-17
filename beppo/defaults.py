@@ -11,3 +11,5 @@ PACKAGE_META = {
 OUTPUT_PATH = 'pages_out'
 
 PACKAGE_OUTPUT_PATH = 'pack'
+
+TARGET_PATH_REL = 'usr/lib/enigma2/python/Plugins/Extensions/OpenWebif'

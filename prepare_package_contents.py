@@ -5,10 +5,13 @@ import shutil
 import glob
 import subprocess
 import compileall
+import json
+import datetime
 
 from jinja2 import Environment, PackageLoader
 
 from beppo.defaults import PACKAGE_OUTPUT_PATH, PACKAGE_META
+from beppo.defaults import TARGET_PATH_REL
 
 COMPILE_PO_CALL_FMT = '{binary} -o "{target}" "{source}"'
 COMPILE_CHEETAH_CALL_FMT = '{binary} compile -R "{target}"'
@@ -81,12 +84,23 @@ def create_control():
     with open(control_file, "wb") as target:
         target.write(control_content)
 
+
+def create_tag(tag_file):
+    data = {
+        "upstream_version": PACKAGE_META['upstream_version'],
+        "build_date": datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+        "owif_version": "OWIF 1.2.999"
+    }
+
+    with open(tag_file, "wb") as tgt:
+        json.dump(data, tgt, indent=2)
+
 if __name__ == '__main__':
     sources = './plugin'
     target_root = PACKAGE_OUTPUT_PATH
     target_path = os.path.join(
-        target_root,
-        'usr/lib/enigma2/python/Plugins/Extensions/OpenWebif')
+        target_root, TARGET_PATH_REL)
+    tag_file = os.path.join(target_path, "public/tag.json")
 
     if os.path.isdir(target_path):
         shutil.rmtree(target_path)
@@ -112,3 +126,4 @@ if __name__ == '__main__':
         raise
     compileall.compile_dir(target_path, maxlevels=100, force=True)
     create_control()
+    create_tag(tag_file)

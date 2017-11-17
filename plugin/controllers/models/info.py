@@ -8,6 +8,11 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
+import os
+import sys
+import time
+
+from twisted.web import version
 
 from Plugins.Extensions.OpenWebif.__init__ import _
 
@@ -18,12 +23,9 @@ from Components.Harddisk import harddiskmanager
 from Components.Network import iNetwork
 from Components.Language import language
 from RecordTimer import parseEvent
-from Screens.Standby import inStandby
 from timer import TimerEntry
 from Tools.Directories import fileExists, pathExists
-from time import time, localtime, strftime
 from enigma import eDVBVolumecontrol, eServiceCenter, eServiceReference, eEnv
-from twisted.web import version
 from socket import has_ipv6, AF_INET6, AF_INET, inet_ntop, inet_pton, getaddrinfo
 
 try:
@@ -37,10 +39,6 @@ except BaseException:
 
 import NavigationInstance
 
-import os
-import sys
-import time
-import string
 
 OPENWEBIFVER = "OWIF 1.2.8"
 
@@ -270,7 +268,6 @@ def _getPiconPath():
 
 
 def getInfo(session=None, need_fullinfo=False):
-    # TODO: get webif versione somewhere!
     info = {}
     global STATICBOXINFO
 
@@ -792,11 +789,11 @@ def getStatusInfo(self):
         statusinfo['currservice_name'] = curEvent[2].replace(
             '\xc2\x86', '').replace('\xc2\x87', '')
         statusinfo['currservice_serviceref'] = serviceref_string
-        statusinfo['currservice_begin'] = strftime(
-            "%H:%M", (localtime(begin_timestamp)))
+        statusinfo['currservice_begin'] = time.strftime(
+            "%H:%M", (time.localtime(begin_timestamp)))
         statusinfo['currservice_begin_timestamp'] = begin_timestamp
-        statusinfo['currservice_end'] = strftime(
-            "%H:%M", (localtime(end_timestamp)))
+        statusinfo['currservice_end'] = time.strftime(
+            "%H:%M", (time.localtime(end_timestamp)))
         statusinfo['currservice_end_timestamp'] = end_timestamp
         statusinfo['currservice_description'] = curEvent[3]
         if len(curEvent[3].decode('utf-8')) > 220:

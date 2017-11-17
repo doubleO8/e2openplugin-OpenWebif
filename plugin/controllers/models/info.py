@@ -11,6 +11,7 @@
 import os
 import sys
 import time
+import json
 
 from twisted.web import version
 
@@ -39,33 +40,49 @@ except BaseException:
         getMachineName, getImageDistro, getImageVersion, getImageBuild, \
         getOEVersion, getDriverDate
 
+
     def getEnigmaVersionString():
         return about.getEnigmaVersionString()
 
 import NavigationInstance
 
-OPENWEBIFVER = "OWIF 1.2.8"
+TAG_FILE = os.path.join(os.path.dirname(__file__), '../../public/tag.json')
+
+try:
+    with open(TAG_FILE, "rb") as src:
+        TAG_DATA = json.load(src)
+except Exception:
+    TAG_DATA = {
+        "upstream_version": '1:0.0-1',
+        "build_date": '2017-11-17 00:00:00',
+        "owif_version": "OWIF 1.2.8"
+    }
 
 STATICBOXINFO = None
 
 PICONPATH = None
 
+FRIENDLY_DISTRO_NAMES = {
+    "openatv": "OpenATV",
+    "openhdf": "OpenHDF",
+    "openpli": "OpenPLi",
+    "openvix": "OpenViX",
+}
+
 
 def getOpenWebifVer():
-    return OPENWEBIFVER
+    return TAG_DATA['owif_version']
 
 
 def getFriendlyImageDistro():
-    dist = getImageDistro().replace(
-        "openatv",
-        "OpenATV").replace(
-        "openhdf",
-        "OpenHDF").replace(
-        "openpli",
-        "OpenPLi").replace(
-        "openvix",
-        "OpenViX")
-    return dist
+    value = getImageDistro()
+
+    try:
+        return FRIENDLY_DISTRO_NAMES[value.lower()]
+    except KeyError:
+        pass
+
+    return value
 
 
 def getIPMethod(iface):
@@ -272,16 +289,18 @@ def _getPiconPath():
 
 
 def getInfo(session=None, need_fullinfo=False):
-    info = {}
     global STATICBOXINFO
 
     if not (STATICBOXINFO is None or need_fullinfo):
         return STATICBOXINFO
 
-    info['brand'] = getMachineBrand()
-    info['model'] = getMachineName()
-    info['boxtype'] = getBoxType()
-    info['machinebuild'] = getMachineBuild()
+    info = {
+        'brand': getMachineBrand(),
+        'model': getMachineName(),
+        'boxtype': getBoxType(),
+        'machinebuild': getMachineBuild(),
+        'tag_data': TAG_DATA,
+    }
 
     chipset = "unknown"
     if fileExists("/etc/.box"):
@@ -417,7 +436,7 @@ def getInfo(session=None, need_fullinfo=False):
     info['tuners'] = []
     for i in range(0, nimmanager.getSlotCount()):
         print "[OpenWebif] -D- tuner '%d' '%s' '%s'" % (
-        i, nimmanager.getNimName(i), nimmanager.getNim(i).getSlotName())
+            i, nimmanager.getNimName(i), nimmanager.getNim(i).getSlotName())
         info['tuners'].append({
             "name": nimmanager.getNim(i).getSlotName(),
             "type": nimmanager.getNimName(i) + " (" + nimmanager.getNim(
@@ -453,6 +472,7 @@ def getInfo(session=None, need_fullinfo=False):
             stat = os.statvfs(dev)
             free = int((stat.f_bfree / 1024) * (stat.f_bsize / 1024))
         else:
+            stat = (-1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
             free = -1
 
         if free <= 1024:
@@ -481,7 +501,8 @@ def getInfo(session=None, need_fullinfo=False):
         # Round harddisk sizes beyond ~300GB to full tens: 320, 500, 640, 750GB
         elif iecsize > 300000:
             iecsize = "%d %s" % (((iecsize + 5000) // 10000 * 10), _("GB"))
-        # ... be more precise for media < ~300GB (Sticks, SSDs, CF, MMC, ...): 1, 2, 4, 8, 16 ... 256GB
+        # ... be more precise for media < ~300GB (Sticks, SSDs, CF, MMC, ...):
+        # 1, 2, 4, 8, 16 ... 256GB
         elif iecsize > 1000:
             iecsize = "%d %s" % (((iecsize + 500) // 1000), _("GB"))
         else:
@@ -494,7 +515,8 @@ def getInfo(session=None, need_fullinfo=False):
             "free": free,
             "mount": dev,
             "friendlycapacity": _("%s free / %s total") % (
-            free, size + ' ("' + iecsize + '")')
+                free, size + ' ("' + iecsize + '")'),
+            "_statvfs_result": tuple(stat),
         })
 
     info['shares'] = []

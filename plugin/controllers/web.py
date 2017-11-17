@@ -8,31 +8,46 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
+import re
 
 from Plugins.Extensions.OpenWebif.__init__ import _
 
 from Components.config import config
 
-from models.info import getInfo, getCurrentTime, getStatusInfo, getFrontendStatus
-from models.services import getCurrentService, getBouquets, getServices, getSubServices, getChannels, getSatellites, getBouquetEpg, getBouquetNowNextEpg, getServicesNowNextEpg, getSearchEpg, getChannelEpg, getNowNextEpg, getSearchSimilarEpg, getAllServices, getPlayableServices, getPlayableService, getParentalControlList, getEvent, loadEpg, saveEpg
-from models.volume import getVolumeStatus, setVolumeUp, setVolumeDown, setVolumeMute, setVolume
+from models.info import getInfo, getCurrentTime, \
+    getStatusInfo, getFrontendStatus
+from models.services import getCurrentService, getBouquets, getServices, \
+    getSubServices, getSatellites, getBouquetEpg, getBouquetNowNextEpg, \
+    getServicesNowNextEpg, getSearchEpg, getChannelEpg, getNowNextEpg, \
+    getSearchSimilarEpg, getAllServices, getPlayableServices, \
+    getPlayableService, getParentalControlList, getEvent, loadEpg, saveEpg
+from models.volume import getVolumeStatus, setVolumeUp, setVolumeDown, \
+    setVolumeMute, setVolume
 from models.audiotrack import getAudioTracks, setAudioTrack
-from models.control import zapService, remoteControl, setPowerState, getStandbyState
-from models.locations import getLocations, getCurrentLocation, addLocation, removeLocation
-from models.timers import getTimers, addTimer, addTimerByEventId, editTimer, removeTimer, toggleTimerStatus, cleanupTimer, writeTimerList, recordNow, tvbrowser, getSleepTimer, setSleepTimer, getPowerTimer, setPowerTimer, getVPSChannels
+from models.control import zapService, remoteControl, \
+    setPowerState, getStandbyState
+from models.locations import getLocations, getCurrentLocation, \
+    addLocation, removeLocation
+from models.timers import getTimers, addTimer, addTimerByEventId, editTimer, \
+    removeTimer, toggleTimerStatus, cleanupTimer, writeTimerList, recordNow, \
+    tvbrowser, getSleepTimer, setSleepTimer, getPowerTimer, \
+    setPowerTimer, getVPSChannels
 from models.message import sendMessage, getMessageAnswer
-from models.movies import getMovieList, removeMovie, getMovieTags, moveMovie, renameMovie, getAllMovies
-from models.config import getSettings, addCollapsedMenu, removeCollapsedMenu, setZapStream, saveConfig, getZapStream, setShowChPicon, getConfigs, getConfigsSections
+from models.movies import getMovieList, removeMovie, getMovieTags, moveMovie, \
+    renameMovie, getAllMovies
+from models.config import getSettings, addCollapsedMenu, removeCollapsedMenu, \
+    setZapStream, saveConfig, getZapStream, setShowChPicon, \
+    getConfigs, getConfigsSections
 from models.stream import getStream, getTS, getStreamSubservices, GetSession
 from models.servicelist import reloadServicesLists
-from models.mediaplayer import mediaPlayerAdd, mediaPlayerRemove, mediaPlayerPlay, mediaPlayerCommand, mediaPlayerCurrent, mediaPlayerList, mediaPlayerLoad, mediaPlayerSave, mediaPlayerFindFile
+from models.mediaplayer import mediaPlayerAdd, mediaPlayerRemove, \
+    mediaPlayerPlay, mediaPlayerCommand, mediaPlayerCurrent, mediaPlayerList, \
+    mediaPlayerLoad, mediaPlayerSave, mediaPlayerFindFile
 from models.plugins import reloadPlugins
 from Screens.InfoBar import InfoBar
 
-from fcntl import ioctl
 from base import BaseController
 from stream import StreamController
-import re
 
 
 def whoami(request):
@@ -80,8 +95,8 @@ class WebController(BaseController):
             success = False
         return self.P_tstate(request, success)
 
-#	TODO: improve after action / save , save+record , nothing
-#	config.timeshift.favoriteSaveAction ....
+    #	TODO: improve after action / save , save+record , nothing
+    #	config.timeshift.favoriteSaveAction ....
     def P_tsstop(self, request):
         success = True
         oldcheck = False
@@ -136,7 +151,8 @@ class WebController(BaseController):
                 res = getVolumeStatus()
                 res["result"] = False
                 res["message"] = _(
-                    "Wrong parameter format 'set=%s'. Use set=set15 ") % request.args["set"][0]
+                    "Wrong parameter format 'set=%s'. Use set=set15 ") % \
+                                 request.args["set"][0]
                 return res
 
         res = getVolumeStatus()
@@ -208,7 +224,7 @@ class WebController(BaseController):
             powerupWithoutWakingTv = f.read()
             f.close()
             if ((powerupWithoutWakingTv == 'True') or (
-                    powerupWithoutWakingTv == 'False')):
+                        powerupWithoutWakingTv == 'False')):
                 return True
             else:
                 return False
@@ -343,7 +359,7 @@ class WebController(BaseController):
             return {
                 "result": False,
                 "message": _("type %s is not a number") %
-                request.args["type"][0]}
+                           request.args["type"][0]}
 
         timeout = -1
         if "timeout" in request.args.keys():
@@ -381,13 +397,15 @@ class WebController(BaseController):
         request.setHeader('Content-Type', 'application/x-mpegurl')
         movielist = getMovieList(request.args)
         movielist["host"] = "%s://%s:%s" % (
-            whoami(request)['proto'], request.getRequestHostname(), whoami(request)['port'])
+            whoami(request)['proto'], request.getRequestHostname(),
+            whoami(request)['port'])
         return movielist
 
     def P_movielistrss(self, request):
         movielist = getMovieList(request.args)
         movielist["host"] = "%s://%s:%s" % (
-            whoami(request)['proto'], request.getRequestHostname(), whoami(request)['port'])
+            whoami(request)['proto'], request.getRequestHostname(),
+            whoami(request)['port'])
         return movielist
 
     def P_moviedelete(self, request):
@@ -441,14 +459,16 @@ class WebController(BaseController):
     def P_gettags(self, request):
         return getMovieTags()
 
-# VPS Plugin
+    # VPS Plugin
     def vpsparams(self, request):
         vpsplugin_enabled = None
         if "vpsplugin_enabled" in request.args:
-            vpsplugin_enabled = True if request.args["vpsplugin_enabled"][0] == '1' else False
+            vpsplugin_enabled = True if request.args["vpsplugin_enabled"][
+                                            0] == '1' else False
         vpsplugin_overwrite = None
         if "vpsplugin_overwrite" in request.args:
-            vpsplugin_overwrite = True if request.args["vpsplugin_overwrite"][0] == '1' else False
+            vpsplugin_overwrite = True if request.args["vpsplugin_overwrite"][
+                                              0] == '1' else False
         vpsplugin_time = None
         if "vpsplugin_time" in request.args:
             vpsplugin_time = int(float(request.args["vpsplugin_time"][0]))
@@ -491,8 +511,9 @@ class WebController(BaseController):
             justplay = request.args["justplay"][0] == "1"
 
         afterevent = 3
-        if "afterevent" in request.args.keys() and request.args["afterevent"][0] in [
-                "1", "2", "3"]:
+        if "afterevent" in request.args.keys() and request.args["afterevent"][
+            0] in [
+            "1", "2", "3"]:
             afterevent = int(request.args["afterevent"][0])
 
         dirname = None
@@ -519,7 +540,12 @@ class WebController(BaseController):
         else:
             from enigma import eEPGCache, eServiceReference
             queryTime = int(request.args["begin"][0]) + (
-                int(request.args["end"][0]) - int(request.args["begin"][0])) / 2
+                                                            int(request.args[
+                                                                    "end"][
+                                                                    0]) - int(
+                                                                request.args[
+                                                                    "begin"][
+                                                                    0])) / 2
             event = eEPGCache.getInstance().lookupEventTime(
                 eServiceReference(request.args["sRef"][0]), queryTime)
             eventid = event and event.getEventId()
@@ -592,7 +618,8 @@ class WebController(BaseController):
 
     def P_timerchange(self, request):
         res = self.testMandatoryArguments(
-            request, ["sRef", "begin", "end", "name", "channelOld", "beginOld", "endOld"])
+            request, ["sRef", "begin", "end", "name", "channelOld", "beginOld",
+                      "endOld"])
         if res:
             return res
 
@@ -605,8 +632,9 @@ class WebController(BaseController):
             justplay = request.args["justplay"][0] == "1"
 
         afterevent = 3
-        if "afterevent" in request.args.keys() and request.args["afterevent"][0] in [
-                "0", "1", "2", "3"]:
+        if "afterevent" in request.args.keys() and request.args["afterevent"][
+            0] in [
+            "0", "1", "2", "3"]:
             afterevent = int(request.args["afterevent"][0])
 
         dirname = None
@@ -901,8 +929,10 @@ class WebController(BaseController):
 
     def P_event(self, request):
         event = getEvent(request.args["sref"][0], request.args["idev"][0])
-        event['event']['recording_margin_before'] = config.recording.margin_before.value
-        event['event']['recording_margin_after'] = config.recording.margin_after.value
+        event['event'][
+            'recording_margin_before'] = config.recording.margin_before.value
+        event['event'][
+            'recording_margin_after'] = config.recording.margin_after.value
         return event
 
     def P_getcurrent(self, request):
@@ -964,7 +994,8 @@ class WebController(BaseController):
             serviceref = self.session.nav.getCurrentlyPlayingServiceReference()
             if serviceref is not None:
                 try:
-                    if serviceref.toString().startswith('4097:0:0:0:0:0:0:0:0:0:/'):
+                    if serviceref.toString().startswith(
+                            '4097:0:0:0:0:0:0:0:0:0:/'):
                         from enigma import eServiceCenter
                         serviceHandler = eServiceCenter.getInstance()
                         sinfo = serviceHandler.info(serviceref)
@@ -1131,7 +1162,8 @@ class WebController(BaseController):
     def P_powertimer(self, request):
         if len(request.args):
             res = self.testMandatoryArguments(
-                request, ["start", "end", "timertype", "repeated", "afterevent", "disabled"])
+                request, ["start", "end", "timertype", "repeated", "afterevent",
+                          "disabled"])
             if res:
                 return res
             return setPowerTimer(self.session, request)
@@ -1172,22 +1204,26 @@ class WebController(BaseController):
         ret = getSleepTimer(self.session)
 
         if cmd != "set":
-            ret["message"] = "ERROR: Obligatory parameter 'cmd' [get,set] has unspecified value '%s'" % cmd
+            ret[
+                "message"] = "ERROR: Obligatory parameter 'cmd' [get,set] has unspecified value '%s'" % cmd
             return ret
 
         if time is None and enabled:  # it's used only if the timer is enabled
-            ret["message"] = "ERROR: Obligatory parameter 'time' [0-999] is missing"
+            ret[
+                "message"] = "ERROR: Obligatory parameter 'time' [0-999] is missing"
             return ret
 
         if enabled is None:
-            ret["message"] = "Obligatory parameter 'enabled' [True,False] is missing"
+            ret[
+                "message"] = "Obligatory parameter 'enabled' [True,False] is missing"
             return ret
 
         return setSleepTimer(self.session, time, action, enabled)
 
     def P_external(self, request):
         try:
-            from Plugins.Extensions.WebInterface.WebChilds.Toplevel import loaded_plugins
+            from Plugins.Extensions.WebInterface.WebChilds.Toplevel import \
+                loaded_plugins
             return {
                 "plugins": loaded_plugins
             }
@@ -1276,4 +1312,3 @@ class WebController(BaseController):
             return getConfigs(request.args["section"][0])
         else:
             return getConfigsSections()
-        return {}

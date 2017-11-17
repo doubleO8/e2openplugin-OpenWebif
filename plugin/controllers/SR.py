@@ -11,30 +11,31 @@
 ##############################################################################
 from twisted.web import resource, http
 
+
 class SRController(resource.Resource):
-	rootApi = None
+    rootApi = None
 
-	def __init__(self, session):
-		resource.Resource.__init__(self)
-		self.session = session
+    def __init__(self, session):
+        resource.Resource.__init__(self)
+        self.session = session
 
-		try:
-			from Plugins.Extensions.serienrecorder.SerienRecorderResource import addWebInterfaceForOpenWebInterface
-		except ImportError:
-			print "SerienRecorder plugin not found"
-			return
-		
-		(root, childs) = addWebInterfaceForOpenWebInterface()
-		SRController.rootApi = root
-		if childs:
-			for name, api in childs:
-				self.putChild(name, api)
+        try:
+            from Plugins.Extensions.serienrecorder.SerienRecorderResource import addWebInterfaceForOpenWebInterface
+        except ImportError:
+            print "SerienRecorder plugin not found"
+            return
 
-	def render(self, request):
-		if SRController.rootApi:
-			return SRController.rootApi.render(request)
-		else:
-			request.setResponseCode(http.OK)
-			request.setHeader('Content-type', 'application/xhtml+xml')
-			request.setHeader('charset', 'UTF-8')
-			return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2state>false</e2state><e2statetext>SerienRecorder Plugin not found</e2statetext></e2simplexmlresult>'
+        (root, childs) = addWebInterfaceForOpenWebInterface()
+        SRController.rootApi = root
+        if childs:
+            for name, api in childs:
+                self.putChild(name, api)
+
+    def render(self, request):
+        if SRController.rootApi:
+            return SRController.rootApi.render(request)
+        else:
+            request.setResponseCode(http.OK)
+            request.setHeader('Content-type', 'application/xhtml+xml')
+            request.setHeader('charset', 'UTF-8')
+            return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2state>false</e2state><e2statetext>SerienRecorder Plugin not found</e2statetext></e2simplexmlresult>'

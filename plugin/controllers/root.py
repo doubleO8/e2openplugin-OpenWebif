@@ -31,62 +31,64 @@ import rest_api_controller
 
 
 class RootController(BaseController):
-	def __init__(self, session, path = ""):
-		BaseController.__init__(self, path=path, session=session)
-		piconpath = getPiconPath()
+    def __init__(self, session, path=""):
+        BaseController.__init__(self, path=path, session=session)
+        piconpath = getPiconPath()
 
-		self.putChild("web", WebController(session))
-		api_controller_instance = EncodingResourceWrapper(
-			rest_api_controller.ApiController(session, resource_prefix='/api'),
-			[GzipEncoderFactory()])
-		self.putChild("api", api_controller_instance)
-		self.putChild("ajax", AjaxController(session))
+        self.putChild("web", WebController(session))
+        api_controller_instance = EncodingResourceWrapper(
+            rest_api_controller.ApiController(session, resource_prefix='/api'),
+            [GzipEncoderFactory()])
+        self.putChild("api", api_controller_instance)
+        self.putChild("ajax", AjaxController(session))
 
-		encoder_factory = rest_fs_access.GzipEncodeByFileExtensionFactory(
-			extensions=[
-				'txt', 'json', 'html', 'xml', 'js', 'conf', 'cfg',
-				'eit', 'sc', 'ap'
-			])
+        encoder_factory = rest_fs_access.GzipEncodeByFileExtensionFactory(
+            extensions=[
+                'txt', 'json', 'html', 'xml', 'js', 'conf', 'cfg',
+                'eit', 'sc', 'ap'
+            ])
 
-		#: gzip compression enabled file controller
-		wrapped_fs_controller = EncodingResourceWrapper(
-			rest_fs_access.RESTFilesystemController(
-				root='/',
-				resource_prefix="/fs",
-				session=session),
-			[encoder_factory]
-		)
-		self.putChild("fs", wrapped_fs_controller)
+        #: gzip compression enabled file controller
+        wrapped_fs_controller = EncodingResourceWrapper(
+            rest_fs_access.RESTFilesystemController(
+                root='/',
+                resource_prefix="/fs",
+                session=session),
+            [encoder_factory]
+        )
+        self.putChild("fs", wrapped_fs_controller)
 
-		self.putChild("file", FileController())
-		self.putChild("grab", grabScreenshot(session))
-		self.putChild("js", static.File(getPublicPath() + "/js"))
-		self.putChild("css", static.File(getPublicPath() + "/css"))
-		self.putChild("static", static.File(getPublicPath() + "/static"))
-		self.putChild("images", static.File(getPublicPath() + "/images"))
-		self.putChild("fonts", static.File(getPublicPath() + "/fonts"))
-		if os.path.exists(getPublicPath('themes')):
-			self.putChild("themes", static.File(getPublicPath() + "/themes"))
-		if os.path.exists(getPublicPath('webtv')):
-			self.putChild("webtv", static.File(getPublicPath() + "/webtv"))
-		if os.path.exists('/usr/bin/shellinaboxd'):
-			self.putChild("terminal", proxy.ReverseProxyResource('::1', 4200, '/'))
-		self.putChild("autotimer", ATController(session))
-		self.putChild("serienrecorder", SRController(session))
-		self.putChild("epgrefresh", ERController(session))
-		self.putChild("bouqueteditor", BQEController(session))
-		self.putChild("transcoding", TranscodingController())
-		self.putChild("wol", WOLClientController())
-		self.putChild("wolsetup", WOLSetupController(session))
-		if piconpath:
-			self.putChild("picon", static.File(piconpath))
+        self.putChild("file", FileController())
+        self.putChild("grab", grabScreenshot(session))
+        self.putChild("js", static.File(getPublicPath() + "/js"))
+        self.putChild("css", static.File(getPublicPath() + "/css"))
+        self.putChild("static", static.File(getPublicPath() + "/static"))
+        self.putChild("images", static.File(getPublicPath() + "/images"))
+        self.putChild("fonts", static.File(getPublicPath() + "/fonts"))
+        if os.path.exists(getPublicPath('themes')):
+            self.putChild("themes", static.File(getPublicPath() + "/themes"))
+        if os.path.exists(getPublicPath('webtv')):
+            self.putChild("webtv", static.File(getPublicPath() + "/webtv"))
+        if os.path.exists('/usr/bin/shellinaboxd'):
+            self.putChild(
+                "terminal", proxy.ReverseProxyResource(
+                    '::1', 4200, '/'))
+        self.putChild("autotimer", ATController(session))
+        self.putChild("serienrecorder", SRController(session))
+        self.putChild("epgrefresh", ERController(session))
+        self.putChild("bouqueteditor", BQEController(session))
+        self.putChild("transcoding", TranscodingController())
+        self.putChild("wol", WOLClientController())
+        self.putChild("wolsetup", WOLSetupController(session))
+        if piconpath:
+            self.putChild("picon", static.File(piconpath))
 
-	# this function will be called before a page is loaded
-	def prePageLoad(self, request):
-		# we set withMainTemplate here so it's a default for every page
-		self.withMainTemplate = True
+    # this function will be called before a page is loaded
+    def prePageLoad(self, request):
+        # we set withMainTemplate here so it's a default for every page
+        self.withMainTemplate = True
 
-	# the "pages functions" must be called P_pagename
-	# example http://boxip/index => P_index
-	def P_index(self, request):
-		return {}
+    # the "pages functions" must be called P_pagename
+    # example http://boxip/index => P_index
+    def P_index(self, request):
+        return {}

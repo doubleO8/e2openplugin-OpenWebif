@@ -11,72 +11,76 @@
 from Components.config import config
 import os
 
+
 def getLocations():
-	return {
-		"result": True,
-		"locations": config.movielist.videodirs.value
-	}
+    return {
+        "result": True,
+        "locations": config.movielist.videodirs.value
+    }
+
 
 def getCurrentLocation():
-	path = config.movielist.last_videodir.value or "/hdd/movie"
-	if not os.path.exists(path):
-		path = "/hdd/movie"
+    path = config.movielist.last_videodir.value or "/hdd/movie"
+    if not os.path.exists(path):
+        path = "/hdd/movie"
 
-	return {
-		"result": True,
-		"location": path
-	}
+    return {
+        "result": True,
+        "location": path
+    }
+
 
 def addLocation(dirname, create):
-	if not os.path.exists(dirname):
-		if create:
-			try:
-				os.makedirs(dirname)
-			except Exception, e:
-				return {
-					"result": False,
-					"message": "Creation of folder '%s' failed" % dirname
-				}
-		else:
-			return {
-				"result": False,
-				"message": "Folder '%s' does not exist" % dirname
-				}
+    if not os.path.exists(dirname):
+        if create:
+            try:
+                os.makedirs(dirname)
+            except Exception as e:
+                return {
+                    "result": False,
+                    "message": "Creation of folder '%s' failed" % dirname
+                }
+        else:
+            return {
+                "result": False,
+                "message": "Folder '%s' does not exist" % dirname
+            }
 
-	locations = config.movielist.videodirs.value[:] or []
-	if dirname in locations:
-		return {
-			"result": False,
-			"message": "Location '%s' is already defined" % dirname
-		}
+    locations = config.movielist.videodirs.value[:] or []
+    if dirname in locations:
+        return {
+            "result": False,
+            "message": "Location '%s' is already defined" % dirname
+        }
 
-	locations.append(dirname)
-	config.movielist.videodirs.value = locations
-	config.movielist.videodirs.save()
+    locations.append(dirname)
+    config.movielist.videodirs.value = locations
+    config.movielist.videodirs.save()
 
-	return {
-		"result": True,
-		"message": "Location '%s' added succesfully" % dirname
-	}
+    return {
+        "result": True,
+        "message": "Location '%s' added succesfully" % dirname
+    }
 
-def removeLocation(dirname,remove):
-	locations = config.movielist.videodirs.value[:] or []
-	res = False
-	msg = "Location '%s' is not defined" % dirname
-	if dirname in locations:
-		res = True
-		locations.remove(dirname)
-		config.movielist.videodirs.value = locations
-		config.movielist.videodirs.save()
-		if os.path.exists(dirname) and remove:
-			try:
-				os.rmdir(dirname)
-				msg = "Location and Folder '%s' removed succesfully" % dirname
-			except Exception, e:
-				msg = "Location '%s' removed succesfully but the Folder not exists or is not empty" % dirname
-		else:
-			msg = "Location '%s' removed succesfully" % dirname
-	return {
-		"result": res,
-		"message":  msg
-	}
+
+def removeLocation(dirname, remove):
+    locations = config.movielist.videodirs.value[:] or []
+    res = False
+    msg = "Location '%s' is not defined" % dirname
+    if dirname in locations:
+        res = True
+        locations.remove(dirname)
+        config.movielist.videodirs.value = locations
+        config.movielist.videodirs.save()
+        if os.path.exists(dirname) and remove:
+            try:
+                os.rmdir(dirname)
+                msg = "Location and Folder '%s' removed succesfully" % dirname
+            except Exception as e:
+                msg = "Location '%s' removed succesfully but the Folder not exists or is not empty" % dirname
+        else:
+            msg = "Location '%s' removed succesfully" % dirname
+    return {
+        "result": res,
+        "message": msg
+    }

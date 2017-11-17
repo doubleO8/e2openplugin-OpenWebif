@@ -118,438 +118,438 @@ DEFAULT_ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
 
 #: paths where file delete operations shall be allowed
 DELETE_WHITELIST = [
-	'/media',
+    '/media',
 ]
 
 
 def dump_upload(request, target_filename):
-	with open(target_filename, "wb") as handle:
-		handle.write(request.args['data'][0])
+    with open(target_filename, "wb") as handle:
+        handle.write(request.args['data'][0])
 
 
 class GzipEncodeByFileExtensionFactory(GzipEncoderFactory):
-	"""
-	A gzip content encoding factory. Compression is enabled for paths having
-	an extension contained in *self.gzip_allowed*.
+    """
+    A gzip content encoding factory. Compression is enabled for paths having
+    an extension contained in *self.gzip_allowed*.
 
-	Args:
-		extensions: Extensions for which compression will be enabled.
-			Default is [] -- no compression at all
-		compressLevel: Gzip compression level
-			Default is 6
-	"""
+    Args:
+            extensions: Extensions for which compression will be enabled.
+                    Default is [] -- no compression at all
+            compressLevel: Gzip compression level
+                    Default is 6
+    """
 
-	def __init__(self, *args, **kwargs):
-		self.gzip_allowed = kwargs.get("extensions", [])
-		self.compressLevel = kwargs.get("compressLevel", 6)
-		self.log = logging.getLogger(__name__)
+    def __init__(self, *args, **kwargs):
+        self.gzip_allowed = kwargs.get("extensions", [])
+        self.compressLevel = kwargs.get("compressLevel", 6)
+        self.log = logging.getLogger(__name__)
 
-	def encoderForRequest(self, request):
-		"""
-		Check the request path if the extension allows the file to be
-		send compressed. If so use GzipEncoderFactory which may compress
-		the file contents if the client supports it.
-		"""
-		self.log.debug("GZIP? {!r}".format(request.path))
-		try:
-			(trunk, ext) = os.path.splitext(request.path)
-			ext_normalised = ext.lower()[1:]
+    def encoderForRequest(self, request):
+        """
+        Check the request path if the extension allows the file to be
+        send compressed. If so use GzipEncoderFactory which may compress
+        the file contents if the client supports it.
+        """
+        self.log.debug("GZIP? {!r}".format(request.path))
+        try:
+            (trunk, ext) = os.path.splitext(request.path)
+            ext_normalised = ext.lower()[1:]
 
-			if ext_normalised in self.gzip_allowed:
-				self.log.debug("{!r}: we want GZIP!".format(ext_normalised))
-				return GzipEncoderFactory.encoderForRequest(self, request)
-			else:
-				self.log.debug(
-					"{!r}: we do not want GZIP!".format(ext_normalised))
-		except Exception as exc:
-			self.log.error(exc)
+            if ext_normalised in self.gzip_allowed:
+                self.log.debug("{!r}: we want GZIP!".format(ext_normalised))
+                return GzipEncoderFactory.encoderForRequest(self, request)
+            else:
+                self.log.debug(
+                    "{!r}: we do not want GZIP!".format(ext_normalised))
+        except Exception as exc:
+            self.log.error(exc)
 
 
 class RESTFilesystemController(twisted.web.resource.Resource):
-	isLeaf = True
-	_override_args = (
-		'resource_prefix', 'root', 'do_delete', 'delete_whitelist')
-	_resource_prefix = '/fs'
-	_root = os.path.abspath(os.path.dirname(__file__))
-	_do_delete = False
-	_delete_whitelist = DELETE_WHITELIST
+    isLeaf = True
+    _override_args = (
+        'resource_prefix', 'root', 'do_delete', 'delete_whitelist')
+    _resource_prefix = '/fs'
+    _root = os.path.abspath(os.path.dirname(__file__))
+    _do_delete = False
+    _delete_whitelist = DELETE_WHITELIST
 
-	def __init__(self, *args, **kwargs):
-		"""
-		Default Constructor.
+    def __init__(self, *args, **kwargs):
+        """
+        Default Constructor.
 
-		Args:
-			resource_prefix: Prefix value for this controller instance.
-				Default is :py:data:`FileController._resource_prefix`
-			root: Root path of files to be served.
-				Default is the path where the current file is located
-			do_delete: Try to actually delete files?
-				Default is False.
-			delete_whitelist: Folder prefixes where delete operations are
-				allowed _at all_. Default is :py:data:`DELETE_WHITELIST`
-		"""
-		if args:
-			for key, value in zip(self._override_args, args):
-				kwargs[key] = value
+        Args:
+                resource_prefix: Prefix value for this controller instance.
+                        Default is :py:data:`FileController._resource_prefix`
+                root: Root path of files to be served.
+                        Default is the path where the current file is located
+                do_delete: Try to actually delete files?
+                        Default is False.
+                delete_whitelist: Folder prefixes where delete operations are
+                        allowed _at all_. Default is :py:data:`DELETE_WHITELIST`
+        """
+        if args:
+            for key, value in zip(self._override_args, args):
+                kwargs[key] = value
 
-		for arg_name in self._override_args:
-			if kwargs.get(arg_name) is not None:
-				attr_name = '_{:s}'.format(arg_name)
-				setattr(self, attr_name, kwargs.get(arg_name))
-		self.session = kwargs.get("session")
-		self.log = logging.getLogger(__name__)
+        for arg_name in self._override_args:
+            if kwargs.get(arg_name) is not None:
+                attr_name = '_{:s}'.format(arg_name)
+                setattr(self, attr_name, kwargs.get(arg_name))
+        self.session = kwargs.get("session")
+        self.log = logging.getLogger(__name__)
 
-	def _cache(self, request, expires=False):
-		headers = {}
-		if expires is False:
-			headers[
-				'Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
-			headers['Expires'] = '-1'
-		else:
-			now = datetime.datetime.now()
-			expires_time = now + datetime.timedelta(seconds=expires)
-			headers['Cache-Control'] = 'public'
-			headers['Expires'] = format_date_time(
-				time.mktime(expires_time.timetuple()))
-		for key in headers:
-			self.log.debug(
-				"CACHE: {key}={val}".format(key=key, val=headers[key]))
-			request.setHeader(key, headers[key])
+    def _cache(self, request, expires=False):
+        headers = {}
+        if expires is False:
+            headers[
+                'Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+            headers['Expires'] = '-1'
+        else:
+            now = datetime.datetime.now()
+            expires_time = now + datetime.timedelta(seconds=expires)
+            headers['Cache-Control'] = 'public'
+            headers['Expires'] = format_date_time(
+                time.mktime(expires_time.timetuple()))
+        for key in headers:
+            self.log.debug(
+                "CACHE: {key}={val}".format(key=key, val=headers[key]))
+            request.setHeader(key, headers[key])
 
-	def get_response_data_template(self, request):
-		"""
-		Generate a response data :class:`dict` containing default values and
-		some request attribute values for debugging purposes.
+    def get_response_data_template(self, request):
+        """
+        Generate a response data :class:`dict` containing default values and
+        some request attribute values for debugging purposes.
 
-		Args:
-			request (twisted.web.server.Request): HTTP request object
-		Returns:
-			(dict) response template data
-		"""
-		file_path = None
-		if request.path.startswith(self._resource_prefix):
-			file_path = request.path[len(self._resource_prefix):]
+        Args:
+                request (twisted.web.server.Request): HTTP request object
+        Returns:
+                (dict) response template data
+        """
+        file_path = None
+        if request.path.startswith(self._resource_prefix):
+            file_path = request.path[len(self._resource_prefix):]
 
-		response_data = {
-			"_request": {
-				"path": request.path,
-				"uri": request.uri,
-				"method": request.method,
-				"file_path": file_path,
-			},
-			"result": False,
-		}
+        response_data = {
+            "_request": {
+                "path": request.path,
+                "uri": request.uri,
+                "method": request.method,
+                "file_path": file_path,
+            },
+            "result": False,
+        }
 
-		return response_data
+        return response_data
 
-	def error_response(self, request, response_code=None, **kwargs):
-		"""
-		Create and return an HTTP error response with data as JSON.
+    def error_response(self, request, response_code=None, **kwargs):
+        """
+        Create and return an HTTP error response with data as JSON.
 
-		Args:
-			request (twisted.web.server.Request): HTTP request object
-			response_code: HTTP Status Code (default is 500)
-			**kwargs: additional key/value pairs
-		Returns:
-			JSON encoded data with appropriate HTTP headers
-		"""
-		if response_code is None:
-			response_code = http.INTERNAL_SERVER_ERROR
+        Args:
+                request (twisted.web.server.Request): HTTP request object
+                response_code: HTTP Status Code (default is 500)
+                **kwargs: additional key/value pairs
+        Returns:
+                JSON encoded data with appropriate HTTP headers
+        """
+        if response_code is None:
+            response_code = http.INTERNAL_SERVER_ERROR
 
-		response_data = self.get_response_data_template(request)
-		response_data.update(**kwargs)
+        response_data = self.get_response_data_template(request)
+        response_data.update(**kwargs)
 
-		response_data['me'] = dict()
-		for arg_name in self._override_args:
-			attr_name = '_{:s}'.format(arg_name)
-			response_data['me'][attr_name] = getattr(self, attr_name)
+        response_data['me'] = dict()
+        for arg_name in self._override_args:
+            attr_name = '_{:s}'.format(arg_name)
+            response_data['me'][attr_name] = getattr(self, attr_name)
 
-		request.setResponseCode(response_code)
-		return json_response(request, response_data)
+        request.setResponseCode(response_code)
+        return json_response(request, response_data)
 
-	def _existing_path_or_bust(self, request):
-		"""
-		Verify that a filesystem location which is contained in *request.path*
-		is valid and an existing path.
+    def _existing_path_or_bust(self, request):
+        """
+        Verify that a filesystem location which is contained in *request.path*
+        is valid and an existing path.
 
-		Args:
-			request (twisted.web.server.Request): HTTP request object
-		Returns:
-			path
-		Raises:
-			ValueError: If contained path value is invalid.
-			IOError: If contained path value is not existing.
-		"""
-		rq_path = urlparse.unquote(request.path)
-		if not rq_path.startswith(self._resource_prefix):
-			raise ValueError("Invalid Request Path {!r}".format(request.path))
+        Args:
+                request (twisted.web.server.Request): HTTP request object
+        Returns:
+                path
+        Raises:
+                ValueError: If contained path value is invalid.
+                IOError: If contained path value is not existing.
+        """
+        rq_path = urlparse.unquote(request.path)
+        if not rq_path.startswith(self._resource_prefix):
+            raise ValueError("Invalid Request Path {!r}".format(request.path))
 
-		file_path = os.path.join(
-			self._root, rq_path[len(self._resource_prefix) + 1:])
-		file_path = re.sub(MANY_SLASHES_REGEX, '/', file_path)
+        file_path = os.path.join(
+            self._root, rq_path[len(self._resource_prefix) + 1:])
+        file_path = re.sub(MANY_SLASHES_REGEX, '/', file_path)
 
-		if not os.path.exists(file_path):
-			raise IOError("Not Found {!r}".format(file_path))
+        if not os.path.exists(file_path):
+            raise IOError("Not Found {!r}".format(file_path))
 
-		return file_path
+        return file_path
 
-	def render_OPTIONS(self, request):
-		"""
-		Render response for an HTTP OPTIONS request.
+    def render_OPTIONS(self, request):
+        """
+        Render response for an HTTP OPTIONS request.
 
-		Example request
+        Example request
 
-			curl -iv --noproxy localhost http://localhost:18888/fs
+                curl -iv --noproxy localhost http://localhost:18888/fs
 
-		Args:
-			request (twisted.web.server.Request): HTTP request object
-		Returns:
-			HTTP response with headers
-		"""
-		for key in CORS_DEFAULT:
-			request.setHeader(key, CORS_DEFAULT[key])
+        Args:
+                request (twisted.web.server.Request): HTTP request object
+        Returns:
+                HTTP response with headers
+        """
+        for key in CORS_DEFAULT:
+            request.setHeader(key, CORS_DEFAULT[key])
 
-		return ''
+        return ''
 
-	def _glob(self, path, pattern='*'):
-		if path == '/':
-			glob_me = '/' + pattern
-		else:
-			glob_me = '/'.join((path, pattern))
-		return glob.iglob(glob_me)
+    def _glob(self, path, pattern='*'):
+        if path == '/':
+            glob_me = '/' + pattern
+        else:
+            glob_me = '/'.join((path, pattern))
+        return glob.iglob(glob_me)
 
-	def render_path_listing(self, request, path):
-		"""
-		Generate a file/folder listing of *path*'s contents.
+    def render_path_listing(self, request, path):
+        """
+        Generate a file/folder listing of *path*'s contents.
 
-		Args:
-			request (twisted.web.server.Request): HTTP request object
-			path: folder location
-		Returns:
-			HTTP response with headers
-		"""
-		response_data = {
-			'result': True,
-			'dirs': [],
-			'files': [],
-		}
+        Args:
+                request (twisted.web.server.Request): HTTP request object
+                path: folder location
+        Returns:
+                HTTP response with headers
+        """
+        response_data = {
+            'result': True,
+            'dirs': [],
+            'files': [],
+        }
 
-		generator = None
-		if "pattern" in request.args:
-			generator = self._glob(path, request.args["pattern"][0])
+        generator = None
+        if "pattern" in request.args:
+            generator = self._glob(path, request.args["pattern"][0])
 
-		if generator is None:
-			generator = self._glob(path)
+        if generator is None:
+            generator = self._glob(path)
 
-		for item in generator:
-			if os.path.isdir(item):
-				response_data['dirs'].append(item)
-			else:
-				response_data['files'].append(item)
+        for item in generator:
+            if os.path.isdir(item):
+                response_data['dirs'].append(item)
+            else:
+                response_data['files'].append(item)
 
-		return json_response(request, response_data)
+        return json_response(request, response_data)
 
-	def render_file(self, request, path):
-		"""
-		Return the contents of file *path*.
+    def render_file(self, request, path):
+        """
+        Return the contents of file *path*.
 
-		Args:
-			request (twisted.web.server.Request): HTTP request object
-			path: file path
-		Returns:
-			HTTP response with headers
-		"""
-		self.log.info("rendering {!r} ...".format(path))
-		result = twisted.web.static.File(
-			path, defaultType="application/octet-stream")
-		expires = 3600 * 24 * 30
-		if path.lower().endswith('.ts'):
-			expires = False
-		self.log.info("rendering {!r}: add cache header".format(path))
-		self._cache(request, expires=expires)
-		self.log.info("rendering {!r}: returning".format(path))
+        Args:
+                request (twisted.web.server.Request): HTTP request object
+                path: file path
+        Returns:
+                HTTP response with headers
+        """
+        self.log.info("rendering {!r} ...".format(path))
+        result = twisted.web.static.File(
+            path, defaultType="application/octet-stream")
+        expires = 3600 * 24 * 30
+        if path.lower().endswith('.ts'):
+            expires = False
+        self.log.info("rendering {!r}: add cache header".format(path))
+        self._cache(request, expires=expires)
+        self.log.info("rendering {!r}: returning".format(path))
 
-		result.render_GET(request)
-		request.finish()
-		return NOT_DONE_YET
+        result.render_GET(request)
+        request.finish()
+        return NOT_DONE_YET
 
-	def render_GET(self, request):
-		"""
-		HTTP GET request handler returning
+    def render_GET(self, request):
+        """
+        HTTP GET request handler returning
 
-			* legacy response if the query *file* or *dir* parameter is set
-			* file contents if *request.path* contains a file path
-			* directory listing if *request.path* contains a folder path
+                * legacy response if the query *file* or *dir* parameter is set
+                * file contents if *request.path* contains a file path
+                * directory listing if *request.path* contains a folder path
 
-		Args:
-			request (twisted.web.server.Request): HTTP request object
-		Returns:
-			HTTP response with headers
-		"""
-		request.setHeader(
-			'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
+        Args:
+                request (twisted.web.server.Request): HTTP request object
+        Returns:
+                HTTP response with headers
+        """
+        request.setHeader(
+            'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
 
-		try:
-			target_path = self._existing_path_or_bust(request)
-		except ValueError as vexc:
-			return self.error_response(
-				request, response_code=http.BAD_REQUEST, message=vexc.message)
-		except IOError as iexc:
-			return self.error_response(
-				request, response_code=http.NOT_FOUND, message=iexc.message)
+        try:
+            target_path = self._existing_path_or_bust(request)
+        except ValueError as vexc:
+            return self.error_response(
+                request, response_code=http.BAD_REQUEST, message=vexc.message)
+        except IOError as iexc:
+            return self.error_response(
+                request, response_code=http.NOT_FOUND, message=iexc.message)
 
-		if os.path.isdir(target_path):
-			return self.render_path_listing(request, target_path)
-		else:
-			return self.render_file(request, target_path)
+        if os.path.isdir(target_path):
+            return self.render_path_listing(request, target_path)
+        else:
+            return self.render_file(request, target_path)
 
-	def render_POST(self, request):
-		"""
-		HTTP POST request handler (currently NOT implemented).
+    def render_POST(self, request):
+        """
+        HTTP POST request handler (currently NOT implemented).
 
-		Args:
-			request (twisted.web.server.Request): HTTP request object
-		Returns:
-			HTTP response with headers
-		"""
-		request.setHeader(
-			'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
+        Args:
+                request (twisted.web.server.Request): HTTP request object
+        Returns:
+                HTTP response with headers
+        """
+        request.setHeader(
+            'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
 
-		try:
-			target_path = self._existing_path_or_bust(request)
-		except ValueError as vexc:
-			return self.error_response(
-				request, response_code=http.BAD_REQUEST, message=vexc.message)
-		except IOError as iexc:
-			return self.error_response(
-				request, response_code=http.NOT_FOUND, message=iexc.message)
+        try:
+            target_path = self._existing_path_or_bust(request)
+        except ValueError as vexc:
+            return self.error_response(
+                request, response_code=http.BAD_REQUEST, message=vexc.message)
+        except IOError as iexc:
+            return self.error_response(
+                request, response_code=http.NOT_FOUND, message=iexc.message)
 
-		if not os.path.isdir(target_path):
-			return self.error_response(
-				request, response_code=http.NOT_IMPLEMENTED,
-				message="Needs to be an existing path")
+        if not os.path.isdir(target_path):
+            return self.error_response(
+                request, response_code=http.NOT_IMPLEMENTED,
+                message="Needs to be an existing path")
 
-		fn_arg = request.args.get("filename", [None])
-		filename_raw = fn_arg[0]
-		if filename_raw:
-			filename = lenient_force_utf_8(filename_raw).split('/')[-1]
-		else:
-			return self.error_response(
-				request, response_code=http.NOT_IMPLEMENTED,
-				message="I really need a filename.")
+        fn_arg = request.args.get("filename", [None])
+        filename_raw = fn_arg[0]
+        if filename_raw:
+            filename = lenient_force_utf_8(filename_raw).split('/')[-1]
+        else:
+            return self.error_response(
+                request, response_code=http.NOT_IMPLEMENTED,
+                message="I really need a filename.")
 
-		if not request.args.get('data'):
-			return self.error_response(
-				request, response_code=http.NOT_IMPLEMENTED,
-				message="I really need data to write.")
+        if not request.args.get('data'):
+            return self.error_response(
+                request, response_code=http.NOT_IMPLEMENTED,
+                message="I really need data to write.")
 
-		target_filename = '/'.join((target_path, filename))
+        target_filename = '/'.join((target_path, filename))
 
-		if os.path.exists(target_filename):
-			return self.error_response(
-				request, response_code=http.NOT_IMPLEMENTED,
-				message="Existing target {!r}".format(target_filename))
+        if os.path.exists(target_filename):
+            return self.error_response(
+                request, response_code=http.NOT_IMPLEMENTED,
+                message="Existing target {!r}".format(target_filename))
 
-		try:
-			dump_upload(request, target_filename)
-		except Exception as exc:
-			return self.error_response(
-				request, response_code=http.INTERNAL_SERVER_ERROR,
-				message=exc.message)
+        try:
+            dump_upload(request, target_filename)
+        except Exception as exc:
+            return self.error_response(
+                request, response_code=http.INTERNAL_SERVER_ERROR,
+                message=exc.message)
 
-		response_data = {
-			'result': True,
-			'filename': target_filename,
-		}
+        response_data = {
+            'result': True,
+            'filename': target_filename,
+        }
 
-		return json_response(request, response_data)
+        return json_response(request, response_data)
 
-	def render_PUT(self, request):
-		"""
-		HTTP PUT request handler (currently NOT implemented).
+    def render_PUT(self, request):
+        """
+        HTTP PUT request handler (currently NOT implemented).
 
-		Args:
-			request (twisted.web.server.Request): HTTP request object
-		Returns:
-			HTTP response with headers
-		"""
-		request.setHeader(
-			'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
-		return self.error_response(request, response_code=http.NOT_IMPLEMENTED)
+        Args:
+                request (twisted.web.server.Request): HTTP request object
+        Returns:
+                HTTP response with headers
+        """
+        request.setHeader(
+            'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
+        return self.error_response(request, response_code=http.NOT_IMPLEMENTED)
 
-	def render_DELETE(self, request):
-		"""
-		HTTP DELETE request handler which may try to delete a file if its
-		path's prefix is in :py:data:`FileController._delete_whitelist` and
-		:py:data:`FileController._do_delete` is True.
+    def render_DELETE(self, request):
+        """
+        HTTP DELETE request handler which may try to delete a file if its
+        path's prefix is in :py:data:`FileController._delete_whitelist` and
+        :py:data:`FileController._do_delete` is True.
 
-		Args:
-			request (twisted.web.server.Request): HTTP request object
-		Returns:
-			HTTP response with headers
-		"""
-		request.setHeader(
-			'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
+        Args:
+                request (twisted.web.server.Request): HTTP request object
+        Returns:
+                HTTP response with headers
+        """
+        request.setHeader(
+            'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
 
-		try:
-			target_path = self._existing_path_or_bust(request)
-		except ValueError as vexc:
-			return self.error_response(
-				request, response_code=http.BAD_REQUEST, message=vexc.message)
-		except IOError as iexc:
-			return self.error_response(
-				request, response_code=http.NOT_FOUND, message=iexc.message)
+        try:
+            target_path = self._existing_path_or_bust(request)
+        except ValueError as vexc:
+            return self.error_response(
+                request, response_code=http.BAD_REQUEST, message=vexc.message)
+        except IOError as iexc:
+            return self.error_response(
+                request, response_code=http.NOT_FOUND, message=iexc.message)
 
-		if os.path.isdir(target_path):
-			return self.error_response(
-				request, response_code=http.NOT_IMPLEMENTED,
-				message='Will not remove folder {!r}'.format(target_path))
+        if os.path.isdir(target_path):
+            return self.error_response(
+                request, response_code=http.NOT_IMPLEMENTED,
+                message='Will not remove folder {!r}'.format(target_path))
 
-		for prefix in self._delete_whitelist:
-			if not target_path.startswith(os.path.abspath(prefix)):
-				return self.error_response(request,
-										   response_code=http.FORBIDDEN)
+        for prefix in self._delete_whitelist:
+            if not target_path.startswith(os.path.abspath(prefix)):
+                return self.error_response(request,
+                                           response_code=http.FORBIDDEN)
 
-		response_data = {'result': False}
-		try:
-			response_data['result'] = True
-			if self._do_delete:
-				os.unlink(target_path)
-				message = 'Removed {!r}'.format(target_path)
-			else:
-				message = 'WOULD remove {!r}'.format(target_path)
-			response_data['message'] = message
-		except Exception as eexc:
-			response_data['message'] = 'Cannot remove {!r}: {!s}'.format(
-				target_path, eexc.message)
-			request.setResponseCode(http.INTERNAL_SERVER_ERROR)
+        response_data = {'result': False}
+        try:
+            response_data['result'] = True
+            if self._do_delete:
+                os.unlink(target_path)
+                message = 'Removed {!r}'.format(target_path)
+            else:
+                message = 'WOULD remove {!r}'.format(target_path)
+            response_data['message'] = message
+        except Exception as eexc:
+            response_data['message'] = 'Cannot remove {!r}: {!s}'.format(
+                target_path, eexc.message)
+            request.setResponseCode(http.INTERNAL_SERVER_ERROR)
 
-		return json_response(request, response_data)
+        return json_response(request, response_data)
 
 
 if __name__ == '__main__':
-	from twisted.web.resource import Resource, EncodingResourceWrapper
-	from twisted.web.server import Site, GzipEncoderFactory
-	from twisted.internet import reactor
+    from twisted.web.resource import Resource, EncodingResourceWrapper
+    from twisted.web.server import Site, GzipEncoderFactory
+    from twisted.internet import reactor
 
-	# standard factory example
-	factory_s = Site(RESTFilesystemController(DEFAULT_ROOT_PATH))
+    # standard factory example
+    factory_s = Site(RESTFilesystemController(DEFAULT_ROOT_PATH))
 
-	# experimental factory
-	root = Resource()
-	root.putChild("/", RESTFilesystemController)
-	root.putChild("/fs", RESTFilesystemController)
-	factory_r = Site(root)
+    # experimental factory
+    root = Resource()
+    root.putChild("/", RESTFilesystemController)
+    root.putChild("/fs", RESTFilesystemController)
+    factory_r = Site(root)
 
-	#  experimental factory: enable gzip compression
-	wrapped = EncodingResourceWrapper(
-		RESTFilesystemController(
-			root=DEFAULT_ROOT_PATH,
-			# DANGER, WILL ROBINSON! These values allow deletion of ALL files!
-			do_delete=True, delete_whitelist=[]
-		),
-		[GzipEncoderFactory()])
-	factory_s_gz = Site(wrapped)
+    #  experimental factory: enable gzip compression
+    wrapped = EncodingResourceWrapper(
+        RESTFilesystemController(
+            root=DEFAULT_ROOT_PATH,
+            # DANGER, WILL ROBINSON! These values allow deletion of ALL files!
+            do_delete=True, delete_whitelist=[]
+        ),
+        [GzipEncoderFactory()])
+    factory_s_gz = Site(wrapped)
 
-	reactor.listenTCP(18888, factory_s_gz)
-	reactor.run()
+    reactor.listenTCP(18888, factory_s_gz)
+    reactor.run()

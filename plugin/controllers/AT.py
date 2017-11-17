@@ -10,43 +10,44 @@
 ##############################################################################
 from twisted.web import resource, http
 
+
 class ATController(resource.Resource):
-	def __init__(self, session):
-		resource.Resource.__init__(self)
-		self.session = session
+    def __init__(self, session):
+        resource.Resource.__init__(self)
+        self.session = session
 
-		try:
-			from Plugins.Extensions.AutoTimer.AutoTimerResource import AutoTimerDoParseResource, \
-			AutoTimerAddOrEditAutoTimerResource, AutoTimerChangeSettingsResource, \
-			AutoTimerRemoveAutoTimerResource, AutoTimerSettingsResource, \
-			AutoTimerSimulateResource
-		except ImportError:
-			#print "AT plugin not found"
-			return
-		self.putChild('parse', AutoTimerDoParseResource())
-		self.putChild('remove', AutoTimerRemoveAutoTimerResource())
-		self.putChild('edit', AutoTimerAddOrEditAutoTimerResource())
-		self.putChild('get', AutoTimerSettingsResource())
-		self.putChild('set', AutoTimerChangeSettingsResource())
-		self.putChild('simulate', AutoTimerSimulateResource())
-		try:
-			from Plugins.Extensions.AutoTimer.AutoTimerResource import AutoTimerTestResource
-			self.putChild('test', AutoTimerTestResource())
-		except ImportError:
-			# this is not an error
-			pass
+        try:
+            from Plugins.Extensions.AutoTimer.AutoTimerResource import AutoTimerDoParseResource, \
+                AutoTimerAddOrEditAutoTimerResource, AutoTimerChangeSettingsResource, \
+                AutoTimerRemoveAutoTimerResource, AutoTimerSettingsResource, \
+                AutoTimerSimulateResource
+        except ImportError:
+            # print "AT plugin not found"
+            return
+        self.putChild('parse', AutoTimerDoParseResource())
+        self.putChild('remove', AutoTimerRemoveAutoTimerResource())
+        self.putChild('edit', AutoTimerAddOrEditAutoTimerResource())
+        self.putChild('get', AutoTimerSettingsResource())
+        self.putChild('set', AutoTimerChangeSettingsResource())
+        self.putChild('simulate', AutoTimerSimulateResource())
+        try:
+            from Plugins.Extensions.AutoTimer.AutoTimerResource import AutoTimerTestResource
+            self.putChild('test', AutoTimerTestResource())
+        except ImportError:
+            # this is not an error
+            pass
 
-	def render(self, request):
-		request.setResponseCode(http.OK)
-		request.setHeader('Content-type', 'application/xhtml+xml')
-		request.setHeader('charset', 'UTF-8')
-		try:
-			from Plugins.Extensions.AutoTimer.plugin import autotimer
-			try:
-				if autotimer is not None:
-					autotimer.readXml()
-					return ''.join(autotimer.getXml())
-			except Exception:
-				return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2state>false</e2state><e2statetext>AutoTimer Config not found</e2statetext></e2simplexmlresult>'
-		except ImportError:
-			return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2state>false</e2state><e2statetext>AutoTimer Plugin not found</e2statetext></e2simplexmlresult>'
+    def render(self, request):
+        request.setResponseCode(http.OK)
+        request.setHeader('Content-type', 'application/xhtml+xml')
+        request.setHeader('charset', 'UTF-8')
+        try:
+            from Plugins.Extensions.AutoTimer.plugin import autotimer
+            try:
+                if autotimer is not None:
+                    autotimer.readXml()
+                    return ''.join(autotimer.getXml())
+            except Exception:
+                return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2state>false</e2state><e2statetext>AutoTimer Config not found</e2statetext></e2simplexmlresult>'
+        except ImportError:
+            return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2state>false</e2state><e2statetext>AutoTimer Plugin not found</e2statetext></e2simplexmlresult>'

@@ -12,37 +12,39 @@ from twisted.web import resource, http
 
 
 class ERController(resource.Resource):
-	def __init__(self, session):
-		resource.Resource.__init__(self)
-		self.session = session
+    def __init__(self, session):
+        resource.Resource.__init__(self)
+        self.session = session
 
-		try:
-			from Plugins.Extensions.EPGRefresh.EPGRefreshResource import EPGRefreshSettingsResource, \
-			EPGRefreshChangeSettingsResource, \
-			EPGRefreshListServicesResource, EPGRefreshAddRemoveServiceResource, \
-			EPGRefreshStartRefreshResource, API_VERSION
-		except ImportError:
-			print "EPG Refresh Plugin not found"
-			return
-		self.putChild('get', EPGRefreshSettingsResource())
-		self.putChild('set', EPGRefreshChangeSettingsResource())
-		self.putChild('refresh', EPGRefreshStartRefreshResource())
-		self.putChild('add', EPGRefreshAddRemoveServiceResource(EPGRefreshAddRemoveServiceResource.TYPE_ADD))
-		self.putChild('del', EPGRefreshAddRemoveServiceResource(EPGRefreshAddRemoveServiceResource.TYPE_DEL))
-		try:
-			from Plugins.Extensions.EPGRefresh.EPGRefreshResource import EPGRefreshPreviewServicesResource
-		except ImportError:
-			pass
-		else:
-			self.putChild('preview', EPGRefreshPreviewServicesResource())
+        try:
+            from Plugins.Extensions.EPGRefresh.EPGRefreshResource import EPGRefreshSettingsResource, \
+                EPGRefreshChangeSettingsResource, \
+                EPGRefreshListServicesResource, EPGRefreshAddRemoveServiceResource, \
+                EPGRefreshStartRefreshResource, API_VERSION
+        except ImportError:
+            print "EPG Refresh Plugin not found"
+            return
+        self.putChild('get', EPGRefreshSettingsResource())
+        self.putChild('set', EPGRefreshChangeSettingsResource())
+        self.putChild('refresh', EPGRefreshStartRefreshResource())
+        self.putChild('add', EPGRefreshAddRemoveServiceResource(
+            EPGRefreshAddRemoveServiceResource.TYPE_ADD))
+        self.putChild('del', EPGRefreshAddRemoveServiceResource(
+            EPGRefreshAddRemoveServiceResource.TYPE_DEL))
+        try:
+            from Plugins.Extensions.EPGRefresh.EPGRefreshResource import EPGRefreshPreviewServicesResource
+        except ImportError:
+            pass
+        else:
+            self.putChild('preview', EPGRefreshPreviewServicesResource())
 
-	def render(self, request):
-		request.setResponseCode(http.OK)
-		request.setHeader('Content-type', 'application/xhtml+xml')
-		request.setHeader('charset', 'UTF-8')
+    def render(self, request):
+        request.setResponseCode(http.OK)
+        request.setHeader('Content-type', 'application/xhtml+xml')
+        request.setHeader('charset', 'UTF-8')
 
-		try:
-			from Plugins.Extensions.EPGRefresh.EPGRefresh import epgrefresh
-			return ''.join(epgrefresh.buildConfiguration(webif = True))
-		except ImportError:
-			return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2state>false</e2state><e2statetext>EPG Refresh Plugin not found</e2statetext></e2simplexmlresult>'
+        try:
+            from Plugins.Extensions.EPGRefresh.EPGRefresh import epgrefresh
+            return ''.join(epgrefresh.buildConfiguration(webif=True))
+        except ImportError:
+            return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2state>false</e2state><e2statetext>EPG Refresh Plugin not found</e2statetext></e2simplexmlresult>'

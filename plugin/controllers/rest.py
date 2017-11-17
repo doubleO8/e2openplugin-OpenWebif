@@ -55,7 +55,8 @@ class RESTControllerSkeleton(resource.Resource):
             method_name = 'render_{:s}'.format(verb)
             if hasattr(self, method_name):
                 http_verbs.append(verb)
-        self._cors_header['Access-Control-Allow-Methods'] = ','.join(http_verbs)
+        self._cors_header['Access-Control-Allow-Methods'] = ','.join(
+            http_verbs)
 
     def render_OPTIONS(self, request):
         """
@@ -121,6 +122,7 @@ class SimpleRootController(resource.Resource):
         resource.Resource.__init__(self)
         self.putChild("demo", RESTControllerSkeleton())
         self.putChild("", RESTControllerSkeleton())
+
 
 if __name__ == '__main__':
     from twisted.web.server import Site

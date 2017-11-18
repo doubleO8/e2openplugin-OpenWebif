@@ -19,14 +19,18 @@ from Components.ParentalControl import parentalControl
 from Components.config import config
 from Components.NimManager import nimmanager
 from ServiceReference import ServiceReference
-from Screens.ChannelSelection import service_types_tv, service_types_radio, FLAG_SERVICE_NEW_FOUND
-from enigma import eServiceCenter, eServiceReference, iServiceInformation, eEPGCache, getBestPlayableServiceReference
+from Screens.ChannelSelection import service_types_tv, service_types_radio, \
+    FLAG_SERVICE_NEW_FOUND
+from enigma import eServiceCenter, eServiceReference, \
+    iServiceInformation, eEPGCache
 from info import getPiconPath, GetWithAlternative, getOrbitalText
 # using the tstrings dic is faster than translating with _ func from __init__
 from Plugins.Extensions.OpenWebif.local import tstrings
 from Plugins.Extensions.OpenWebif.controllers.utilities import parse_servicereference, SERVICE_TYPE_LOOKUP, NS_LOOKUP
 
 from model_utilities import mangle_epg_text
+from epg import FLAGS_WEB
+
 try:
     from collections import OrderedDict
 except ImportError:
@@ -664,7 +668,7 @@ def getBouquetEpg(ref, begintime=-1, endtime=None):
     if not services:
         return {"events": ret, "result": False}
 
-    search = ['IBDCTSERN']
+    search = [FLAGS_WEB]
     for service in services.getContent('S'):
         if endtime:
             search.append((service, 0, begintime, endtime))
@@ -696,7 +700,7 @@ def getServicesNowNextEpg(sList):
         return {"events": ret, "result": False}
 
     sRefList = sList.split(",")
-    search = ['IBDCTSERNX']
+    search = [FLAGS_WEB]
     for service in sRefList:
         search.append((service, 0, -1))
         search.append((service, 1, -1))
@@ -731,7 +735,7 @@ def getBouquetNowNextEpg(ref, servicetype):
     if not services:
         return {"events": ret, "result": False}
 
-    search = ['IBDCTSERNX']
+    search = [FLAGS_WEB]
     if servicetype == -1:
         for service in services.getContent('S'):
             search.append((service, 0, -1))
@@ -767,7 +771,7 @@ def getNowNextEpg(ref, servicetype):
     ref = unquote(ref)
     ret = []
     epgcache = eEPGCache.getInstance()
-    events = epgcache.lookupEvent(['IBDCTSERNX', (ref, servicetype, -1)])
+    events = epgcache.lookupEvent([FLAGS_WEB, (ref, servicetype, -1)])
     if events is not None:
         for event in events:
             ev = {}

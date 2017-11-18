@@ -18,11 +18,11 @@
 
 from Screens.Screen import Screen
 from Plugins.Plugin import PluginDescriptor
-from Screens.MessageBox import MessageBox
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.ConfigList import ConfigListScreen
-from Components.config import config, getConfigListEntry, ConfigSubsection, ConfigInteger, ConfigYesNo, ConfigText, ConfigSelection
+from Components.config import config, getConfigListEntry, ConfigSubsection, \
+    ConfigInteger, ConfigYesNo, ConfigText, ConfigSelection
 from enigma import getDesktop
 from controllers.models.info import getInfo
 
@@ -92,7 +92,6 @@ config.OpenWebif.no_root_access = ConfigYesNo(default=False)
 config.OpenWebif.local_access_only = ConfigSelection(
     default=' ', choices=[' '])
 config.OpenWebif.vpn_access = ConfigYesNo(default=False)
-config.OpenWebif.allow_upload_ipk = ConfigYesNo(default=False)
 # encoding of EPG data
 config.OpenWebif.epg_encoding = ConfigSelection(
     default='utf-8',
@@ -117,14 +116,14 @@ imagedistro = getInfo()['imagedistro']
 
 class OpenWebifConfig(Screen, ConfigListScreen):
     skin = """
-	<screen position="center,center" size="700,340" title="OpenWebif Configuration">
-		<widget name="lab1" position="10,30" halign="center" size="680,60" zPosition="1" font="Regular;24" valign="top" transparent="1" />
-		<widget name="config" position="10,100" size="680,180" scrollbarMode="showOnDemand" />
-		<ePixmap position="140,290" size="140,40" pixmap="skin_default/buttons/red.png" alphatest="on" />
-		<widget name="key_red" position="140,290" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="red" transparent="1" />
-		<ePixmap position="420,290" size="140,40" pixmap="skin_default/buttons/green.png" alphatest="on" zPosition="1" />
-		<widget name="key_green" position="420,290" zPosition="2" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="green" transparent="1" />
-	</screen>"""
+    <screen position="center,center" size="700,340" title="OpenWebif Configuration">
+        <widget name="lab1" position="10,30" halign="center" size="680,60" zPosition="1" font="Regular;24" valign="top" transparent="1" />
+        <widget name="config" position="10,100" size="680,180" scrollbarMode="showOnDemand" />
+        <ePixmap position="140,290" size="140,40" pixmap="skin_default/buttons/red.png" alphatest="on" />
+        <widget name="key_red" position="140,290" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="red" transparent="1" />
+        <ePixmap position="420,290" size="140,40" pixmap="skin_default/buttons/green.png" alphatest="on" zPosition="1" />
+        <widget name="key_green" position="420,290" zPosition="2" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="green" transparent="1" />
+    </screen>"""
 
     def __init__(self, session):
         self.skin = OpenWebifConfig.skin
@@ -219,15 +218,12 @@ class OpenWebifConfig(Screen, ConfigListScreen):
                 getConfigListEntry(
                     _("Add service name to stream information"),
                     config.OpenWebif.service_name_for_stream))
-            if imagedistro in ("VTi-Team Image"):
+
+            if imagedistro in ("VTi-Team Image", ):
                 self.list.append(
                     getConfigListEntry(
                         _("Character encoding for EPG data"),
                         config.OpenWebif.epg_encoding))
-            self.list.append(
-                getConfigListEntry(
-                    _("Allow IPK Upload"),
-                    config.OpenWebif.allow_upload_ipk))
 
         self["config"].list = self.list
         self["config"].l.setList(self.list)

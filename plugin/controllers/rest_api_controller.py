@@ -42,8 +42,10 @@ class ApiController(resource.Resource):
 
     def __init__(self, session, path="", *args, **kwargs):
         resource.Resource.__init__(self)
-        self.putChild("saveconfig",
-                      SaveConfigApiController(session=session, path=path))
+        saveconfig_controller_instance = EncodingResourceWrapper(
+            SaveConfigApiController(session=session, path=path),
+            [GzipEncoderFactory()])
+        self.putChild("saveconfig", saveconfig_controller_instance)
 
         #: web controller instance
         self.web_instance = WebController(session, path)

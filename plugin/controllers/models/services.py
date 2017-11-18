@@ -639,7 +639,6 @@ def getChannelEpg(ref, begintime=-1, endtime=-1):
 
 
 def getBouquetEpg(ref, begintime=-1, endtime=None, mangle_html=True):
-    ref = unquote(ref)
     ret = []
     services = eServiceCenter.getInstance().list(eServiceReference(ref))
     if not services:
@@ -659,7 +658,7 @@ def getBouquetEpg(ref, begintime=-1, endtime=None, mangle_html=True):
 
     for raw_data in events:
         ret.append(ServicesEventDict(
-            raw_data, now_next_mode=True, mangle_html=mangle_html))
+            raw_data, now_next_mode=False, mangle_html=mangle_html))
 
     return {"events": ret, "result": True}
 
@@ -688,7 +687,6 @@ def getServicesNowNextEpg(sList, mangle_html=True):
 
 
 def getBouquetNowNextEpg(ref, servicetype, mangle_html=True):
-    ref = unquote(ref)
     ret = []
     services = eServiceCenter.getInstance().list(eServiceReference(ref))
     if not services:
@@ -711,7 +709,7 @@ def getBouquetNowNextEpg(ref, servicetype, mangle_html=True):
 
     for raw_data in events:
         e_data = ServicesEventDict(
-            raw_data, now_next_mode=True, mangle_html=mangle_html)
+            raw_data, now_next_mode=False, mangle_html=mangle_html)
         if e_data['sref'] is not None:
             achannels = GetWithAlternative(e_data['sref'], False)
             if achannels:

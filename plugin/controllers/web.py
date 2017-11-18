@@ -251,7 +251,6 @@ class WebController(BaseController):
         return getCurrentLocation()
 
     def P_getallservices(self, request):
-        self.isGZ = True
         type = "tv"
         if "type" in request.args.keys():
             type = "radio"
@@ -274,7 +273,6 @@ class WebController(BaseController):
             hidden = request.args["hidden"][0] == "1"
         else:
             hidden = False
-        self.isGZ = True
         return getServices(sRef, True, hidden)
 
     def P_servicesm3u(self, request):
@@ -311,7 +309,7 @@ class WebController(BaseController):
         sRefPlaying = ""
         if "sRefPlaying" in request.args.keys():
             sRefPlaying = request.args["sRefPlaying"][0]
-        self.isGZ = True
+
         return getPlayableServices(sRef, sRefPlaying)
 
     def P_serviceplayable(self, request):
@@ -377,7 +375,6 @@ class WebController(BaseController):
         return getMessageAnswer()
 
     def P_movielist(self, request):
-        self.isGZ = True
         if self.isJson:
             request.setHeader(
                 "content-type",
@@ -385,7 +382,6 @@ class WebController(BaseController):
         return getMovieList(request.args)
 
     def P_fullmovielist(self, request):
-        self.isGZ = True
         return getAllMovies()
 
     def P_movielisthtml(self, request):
@@ -492,7 +488,6 @@ class WebController(BaseController):
     def P_timerlist(self, request):
         ret = getTimers(self.session)
         ret["locations"] = config.movielist.videodirs.value
-        self.isGZ = True
         return ret
 
     def P_timeradd(self, request):
@@ -785,7 +780,6 @@ class WebController(BaseController):
                 begintime = int(request.args["time"][0])
             except ValueError:
                 pass
-        self.isGZ = True
         return getBouquetEpg(request.args["bRef"][0], begintime)
 
     def P_epgmulti(self, request):
@@ -806,28 +800,24 @@ class WebController(BaseController):
                 endtime = int(request.args["endTime"][0])
             except ValueError:
                 pass
-        self.isGZ = True
         return getBouquetEpg(request.args["bRef"][0], begintime, endtime)
 
     def P_epgnow(self, request):
         res = self.testMandatoryArguments(request, ["bRef"])
         if res:
             return res
-        self.isGZ = True
         return getBouquetNowNextEpg(request.args["bRef"][0], 0)
 
     def P_epgnext(self, request):
         res = self.testMandatoryArguments(request, ["bRef"])
         if res:
             return res
-        self.isGZ = True
         return getBouquetNowNextEpg(request.args["bRef"][0], 1)
 
     def P_epgnownext(self, request):
         res = self.testMandatoryArguments(request, ["bRef"])
         if res:
             return res
-        self.isGZ = True
         info = getCurrentService(self.session)
         ret = getBouquetNowNextEpg(request.args["bRef"][0], -1)
         ret["info"] = info
@@ -837,12 +827,10 @@ class WebController(BaseController):
         res = self.testMandatoryArguments(request, ["sList"])
         if res:
             return res
-        self.isGZ = True
         ret = getServicesNowNextEpg(request.args["sList"][0])
         return ret
 
     def P_epgsearch(self, request):
-        self.isGZ = True
         if "search" in request.args.keys():
             endtime = None
             if "endtime" in request.args.keys():
@@ -896,7 +884,6 @@ class WebController(BaseController):
                 endtime = int(request.args["endTime"][0])
             except ValueError:
                 pass
-        self.isGZ = True
         return getChannelEpg(request.args["sRef"][0], begintime, endtime)
 
     def P_epgservicenow(self, request):

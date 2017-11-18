@@ -20,7 +20,6 @@ from base import BaseController
 from web import WebController
 from ajax import AjaxController
 from SR import SRController
-from ER import ERController
 from transcoding import TranscodingController
 from file import FileController
 import rest_fs_access

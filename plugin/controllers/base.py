@@ -276,12 +276,6 @@ class BaseController(resource.Resource):
                 extras.append({'key': url, 'description': _(
                     "OSCam Webinterface"), 'nw': '1'})
 
-        try:
-            from Plugins.Extensions.EPGRefresh.EPGRefresh import epgrefresh
-            extras.append({'key': 'ajax/epgr', 'description': _('EPGRefresh')})
-        except ImportError:
-            pass
-
         ret['extras'] = extras
         theme = 'original'
 

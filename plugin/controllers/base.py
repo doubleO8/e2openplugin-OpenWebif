@@ -46,10 +46,18 @@ except BaseException:
 
 try:
     from Components.RcModel import rc_model
+
     REMOTE = rc_model.getRcFolder() + "/remote"
 except BaseException:
     from models.owibranding import rc_model
+
     REMOTE = rc_model().getRcFolder()
+
+FOUR_O_FOUR = """
+<html><head><title>Open Webif</title></head>
+<body><h1>Error 404: Page not found</h1><br/>
+The requested URL was not found on this server.</body></html>
+"""
 
 
 class BaseController(resource.Resource):
@@ -75,31 +83,34 @@ class BaseController(resource.Resource):
     def error404(self, request):
         request.setHeader("content-type", "text/html")
         request.setResponseCode(http.NOT_FOUND)
-        request.write("<html><head><title>Open Webif</title></head><body><h1>Error 404: Page not found</h1><br />The requested URL was not found on this server.</body></html>")
+        request.write(FOUR_O_FOUR)
         request.finish()
 
     def loadTemplate(self, path, module, args):
-        if fileExists(
-            getViewsPath(
-                path +
-                ".py")) or fileExists(
-            getViewsPath(
-                path +
-                ".pyo")):
-            if fileExists(getViewsPath(path + ".pyo")):
-                template = imp.load_compiled(
-                    module, getViewsPath(path + ".pyo"))
+        trunk = getViewsPath(path)
+        template_file = None
+
+        for ext in ('pyo', 'py', 'tmpl'):
+            candy = '.'.join((trunk, ext))
+            if os.path.isfile(candy):
+                template_file = candy
+                break
+
+        if template_file is None:
+            return None
+
+        if template_file[-1] in ('o', 'y'):
+            if template_file.endswith("o"):
+                template = imp.load_compiled(module, template_file)
             else:
-                template = imp.load_source(module, getViewsPath(path + ".py"))
+                template = imp.load_source(module, template_file)
+
             mod = getattr(template, module, None)
             if callable(mod):
                 return str(mod(searchList=args))
-        elif fileExists(getViewsPath(path + ".tmpl")):
-            return str(
-                Template(
-                    file=getViewsPath(
-                        path + ".tmpl"),
-                    searchList=[args]))
+        else:
+            return str(Template(file=template_file, searchList=[args]))
+
         return None
 
     def getChild(self, path, request):
@@ -148,7 +159,8 @@ class BaseController(resource.Resource):
                 module = module.replace(".", "")
                 out = self.loadTemplate(module, self.path, data)
                 if out is None:
-                    self.log.error("Template not found for page {!r}".format(request.uri))
+                    self.log.error("Template not found for page {!r}".format(
+                        request.uri))
                     self.error404(request)
                 else:
                     if self.withMainTemplate:
@@ -226,17 +238,18 @@ class BaseController(resource.Resource):
                 ip_list[0], ip_list[1], ip_list[2], ip_list[3])
 
             if fileExists(
-                resolveFilename(
-                    SCOPE_PLUGINS,
-                    "Extensions/LCD4linux/WebSite.pyo")):
-                lcd4linux_key = "lcd4linux/config"
-                if fileExists(
                     resolveFilename(
                         SCOPE_PLUGINS,
-                        "Extensions/WebInterface/plugin.pyo")):
+                        "Extensions/LCD4linux/WebSite.pyo")):
+                lcd4linux_key = "lcd4linux/config"
+                if fileExists(
+                        resolveFilename(
+                            SCOPE_PLUGINS,
+                            "Extensions/WebInterface/plugin.pyo")):
                     try:
                         lcd4linux_port = "http://" + ip + ":" + \
-                            str(config.plugins.Webinterface.http.port.value) + "/"
+                                         str(
+                                             config.plugins.Webinterface.http.port.value) + "/"
                         lcd4linux_key = lcd4linux_port + 'lcd4linux/config'
                     except KeyError:
                         lcd4linux_key = None
@@ -246,7 +259,7 @@ class BaseController(resource.Resource):
 
         oscamconf = self.oscamconfPath()
         if oscamconf is not None:
-            self.log.info("Reading oscam conf {!r}".format(oscamconf))
+            # self.log.info("Reading oscam conf {!r}".format(oscamconf))
             data = open(oscamconf, "r").readlines()
             proto = "http"
             port = None

@@ -744,17 +744,17 @@ def getBouquetNowNextEpg(ref, servicetype):
     return {"events": ret, "result": True}
 
 
-def getNowNextEpg(ref, servicetype):
-    ref = unquote(ref)
+def getNowNextEpg(ref, servicetype, mangle_html=True):
     ret = []
     epgcache = eEPGCache.getInstance()
     events = epgcache.lookupEvent([FLAGS_WEB, (ref, servicetype, -1)])
+
     if not events:
         return {"events": [], "result": True}
 
     for raw_data in events:
-        ret.append(ServicesEventDict(raw_data,
-                                     now_next_mode=True, mangle_html=True))
+        ret.append(ServicesEventDict(
+            raw_data, now_next_mode=True, mangle_html=mangle_html))
 
     return {"events": ret, "result": True}
 

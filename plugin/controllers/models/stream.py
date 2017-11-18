@@ -73,17 +73,17 @@ def getStream(session, request, m3ufile):
     transcoder_port = None
     args = ""
     if model in (
-        "Uno4K",
-        "Ultimo4K",
-        "Solo4K",
-        "Solo²",
-        "Duo²",
-        "Solo SE",
-        "Quad",
-        "Quad Plus") or machinebuild in (
-        'dags7356',
-        'dags7252',
-        'gb7252',
+            "Uno4K",
+            "Ultimo4K",
+            "Solo4K",
+            "Solo²",
+            "Duo²",
+            "Solo SE",
+            "Quad",
+            "Quad Plus") or machinebuild in (
+            'dags7356',
+            'dags7252',
+            'gb7252',
             'gb7356'):
         try:
             transcoder_port = int(config.plugins.transcodingsetup.port.value)
@@ -100,11 +100,11 @@ def getStream(session, request, m3ufile):
     # INI use dynamic encoder allocation, and each stream can have diffrent
     # parameters
     if machinebuild in (
-        'inihdp',
-        'hd2400',
-        'et10000',
-        'et13000',
-        'sf5008',
+            'inihdp',
+            'hd2400',
+            'et10000',
+            'et13000',
+            'sf5008',
             '8100s'):
         transcoder_port = 8001
         if "device" in request.args:
@@ -155,14 +155,15 @@ def getTS(self, request):
         if not os.path.exists(filename):
             return "File '%s' not found" % (filename)
 
-#	ServiceReference is not part of filename so look in the '.ts.meta' file
+        # ServiceReference is not part of filename so look in
+        # the '.ts.meta' file
         sRef = ""
         progopt = ''
 
         if os.path.exists(filename + '.meta'):
             metafile = open(filename + '.meta', "r")
             name = ''
-            seconds = -1 				# unknown duration default
+            seconds = -1  # unknown duration default
             line = metafile.readline()  # service ref
             if line:
                 sRef = eServiceReference(line.strip()).toString()
@@ -216,11 +217,11 @@ def getTS(self, request):
         # INI use dynamic encoder allocation, and each stream can have diffrent
         # parameters
         if machinebuild in (
-            'inihdp',
-            'hd2400',
-            'et10000',
-            'et13000',
-            'sf5008',
+                'inihdp',
+                'hd2400',
+                'et10000',
+                'et13000',
+                'sf5008',
                 '8100s'):
             if "device" in request.args:
                 if request.args["device"][0] == "phone":
@@ -255,7 +256,8 @@ def getTS(self, request):
                 portNumber = m.group(1)
 
         response = "#EXTM3U \n#EXTVLCOPT--http-reconnect=true \n%s%s://%s:%s/file?file=%s%s\n" % (
-            (progopt, proto, request.getRequestHostname(), portNumber, quote(filename), args))
+            (progopt, proto, request.getRequestHostname(), portNumber,
+             quote(filename), args))
         request.setHeader('Content-Type', 'application/x-mpegurl')
         return response
     else:

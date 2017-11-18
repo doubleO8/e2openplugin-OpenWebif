@@ -26,7 +26,8 @@ from enigma import eServiceCenter, eServiceReference, \
 from info import getPiconPath, GetWithAlternative, getOrbitalText
 # using the tstrings dic is faster than translating with _ func from __init__
 from Plugins.Extensions.OpenWebif.local import tstrings
-from Plugins.Extensions.OpenWebif.controllers.utilities import parse_servicereference, SERVICE_TYPE_LOOKUP, NS_LOOKUP
+from Plugins.Extensions.OpenWebif.controllers.utilities import \
+    parse_servicereference, SERVICE_TYPE_LOOKUP, NS_LOOKUP
 
 from model_utilities import mangle_epg_text
 from epg import FLAGS_WEB, ServicesEventDict, convertDesc, filterName
@@ -35,7 +36,6 @@ try:
     from collections import OrderedDict
 except ImportError:
     from Plugins.Extensions.OpenWebif.backport.OrderedDict import OrderedDict
-
 
 
 def getServiceInfoString(info, what):
@@ -53,11 +53,15 @@ def getCurrentService(session):
         return {
             "result": True,
             "name": filterName(info.getName()),
-            "namespace": getServiceInfoString(info, iServiceInformation.sNamespace),
+            "namespace": getServiceInfoString(info,
+                                              iServiceInformation.sNamespace),
             "aspect": getServiceInfoString(info, iServiceInformation.sAspect),
-            "provider": getServiceInfoString(info, iServiceInformation.sProvider),
-            "width": getServiceInfoString(info, iServiceInformation.sVideoWidth),
-            "height": getServiceInfoString(info, iServiceInformation.sVideoHeight),
+            "provider": getServiceInfoString(info,
+                                             iServiceInformation.sProvider),
+            "width": getServiceInfoString(info,
+                                          iServiceInformation.sVideoWidth),
+            "height": getServiceInfoString(info,
+                                           iServiceInformation.sVideoHeight),
             "apid": getServiceInfoString(info, iServiceInformation.sAudioPID),
             "vpid": getServiceInfoString(info, iServiceInformation.sVideoPID),
             "pcrpid": getServiceInfoString(info, iServiceInformation.sPCRPID),
@@ -66,8 +70,11 @@ def getCurrentService(session):
             "tsid": getServiceInfoString(info, iServiceInformation.sTSID),
             "onid": getServiceInfoString(info, iServiceInformation.sONID),
             "sid": getServiceInfoString(info, iServiceInformation.sSID),
-            "ref": quote(getServiceInfoString(info, iServiceInformation.sServiceref), safe=' ~@#$&()*!+=:;,.?/\''),
-            "iswidescreen": info.getInfo(iServiceInformation.sAspect) in (3, 4, 7, 8, 0xB, 0xC, 0xF, 0x10)
+            "ref": quote(
+                getServiceInfoString(info, iServiceInformation.sServiceref),
+                safe=' ~@#$&()*!+=:;,.?/\''),
+            "iswidescreen": info.getInfo(iServiceInformation.sAspect) in (
+            3, 4, 7, 8, 0xB, 0xC, 0xF, 0x10)
         }
     except Exception as e:
         return {
@@ -274,7 +281,8 @@ def getSatellites(stype):
             if service.getPath().find("FROM PROVIDER") != -1:
                 #				service_type = _("Providers")
                 continue
-            elif service.getPath().find("flags == %d" % (FLAG_SERVICE_NEW_FOUND)) != -1:
+            elif service.getPath().find(
+                            "flags == %d" % (FLAG_SERVICE_NEW_FOUND)) != -1:
                 service_type = _("New")
             else:
                 service_type = _("Services")
@@ -407,7 +415,7 @@ def getChannels(idbouquet, stype):
                     chan['next_duration'] = int(nextevent[0][2] / 60)
                     chan['next_ev_id'] = nextevent[0][3]
                     chan['next_idp'] = "nextd" + str(idp)
-                else:   # Have to fudge one in, as rest of OWI code expects it...
+                else:  # Have to fudge one in, as rest of OWI code expects it...
                     chan['next_title'] = filterName("<<absent>>")
                     chan['next_begin'] = chan['now_end']
                     chan['next_end'] = chan['now_end']
@@ -484,7 +492,7 @@ def getPlayableServices(sRef, sRefPlaying):
 
     for service in servicelist2:
         if not int(service.split(":")[
-                   1]) & 512:  # 512 is hidden service on sifteam image. Doesn't affect other images
+                       1]) & 512:  # 512 is hidden service on sifteam image. Doesn't affect other images
             service2 = {}
             service2['servicereference'] = service
             info = servicecenter.info(eServiceReference(service))
@@ -515,7 +523,8 @@ def getSubServices(session):
     service = session.nav.getCurrentService()
     if service is not None:
         services.append({"servicereference": service.info().getInfoString(
-            iServiceInformation.sServiceref), "servicename": service.info().getName()})
+            iServiceInformation.sServiceref),
+            "servicename": service.info().getName()})
         subservices = service.subServices()
         if subservices and subservices.getNumberOfSubservices() > 0:
             print subservices.getNumberOfSubservices()
@@ -589,7 +598,9 @@ def getChannelEpg(ref, begintime=-1, endtime=-1):
                 ev['id'] = event[0]
                 if event[1]:
                     ev['date'] = "%s %s" % (tstrings[(
-                        "day_" + strftime("%w", (localtime(event[1]))))], strftime("%d.%m.%Y", (localtime(event[1]))))
+                        "day_" + strftime("%w", (localtime(event[1]))))],
+                                            strftime("%d.%m.%Y",
+                                                     (localtime(event[1]))))
                     ev['begin'] = strftime("%H:%M", (localtime(event[1])))
                     ev['begin_timestamp'] = event[1]
                     ev['duration'] = int(event[2] / 60)
@@ -764,7 +775,8 @@ def getSearchEpg(sstr, endtime=None, fulldesc=False, bouquetsonly=False):
             ev = {}
             ev['id'] = event[0]
             ev['date'] = "%s %s" % (tstrings[(
-                "day_" + strftime("%w", (localtime(event[1]))))], strftime("%d.%m.%Y", (localtime(event[1]))))
+                "day_" + strftime("%w", (localtime(event[1]))))],
+                                    strftime("%d.%m.%Y", (localtime(event[1]))))
             ev['begin_timestamp'] = event[1]
             ev['begin'] = strftime("%H:%M", (localtime(event[1])))
             ev['duration_sec'] = event[2]
@@ -802,7 +814,8 @@ def getSearchSimilarEpg(ref, eventid):
             ev = {}
             ev['id'] = event[0]
             ev['date'] = "%s %s" % (tstrings[(
-                "day_" + strftime("%w", (localtime(event[1]))))], strftime("%d.%m.%Y", (localtime(event[1]))))
+                "day_" + strftime("%w", (localtime(event[1]))))],
+                                    strftime("%d.%m.%Y", (localtime(event[1]))))
             ev['begin_timestamp'] = event[1]
             ev['begin'] = strftime("%H:%M", (localtime(event[1])))
             ev['duration_sec'] = event[2]
@@ -876,7 +889,8 @@ def getMultiEpg(self, ref, begintime=-1, endtime=None, Mode=1):
                 (bt.tm_year, bt.tm_mon, bt.tm_mday, bt.tm_hour - bt.tm_hour %
                  2, 0, 0, -1, -1, -1))
             lastevent = mktime(
-                (bt.tm_year, bt.tm_mon, bt.tm_mday, 23, 59, 0, -1, -1, -1)) + 6 * 3600
+                (bt.tm_year, bt.tm_mon, bt.tm_mday, 23, 59, 0, -1, -1,
+                 -1)) + 6 * 3600
         else:
             # If a start time is requested, show all events in a 24 hour frame
             bt = localtime(begintime)
@@ -917,7 +931,6 @@ def getMultiEpg(self, ref, begintime=-1, endtime=None, Mode=1):
 
 
 def getPicon(sname):
-
     pp = getPiconPath()
     if pp is not None:
         # remove URL part
@@ -962,7 +975,7 @@ def getPicon(sname):
                 return "/picon/" + sname
         if cname is not None:  # picon by channel name
             cname1 = mangle_epg_text(cname).replace(
-                '/', '_').encode('utf-8','ignore')
+                '/', '_').encode('utf-8', 'ignore')
             if fileExists(pp + cname1 + ".png"):
                 return "/picon/" + cname1 + ".png"
             cname = unicodedata.normalize(

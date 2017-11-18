@@ -91,8 +91,8 @@ class WebController(BaseController):
             success = False
         return self.P_tstate(request, success)
 
-    #	TODO: improve after action / save , save+record , nothing
-    #	config.timeshift.favoriteSaveAction ....
+    # TODO: improve after action / save , save+record , nothing
+    # config.timeshift.favoriteSaveAction ....
     def P_tsstop(self, request):
         success = True
         oldcheck = False

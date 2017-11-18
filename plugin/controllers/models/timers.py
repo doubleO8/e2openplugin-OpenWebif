@@ -693,7 +693,6 @@ def getSleepTimer(session):
                         enabled = False
                     return {"enabled": enabled, "minutes": minutes, "action": action, "message": _(
                         "Sleeptimer is enabled") if enabled else _("Sleeptimer is disabled")}
-                    break
         except Exception as e:
             return {
                 "result": False,

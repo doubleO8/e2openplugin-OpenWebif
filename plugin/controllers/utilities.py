@@ -6,8 +6,8 @@ MANY_SLASHES_PATTERN = r'[\/]+'
 MANY_SLASHES_REGEX = re.compile(MANY_SLASHES_PATTERN)
 
 PATTERN_ITEM_OR_KEY_ACCESS = r'^(?P<attr_name>[a-zA-Z][\w\d]*)' \
-    r'\[((?P<index>\d+)|' \
-    r'[\'\"](?P<key>[\s\w\d]+)[\'\"])\]$'
+                             r'\[((?P<index>\d+)|' \
+                             r'[\'\"](?P<key>[\s\w\d]+)[\'\"])\]$'
 REGEX_ITEM_OR_KEY_ACCESS = re.compile(PATTERN_ITEM_OR_KEY_ACCESS)
 
 # stolen from enigma2_http_api ...
@@ -47,7 +47,7 @@ SERVICE_TYPE_LOOKUP = {v: k for k, v in SERVICE_TYPE.iteritems()}
 NS_DVB_C = 0xffff0000
 
 #: Namespace - DVB-S services
-#NS_DVB_S = 0x00c00000
+NS_DVB_S = 0x00c00000
 
 #: Namespace - DVB-T services
 NS_DVB_T = 0xeeee0000
@@ -55,7 +55,7 @@ NS_DVB_T = 0xeeee0000
 #: Label:Namespace map
 NS = {
     'DVB-C': NS_DVB_C,
-    #	'DVB-S': NS_DVB_S,
+    'DVB-S': NS_DVB_S,
     'DVB-T': NS_DVB_T,
 }
 

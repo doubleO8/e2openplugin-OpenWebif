@@ -29,36 +29,13 @@ from Plugins.Extensions.OpenWebif.local import tstrings
 from Plugins.Extensions.OpenWebif.controllers.utilities import parse_servicereference, SERVICE_TYPE_LOOKUP, NS_LOOKUP
 
 from model_utilities import mangle_epg_text
-from epg import FLAGS_WEB
+from epg import FLAGS_WEB, ServicesEventDict, convertDesc, filterName
 
 try:
     from collections import OrderedDict
 except ImportError:
     from Plugins.Extensions.OpenWebif.backport.OrderedDict import OrderedDict
 
-# The fields fetched by filterName() and convertDesc() all need to be
-# html-escaped, so do it there.
-#
-from cgi import escape as html_escape
-
-
-def filterName(name):
-    if name is not None:
-        name = html_escape(mangle_epg_text(name), quote=True)
-    return name
-
-
-def convertDesc(val):
-    if val is not None:
-        return html_escape(
-            unicode(
-                val,
-                'utf_8',
-                errors='ignore').encode(
-                'utf_8',
-                'ignore'),
-            quote=True)
-    return val
 
 
 def getServiceInfoString(info, what):
@@ -772,32 +749,12 @@ def getNowNextEpg(ref, servicetype):
     ret = []
     epgcache = eEPGCache.getInstance()
     events = epgcache.lookupEvent([FLAGS_WEB, (ref, servicetype, -1)])
-    if events is not None:
-        for event in events:
-            ev = {}
-            ev['id'] = event[0]
-            if event[1]:
-                ev['begin_timestamp'] = event[1]
-                ev['duration_sec'] = event[2]
-                ev['title'] = event[4]
-                ev['shortdesc'] = convertDesc(event[5])
-                ev['longdesc'] = convertDesc(event[6])
-                ev['sref'] = event[7]
-                ev['sname'] = filterName(event[8])
-                ev['now_timestamp'] = event[3]
-                ev['remaining'] = (event[1] + event[2]) - event[3]
-            else:
-                ev['begin_timestamp'] = 0
-                ev['duration_sec'] = 0
-                ev['title'] = "N/A"
-                ev['shortdesc'] = ""
-                ev['longdesc'] = ""
-                ev['sref'] = event[7]
-                ev['sname'] = filterName(event[8])
-                ev['now_timestamp'] = 0
-                ev['remaining'] = 0
+    if not events:
+        return {"events": [], "result": True}
 
-            ret.append(ev)
+    for raw_data in events:
+        ret.append(ServicesEventDict(raw_data,
+                                     now_next_mode=True, mangle_html=True))
 
     return {"events": ret, "result": True}
 

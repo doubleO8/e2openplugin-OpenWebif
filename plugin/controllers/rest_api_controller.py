@@ -40,7 +40,6 @@ class ApiController(resource.Resource):
 
     def __init__(self, session, path="", *args, **kwargs):
         resource.Resource.__init__(self)
-        self.putChild("", self)
         saveconfig_controller_instance = EncodingResourceWrapper(
             SaveConfigApiController(session=session, path=path),
             [GzipEncoderFactory()])
@@ -62,9 +61,10 @@ class ApiController(resource.Resource):
             http_verbs)
 
     def getChild(self, path, request):
+        child = self
         if path in self.children:
-            return self.children[path]
-        return self
+            child = self.children[path]
+        return EncodingResourceWrapper(child, [GzipEncoderFactory])
 
     def render_OPTIONS(self, request):
         """

@@ -30,8 +30,7 @@ from models.locations import getLocations, getCurrentLocation, \
     addLocation, removeLocation
 from models.timers import getTimers, addTimer, addTimerByEventId, editTimer, \
     removeTimer, toggleTimerStatus, cleanupTimer, writeTimerList, recordNow, \
-    tvbrowser, getSleepTimer, setSleepTimer, getPowerTimer, \
-    setPowerTimer, getVPSChannels
+    tvbrowser, getSleepTimer, setSleepTimer, getVPSChannels
 from models.message import sendMessage, getMessageAnswer
 from models.movies import getMovieList, removeMovie, getMovieTags, moveMovie, \
     renameMovie, getAllMovies
@@ -1158,17 +1157,6 @@ class WebController(BaseController):
         from ..httpserver import HttpdRestart
         HttpdRestart(self.session)
         return ""
-
-    def P_powertimer(self, request):
-        if len(request.args):
-            res = self.testMandatoryArguments(
-                request, ["start", "end", "timertype", "repeated", "afterevent",
-                          "disabled"])
-            if res:
-                return res
-            return setPowerTimer(self.session, request)
-        else:
-            return getPowerTimer(self.session)
 
     def P_sleeptimer(self, request):
         cmd = "get"

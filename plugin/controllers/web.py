@@ -375,10 +375,6 @@ class WebController(BaseController):
         return getMessageAnswer()
 
     def P_movielist(self, request):
-        if self.isJson:
-            request.setHeader(
-                "content-type",
-                "application/json; charset=utf-8")
         return getMovieList(request.args)
 
     def P_fullmovielist(self, request):

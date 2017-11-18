@@ -110,7 +110,6 @@ class BaseController(resource.Resource):
         # cache data
         withMainTemplate = self.withMainTemplate
         path = self.path
-        isJson = self.isJson
         isCustom = self.isCustom
 
         if self.path == "":
@@ -183,7 +182,6 @@ class BaseController(resource.Resource):
         # restore cached data
         self.withMainTemplate = withMainTemplate
         self.path = path
-        self.isJson = isJson
         self.isCustom = isCustom
 
         return server.NOT_DONE_YET

@@ -61,10 +61,9 @@ class ApiController(resource.Resource):
             http_verbs)
 
     def getChild(self, path, request):
-        child = self
         if path in self.children:
-            child = self.children[path]
-        return EncodingResourceWrapper(child, [GzipEncoderFactory()])
+            return self.children[path]
+        return EncodingResourceWrapper(self, [GzipEncoderFactory()])
 
     def render_OPTIONS(self, request):
         """

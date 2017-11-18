@@ -11,6 +11,7 @@
 import re
 import unicodedata
 from time import time, localtime, strftime, mktime
+from urllib import quote, unquote
 
 from Tools.Directories import fileExists
 from Components.Sources.ServiceList import ServiceList
@@ -21,11 +22,11 @@ from ServiceReference import ServiceReference
 from Screens.ChannelSelection import service_types_tv, service_types_radio, FLAG_SERVICE_NEW_FOUND
 from enigma import eServiceCenter, eServiceReference, iServiceInformation, eEPGCache, getBestPlayableServiceReference
 from info import getPiconPath, GetWithAlternative, getOrbitalText
-from urllib import quote, unquote
 # using the tstrings dic is faster than translating with _ func from __init__
 from Plugins.Extensions.OpenWebif.local import tstrings
 from Plugins.Extensions.OpenWebif.controllers.utilities import parse_servicereference, SERVICE_TYPE_LOOKUP, NS_LOOKUP
 
+from model_utilities import mangle_epg_text
 try:
     from collections import OrderedDict
 except ImportError:
@@ -39,13 +40,7 @@ from cgi import escape as html_escape
 
 def filterName(name):
     if name is not None:
-        name = html_escape(
-            name.replace(
-                '\xc2\x86',
-                '').replace(
-                '\xc2\x87',
-                ''),
-            quote=True)
+        name = html_escape(mangle_epg_text(name), quote=True)
     return name
 
 
@@ -566,21 +561,9 @@ def getEventDesc(ref, idev):
     epgcache = eEPGCache.getInstance()
     event = epgcache.lookupEvent(['ESX', (ref, 2, int(idev))])
     if len(event[0][0]) > 1:
-        description = event[0][0].replace(
-            '\xc2\x86',
-            '').replace(
-            '\xc2\x87',
-            '').replace(
-            '\xc2\x8a',
-            '')
+        description = mangle_epg_text(event[0][0])
     elif len(event[0][1]) > 1:
-        description = event[0][1].replace(
-            '\xc2\x86',
-            '').replace(
-            '\xc2\x87',
-            '').replace(
-            '\xc2\x8a',
-            '')
+        description = mangle_epg_text(event[0][1])
     else:
         description = "No description available"
 
@@ -1045,15 +1028,8 @@ def getPicon(sname):
             if fileExists(filename):
                 return "/picon/" + sname
         if cname is not None:  # picon by channel name
-            cname1 = cname.replace(
-                '\xc2\x86',
-                '').replace(
-                '\xc2\x87',
-                '').replace(
-                '/',
-                '_').encode(
-                'utf-8',
-                'ignore')
+            cname1 = mangle_epg_text(cname).replace(
+                '/', '_').encode('utf-8','ignore')
             if fileExists(pp + cname1 + ".png"):
                 return "/picon/" + cname1 + ".png"
             cname = unicodedata.normalize(

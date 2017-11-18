@@ -10,11 +10,12 @@ import datetime
 
 from jinja2 import Environment, PackageLoader
 
-from beppo.defaults import PACKAGE_OUTPUT_PATH, PACKAGE_META
-from beppo.defaults import TARGET_PATH_REL
+from beppo.defaults import PACKAGE_OUTPUT_PATH, PACKAGE_META, OUTPUT_PATH
+from beppo.defaults import TARGET_PATH_REL, TAG_PATH_REL
 
 COMPILE_PO_CALL_FMT = '{binary} -o "{target}" "{source}"'
 COMPILE_CHEETAH_CALL_FMT = '{binary} compile -R "{target}"'
+JINJA_ENV = Environment(loader=PackageLoader('beppo', 'templates'))
 
 
 def source_files(top):
@@ -69,8 +70,7 @@ def compile_cheetah(target_path):
 
 
 def create_control():
-    env = Environment(loader=PackageLoader('beppo', 'templates'))
-    control_template = env.get_template('control')
+    control_template = JINJA_ENV.get_template('control')
     control_content = control_template.render(**PACKAGE_META)
     control_path = os.path.join(PACKAGE_OUTPUT_PATH, "CONTROL")
     control_file = os.path.join(control_path, "control")
@@ -95,12 +95,29 @@ def create_tag(tag_file):
     with open(tag_file, "wb") as tgt:
         json.dump(data, tgt, indent=2)
 
+
+def create_repo_conf(target_root, repo_config_filename='github_io.conf'):
+    repo_config_template = JINJA_ENV.get_template(repo_config_filename)
+    content = repo_config_template.render(**PACKAGE_META)
+    repo_config_target_filename = os.path.join(
+        target_root, repo_config_filename)
+
+    with open(repo_config_target_filename, "wb") as target:
+        target.write(content)
+
+
 if __name__ == '__main__':
+    try:
+        os.environ["PYTHONOPTIMIZE"]
+    except KeyError as keks:
+        print("Please set PYTHONOPTIMIZE environment variable!")
+        raise
+
     sources = './plugin'
     target_root = PACKAGE_OUTPUT_PATH
     target_path = os.path.join(
         target_root, TARGET_PATH_REL)
-    tag_file = os.path.join(target_path, "public/tag.json")
+    tag_file = os.path.join(target_path, TAG_PATH_REL)
 
     if os.path.isdir(target_path):
         shutil.rmtree(target_path)
@@ -119,11 +136,7 @@ if __name__ == '__main__':
     compile_locales(os.path.abspath('locale'),
                     os.path.join(target_path, 'locale'))
     compile_cheetah(target_path)
-    try:
-        os.environ["PYTHONOPTIMIZE"]
-    except KeyError as keks:
-        print("Please set PYTHONOPTIMIZE environment variable!")
-        raise
     compileall.compile_dir(target_path, maxlevels=100, force=True)
     create_control()
     create_tag(tag_file)
+    create_repo_conf(target_root=OUTPUT_PATH)

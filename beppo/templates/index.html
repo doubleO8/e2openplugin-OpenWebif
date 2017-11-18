@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{ meta.package }} {{ meta.upstream_version }}</title>
 </head>
 
 <body>
@@ -14,6 +14,13 @@
     <li><em>no items ?!</em></li>
     {% endfor %}
 </ul>
+
+<h2>Build Information</h2>
+<pre>
+    build date:       {{ tag_data.build_date }}
+    upstream_version: {{ tag_data.upstream_version }}
+    owif_version:     {{ tag_data.owif_version }}
+</pre>
 </body>
 
 </html>

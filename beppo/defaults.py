@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 from . import __version__
 
 PACKAGE_META = {
@@ -13,3 +14,5 @@ OUTPUT_PATH = 'pages_out'
 PACKAGE_OUTPUT_PATH = 'pack'
 
 TARGET_PATH_REL = 'usr/lib/enigma2/python/Plugins/Extensions/OpenWebif'
+
+TAG_PATH_REL = "public/tag.json"

@@ -295,20 +295,6 @@ class BaseController(resource.Resource):
         except ImportError:
             pass
 
-        try:
-            # this will currenly only works if NO Webiterface plugin installed
-            # TODO: test if webinterface AND openwebif installed
-            from Plugins.Extensions.WebInterface.WebChilds.Toplevel import loaded_plugins
-            for plugins in loaded_plugins:
-                if plugins[0] in ["fancontrol", "iptvplayer"]:
-                    try:
-                        extras.append(
-                            {'key': plugins[0], 'description': plugins[2], 'nw': '2'})
-                    except KeyError:
-                        pass
-        except ImportError:
-            pass
-
         ret['extras'] = extras
         theme = 'original'
 

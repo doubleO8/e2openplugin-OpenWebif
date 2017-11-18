@@ -164,7 +164,8 @@ class ApiController(resource.Resource):
             request.setResponseCode(http.INTERNAL_SERVER_ERROR)
             data = {
                 "exception": repr(exc),
-                "result": False
+                "result": False,
+                "path": request.path,
             }
 
             return json_response(request, data)

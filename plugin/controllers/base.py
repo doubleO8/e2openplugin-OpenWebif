@@ -62,7 +62,6 @@ class BaseController(resource.Resource):
                 path: Base path
                 session: (?) Session instance
                 withMainTemplate: (?)
-                isJson: responses shall be JSON encoded
                 isCustom: (?)
         """
         resource.Resource.__init__(self)
@@ -70,7 +69,6 @@ class BaseController(resource.Resource):
         self.path = path
         self.session = kwargs.get("session")
         self.withMainTemplate = kwargs.get("withMainTemplate", False)
-        self.isJson = kwargs.get("isJson", False)
         self.isCustom = kwargs.get("isCustom", False)
 
     def error404(self, request):
@@ -139,10 +137,6 @@ class BaseController(resource.Resource):
                 #				if not self.suppresslog:
                 #					print "[OpenWebif] page '%s' ok (custom)" % request.uri
                 request.write(data)
-                request.finish()
-            elif self.isJson:
-                request.setHeader("content-type", "text/plain")
-                request.write(json.dumps(data))
                 request.finish()
             elif isinstance(data, str):
                 #				if not self.suppresslog:

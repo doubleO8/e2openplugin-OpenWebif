@@ -15,7 +15,7 @@ import logging
 from twisted.web import server, http, resource
 
 from Plugins.Extensions.OpenWebif.__init__ import _
-from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS
+from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 from Cheetah.Template import Template
 from enigma import eEPGCache
 from Components.config import config
@@ -188,7 +188,7 @@ class BaseController(resource.Resource):
         opath = None
         owebif = None
         oport = None
-        if fileExists("/tmp/.oscam/oscam.version"):  # nosec
+        if os.path.isfile("/tmp/.oscam/oscam.version"):  # nosec
             data = open("/tmp/.oscam/oscam.version", "r").readlines()  # nosec
             for i in data:
                 if "configdir:" in i.lower():
@@ -200,7 +200,7 @@ class BaseController(resource.Resource):
                 else:
                     continue
         if owebif == "yes" and oport is not "0" and opath is not None:
-            if fileExists(opath):
+            if os.path.isfile(opath):
                 return opath
         return None
 
@@ -237,12 +237,12 @@ class BaseController(resource.Resource):
             ip = "%d.%d.%d.%d" % (
                 ip_list[0], ip_list[1], ip_list[2], ip_list[3])
 
-            if fileExists(
+            if os.path.isfile(
                     resolveFilename(
                         SCOPE_PLUGINS,
                         "Extensions/LCD4linux/WebSite.pyo")):
                 lcd4linux_key = "lcd4linux/config"
-                if fileExists(
+                if os.path.isfile(
                         resolveFilename(
                             SCOPE_PLUGINS,
                             "Extensions/WebInterface/plugin.pyo")):

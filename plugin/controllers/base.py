@@ -181,27 +181,6 @@ class BaseController(resource.Resource):
 
         return server.NOT_DONE_YET
 
-    def oscamconfPath(self):
-        # Find and parse running oscam
-        opath = None
-        owebif = None
-        oport = None
-        if os.path.isfile("/tmp/.oscam/oscam.version"):  # nosec
-            data = open("/tmp/.oscam/oscam.version", "r").readlines()  # nosec
-            for i in data:
-                if "configdir:" in i.lower():
-                    opath = i.split(":")[1].strip() + "/oscam.conf"
-                elif "web interface support:" in i.lower():
-                    owebif = i.split(":")[1].strip()
-                elif "webifport:" in i.lower():
-                    oport = i.split(":")[1].strip()
-                else:
-                    continue
-        if owebif == "yes" and oport is not "0" and opath is not None:
-            if os.path.isfile(opath):
-                return opath
-        return None
-
     def prepareMainTemplate(self, request):
         """
         Generate the `dict()` for main template.
@@ -228,25 +207,9 @@ class BaseController(resource.Resource):
             ret['epgsearchcaps'] = False
         extras = [{'key': 'ajax/settings', 'description': _("Settings")}]
 
-        oscamconf = self.oscamconfPath()
-        if oscamconf is not None:
-            # self.log.info("Reading oscam conf {!r}".format(oscamconf))
-            data = open(oscamconf, "r").readlines()
-            proto = "http"
-            port = None
-            for i in data:
-                if "httpport" in i.lower():
-                    port = i.split("=")[1].strip()
-                    if port[0] == '+':
-                        proto = "https"
-                        port = port[1:]
-            if port is not None:
-                url = "%s://%s:%s" % (proto,
-                                      request.getRequestHostname(), port)
-                extras.append({'key': url, 'description': _(
-                    "OSCam Webinterface"), 'nw': '1'})
-
-        ret['extras'] = extras
+        ret['extras'] = [
+            {'key': 'ajax/settings', 'description': _("Settings")}
+        ]
         theme = 'original'
 
         if config.OpenWebif.webcache.theme.value:

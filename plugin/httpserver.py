@@ -184,8 +184,9 @@ def HttpdStart(session):
         global listener, site
         port = config.OpenWebif.port.value
 
-        temproot = buildRootTree(session)
-        root = temproot
+        #temproot = buildRootTree(session)
+        #root = temproot
+        root = RootController(session)
         root = AuthResource(session, root)
         site = server.Site(root)
 

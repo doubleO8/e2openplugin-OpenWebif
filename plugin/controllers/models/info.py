@@ -791,6 +791,10 @@ def getStatusInfo(self):
         'transcoding': getTranscodingSupport(),
         'currservice_filename': "",
         'currservice_id': -1,
+        'state': {
+            'standby': False,
+            'recording': False
+        }
     }
 
     # Get currently running Service
@@ -861,21 +865,25 @@ def getStatusInfo(self):
 
     # Get Standby State
     from Screens.Standby import inStandby
-    if inStandby is None:
+    statusinfo['state']['standby'] = inStandby is not None
+    if statusinfo['state']['standby'] is False:
         statusinfo['inStandby'] = "false"
     else:
         statusinfo['inStandby'] = "true"
 
     # Get recording state
     recs = NavigationInstance.instance.getRecordings()
+    statusinfo['state']['recording'] = len(recs) > 0
     if recs:
-        statusinfo['isRecording'] = "true"
         statusinfo['Recording_list'] = "\n"
         for timer in NavigationInstance.instance.RecordTimer.timer_list:
             if timer.state == TimerEntry.StateRunning:
                 if not timer.justplay:
                     statusinfo['Recording_list'] += mangle_epg_text(
                         timer.service_ref.getServiceName()) + ": " + timer.name + "\n"
+
+    if statusinfo['state']['recording']:
+        statusinfo['isRecording'] = "true"
     else:
         statusinfo['isRecording'] = "false"
 

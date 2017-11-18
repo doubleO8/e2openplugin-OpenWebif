@@ -64,7 +64,7 @@ class ApiController(resource.Resource):
         child = self
         if path in self.children:
             child = self.children[path]
-        return EncodingResourceWrapper(child, [GzipEncoderFactory])
+        return EncodingResourceWrapper(child, [GzipEncoderFactory()])
 
     def render_OPTIONS(self, request):
         """

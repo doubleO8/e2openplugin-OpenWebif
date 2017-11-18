@@ -12,6 +12,8 @@ import os
 import sys
 import time
 import json
+from socket import has_ipv6, AF_INET6, AF_INET, inet_ntop, inet_pton, \
+    getaddrinfo
 
 from twisted.web import version
 
@@ -27,8 +29,7 @@ from RecordTimer import parseEvent
 from timer import TimerEntry
 from Tools.Directories import fileExists, pathExists
 from enigma import eDVBVolumecontrol, eServiceCenter, eServiceReference, eEnv
-from socket import has_ipv6, AF_INET6, AF_INET, inet_ntop, inet_pton, \
-    getaddrinfo
+from model_utilities import mangle_epg_text
 
 try:
     from boxbranding import getBoxType, getMachineBuild, getMachineBrand, \
@@ -667,10 +668,8 @@ def getInfo(session=None, need_fullinfo=False):
                 timers = []
                 for timer in NavigationInstance.instance.RecordTimer.timer_list:
                     if timer.isRunning() and not timer.justplay:
-                        timers.append(
-                            timer.service_ref.getServiceName().replace(
-                                '\xc2\x86', '').replace(
-                                '\xc2\x87', ''))
+                        timers.append(mangle_epg_text(
+                            timer.service_ref.getServiceName()))
                         print "[OpenWebif] -D- timer '%s'" % timer.service_ref.getServiceName()
                 # only one recording
                 if len(timers) == 1:
@@ -807,8 +806,8 @@ def getStatusInfo(self):
         serviceinfo = service and service.info()
         event = serviceinfo and serviceinfo.getEvent(0)
         serviceref_string = serviceref.toString()
-        currservice_station = serviceHandlerInfo.getName(
-            serviceref).replace('\xc2\x86', '').replace('\xc2\x87', '')
+        currservice_station = mangle_epg_text(serviceHandlerInfo.getName(
+            serviceref))
     else:
         event = None
         serviceHandlerInfo = None
@@ -820,8 +819,7 @@ def getStatusInfo(self):
             curEvent[0]) + (config.recording.margin_before.value * 60)
         end_timestamp = int(curEvent[1]) - \
                         (config.recording.margin_after.value * 60)
-        statusinfo['currservice_name'] = curEvent[2].replace(
-            '\xc2\x86', '').replace('\xc2\x87', '')
+        statusinfo['currservice_name'] = mangle_epg_text(curEvent[2])
         statusinfo['currservice_serviceref'] = serviceref_string
         statusinfo['currservice_begin'] = time.strftime(
             "%H:%M", (time.localtime(begin_timestamp)))
@@ -842,9 +840,7 @@ def getStatusInfo(self):
         full_desc = statusinfo['currservice_name'] + '\n'
         full_desc += statusinfo['currservice_begin'] + \
                      " - " + statusinfo['currservice_end'] + '\n\n'
-        full_desc += event.getExtendedDescription().replace('\xc2\x86',
-                                                            '').replace(
-            '\xc2\x87', '').replace('\xc2\x8a', '\n')
+        full_desc += mangle_epg_text(event.getExtendedDescription())
         statusinfo['currservice_fulldescription'] = full_desc
         statusinfo['currservice_id'] = curEvent[4]
     else:
@@ -878,10 +874,8 @@ def getStatusInfo(self):
         for timer in NavigationInstance.instance.RecordTimer.timer_list:
             if timer.state == TimerEntry.StateRunning:
                 if not timer.justplay:
-                    statusinfo[
-                        'Recording_list'] += timer.service_ref.getServiceName().replace(
-                        '\xc2\x86', '').replace('\xc2\x87',
-                                                '') + ": " + timer.name + "\n"
+                    statusinfo['Recording_list'] += mangle_epg_text(
+                        timer.service_ref.getServiceName()) + ": " + timer.name + "\n"
     else:
         statusinfo['isRecording'] = "false"
 

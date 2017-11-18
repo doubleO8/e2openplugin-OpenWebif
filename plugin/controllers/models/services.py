@@ -12,6 +12,7 @@ import re
 import unicodedata
 from time import time, localtime, strftime, mktime
 from urllib import quote, unquote
+from collections import OrderedDict
 
 from Tools.Directories import fileExists
 from Components.Sources.ServiceList import ServiceList
@@ -31,11 +32,6 @@ from Plugins.Extensions.OpenWebif.controllers.utilities import \
 
 from model_utilities import mangle_epg_text
 from epg import FLAGS_WEB, ServicesEventDict, convertDesc, filterName
-
-try:
-    from collections import OrderedDict
-except ImportError:
-    from Plugins.Extensions.OpenWebif.backport.OrderedDict import OrderedDict
 
 
 def getServiceInfoString(info, what):
@@ -74,7 +70,7 @@ def getCurrentService(session):
                 getServiceInfoString(info, iServiceInformation.sServiceref),
                 safe=' ~@#$&()*!+=:;,.?/\''),
             "iswidescreen": info.getInfo(iServiceInformation.sAspect) in (
-            3, 4, 7, 8, 0xB, 0xC, 0xF, 0x10)
+                3, 4, 7, 8, 0xB, 0xC, 0xF, 0x10)
         }
     except Exception as e:
         return {

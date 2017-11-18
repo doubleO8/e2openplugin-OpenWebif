@@ -260,22 +260,32 @@ class BaseController(resource.Resource):
         return None
 
     def prepareMainTemplate(self, request):
-        # here will be generated the dictionary for the main template
+        """
+        Generate the `dict()` for main template.
+
+        Args:
+                request (twisted.web.server.Request): HTTP request object
+        Returns:
+                dict: Parameter values
+        """
         ret = getCollapsedMenus()
         ret['configsections'] = getConfigsSections()['sections']
         ret['showname'] = getShowName()['showname']
         ret['customname'] = getCustomName()['customname']
         ret['boxname'] = getBoxName()['boxname']
+
         if not ret['boxname'] or not ret['customname']:
             ret['boxname'] = getInfo()['brand'] + " " + getInfo()['model']
         ret['box'] = getBoxType()
         ret["remote"] = REMOTE
+
         if hasattr(eEPGCache, 'FULL_DESCRIPTION_SEARCH'):
             ret['epgsearchcaps'] = True
         else:
             ret['epgsearchcaps'] = False
         extras = [{'key': 'ajax/settings', 'description': _("Settings")}]
         ifaces = iNetwork.getConfiguredAdapters()
+
         if len(ifaces):
             ip_list = iNetwork.getAdapterAttribute(
                 ifaces[0], "ip")  # use only the first configured interface
@@ -353,12 +363,15 @@ class BaseController(resource.Resource):
 
         ret['extras'] = extras
         theme = 'original'
+
         if config.OpenWebif.webcache.theme.value:
             theme = config.OpenWebif.webcache.theme.value
+
         if not os.path.exists(getPublicPath('themes')):
             if not (theme == 'original' or theme == 'clear'):
                 theme = 'original'
                 config.OpenWebif.webcache.theme.value = theme
                 config.OpenWebif.webcache.theme.save()
         ret['theme'] = theme
+
         return ret

@@ -86,12 +86,7 @@ config.OpenWebif.webcache.moviesort = ConfigSelection(
     default='name', choices=['name', 'named', 'date', 'dated'])
 config.OpenWebif.webcache.showchannelpicon = ConfigYesNo(default=True)
 config.OpenWebif.webcache.mepgmode = ConfigInteger(default=1, limits=(1, 2))
-# HTTPS
-config.OpenWebif.https_enabled = ConfigYesNo(default=False)
-config.OpenWebif.https_port = ConfigInteger(default=443, limits=(1, 65535))
-config.OpenWebif.https_auth = ConfigYesNo(default=True)
-config.OpenWebif.https_clientcert = ConfigYesNo(default=False)
-config.OpenWebif.parentalenabled = ConfigYesNo(default=False)
+
 # Use service name for stream
 config.OpenWebif.service_name_for_stream = ConfigYesNo(default=True)
 # authentication for streaming
@@ -181,23 +176,6 @@ class OpenWebifConfig(Screen, ConfigListScreen):
                 getConfigListEntry(
                     _("Enable HTTP Authentication"),
                     config.OpenWebif.auth))
-            self.list.append(
-                getConfigListEntry(
-                    _("Enable HTTPS"),
-                    config.OpenWebif.https_enabled))
-            if config.OpenWebif.https_enabled.value:
-                self.list.append(
-                    getConfigListEntry(
-                        _("HTTPS port"),
-                        config.OpenWebif.https_port))
-                self.list.append(
-                    getConfigListEntry(
-                        _("Enable HTTPS Authentication"),
-                        config.OpenWebif.https_auth))
-                self.list.append(
-                    getConfigListEntry(
-                        _("Require client cert for HTTPS"),
-                        config.OpenWebif.https_clientcert))
             if config.OpenWebif.auth.value:
                 self.list.append(
                     getConfigListEntry(
@@ -207,16 +185,6 @@ class OpenWebifConfig(Screen, ConfigListScreen):
                     getConfigListEntry(
                         _("Disable remote access for user root"),
                         config.OpenWebif.no_root_access))
-            if not config.OpenWebif.auth.value or (
-                        config.OpenWebif.https_enabled.value and not config.OpenWebif.https_auth.value):
-                self.list.append(
-                    getConfigListEntry(
-                        _("Without auth only local access is allowed!"),
-                        config.OpenWebif.local_access_only))
-                self.list.append(
-                    getConfigListEntry(
-                        _("Enable access from VPNs"),
-                        config.OpenWebif.vpn_access))
             self.list.append(
                 getConfigListEntry(
                     _("Enable Parental Control"),
@@ -253,10 +221,6 @@ class OpenWebifConfig(Screen, ConfigListScreen):
         if not config.OpenWebif.auth.value:
             config.OpenWebif.auth_for_streaming.value = False
             config.OpenWebif.auth_for_streaming.save()
-
-        if not config.OpenWebif.https_enabled.value:
-            config.OpenWebif.https_clientcert.value = False
-            config.OpenWebif.https_clientcert.save()
 
         if config.OpenWebif.enabled.value:
             HttpdRestart(global_session)

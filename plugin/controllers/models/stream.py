@@ -249,9 +249,6 @@ def getTS(self, request):
 
         if portNumber is None:
             portNumber = config.OpenWebif.port.value
-            if request.isSecure():
-                portNumber = config.OpenWebif.https_port.value
-                proto = 'https'
             ourhost = request.getHeader('host')
             m = re.match('.+\:(\d+)$', ourhost)
             if m is not None:

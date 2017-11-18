@@ -14,15 +14,12 @@ from socket import has_ipv6
 import ipaddress
 
 import enigma
-from Screens.MessageBox import MessageBox
 from Components.config import config
 from Tools.Directories import fileExists
 from Components.Network import iNetwork
 from controllers.root import RootController
-from sslcertificate import SSLCertificateGenerator, KEY_FILE, CERT_FILE, CA_FILE
 
-from OpenSSL import SSL
-from twisted.internet import reactor, ssl
+from twisted.internet import reactor
 from twisted.web import server, http, resource, version
 from twisted.internet.error import CannotListenError
 
@@ -205,75 +202,6 @@ def HttpdStart(session):
             BJregisterService('http', port)
         except CannotListenError:
             print "[OpenWebif] failed to listen on Port %i" % (port)
-
-        if config.OpenWebif.https_clientcert.value and not os.path.exists(
-                CA_FILE):
-            # Disable https
-            config.OpenWebif.https_enabled.value = False
-            config.OpenWebif.https_enabled.save()
-            # Inform the user
-            session.open(
-                MessageBox,
-                "Cannot read CA certs for HTTPS access\nHTTPS access is disabled!",
-                MessageBox.TYPE_ERROR)
-
-        if config.OpenWebif.https_enabled.value:
-            httpsPort = config.OpenWebif.https_port.value
-            installCertificates(session)
-            # start https webserver on port configured port
-            try:
-                try:
-                    context = ssl.DefaultOpenSSLContextFactory(
-                        KEY_FILE, CERT_FILE)
-                except BaseException:
-                    # THIS EXCEPTION IS ONLY CATCHED WHEN CERT FILES ARE BAD
-                    # (look below for error)
-                    print "[OpenWebif] failed to get valid cert files. (It could occure bad file save or format, removing...)"
-                    # removing bad files
-                    if os.path.exists(KEY_FILE):
-                        os.remove(KEY_FILE)
-                    if os.path.exists(CERT_FILE):
-                        os.remove(CERT_FILE)
-                    # regenerate new ones
-                    installCertificates(session)
-                    context = ssl.DefaultOpenSSLContextFactory(
-                        KEY_FILE, CERT_FILE)
-
-                if config.OpenWebif.https_clientcert.value:
-                    ctx = context.getContext()
-                    ctx.set_verify(
-                        SSL.VERIFY_PEER | SSL.VERIFY_FAIL_IF_NO_PEER_CERT,
-                        verifyCallback
-                    )
-                    ctx.load_verify_locations(CA_FILE)
-
-                sslroot = temproot
-                sslroot = AuthResource(session, sslroot)
-                sslsite = server.Site(sslroot)
-
-                if has_ipv6 and fileExists(
-                        '/proc/net/if_inet6') and version.major >= 12:
-                    # use ipv6
-                    listener.append(
-                        reactor.listenSSL(
-                            httpsPort,
-                            sslsite,
-                            context,
-                            interface='::'))
-                else:
-                    # ipv4 only
-                    listener.append(
-                        reactor.listenSSL(
-                            httpsPort, sslsite, context))
-                print "[OpenWebif] started on", httpsPort
-                BJregisterService('https', httpsPort)
-            except CannotListenError:
-                print "[OpenWebif] failed to listen on Port", httpsPort
-            except BaseException:
-                print "[OpenWebif] failed to start https, disabling..."
-                # Disable https
-                config.OpenWebif.https_enabled.value = False
-                config.OpenWebif.https_enabled.save()
 
         # Streaming requires listening on 127.0.0.1:80
         if port != 80:
@@ -499,27 +427,8 @@ class StopServer:
         if self.callback is not None:
             self.callback(self.session)
 
-#
-# create a self signed SSL certificate if necessary
-#
 
-
-def installCertificates(session):
-    certGenerator = SSLCertificateGenerator()
-    try:
-        certGenerator.installCertificates()
-    except IOError as e:
-        # Disable https
-        config.OpenWebif.https_enabled.value = False
-        config.OpenWebif.https_enabled.save()
-        # Inform the user
-        session.open(
-            MessageBox,
-            "Cannot install generated SSL-Certifactes for https access\nHttps access is disabled!",
-            MessageBox.TYPE_ERROR)
 # BJ
-
-
 def BJregisterService(protocol, port):
     try:
         from Plugins.Extensions.Bonjour.Bonjour import bonjour

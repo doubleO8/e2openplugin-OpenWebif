@@ -52,9 +52,6 @@ from stream import StreamController
 def whoami(request):
     port = config.OpenWebif.port.value
     proto = 'http'
-    if request.isSecure():
-        port = config.OpenWebif.https_port.value
-        proto = 'https'
     ourhost = request.getHeader('host')
     m = re.match('.+\:(\d+)$', ourhost)
     if m is not None:

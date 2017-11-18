@@ -19,7 +19,6 @@ from models.grab import grabScreenshot
 from base import BaseController
 from web import WebController
 from ajax import AjaxController
-from SR import SRController
 from transcoding import TranscodingController
 from file import FileController
 import rest_fs_access
@@ -63,8 +62,6 @@ class RootController(BaseController):
         self.putChild("fonts", static.File(getPublicPath() + "/fonts"))
         if os.path.exists(getPublicPath('themes')):
             self.putChild("themes", static.File(getPublicPath() + "/themes"))
-        self.putChild("serienrecorder", SRController(session))
-        self.putChild("epgrefresh", ERController(session))
         self.putChild("transcoding", TranscodingController())
         if piconpath:
             self.putChild("picon", static.File(piconpath))

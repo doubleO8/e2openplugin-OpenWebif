@@ -18,6 +18,7 @@ from Components.MovieList import MovieList
 from Tools.Directories import fileExists
 from Screens import MovieSelection
 
+from model_utilities import mangle_epg_text
 MOVIETAGFILE = "/etc/enigma2/movietags"
 TRASHDIRNAME = "movie_trash"
 
@@ -183,8 +184,8 @@ def getMovieList(rargs=None, locations=None):
                     'filesize_readable': '',
                     'recordingtime': rtime,
                     'begintime': 'undefined',
-                    'eventname': ServiceReference(serviceref).getServiceName().replace('\xc2\x86', '').replace('\xc2\x87', ''),
-                    'servicename': sourceRef.getServiceName().replace('\xc2\x86', '').replace('\xc2\x87', ''),
+                    'eventname': mangle_epg_text(ServiceReference(serviceref).getServiceName()),
+                    'servicename': mangle_epg_text(sourceRef.getServiceName()),
                     'tags': info.getInfoString(serviceref, iServiceInformation.sTags),
                     'fullname': serviceref.toString(),
                 }

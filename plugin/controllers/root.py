@@ -10,7 +10,7 @@
 ##############################################################################
 import os
 
-from twisted.web import static, proxy
+from twisted.web import static
 from twisted.web.resource import EncodingResourceWrapper
 from twisted.web.server import GzipEncoderFactory
 
@@ -29,6 +29,7 @@ class RootController(BaseController):
     def __init__(self, session, path=""):
         BaseController.__init__(self, path=path, session=session)
         piconpath = getPiconPath()
+        publicpath = getPublicPath()
 
         self.putChild("web", WebController(session))
         api_controller_instance = EncodingResourceWrapper(
@@ -55,13 +56,13 @@ class RootController(BaseController):
 
         self.putChild("file", FileController())
         self.putChild("grab", grabScreenshot(session))
-        self.putChild("js", static.File(getPublicPath() + "/js"))
-        self.putChild("css", static.File(getPublicPath() + "/css"))
-        self.putChild("static", static.File(getPublicPath() + "/static"))
-        self.putChild("images", static.File(getPublicPath() + "/images"))
-        self.putChild("fonts", static.File(getPublicPath() + "/fonts"))
+        self.putChild("js", static.File(publicpath + "/js"))
+        self.putChild("css", static.File(publicpath + "/css"))
+        self.putChild("static", static.File(publicpath + "/static"))
+        self.putChild("images", static.File(publicpath + "/images"))
+        self.putChild("fonts", static.File(publicpath + "/fonts"))
         if os.path.exists(getPublicPath('themes')):
-            self.putChild("themes", static.File(getPublicPath() + "/themes"))
+            self.putChild("themes", static.File(publicpath + "/themes"))
         self.putChild("transcoding", TranscodingController())
         if piconpath:
             self.putChild("picon", static.File(piconpath))

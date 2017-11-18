@@ -802,6 +802,7 @@ def getStatusInfo(self):
     serviceref = self.session.nav.getCurrentlyPlayingServiceReference()
     serviceref_string = None
     currservice_station = None
+
     if serviceref is not None:
         serviceHandler = eServiceCenter.getInstance()
         serviceHandlerInfo = serviceHandler.info(serviceref)
@@ -832,20 +833,14 @@ def getStatusInfo(self):
             "%H:%M", (time.localtime(end_timestamp)))
         statusinfo['currservice_end_timestamp'] = end_timestamp
         statusinfo['currservice_description'] = curEvent[3]
-        if len(curEvent[3].decode('utf-8')) > 220:
-            statusinfo['currservice_description'] = curEvent[3].decode(
-                'utf-8')[0:220].encode('utf-8') + "..."
         statusinfo['currservice_station'] = currservice_station
+
         if statusinfo['currservice_serviceref'].startswith('1:0:0'):
-            statusinfo['currservice_filename'] = '/' + \
-                                                 '/'.join(
-                                                     serviceref_string.split(
-                                                         "/")[1:])
-        full_desc = statusinfo['currservice_name'] + '\n'
-        full_desc += statusinfo['currservice_begin'] + \
-                     " - " + statusinfo['currservice_end'] + '\n\n'
-        full_desc += mangle_epg_text(event.getExtendedDescription())
-        statusinfo['currservice_fulldescription'] = full_desc
+            fn = '/' + '/'.join(serviceref_string.split("/")[1:])
+            statusinfo['currservice_filename'] = fn
+
+        statusinfo['currservice_fulldescription'] = mangle_epg_text(
+            event.getExtendedDescription())
         statusinfo['currservice_id'] = curEvent[4]
     else:
         statusinfo['currservice_name'] = "N/A"
@@ -853,15 +848,16 @@ def getStatusInfo(self):
         statusinfo['currservice_end'] = ""
         statusinfo['currservice_description'] = ""
         statusinfo['currservice_fulldescription'] = "N/A"
-        if serviceref:
-            statusinfo['currservice_serviceref'] = serviceref_string
-            if serviceHandlerInfo:
-                statusinfo['currservice_station'] = currservice_station
-            elif serviceref_string.find("http") != -1:
-                statusinfo['currservice_station'] = serviceref_string.replace(
-                    '%3a', ':')[serviceref_string.find("http"):]
-            else:
-                statusinfo['currservice_station'] = "N/A"
+
+    if serviceref:
+        statusinfo['currservice_serviceref'] = serviceref_string
+        if serviceHandlerInfo:
+            statusinfo['currservice_station'] = currservice_station
+        elif serviceref_string.find("http") != -1:
+            statusinfo['currservice_station'] = serviceref_string.replace(
+                '%3a', ':')[serviceref_string.find("http"):]
+        else:
+            statusinfo['currservice_station'] = "N/A"
 
     # Get Standby State
     from Screens.Standby import inStandby

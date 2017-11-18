@@ -8,26 +8,23 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
+import os
+import imp
+from socket import has_ipv6
+import ipaddress
 
 import enigma
 from Screens.MessageBox import MessageBox
 from Components.config import config
 from Tools.Directories import fileExists
-from twisted.internet import reactor, ssl
-from twisted.web import server, http, static, resource, error, version
-from twisted.internet.error import CannotListenError
-
+from Components.Network import iNetwork
 from controllers.root import RootController
 from sslcertificate import SSLCertificateGenerator, KEY_FILE, CERT_FILE, CA_FILE
-from socket import gethostname, has_ipv6
-from OpenSSL import SSL
-from twisted.internet.protocol import Factory, Protocol
-from Components.Network import iNetwork
 
-import os
-import imp
-import re
-import ipaddress
+from OpenSSL import SSL
+from twisted.internet import reactor, ssl
+from twisted.web import server, http, resource, version
+from twisted.internet.error import CannotListenError
 
 global listener, server_to_stop, site
 listener = []

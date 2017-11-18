@@ -8,6 +8,8 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
+from time import time, strftime, localtime, mktime
+from urllib import unquote
 
 from enigma import eEPGCache, eServiceReference
 from Components.UsageConfig import preferredTimerPath, preferredInstantRecordPath
@@ -15,10 +17,10 @@ from Components.config import config
 from Components.TimerSanityCheck import TimerSanityCheck
 from RecordTimer import RecordTimerEntry, RecordTimer, parseEvent, AFTEREVENT
 from ServiceReference import ServiceReference
-from time import time, strftime, localtime, mktime
-from urllib import unquote
 from info import GetWithAlternative
 from Plugins.Extensions.OpenWebif.__init__ import _
+
+from model_utilities import mangle_epg_text
 
 
 def getTimers(session):
@@ -97,11 +99,7 @@ def getTimers(session):
             {
                 "serviceref": str(
                     timer.service_ref),
-                "servicename": timer.service_ref.getServiceName().replace(
-                    '\xc2\x86',
-                    '').replace(
-                    '\xc2\x87',
-                    ''),
+                "servicename": mangle_epg_text(timer.service_ref.getServiceName()),
                 "eit": timer.eit,
                 "name": timer.name,
                 "description": timer.description,
@@ -205,11 +203,7 @@ def addTimer(
                     {
                         "serviceref": str(
                             conflict.service_ref),
-                        "servicename": conflict.service_ref.getServiceName().replace(
-                            '\xc2\x86',
-                            '').replace(
-                            '\xc2\x87',
-                            ''),
+                        "servicename": mangle_epg_text(conflict.service_ref.getServiceName()),
                         "name": conflict.name,
                         "begin": conflict.begin,
                         "end": conflict.end,
@@ -371,11 +365,7 @@ def editTimer(
                         {
                             "serviceref": str(
                                 conflict.service_ref),
-                            "servicename": conflict.service_ref.getServiceName().replace(
-                                '\xc2\x86',
-                                '').replace(
-                                '\xc2\x87',
-                                ''),
+                            "servicename": mangle_epg_text(conflict.service_ref.getServiceName()),
                             "name": conflict.name,
                             "begin": conflict.begin,
                             "end": conflict.end,
@@ -534,11 +524,7 @@ def recordNow(session, infinite):
     nt = {
         "serviceref": str(
             timer.service_ref),
-        "servicename": timer.service_ref.getServiceName().replace(
-            '\xc2\x86',
-            '').replace(
-                '\xc2\x87',
-                ''),
+        "servicename": mangle_epg_text(timer.service_ref.getServiceName()),
         "eit": timer.eit,
         "name": timer.name,
         "begin": timer.begin,

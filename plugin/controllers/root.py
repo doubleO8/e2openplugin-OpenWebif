@@ -21,7 +21,6 @@ from web import WebController
 from ajax import AjaxController
 from SR import SRController
 from ER import ERController
-from BQE import BQEController
 from transcoding import TranscodingController
 from file import FileController
 import rest_fs_access
@@ -65,10 +64,8 @@ class RootController(BaseController):
         self.putChild("fonts", static.File(getPublicPath() + "/fonts"))
         if os.path.exists(getPublicPath('themes')):
             self.putChild("themes", static.File(getPublicPath() + "/themes"))
-        self.putChild("autotimer", ATController(session))
         self.putChild("serienrecorder", SRController(session))
         self.putChild("epgrefresh", ERController(session))
-        self.putChild("bouqueteditor", BQEController(session))
         self.putChild("transcoding", TranscodingController())
         if piconpath:
             self.putChild("picon", static.File(piconpath))

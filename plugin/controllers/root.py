@@ -66,8 +66,6 @@ class RootController(BaseController):
         self.putChild("fonts", static.File(getPublicPath() + "/fonts"))
         if os.path.exists(getPublicPath('themes')):
             self.putChild("themes", static.File(getPublicPath() + "/themes"))
-        if os.path.exists(getPublicPath('webtv')):
-            self.putChild("webtv", static.File(getPublicPath() + "/webtv"))
         if os.path.exists('/usr/bin/shellinaboxd'):
             self.putChild(
                 "terminal", proxy.ReverseProxyResource(

@@ -66,10 +66,6 @@ class RootController(BaseController):
         self.putChild("fonts", static.File(getPublicPath() + "/fonts"))
         if os.path.exists(getPublicPath('themes')):
             self.putChild("themes", static.File(getPublicPath() + "/themes"))
-        if os.path.exists('/usr/bin/shellinaboxd'):
-            self.putChild(
-                "terminal", proxy.ReverseProxyResource(
-                    '::1', 4200, '/'))
         self.putChild("autotimer", ATController(session))
         self.putChild("serienrecorder", SRController(session))
         self.putChild("epgrefresh", ERController(session))

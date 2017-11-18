@@ -9,11 +9,9 @@
 #                                                                            #
 ##############################################################################
 from socket import has_ipv6
-import ipaddress
 
 from Components.config import config
 from Tools.Directories import fileExists
-from Components.Network import iNetwork
 from controllers.root import RootController
 
 from twisted.internet import reactor

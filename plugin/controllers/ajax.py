@@ -17,7 +17,7 @@ from Components.config import config
 from models.services import getBouquets, getChannels, getSatellites, \
     getProviders, getEventDesc, getChannelEpg, getSearchEpg, \
     getCurrentFullInfo, getMultiEpg, getEvent
-from models.info import getInfo, getPublicPath, getOpenWebifVer, \
+from models.info import getInfo, getPublicPath, \
     getTranscodingSupport, getLanguage
 from models.movies import getMovieList
 from models.timers import getTimers
@@ -83,21 +83,10 @@ class AjaxController(BaseController):
             'recording_margin_before'] = config.recording.margin_before.value
         event['event'][
             'recording_margin_after'] = config.recording.margin_after.value
-        at = False
-        try:
-            from Plugins.Extensions.AutoTimer.AutoTimer import AutoTimer
-            at = True
-        except ImportError:
-            pass
-        event['at'] = at
+        event['at'] = False
         event['transcoding'] = getTranscodingSupport()
         event['kinopoisk'] = getLanguage()
         return event
-
-    def P_about(self, request):
-        info = {}
-        info["owiver"] = getOpenWebifVer()
-        return {"info": info}
 
     def P_boxinfo(self, request):
         info = getInfo(self.session, need_fullinfo=True)
@@ -198,9 +187,6 @@ class AjaxController(BaseController):
         return movies
 
     def P_radio(self, request):
-        return {}
-
-    def P_terminal(self, request):
         return {}
 
     def P_timers(self, request):

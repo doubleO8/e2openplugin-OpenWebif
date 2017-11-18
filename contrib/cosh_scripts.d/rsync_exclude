@@ -1,0 +1,7 @@
+*~
+.idea/
+*.py[cod]
+config.local.js
+.git*
+pack/
+opkg-utils/

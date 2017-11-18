@@ -160,11 +160,11 @@ class WebController(BaseController):
 
     def P_selectaudiotrack(self, request):
         try:
-            id = int(request.args["id"][0])
+            track_id = int(request.args["id"][0])
         except Exception as e:
-            id = -1
+            track_id = -1
 
-        return setAudioTrack(self.session, id)
+        return setAudioTrack(self.session, track_id)
 
     def P_zap(self, request):
         res = self.testMandatoryArguments(request, ["sRef"])

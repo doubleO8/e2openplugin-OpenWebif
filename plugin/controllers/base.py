@@ -10,7 +10,7 @@
 ##############################################################################
 import os
 import imp
-import json
+import logging
 
 from twisted.web import server, http, resource
 
@@ -70,6 +70,7 @@ class BaseController(resource.Resource):
         self.session = kwargs.get("session")
         self.withMainTemplate = kwargs.get("withMainTemplate", False)
         self.isCustom = kwargs.get("isCustom", False)
+        self.log = logging.getLogger(__name__)
 
     def error404(self, request):
         request.setHeader("content-type", "text/html")
@@ -117,7 +118,6 @@ class BaseController(resource.Resource):
             request.uri = request.uri.replace('signal', 'tunersignal')
             request.path = request.path.replace('signal', 'tunersignal')
 
-        self.suppresslog = False
         self.path = self.path.replace(".", "")
         func = getattr(self, "P_" + self.path, None)
         if callable(func):
@@ -130,24 +130,15 @@ class BaseController(resource.Resource):
 
             data = func(request)
             if data is None:
-                #				if not self.suppresslog:
-                # print "[OpenWebif] page '%s' without content" % request.uri
                 self.error404(request)
             elif self.isCustom:
-                #				if not self.suppresslog:
-                #					print "[OpenWebif] page '%s' ok (custom)" % request.uri
                 request.write(data)
                 request.finish()
             elif isinstance(data, str):
-                #				if not self.suppresslog:
-                # print "[OpenWebif] page '%s' ok (simple string)" %
-                # request.uri
                 request.setHeader("content-type", "text/plain")
                 request.write(data)
                 request.finish()
             else:
-                # print "[OpenWebif] page '%s' ok (cheetah template)" %
-                # request.uri
                 module = request.path
                 if module[-1] == "/":
                     module += "index"
@@ -157,7 +148,7 @@ class BaseController(resource.Resource):
                 module = module.replace(".", "")
                 out = self.loadTemplate(module, self.path, data)
                 if out is None:
-                    print "[OpenWebif] ERROR! Template not found for page '%s'" % request.uri
+                    self.log.error("Template not found for page {!r}".format(request.uri))
                     self.error404(request)
                 else:
                     if self.withMainTemplate:
@@ -170,7 +161,7 @@ class BaseController(resource.Resource):
                     request.finish()
 
         else:
-            print "[OpenWebif] page '%s' not found" % request.uri
+            self.log.error("Page {!r} not found".format(request.uri))
             self.error404(request)
 
         # restore cached data
@@ -253,9 +244,10 @@ class BaseController(resource.Resource):
                     extras.append({'key': lcd4linux_key, 'description': _(
                         "LCD4Linux Setup"), 'nw': '1'})
 
-        self.oscamconf = self.oscamconfPath()
-        if self.oscamconf is not None:
-            data = open(self.oscamconf, "r").readlines()
+        oscamconf = self.oscamconfPath()
+        if oscamconf is not None:
+            self.log.info("Reading oscam conf {!r}".format(oscamconf))
+            data = open(oscamconf, "r").readlines()
             proto = "http"
             port = None
             for i in data:

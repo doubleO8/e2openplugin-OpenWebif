@@ -187,10 +187,6 @@ class OpenWebifConfig(Screen, ConfigListScreen):
                         config.OpenWebif.no_root_access))
             self.list.append(
                 getConfigListEntry(
-                    _("Enable Parental Control"),
-                    config.OpenWebif.parentalenabled))
-            self.list.append(
-                getConfigListEntry(
                     _("Add service name to stream information"),
                     config.OpenWebif.service_name_for_stream))
 

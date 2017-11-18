@@ -113,14 +113,6 @@ def zapService(session, id, title="", stream=False):
     isRecording = service.getPath()
     isRecording = isRecording and isRecording.startswith("/")
 
-    if not isRecording:
-        if config.ParentalControl.servicepinactive.value and config.OpenWebif.parentalenabled.value:
-            if getProtection(service.toString()) != "0":
-                return {
-                    "result": False,
-                    "message": "Service '%s' is blocked by parental Control" %
-                    title}
-
     # use mediaplayer for recording
     if isRecording:
         if isinstance(session.current_dialog, InfoBar):

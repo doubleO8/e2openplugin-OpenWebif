@@ -146,105 +146,99 @@ def getMovieList(rargs=None, locations=None):
             ff = eServiceReference(MOVIE_LIST_SREF_ROOT + f)
             folders.append(ff)
 
-    if config.OpenWebif.parentalenabled.value:
-        dir_is_protected = checkParentalProtection(directory)
-    else:
-        dir_is_protected = False
+    for root in folders:
+        movielist = MovieList(None)
+        movielist.load(root, None)
 
-    if not dir_is_protected:
-        for root in folders:
-            movielist = MovieList(None)
-            movielist.load(root, None)
+        if tag is not None:
+            movielist.reload(root=root, filter_tags=[tag])
 
-            if tag is not None:
-                movielist.reload(root=root, filter_tags=[tag])
+        for (serviceref, info, begin, unknown) in movielist.list:
+            if serviceref.flags & eServiceReference.mustDescent:
+                continue
 
-            for (serviceref, info, begin, unknown) in movielist.list:
-                if serviceref.flags & eServiceReference.mustDescent:
-                    continue
+            length_minutes = 0
+            txtdesc = ""
+            filename = '/'.join(serviceref.toString().split("/")[1:])
+            filename = '/' + filename
+            name, ext = os.path.splitext(filename)
 
-                length_minutes = 0
-                txtdesc = ""
-                filename = '/'.join(serviceref.toString().split("/")[1:])
-                filename = '/' + filename
-                name, ext = os.path.splitext(filename)
+            sourceRef = ServiceReference(
+                info.getInfoString(
+                    serviceref, iServiceInformation.sServiceref))
+            rtime = info.getInfo(
+                serviceref, iServiceInformation.sTimeCreate)
 
-                sourceRef = ServiceReference(
-                    info.getInfoString(
-                        serviceref, iServiceInformation.sServiceref))
-                rtime = info.getInfo(
-                    serviceref, iServiceInformation.sTimeCreate)
+            movie = {
+                'filename': filename,
+                'filename_stripped': filename.split("/")[-1],
+                'serviceref': serviceref.toString(),
+                'length': "?:??",
+                'lastseen': 0,
+                'filesize_readable': '',
+                'recordingtime': rtime,
+                'begintime': 'undefined',
+                'eventname': mangle_epg_text(ServiceReference(serviceref).getServiceName()),
+                'servicename': mangle_epg_text(sourceRef.getServiceName()),
+                'tags': info.getInfoString(serviceref, iServiceInformation.sTags),
+                'fullname': serviceref.toString(),
+            }
 
-                movie = {
-                    'filename': filename,
-                    'filename_stripped': filename.split("/")[-1],
-                    'serviceref': serviceref.toString(),
-                    'length': "?:??",
-                    'lastseen': 0,
-                    'filesize_readable': '',
-                    'recordingtime': rtime,
-                    'begintime': 'undefined',
-                    'eventname': mangle_epg_text(ServiceReference(serviceref).getServiceName()),
-                    'servicename': mangle_epg_text(sourceRef.getServiceName()),
-                    'tags': info.getInfoString(serviceref, iServiceInformation.sTags),
-                    'fullname': serviceref.toString(),
-                }
+            if rtime > 0:
+                fuzzy_rtime = FuzzyTime(rtime)
+                movie['begintime'] = fuzzy_rtime[0] + ", " + fuzzy_rtime[1]
 
-                if rtime > 0:
-                    fuzzy_rtime = FuzzyTime(rtime)
-                    movie['begintime'] = fuzzy_rtime[0] + ", " + fuzzy_rtime[1]
+            try:
+                length_minutes = info.getLength(serviceref)
+            except BaseException:
+                pass
+
+            if length_minutes:
+                movie['length'] = "%d:%02d" % (
+                    length_minutes / 60, length_minutes % 60)
+                if fields is None or 'pos' in fields:
+                    movie['lastseen'] = getPosition(
+                        filename + '.cuts', length_minutes)
+
+            if fields is None or 'desc' in fields:
+                txtfile = name + '.txt'
+                if ext.lower() != '.ts' and os.path.isfile(txtfile):
+                    with open(txtfile, "rb") as handle:
+                        txtdesc = ''.join(handle.readlines())
+
+                event = info.getEvent(serviceref)
+                extended_description = event and event.getExtendedDescription() or ""
+                if extended_description == '' and txtdesc != '':
+                    extended_description = txtdesc
+                movie['descriptionExtended'] = unicode(
+                    extended_description, 'utf_8', errors='ignore').encode(
+                    'utf_8', 'ignore')
+
+                desc = info.getInfoString(
+                    serviceref, iServiceInformation.sDescription)
+                movie['description'] = unicode(
+                    desc, 'utf_8', errors='ignore').encode(
+                    'utf_8', 'ignore')
+
+            if fields is None or 'size' in fields:
+                size = 0
+                sz = ''
 
                 try:
-                    length_minutes = info.getLength(serviceref)
+                    size = os.stat(filename).st_size
+                    if size > 1073741824:
+                        sz = "%.2f %s" % ((size / 1073741824.), _("GB"))
+                    elif size > 1048576:
+                        sz = "%.2f %s" % ((size / 1048576.), _("MB"))
+                    elif size > 1024:
+                        sz = "%.2f %s" % ((size / 1024.), _("kB"))
                 except BaseException:
                     pass
 
-                if length_minutes:
-                    movie['length'] = "%d:%02d" % (
-                        length_minutes / 60, length_minutes % 60)
-                    if fields is None or 'pos' in fields:
-                        movie['lastseen'] = getPosition(
-                            filename + '.cuts', length_minutes)
+                movie['filesize'] = size
+                movie['filesize_readable'] = sz
 
-                if fields is None or 'desc' in fields:
-                    txtfile = name + '.txt'
-                    if ext.lower() != '.ts' and os.path.isfile(txtfile):
-                        with open(txtfile, "rb") as handle:
-                            txtdesc = ''.join(handle.readlines())
-
-                    event = info.getEvent(serviceref)
-                    extended_description = event and event.getExtendedDescription() or ""
-                    if extended_description == '' and txtdesc != '':
-                        extended_description = txtdesc
-                    movie['descriptionExtended'] = unicode(
-                        extended_description, 'utf_8', errors='ignore').encode(
-                        'utf_8', 'ignore')
-
-                    desc = info.getInfoString(
-                        serviceref, iServiceInformation.sDescription)
-                    movie['description'] = unicode(
-                        desc, 'utf_8', errors='ignore').encode(
-                        'utf_8', 'ignore')
-
-                if fields is None or 'size' in fields:
-                    size = 0
-                    sz = ''
-
-                    try:
-                        size = os.stat(filename).st_size
-                        if size > 1073741824:
-                            sz = "%.2f %s" % ((size / 1073741824.), _("GB"))
-                        elif size > 1048576:
-                            sz = "%.2f %s" % ((size / 1048576.), _("MB"))
-                        elif size > 1024:
-                            sz = "%.2f %s" % ((size / 1024.), _("kB"))
-                    except BaseException:
-                        pass
-
-                    movie['filesize'] = size
-                    movie['filesize_readable'] = sz
-
-                movieliste.append(movie)
+            movieliste.append(movie)
 
     if locations is None:
         return {

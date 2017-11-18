@@ -376,10 +376,7 @@ def getChannels(idbouquet, stype):
                 psref.get('service_type'), "UNKNOWN")
             chan['ns'] = NS_LOOKUP.get(psref.get('ns'), "DVB-S")
             chan['picon'] = getPicon(chan['ref'])
-            if config.OpenWebif.parentalenabled.value and config.ParentalControl.configured.value and config.ParentalControl.servicepinactive.value:
-                chan['protection'] = getProtection(channel[0])
-            else:
-                chan['protection'] = "0"
+            chan['protection'] = "0"
             nowevent = epgcache.lookupEvent(['TBDCIX', (channel[0], 0, -1)])
             if len(nowevent) > 0 and nowevent[0][0] is not None:
                 chan['now_title'] = filterName(nowevent[0][0])

@@ -28,6 +28,7 @@ from ajax import AjaxController
 from rest import json_response, CORS_ALLOWED_METHODS_DEFAULT, CORS_DEFAULT
 from rest import CORS_DEFAULT_ALLOW_ORIGIN
 from rest_saveconfig_api import SaveConfigApiController
+from rest_eventlookup_api import EventLookupApiController
 
 #: OpenAPI specification source (swagger.json)
 SWAGGER_TEMPLATE = os.path.join(
@@ -44,6 +45,7 @@ class ApiController(resource.Resource):
         resource.Resource.__init__(self)
         self.putChild("saveconfig",
                       SaveConfigApiController(session=session, path=path))
+        self.putChild("eventlookup", EventLookupApiController())
 
         #: web controller instance
         self.web_instance = WebController(session, path)

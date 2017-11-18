@@ -15,6 +15,7 @@
 #
 # Authors: meo <lupomeo@hotmail.com>, skaman <sandro@skanetwork.com>
 # Graphics: .....
+import logging
 
 from Screens.Screen import Screen
 from Plugins.Plugin import PluginDescriptor
@@ -29,6 +30,13 @@ from controllers.models.info import getInfo
 from httpserver import HttpdStart, HttpdStop, HttpdRestart
 
 from __init__ import _
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)-8s %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S',
+                    filename="/media/hdd/openwebif.log")
+
+LOG = logging.getLogger("PLUGIN")
 
 # not used redmond -> original , trontastic , ui-lightness
 THEMES = [
@@ -110,7 +118,6 @@ config.OpenWebif.epg_encoding = ConfigSelection(
         'iso-8859-10',
         'iso-8859-16'])
 
-
 imagedistro = getInfo()['imagedistro']
 
 
@@ -137,11 +144,11 @@ class OpenWebifConfig(Screen, ConfigListScreen):
 
         self["actions"] = ActionMap(["WizardActions", "ColorActions"],
                                     {
-            "red": self.keyCancel,
-            "back": self.keyCancel,
-            "green": self.keySave,
+                                        "red": self.keyCancel,
+                                        "back": self.keyCancel,
+                                        "green": self.keySave,
 
-        }, -2)
+                                    }, -2)
         self.runSetup()
         self.onLayoutFinish.append(self.setWindowTitle)
 
@@ -201,7 +208,7 @@ class OpenWebifConfig(Screen, ConfigListScreen):
                         _("Disable remote access for user root"),
                         config.OpenWebif.no_root_access))
             if not config.OpenWebif.auth.value or (
-                    config.OpenWebif.https_enabled.value and not config.OpenWebif.https_auth.value):
+                        config.OpenWebif.https_enabled.value and not config.OpenWebif.https_auth.value):
                 self.list.append(
                     getConfigListEntry(
                         _("Without auth only local access is allowed!"),
@@ -219,7 +226,7 @@ class OpenWebifConfig(Screen, ConfigListScreen):
                     _("Add service name to stream information"),
                     config.OpenWebif.service_name_for_stream))
 
-            if imagedistro in ("VTi-Team Image", ):
+            if imagedistro in ("VTi-Team Image",):
                 self.list.append(
                     getConfigListEntry(
                         _("Character encoding for EPG data"),
@@ -268,18 +275,25 @@ def confplug(session, **kwargs):
 
 
 def IfUpIfDown(reason, **kwargs):
-    if reason is True:
-        HttpdStart(global_session)
-    else:
-        HttpdStop(global_session)
+    LOG.info("IfUpIfDown({!r})".format(reason))
+
+    try:
+        if reason is True:
+            HttpdStart(global_session)
+        else:
+            HttpdStop(global_session)
+    except Exception as exc:
+        LOG.error(exc)
 
 
 def startSession(reason, session):
+    LOG.info("startSession({!r})".format(session))
     global global_session
     global_session = session
 
 
 def main_menu(menuid, **kwargs):
+    LOG.info("main_menu({!r})".format(menuid))
     if menuid == "network":
         return [("OpenWebif", confplug, "openwebif", 45)]
     else:
@@ -323,4 +337,5 @@ def Plugins(**kwargs):
                 where=[
                     PluginDescriptor.WHERE_PLUGINMENU],
                 fnc=confplug))
+
     return result

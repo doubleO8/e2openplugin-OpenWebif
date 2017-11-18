@@ -68,6 +68,7 @@ SERVICES_KEY_MAP = {
 class ServicesEventDict(dict):
     """
     """
+
     def __init__(self, raw_data, now_next_mode=False, mangle_html=True):
         """
         >>> dd_in = (123, 1506020400, 120*60, 1506020440, "DASDING Sprechstunde", None, None, "1:0:2:6F37:431:A401:FFFF0000:0:0:0:", "DASDING")
@@ -100,13 +101,12 @@ class ServicesEventDict(dict):
                 self['now_timestamp'] = 0
                 self['remaining'] = 0
             else:
-                current_timestamp = raw_data[FLAGS_WEB.index(FLAG_CURRENT_TIME)]
+                current_timestamp = self['now_timestamp']
                 if current_timestamp > self['begin_timestamp']:
-                    self['remaining'] = self['begin_timestamp'] + self['duration_sec'] - current_timestamp
+                    self['remaining'] = self['begin_timestamp'] + self[
+                        'duration_sec'] - current_timestamp
                 else:
                     self['remaining'] = self['duration_sec']
-
-
 
 
 if __name__ == '__main__':

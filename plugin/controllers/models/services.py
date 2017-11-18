@@ -638,7 +638,7 @@ def getChannelEpg(ref, begintime=-1, endtime=-1):
     return {"events": ret, "result": True}
 
 
-def getBouquetEpg(ref, begintime=-1, endtime=None):
+def getBouquetEpg(ref, begintime=-1, endtime=None, mangle_html=True):
     ref = unquote(ref)
     ret = []
     services = eServiceCenter.getInstance().list(eServiceReference(ref))
@@ -654,24 +654,17 @@ def getBouquetEpg(ref, begintime=-1, endtime=None):
 
     epgcache = eEPGCache.getInstance()
     events = epgcache.lookupEvent(search)
-    if events is not None:
-        for event in events:
-            ev = {}
-            ev['id'] = event[0]
-            ev['begin_timestamp'] = event[1]
-            ev['duration_sec'] = event[2]
-            ev['title'] = event[4]
-            ev['shortdesc'] = convertDesc(event[5])
-            ev['longdesc'] = convertDesc(event[6])
-            ev['sref'] = event[7]
-            ev['sname'] = filterName(event[8])
-            ev['now_timestamp'] = event[3]
-            ret.append(ev)
+    if not events:
+        return {"events": [], "result": True}
+
+    for raw_data in events:
+        ret.append(ServicesEventDict(
+            raw_data, now_next_mode=True, mangle_html=mangle_html))
 
     return {"events": ret, "result": True}
 
 
-def getServicesNowNextEpg(sList):
+def getServicesNowNextEpg(sList, mangle_html=True):
     ret = []
     if not sList:
         return {"events": ret, "result": False}
@@ -684,28 +677,17 @@ def getServicesNowNextEpg(sList):
 
     epgcache = eEPGCache.getInstance()
     events = epgcache.lookupEvent(search)
-    if events is not None:
-        for event in events:
-            ev = {}
-            ev['id'] = event[0]
-            ev['begin_timestamp'] = event[1]
-            ev['duration_sec'] = event[2]
-            ev['title'] = event[4]
-            ev['shortdesc'] = convertDesc(event[5])
-            ev['longdesc'] = convertDesc(event[6])
-            # if event[7] is not None:
-            #	achannels = GetWithAlternative(event[7], False)
-            #	if achannels:
-            #		ev['asrefs'] = achannels
-            ev['sref'] = event[7]
-            ev['sname'] = filterName(event[8])
-            ev['now_timestamp'] = event[3]
-            ret.append(ev)
+    if not events:
+        return {"events": [], "result": True}
+
+    for raw_data in events:
+        ret.append(ServicesEventDict(
+            raw_data, now_next_mode=True, mangle_html=mangle_html))
 
     return {"events": ret, "result": True}
 
 
-def getBouquetNowNextEpg(ref, servicetype):
+def getBouquetNowNextEpg(ref, servicetype, mangle_html=True):
     ref = unquote(ref)
     ret = []
     services = eServiceCenter.getInstance().list(eServiceReference(ref))
@@ -723,23 +705,18 @@ def getBouquetNowNextEpg(ref, servicetype):
 
     epgcache = eEPGCache.getInstance()
     events = epgcache.lookupEvent(search)
-    if events is not None:
-        for event in events:
-            ev = {}
-            ev['id'] = event[0]
-            ev['begin_timestamp'] = event[1]
-            ev['duration_sec'] = event[2]
-            ev['title'] = event[4]
-            ev['shortdesc'] = convertDesc(event[5])
-            ev['longdesc'] = convertDesc(event[6])
-            if event[7] is not None:
-                achannels = GetWithAlternative(event[7], False)
-                if achannels:
-                    ev['asrefs'] = achannels
-            ev['sref'] = event[7]
-            ev['sname'] = filterName(event[8])
-            ev['now_timestamp'] = event[3]
-            ret.append(ev)
+
+    if not events:
+        return {"events": [], "result": True}
+
+    for raw_data in events:
+        e_data = ServicesEventDict(
+            raw_data, now_next_mode=True, mangle_html=mangle_html)
+        if e_data['sref'] is not None:
+            achannels = GetWithAlternative(e_data['sref'], False)
+            if achannels:
+                e_data['asrefs'] = achannels
+        ret.append(e_data)
 
     return {"events": ret, "result": True}
 

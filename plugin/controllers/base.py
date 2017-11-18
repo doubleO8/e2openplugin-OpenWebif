@@ -372,5 +372,4 @@ class BaseController(resource.Resource):
                 config.OpenWebif.webcache.theme.value = theme
                 config.OpenWebif.webcache.theme.save()
         ret['theme'] = theme
-        ret['webtv'] = os.path.exists(getPublicPath('webtv'))
         return ret

@@ -29,9 +29,11 @@ from rest import json_response, CORS_ALLOWED_METHODS_DEFAULT, CORS_DEFAULT
 from rest import CORS_DEFAULT_ALLOW_ORIGIN
 from rest_saveconfig_api import SaveConfigApiController
 
+#: OpenAPI specification source (swagger.json)
 SWAGGER_TEMPLATE = os.path.join(
     os.path.dirname(__file__), 'swagger.json')
 
+#: prefix for OpenWebif controller methods
 OWIF_PREFIX = 'P_'
 
 
@@ -40,10 +42,8 @@ class ApiController(resource.Resource):
 
     def __init__(self, session, path="", *args, **kwargs):
         resource.Resource.__init__(self)
-        saveconfig_controller_instance = EncodingResourceWrapper(
-            SaveConfigApiController(session=session, path=path),
-            [GzipEncoderFactory()])
-        self.putChild("saveconfig", saveconfig_controller_instance)
+        self.putChild("saveconfig",
+                      SaveConfigApiController(session=session, path=path))
 
         #: web controller instance
         self.web_instance = WebController(session, path)

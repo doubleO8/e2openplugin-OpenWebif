@@ -24,7 +24,6 @@ from models.timers import getTimers
 from models.config import getConfigs, getConfigsSections, getZapStream, \
     getShowChPicon
 from base import BaseController
-from models.locations import getLocations
 
 try:
     from boxbranding import getBoxType, getMachineName, \
@@ -243,7 +242,6 @@ class AjaxController(BaseController):
             ret['theme'] = 'original'
         ret['zapstream'] = getZapStream()['zapstream']
         ret['showchannelpicon'] = getShowChPicon()['showchannelpicon']
-        ret['allowipkupload'] = config.OpenWebif.allow_upload_ipk.value
         return ret
 
     def P_multiepg(self, request):
@@ -294,9 +292,3 @@ class AjaxController(BaseController):
         epg['mode'] = mode
         epg['epgmode'] = epgmode
         return epg
-
-    def P_bqe(self, request):
-        return {}
-
-    def P_epgr(self, request):
-        return {}

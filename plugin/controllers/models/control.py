@@ -145,7 +145,7 @@ def zapService(session, id, title="", stream=False):
     }
 
 
-def remoteControl(key, type="", rcu=""):
+def remoteControl(key, pressed_type="", rcu=""):
     # TODO: do something better here
     if rcu == "standard":
         remotetype = "dreambox remote control (native)"
@@ -173,10 +173,10 @@ def remoteControl(key, type="", rcu=""):
             print "[OpenWebIf] wrong hw detection"
 
     amap = eActionMap.getInstance()
-    if type == "long":
+    if pressed_type == "long":
         amap.keyPressed(remotetype, key, 0)
         amap.keyPressed(remotetype, key, 3)
-    elif type == "ascii":
+    elif pressed_type == "ascii":
         amap.keyPressed(remotetype, key, 4)
     else:
         amap.keyPressed(remotetype, key, 0)

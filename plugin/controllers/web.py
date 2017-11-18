@@ -184,24 +184,23 @@ class WebController(BaseController):
         if res:
             return res
 
-        id = -1
         try:
-            id = int(request.args["command"][0])
+            key_id = int(request.args["command"][0])
         except Exception as e:
             return {
                 "result": False,
                 "message": _("The parameter 'command' must be a number")
             }
 
-        type = ""
+        pressed_type = ""
         rcu = ""
         if "type" in request.args.keys():
-            type = request.args["type"][0]
+            pressed_type = request.args["type"][0]
 
         if "rcu" in request.args.keys():
             rcu = request.args["rcu"][0]
 
-        return remoteControl(id, type, rcu)
+        return remoteControl(key_id, pressed_type, rcu)
 
     def P_powerstate(self, request):
         if "shift" in request.args.keys():

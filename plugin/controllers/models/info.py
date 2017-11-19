@@ -639,7 +639,6 @@ def getInfo(session=None, need_fullinfo=False):
                 from Plugins.Extensions.OpenWebif.controllers.stream import \
                     streamList
                 s_name = ''
-                s_cip = ''
 
                 print "[OpenWebif] -D- streamList count '%d'" % len(streamList)
                 if len(streamList) == 1:
@@ -682,13 +681,13 @@ def getInfo(session=None, need_fullinfo=False):
 
                 for rec in recs:
                     feinfo = rec.frontendInfo()
-                    frontendData = feinfo and feinfo.getAll(True)
-                    if frontendData is not None:
+                    frontend_data = feinfo and feinfo.getAll(True)
+                    if frontend_data is not None:
                         cur_info = feinfo.getTransponderData(True)
                         if cur_info:
-                            nr = frontendData['tuner_number']
-                            info['tuners'][nr]['rec'] = getOrbitalText(
-                                cur_info) + ' / ' + sname
+                            ti_nr = info['tuners'][frontend_data['tuner_number']]
+                            label = getOrbitalText(cur_info) + ' / ' + sname
+                            ti_nr['rec'] = mangle_epg_text(label)
 
             service = session.nav.getCurrentService()
             if service is not None:
@@ -702,8 +701,8 @@ def getInfo(session=None, need_fullinfo=False):
                     cur_info = feinfo.getTransponderData(True)
                     if cur_info:
                         ti_nr = info['tuners'][frontend_data['tuner_number']]
-                        live_label = getOrbitalText(cur_info) + ' / ' + sname
-                        ti_nr['live'] = live_label
+                        label = getOrbitalText(cur_info) + ' / ' + sname
+                        ti_nr['live'] = mangle_epg_text(label)
                         ti_nr['live_meta'] = {
                             'service_name': mangle_epg_text(sname),
                             'service_reference': service_reference.toString()

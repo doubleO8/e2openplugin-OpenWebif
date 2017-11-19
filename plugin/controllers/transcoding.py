@@ -121,7 +121,7 @@ class TranscodingController(resource.Resource):
                 config.plugins.transcodingsetup.save()
 
         result = ['<?xml version="1.0" encoding="UTF-8" ?>',
-                  'e2configs>']
+                  '<e2configs>']
 
         for encoder in encoders:
             encoder_features = get_transcoding_features(encoder)

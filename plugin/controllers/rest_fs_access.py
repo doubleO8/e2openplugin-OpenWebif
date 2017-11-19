@@ -8,8 +8,8 @@ This controller exposes parts or all of the server's filesystem.
 Means to retrieve and delete files are provided as well as the
 ability to list folder contents.
 
-The generated responses are returned as JSON data with appropriate HTTP headers.
-Output will be compressed using gzip for some files if using wrapper
+The generated responses are returned as JSON data with appropriate HTTP
+headers. Output will be compressed using gzip for some files if using wrapper
 and requested by client.
 
 Example calls using curl
@@ -28,73 +28,79 @@ Fetch example file 'example.txt'
 
 Fetch gzipped example file 'example.txt'
 
-    curl --compressed -H "Accept-Encoding: gzip" --noproxy localhost -iv http://localhost:18888/fs/example.txt
+    curl --compressed -H "Accept-Encoding: gzip" --noproxy localhost -iv \
+    http://localhost:18888/fs/example.txt
 
 Delete example file 'example.txt'
 
-    curl --noproxy localhost -iv -X DELETE http://localhost:18888/fs/example.txt
+    curl --noproxy localhost -iv -X DELETE \
+    http://localhost:18888/fs/example.txt
 
 Create example file 'test.dat' using HTTP POST request on /fs
 
-    curl --noproxy localhost -iv -X POST http://localhost:18888/fs?filename=test.dat -F "data=blabla"
+    curl --noproxy localhost -iv -X POST \
+    http://localhost:18888/fs?filename=test.dat -F "data=blabla"
 
 Request file '/etc/sysctl.conf' (compressed)
 
-    curl --compressed -H "Accept-Encoding: gzip" --noproxy localhost -I http://localhost/fs/etc/sysctl.conf
+    curl --compressed -H "Accept-Encoding: gzip" --noproxy localhost \
+    -I http://localhost/fs/etc/sysctl.conf
 
 Example Response:
 
-	HTTP/1.1 200 OK
-	Content-Encoding: gzip
-	Accept-Ranges: bytes
-	Expires: Fri, 27 Oct 2017 17:24:11 GMT
-	Server: TwistedWeb/16.2.0
-	Last-Modified: Thu, 01 Jan 1970 00:05:52 GMT
-	Cache-Control: public
-	Date: Wed, 27 Sep 2017 17:24:11 GMT
-	Access-Control-Allow-Origin: *
-	Content-Type: text/plain
-	Set-Cookie: TWISTED_SESSION=7aa774819460330851b703cb3d82b240; Path=/
+    HTTP/1.1 200 OK
+    Content-Encoding: gzip
+    Accept-Ranges: bytes
+    Expires: Fri, 27 Oct 2017 17:24:11 GMT
+    Server: TwistedWeb/16.2.0
+    Last-Modified: Thu, 01 Jan 1970 00:05:52 GMT
+    Cache-Control: public
+    Date: Wed, 27 Sep 2017 17:24:11 GMT
+    Access-Control-Allow-Origin: *
+    Content-Type: text/plain
+    Set-Cookie: TWISTED_SESSION=7aa774819460330851b703cb3d82b240; Path=/
 
 Request file '/etc/sysctl.conf' (without compression)
 
-	curl --noproxy localhost -I http://localhost/fs/etc/sysctl.conf
+    curl --noproxy localhost -I http://localhost/fs/etc/sysctl.conf
 
 Example Response:
 
-	HTTP/1.1 200 OK
-	Content-Length: 2065
-	Accept-Ranges: bytes
-	Expires: Fri, 27 Oct 2017 17:26:05 GMT
-	Server: TwistedWeb/16.2.0
-	Last-Modified: Thu, 01 Jan 1970 00:05:52 GMT
-	Cache-Control: public
-	Date: Wed, 27 Sep 2017 17:26:05 GMT
-	Access-Control-Allow-Origin: *
-	Content-Type: text/plain
-	Set-Cookie: TWISTED_SESSION=0b3688af9874df9b432f09bedae63c40; Path=/
+    HTTP/1.1 200 OK
+    Content-Length: 2065
+    Accept-Ranges: bytes
+    Expires: Fri, 27 Oct 2017 17:26:05 GMT
+    Server: TwistedWeb/16.2.0
+    Last-Modified: Thu, 01 Jan 1970 00:05:52 GMT
+    Cache-Control: public
+    Date: Wed, 27 Sep 2017 17:26:05 GMT
+    Access-Control-Allow-Origin: *
+    Content-Type: text/plain
+    Set-Cookie: TWISTED_SESSION=0b3688af9874df9b432f09bedae63c40; Path=/
 
 Create example file 'test_01.ts' using HTTP POST request on /fs. After that
 request 'test_01.ts' compressed. Because of the file extension the server will
 _not_ return its content gzip encoded and orders the client not to cache the
 result.
 
-	curl --noproxy localhost -iv -X POST http://localhost/fs/tmp?filename=test_01.ts -F "data=dummy"
-	curl --compressed -H "Accept-Encoding: gzip" --noproxy localhost -I http://localhost/fs/tmp/test_01.ts
+    curl --noproxy localhost -iv -X POST \
+    http://localhost/fs/tmp?filename=test_01.ts -F "data=dummy"
+    curl --compressed -H "Accept-Encoding: gzip" --noproxy localhost -I \
+    http://localhost/fs/tmp/test_01.ts
 
 Example response:
 
-	HTTP/1.1 200 OK
-	Content-Length: 5
-	Accept-Ranges: bytes
-	Expires: -1
-	Server: TwistedWeb/16.2.0
-	Last-Modified: Wed, 27 Sep 2017 17:33:08 GMT
-	Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0
-	Date: Wed, 27 Sep 2017 17:33:19 GMT
-	Access-Control-Allow-Origin: *
-	Content-Type: video/MP2T
-	Set-Cookie: TWISTED_SESSION=7d3e06aa234b04e1124d4812c80dad22; Path=/
+    HTTP/1.1 200 OK
+    Content-Length: 5
+    Accept-Ranges: bytes
+    Expires: -1
+    Server: TwistedWeb/16.2.0
+    Last-Modified: Wed, 27 Sep 2017 17:33:08 GMT
+    Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0
+    Date: Wed, 27 Sep 2017 17:33:19 GMT
+    Access-Control-Allow-Origin: *
+    Content-Type: video/MP2T
+    Set-Cookie: TWISTED_SESSION=7d3e06aa234b04e1124d4812c80dad22; Path=/
 
 """
 import os
@@ -179,14 +185,14 @@ class RESTFilesystemController(twisted.web.resource.Resource):
         Default Constructor.
 
         Args:
-                resource_prefix: Prefix value for this controller instance.
-                        Default is :py:data:`FileController._resource_prefix`
-                root: Root path of files to be served.
-                        Default is the path where the current file is located
-                do_delete: Try to actually delete files?
-                        Default is False.
-                delete_whitelist: Folder prefixes where delete operations are
-                        allowed _at all_. Default is :py:data:`DELETE_WHITELIST`
+            resource_prefix: Prefix value for this controller instance.
+                    Default is :py:data:`FileController._resource_prefix`
+            root: Root path of files to be served.
+                    Default is the path where the current file is located
+            do_delete: Try to actually delete files?
+                    Default is False.
+            delete_whitelist: Folder prefixes where delete operations are
+                    allowed _at all_. Default is :py:data:`DELETE_WHITELIST`
         """
         if args:
             for key, value in zip(self._override_args, args):
@@ -203,7 +209,8 @@ class RESTFilesystemController(twisted.web.resource.Resource):
         headers = {}
         if expires is False:
             headers[
-                'Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+                'Cache-Control'] = 'no-store, no-cache, must-revalidate, ' \
+                                   'post-check=0, pre-check=0, max-age=0'
             headers['Expires'] = '-1'
         else:
             now = datetime.datetime.now()

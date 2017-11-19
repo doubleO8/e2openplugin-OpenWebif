@@ -249,7 +249,10 @@ tstrings = {
     'zap_to': _("Zap to"),
     'zapped_to': _("Zapped to"),
     'translation_spanish': _('Translation to Spanish'),
-    'license_text': _('All Files of this Software are open source software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 3 as published by the Free Software Foundation.'),
+    'license_text': _('All Files of this Software are open source software; '
+                      'you can redistribute it and/or modify it under the '
+                      'terms of the GNU General Public License version 3 as '
+                      'published by the Free Software Foundation.'),
     'Root': _('Root'),
     'at_list': _("AutoTimer List"),
     'at_at_edit': _("AutoTimer Edit"),
@@ -262,7 +265,8 @@ tstrings = {
     'at_exact_match': _("exact match"),
     'at_description_match': _("description match"),
     'at_title_or_description_match': _("title or description match"),
-    'at_title_or_short_description_match': _("title or short description match"),
+    'at_title_or_short_description_match':
+        _("title or short description match"),
     'at_short_description_match': _("short description match"),
     'at_start_match': _("start match"),
     'at_search_strictness': _("Search strictness"),
@@ -387,7 +391,8 @@ tstrings = {
     'bqe_add_marker': _("Add Marker"),
     'bqe_add_spacer': _("Add Spacer"),
     'bqe_rename': _("Rename"),
-    'bqe_del_channel_question': _("Do you really want to delete the selected item(s)"),
+    'bqe_del_channel_question':
+        _("Do you really want to delete the selected item(s)"),
     'bqe_del_bouquet_question': _("Do you really want to delete the bouquet"),
     'bqe_name_bouquet': _("Name of the Bouquet"),
     'bqe_name_marker': _("Name of the Marker"),

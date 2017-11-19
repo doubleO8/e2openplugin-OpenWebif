@@ -24,7 +24,7 @@ init 3                                                              # start enig
 Create `/etc/opkg/github_io.conf`:
 
 ```
-src githubio https://doubleo8.github.io/e2openplugin-OpenWebif
+src/gz githubio https://doubleo8.github.io/e2openplugin-OpenWebif
 ```
 
 ```bash

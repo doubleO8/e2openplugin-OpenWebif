@@ -3,7 +3,7 @@
 import json
 import copy
 
-from twisted.web import http, resource
+from twisted.web import resource
 
 #: CORS - HTTP headers the client may use
 CORS_ALLOWED_CLIENT_HEADERS = [
@@ -129,7 +129,7 @@ if __name__ == '__main__':
     from twisted.internet import reactor
 
     root = SimpleRootController()
-    #root.putChild("configuration", RESTControllerSkeleton())
+    # root.putChild("configuration", RESTControllerSkeleton())
     factory_r = Site(root)
 
     reactor.listenTCP(19999, factory_r)

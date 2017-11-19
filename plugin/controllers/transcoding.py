@@ -166,5 +166,6 @@ class TranscodingController(resource.Resource):
         result.append(
             '<e2configvalue>{!s}</e2configvalue>'.format(value))
         result.append('</e2config>')
+        result.append('</e2configs>')
 
         return "\n".join(result)

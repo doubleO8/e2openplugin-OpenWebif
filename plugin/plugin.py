@@ -66,6 +66,10 @@ THEMES = [
     'vader',
     'original-small-screen']
 
+PLUGIN_NAME = 'OpenWebif'
+PLUGIN_ICON_HD = 'openwebifhd.png'
+PLUGIN_ICON = 'openwebif.png'
+
 config.OpenWebif = ConfigSubsection()
 config.OpenWebif.enabled = ConfigYesNo(default=True)
 config.OpenWebif.identifier = ConfigYesNo(default=True)
@@ -280,28 +284,30 @@ def Plugins(**kwargs):
             fnc=IfUpIfDown),
     ]
     screenwidth = getDesktop(0).size().width()
+
     if imagedistro in ("openatv",):
         result.append(
             PluginDescriptor(
-                name="OpenWebif",
+                name=PLUGIN_NAME,
                 description=_("OpenWebif Configuration"),
                 where=PluginDescriptor.WHERE_MENU,
                 fnc=main_menu))
+
     if screenwidth and screenwidth == 1920:
         result.append(
             PluginDescriptor(
-                name="OpenWebif",
+                name=PLUGIN_NAME,
                 description=_("OpenWebif Configuration"),
-                icon="openwebifhd.png",
+                icon=PLUGIN_ICON_HD,
                 where=[
                     PluginDescriptor.WHERE_PLUGINMENU],
                 fnc=confplug))
     else:
         result.append(
             PluginDescriptor(
-                name="OpenWebif",
+                name=PLUGIN_NAME,
                 description=_("OpenWebif Configuration"),
-                icon="openwebif.png",
+                icon=PLUGIN_ICON,
                 where=[
                     PluginDescriptor.WHERE_PLUGINMENU],
                 fnc=confplug))

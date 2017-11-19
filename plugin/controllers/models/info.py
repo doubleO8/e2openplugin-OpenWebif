@@ -692,15 +692,23 @@ def getInfo(session=None, need_fullinfo=False):
 
             service = session.nav.getCurrentService()
             if service is not None:
-                sname = service.info().getName()
+                service_reference = session.nav.getCurrentlyPlayingServiceReference()
+                service_information = service.info()
+                sname = service_information.getName()
                 feinfo = service.frontendInfo()
-                frontendData = feinfo and feinfo.getAll(True)
-                if frontendData is not None:
+                frontend_data = feinfo and feinfo.getAll(True)
+
+                if frontend_data is not None:
                     cur_info = feinfo.getTransponderData(True)
                     if cur_info:
-                        nr = frontendData['tuner_number']
-                        info['tuners'][nr]['live'] = getOrbitalText(
-                            cur_info) + ' / ' + sname
+                        ti_nr = info['tuners'][frontend_data['tuner_number']]
+                        live_label = getOrbitalText(cur_info) + ' / ' + sname
+                        ti_nr['live'] = live_label
+                        ti_nr['live_meta'] = {
+                            'service_name': mangle_epg_text(sname),
+                            'service_reference': service_reference.toString()
+                        }
+
         except Exception as error:
             info['EX'] = error
 

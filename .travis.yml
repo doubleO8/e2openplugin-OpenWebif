@@ -18,13 +18,13 @@ script:
 - python testsuite/evil_eval.py
 
 after_success:
-- python -m flake8 pack/ --output-file ./pages_out/flake8_report.txt
-- jshint pack/ | tee ./pages_out/jshint_report.txt
+- python -m flake8 plugin/ --output-file ./pages_out/flake8_report.txt
+- jshint ./sourcefiles/js/ | tee ./pages_out/jshint_report.txt
 - python ./harvest.py
 
 after_failure:
-- python -m flake8 pack/ --output-file ./pages_out/flake8_report.txt
-- jshint pack/ | tee ./pages_out/jshint_report.txt
+- python -m flake8 plugin/ --output-file ./pages_out/flake8_report.txt
+- jshint ./sourcefiles/js/ | tee ./pages_out/jshint_report.txt
 - python ./harvest.py
 
 before_deploy:

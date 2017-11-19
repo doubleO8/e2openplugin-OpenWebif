@@ -51,6 +51,14 @@ def get_transcoding_features(encoder=0):
     return encoder_features
 
 
+ERROR_FMT = """
+<?xml version="1.0" encoding="UTF-8" ?>
+<e2simplexmlresult>
+<e2state>false</e2state>
+<e2statetext>{:s}</e2statetext></e2simplexmlresult>
+"""
+
+
 class TranscodingController(resource.Resource):
     def render(self, request):
         request.setHeader('Content-type', 'application/xhtml+xml')
@@ -58,7 +66,8 @@ class TranscodingController(resource.Resource):
         try:
             port = config.plugins.transcodingsetup.port
         except KeyError:
-            return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2state>false</e2state><e2statetext>Transcoding Plugin is not installed or your STB does not support transcoding</e2statetext></e2simplexmlresult>'
+            return ERROR_FMT.format('Transcoding Plugin is not installed or '
+                                    'your STB does not support transcoding')
 
         encoders = (0, 1)
         if len(request.args):
@@ -75,10 +84,10 @@ class TranscodingController(resource.Resource):
                 try:
                     encoder = int(request.args["encoder"][0])
                 except ValueError:
-                    return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2state>false</e2state><e2statetext>wrong argument for encoder</e2statetext></e2simplexmlresult>'
+                    return ERROR_FMT.format('wrong argument for encoder')
             encoder_features = get_transcoding_features(encoder)
             if not len(encoder_features):
-                return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2state>false</e2state><e2statetext>choosen encoder is not available</e2statetext></e2simplexmlresult>'
+                return ERROR_FMT.format('chosen encoder is not available')
 
             for arg in request.args:
                 if arg in encoder_features:
@@ -87,7 +96,9 @@ class TranscodingController(resource.Resource):
                         try:
                             new_value = int(request.args[arg][0])
                         except ValueError:
-                            return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2state>false</e2state><e2statetext>wrong argument for %s</e2statetext></e2simplexmlresult>' % arg
+                            response = 'wrong argument for {!r}'.format(arg)
+                            return ERROR_FMT.format(response)
+
                         if new_value < int(attr.limits[0][0]):
                             new_value = int(attr.limits[0][0])
                         elif new_value > int(attr.limits[0][1]):
@@ -98,44 +109,62 @@ class TranscodingController(resource.Resource):
                     elif hasattr(attr, "choices"):
                         new_value = request.args[arg][0]
                         if new_value not in attr.choices:
-                            return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2state>false</e2state><e2statetext>wrong argument for %s</e2statetext></e2simplexmlresult>' % arg
+                            response = 'wrong argument for {!r}'.format(arg)
+                            return ERROR_FMT.format(response)
                         if new_value != attr.value:
                             attr.value = new_value
                             config_changed = True
                 elif arg not in ("encoder", "port"):
-                    return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2state>false</e2state><e2statetext>choosen feature %s is not available</e2statetext></e2simplexmlresult>' % arg
+                    response = 'chosen feature %s is not available'.format(arg)
+                    return ERROR_FMT.format(response)
             if config_changed:
                 config.plugins.transcodingsetup.save()
 
-        str_result = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<e2configs>\n"
+        result = ['<?xml version="1.0" encoding="UTF-8" ?>',
+                  'e2configs>']
 
         for encoder in encoders:
             encoder_features = get_transcoding_features(encoder)
             if len(encoder_features):
-                str_result += "<encoder number=\"%s\">\n" % str(encoder)
+                result.append("<encoder number=\"%s\">\n" % str(encoder))
             for arg in encoder_features:
                 attr = encoder_features[arg]
                 value = str(attr.value)
                 if hasattr(attr, "limits"):
                     attr_min = str(attr.limits[0][0])
                     attr_max = str(attr.limits[0][1])
-                    str_result += "<e2config>\n<e2configname>%s</e2configname>\n<e2configlimits>%s-%s</e2configlimits>\n<e2configvalue>%s</e2configvalue>\n</e2config>\n" % (
-                        arg, attr_min, attr_max, value)
+                    result.append('<e2config>')
+                    result.append(
+                        '<e2configname>{!s}</e2configname>'.format(arg))
+                    result.append(
+                        '<e2configlimits>{!s}-{!s}</e2configlimits>'.format(
+                            attr_min, attr_max))
+                    result.append(
+                        '<e2configvalue>{!s}</e2configvalue>'.format(value))
+                    result.append('</e2config>')
                 elif hasattr(attr, "choices"):
-                    choices = ""
-                    for choice in attr.choices:
-                        choices += choice + ", "
-                    choices = choices.rstrip(', ')
-                    str_result += "<e2config>\n<e2configname>%s</e2configname>\n<e2configchoices>%s</e2configchoices>\n<e2configvalue>%s</e2configvalue>\n</e2config>\n" % (
-                        arg, choices, value)
+                    chcs = ', '.join(attr.choices)
+                    result.append('<e2config>')
+                    result.append(
+                        '<e2configname>{!s}</e2configname>'.format(arg))
+                    result.append(
+                        '<e2configchoices>{!s}</e2configchoices>'.format(chcs))
+                    result.append(
+                        '<e2configvalue>{!s}</e2configvalue>'.format(value))
+                    result.append('</e2config>')
             if len(encoder_features):
-                str_result += "</encoder>\n"
+                result.append('</encoder>')
+
         attr, arg = port, "port"
         value = str(attr.value)
-        choices = ""
-        for choice in attr.choices:
-            choices += choice + ", "
-        choices = choices.rstrip(', ')
-        str_result += "<e2config>\n<e2configname>%s</e2configname>\n<e2configchoices>%s</e2configchoices>\n<e2configvalue>%s</e2configvalue>\n</e2config>\n</e2configs>\n" % (
-            arg, choices, value)
-        return str_result
+        chcs = ', '.join(attr.choices)
+        result.append('<e2config>')
+        result.append(
+            '<e2configname>{!s}</e2configname>'.format(arg))
+        result.append(
+            '<e2configchoices>{!s}</e2configchoices>'.format(chcs))
+        result.append(
+            '<e2configvalue>{!s}</e2configvalue>'.format(value))
+        result.append('</e2config>')
+
+        return "\n".join(result)

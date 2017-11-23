@@ -10,6 +10,7 @@
     E longinfo
     R service_reference
     N service_name
+    n shortservice_name
 """
 # The fields fetched by filterName() and convertDesc() all need to be
 # html-escaped, so do it there.
@@ -38,6 +39,7 @@ FLAG_LONGINFO = "E"
 FLAG_DURATION = "D"
 FLAG_ITEM_ID = "I"
 FLAG_SERVICE_NAME = "N"
+FLAG_SHORT_SERVICE_NAME = "n"
 FLAG_SERVICE_REFERENCE = "R"
 FLAG_SHORTINFO = "S"
 FLAG_TITLE = "T"
@@ -64,9 +66,47 @@ SERVICES_KEY_MAP = {
     'now_timestamp': FLAGS_WEB.index(FLAG_CURRENT_TIME),
 }
 
+EVENT_FIELD_MAP = {
+    "B": "begin",
+    "C": "current time",
+    "I": "id",
+    "D": "duration",
+    "T": "title",
+    "S": "shortinfo",
+    "E": "longinfo",
+    "R": "service_reference",
+    "N": "service_name",
+    "n": "shortservice_name",
+}
+
+
+class EventDict(dict):
+    """
+    Event data container object
+    """
+    def __init__(self, raw_data, flag_string=None):
+        """
+        >>> dd_in = (123, 1506020400, 120*60, 1506020440, "DASDING Sprechstunde", None, None, "1:0:2:6F37:431:A401:FFFF0000:0:0:0:", "DASDING")
+        >>> sed = EventDict(dd_in)
+        >>> sed['id']
+        123
+        >>> sed['begin']
+        1506020400
+        >>> sed['duration']
+        7200
+        """
+        dict.__init__(self)
+        if flag_string is None:
+            flag_string = FLAGS_WEB
+        flags = list(flag_string.replace("X", ''))
+        for flag_key, value in zip(flags, raw_data):
+            key = EVENT_FIELD_MAP[flag_key]
+            self[key] = value
+
 
 class ServicesEventDict(dict):
     """
+    Event data container object as used by EPG lookups in services.py
     """
 
     def __init__(self, raw_data, now_next_mode=False, mangle_html=True):

@@ -23,12 +23,20 @@ from twisted.web import http, resource
 from twisted.web.resource import EncodingResourceWrapper
 from twisted.web.server import GzipEncoderFactory
 
-from web import WebController
-from ajax import AjaxController
 from rest import json_response, CORS_ALLOWED_METHODS_DEFAULT, CORS_DEFAULT
 from rest import CORS_DEFAULT_ALLOW_ORIGIN
-from rest_saveconfig_api import SaveConfigApiController
-from rest_eventlookup_api import EventLookupApiController
+
+HAVE_E2_CONTROLLER = True
+
+try:
+    from web import WebController
+except ImportError:
+    HAVE_E2_CONTROLLER = False
+
+if HAVE_E2_CONTROLLER:
+    from ajax import AjaxController
+    from rest_saveconfig_api import SaveConfigApiController
+    from rest_eventlookup_api import EventLookupApiController
 
 #: OpenAPI specification source (swagger.json)
 SWAGGER_TEMPLATE = os.path.join(
@@ -43,14 +51,19 @@ class ApiController(resource.Resource):
 
     def __init__(self, session, path="", *args, **kwargs):
         resource.Resource.__init__(self)
-        self.putChild("saveconfig",
-                      SaveConfigApiController(session=session, path=path))
-        self.putChild("eventlookup", EventLookupApiController())
+        self.web_instance = None
+        self.ajax_instance = None
 
-        #: web controller instance
-        self.web_instance = WebController(session, path)
-        #: ajax controller instance
-        self.ajax_instance = AjaxController(session, path)
+        if HAVE_E2_CONTROLLER:
+            self.putChild("saveconfig",
+                          SaveConfigApiController(session=session, path=path))
+            self.putChild("eventlookup", EventLookupApiController())
+
+            #: web controller instance
+            self.web_instance = WebController(session, path)
+            #: ajax controller instance
+            self.ajax_instance = AjaxController(session, path)
+
         self._resource_prefix = kwargs.get("resource_prefix", '/api')
         self._cors_header = copy.copy(CORS_DEFAULT)
         http_verbs = []
@@ -144,7 +157,11 @@ class ApiController(resource.Resource):
             request.setResponseCode(http.NOT_FOUND)
             data = {
                 "method": repr(func_path),
-                "result": False
+                "result": False,
+                "request": {
+                    "path": request.path,
+                    "postpath": request.postpath,
+                }
             }
             return json_response(request, data)
 
@@ -176,7 +193,7 @@ if __name__ == '__main__':
     from twisted.internet import reactor
 
     root = ApiController(session=None)
-    # root.putChild("configuration", RESTControllerSkeleton())
+    root.putChild("api", ApiController(session=False))
     factory_r = Site(root)
 
     reactor.listenTCP(19999, factory_r)

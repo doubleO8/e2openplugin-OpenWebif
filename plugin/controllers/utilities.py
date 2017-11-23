@@ -132,16 +132,16 @@ def get_config_attribute(path, root_obj, head=None):
     The *path* value needs to start with *head* (default='config').
 
     Args:
-            path: character string specifying which attribute is to be accessed
-            root_obj: An object whose attributes are to be accessed.
-            head: Value of the first portion of *path*
+        path: character string specifying which attribute is to be accessed
+        root_obj: An object whose attributes are to be accessed.
+        head: Value of the first portion of *path*
 
     Returns:
-            Attribute of *root_obj*
+        Attribute of *root_obj*
 
     Raises:
-            ValueError: If *path* is invalid.
-            AttributeError: If attribute cannot be accessed
+        ValueError: If *path* is invalid.
+        AttributeError: If attribute cannot be accessed
     """
     if head is None:
         head = 'config'
@@ -182,17 +182,28 @@ def get_config_attribute(path, root_obj, head=None):
     return current_obj
 
 
-def parse_servicereference(serviceref):
+def parse_servicereference(serviceref, separators=None):
     """
     Parse a Enigma2 style service reference string representation.
 
-    :param serviceref: Enigma2 style service reference
-    :type serviceref: string
+    Args:
+        serviceref: Enigma2 style service reference
+        separators: Allowed separators
+
+    Returns:
+        dict containing parsed values
+
+    Raises:
+        ValueError: If *serviceref* is invalid.
 
     >>> sref = '1:0:1:300:7:85:00c00000:0:0:0:'
     >>> result = parse_servicereference(sref)
     >>> result
     {'service_type': 1, 'oid': 133, 'tsid': 7, 'ns': 12582912, 'sid': 768}
+    >>> sref_dashes = '1-0-1-300-7-85-00c00000-0-0-0-'
+    >>> result_dashes = parse_servicereference(sref_dashes, ':-')
+    >>> result == result_dashes
+    True
     >>> sref_g = create_servicereference(**result)
     >>> sref_g
     '1:0:1:300:7:85:00c00000:0:0:0:'
@@ -210,15 +221,26 @@ def parse_servicereference(serviceref):
     >>> result3
     {'service_type': 0, 'oid': 0, 'tsid': 0, 'ns': 0, 'sid': 0}
     """
-    parts = serviceref.split(":")
-    sref_data = {
-        'service_type': int(parts[2], 16),
-        'sid': int(parts[3], 16),
-        'tsid': int(parts[4], 16),
-        'oid': int(parts[5], 16),
-        'ns': int(parts[6], 16)
-    }
-    return sref_data
+    if separators is None:
+        separators = (':',)
+    elif isinstance(separators, basestring):
+        separators = list(separators)
+
+    for separator in separators:
+        parts = serviceref.split(separator)
+        try:
+            sref_data = {
+                'service_type': int(parts[2], 16),
+                'sid': int(parts[3], 16),
+                'tsid': int(parts[4], 16),
+                'oid': int(parts[5], 16),
+                'ns': int(parts[6], 16)
+            }
+            return sref_data
+        except IndexError:
+            continue
+
+    raise ValueError(separators)
 
 
 def create_servicereference(*args, **kwargs):

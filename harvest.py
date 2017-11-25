@@ -43,12 +43,6 @@ if __name__ == '__main__':
                 filename='jshint_report.txt',
                 description="JsHint report"),
             dict(
-                filename='Packages',
-                description="Packages"),
-            dict(
-                filename='Packages.gz',
-                description="Packages.gz"),
-            dict(
                 filename='github_io.conf',
                 description="opkg feed configuration file (github_io.conf)"),
         ],

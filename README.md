@@ -21,7 +21,7 @@ init 3                                                              # start enig
 
 ### opkg feed
 
-Create `/etc/opkg/github_io.conf`:
+Create or [download](https://doubleo8.github.io/e2openplugin-OpenWebif/github_io.conf) `/etc/opkg/github_io.conf`:
 
 ```
 src/gz githubio https://doubleo8.github.io/e2openplugin-OpenWebif

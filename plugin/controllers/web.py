@@ -96,6 +96,19 @@ class WebController(BaseController):
         return None
 
     def P_tsstart(self, request):
+        """
+        Request handler for the `tsstart` endpoint.
+        Start timeshift (?).
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (:obj:`twisted.web.server.Request`): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         success = True
         try:
             InfoBar.instance.startTimeshift()
@@ -103,9 +116,23 @@ class WebController(BaseController):
             success = False
         return self.P_tstate(request, success)
 
-    # TODO: improve after action / save , save+record , nothing
-    # comp_config.timeshift.favoriteSaveAction ....
     def P_tsstop(self, request):
+        """
+        Request handler for the `tsstop` endpoint.
+        Stop timeshift (?).
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        *TODO: improve after action / save , save+record , nothing
+        config.timeshift.favoriteSaveAction ....*
+
+        Args:
+            request (:obj:`twisted.web.server.Request`): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         success = True
         oldcheck = False
         try:
@@ -123,6 +150,19 @@ class WebController(BaseController):
         return self.P_tstate(request, success)
 
     def P_tsstate(self, request, success=True):
+        """
+        Request handler for the `tsstate` endpoint.
+        Retrieve timeshift status(?).
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (:obj:`twisted.web.server.Request`): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return {
             "state": success,
             "timeshiftEnabled": InfoBar.instance.timeshiftEnabled()
@@ -147,12 +187,46 @@ class WebController(BaseController):
         }
 
     def P_statusinfo(self, request):
+        """
+        Request handler for the `/statusinfo` endpoint.
+
+        Args:
+            request (:obj:`twisted.web.server.Request`): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return getStatusInfo(self)
 
     def P_tunersignal(self, request):
+        """
+        Request handler for the `tunersignal` endpoint.
+        Get tuner signal status(?)
+
+        .. seealso::
+
+            Probably https://dream.reichholf.net/e2web/#signal
+
+        Args:
+            request (:obj:`twisted.web.server.Request`): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return getFrontendStatus(self.session)
 
     def P_vol(self, request):
+        """
+        Request handler for the `vol` endpoint.
+        Get/Set current volume setting.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#vol
+
+        Args:
+            request (:obj:`twisted.web.server.Request`): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         if "set" not in request.args.keys(
         ) or request.args["set"][0] == "state":
             return getVolumeStatus()

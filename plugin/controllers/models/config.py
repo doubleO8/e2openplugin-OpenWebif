@@ -4,7 +4,7 @@ import xml.etree.cElementTree  # nosec
 
 from enigma import eEnv
 from Components.SystemInfo import SystemInfo
-from Components.config import config
+from Components.config import config as comp_config
 
 from Plugins.Extensions.OpenWebif.__init__ import _
 from Plugins.Extensions.OpenWebif.controllers.utilities import get_config_attribute
@@ -12,12 +12,12 @@ from Plugins.Extensions.OpenWebif.controllers.utilities import get_config_attrib
 CONFIGFILES = None
 
 def addCollapsedMenu(name):
-    tags = config.OpenWebif.webcache.collapsedmenus.value.split("|")
+    tags = comp_config.OpenWebif.webcache.collapsedmenus.value.split("|")
     if name not in tags:
         tags.append(name)
 
-    config.OpenWebif.webcache.collapsedmenus.value = "|".join(tags).strip("|")
-    config.OpenWebif.webcache.collapsedmenus.save()
+    comp_config.OpenWebif.webcache.collapsedmenus.value = "|".join(tags).strip("|")
+    comp_config.OpenWebif.webcache.collapsedmenus.save()
 
     return {
         "result": True
@@ -25,12 +25,12 @@ def addCollapsedMenu(name):
 
 
 def removeCollapsedMenu(name):
-    tags = config.OpenWebif.webcache.collapsedmenus.value.split("|")
+    tags = comp_config.OpenWebif.webcache.collapsedmenus.value.split("|")
     if name in tags:
         tags.remove(name)
 
-    config.OpenWebif.webcache.collapsedmenus.value = "|".join(tags).strip("|")
-    config.OpenWebif.webcache.collapsedmenus.save()
+    comp_config.OpenWebif.webcache.collapsedmenus.value = "|".join(tags).strip("|")
+    comp_config.OpenWebif.webcache.collapsedmenus.save()
 
     return {
         "result": True
@@ -40,13 +40,13 @@ def removeCollapsedMenu(name):
 def getCollapsedMenus():
     return {
         "result": True,
-        "collapsed": config.OpenWebif.webcache.collapsedmenus.value.split("|")
+        "collapsed": comp_config.OpenWebif.webcache.collapsedmenus.value.split("|")
     }
 
 
 def setZapStream(value):
-    config.OpenWebif.webcache.zapstream.value = value
-    config.OpenWebif.webcache.zapstream.save()
+    comp_config.OpenWebif.webcache.zapstream.value = value
+    comp_config.OpenWebif.webcache.zapstream.save()
     return {
         "result": True
     }
@@ -55,13 +55,13 @@ def setZapStream(value):
 def getZapStream():
     return {
         "result": True,
-        "zapstream": config.OpenWebif.webcache.zapstream.value
+        "zapstream": comp_config.OpenWebif.webcache.zapstream.value
     }
 
 
 def setShowChPicon(value):
-    config.OpenWebif.webcache.showchannelpicon.value = value
-    config.OpenWebif.webcache.showchannelpicon.save()
+    comp_config.OpenWebif.webcache.showchannelpicon.value = value
+    comp_config.OpenWebif.webcache.showchannelpicon.save()
     return {
         "result": True
     }
@@ -70,28 +70,28 @@ def setShowChPicon(value):
 def getShowChPicon():
     return {
         "result": True,
-        "showchannelpicon": config.OpenWebif.webcache.showchannelpicon.value
+        "showchannelpicon": comp_config.OpenWebif.webcache.showchannelpicon.value
     }
 
 
 def getShowName():
     return {
         "result": True,
-        "showname": config.OpenWebif.identifier.value
+        "showname": comp_config.OpenWebif.identifier.value
     }
 
 
 def getCustomName():
     return {
         "result": True,
-        "customname": config.OpenWebif.identifier_custom.value
+        "customname": comp_config.OpenWebif.identifier_custom.value
     }
 
 
 def getBoxName():
     return {
         "result": True,
-        "boxname": config.OpenWebif.identifier_text.value
+        "boxname": comp_config.OpenWebif.identifier_text.value
     }
 
 
@@ -160,7 +160,7 @@ def getJsonFromConfig(cnf):
 
 def saveConfig(path, value):
     try:
-        cnf = get_config_attribute(path, root_obj=config)
+        cnf = get_config_attribute(path, root_obj=comp_config)
     except Exception as exc:
         print "[OpenWebif] ", exc
         return {
@@ -269,7 +269,7 @@ def privSettingValues(prefix, top, result):
 
 def getSettings():
     configkeyval = []
-    privSettingValues("config", config.saved_value, configkeyval)
+    privSettingValues("config", comp_config.saved_value, configkeyval)
     return {
         "result": True,
         "settings": configkeyval
@@ -351,7 +351,7 @@ class ConfigFiles:
                         if int(
                             entry.get(
                                 "level",
-                                0)) > config.usage.setup_level.index:
+                                0)) > comp_config.usage.setup_level.index:
                             continue
                         configs.append(entry)
                 if len(configs):

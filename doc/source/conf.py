@@ -173,6 +173,12 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {
+    'python': ('http://docs.python.org/2/', None),
+    'twisted': ('https://twistedmatrix.com/documents/16.2.0/api/', None),
+}
 
-autodoc_mock_imports = ["enigma", "Screens", "Plugins", "Components", "RecordTimer", "timer", "Tools", "NavigationInstance", "ServiceReference"]
+autodoc_mock_imports = [
+    "enigma", "Screens", "Plugins", "Components", "RecordTimer",
+    "timer", "Tools", "NavigationInstance", "ServiceReference"
+]

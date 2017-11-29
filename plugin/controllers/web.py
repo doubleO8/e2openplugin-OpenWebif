@@ -12,7 +12,7 @@ import re
 
 from Plugins.Extensions.OpenWebif.__init__ import _
 
-from Components.config import config
+from Components.config import CONFIGFILES, ConfigFiles
 
 from models.info import getInfo, getCurrentTime, \
     getStatusInfo, getFrontendStatus
@@ -48,6 +48,8 @@ from Screens.InfoBar import InfoBar
 from base import BaseController
 from stream import StreamController
 
+if not CONFIGFILES:
+    CONFIGFILES = ConfigFiles()
 
 def whoami(request):
     port = config.OpenWebif.port.value

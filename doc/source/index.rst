@@ -14,6 +14,7 @@ Welcome to INSERT_NAME_HERE's documentation!
    e2webinterface_api
    restful_api
    controller
+   utilities
    model
 
 Indices and tables

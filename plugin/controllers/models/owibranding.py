@@ -785,8 +785,9 @@ def getAllInfo():
         ]
         for line_cmd in line_prod:
             try:
-                first_line = os.popen(line_cmd).readline()
-                break
+                first_line = os.popen(line_cmd).readline().strip()
+                if first_line:
+                    break
             except:
                 pass
 

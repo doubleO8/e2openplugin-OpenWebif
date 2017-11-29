@@ -60,11 +60,22 @@ def whoami(request):
 
 
 class WebController(BaseController):
+    """
+    Fancy WEB
+    """
     def __init__(self, session, path=""):
         BaseController.__init__(self, path=path, session=session)
         self.putChild("stream", StreamController(session))
 
     def prePageLoad(self, request):
+        """
+        Callback function - right before page loading.
+
+        Args:
+            request (:obj:`twisted.web.server.Request`): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         request.setHeader("content-type", "text/xml")
 
     def testMandatoryArguments(self, request, keys):

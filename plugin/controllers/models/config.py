@@ -11,6 +11,7 @@ from Plugins.Extensions.OpenWebif.controllers.utilities import get_config_attrib
 
 CONFIGFILES = None
 
+
 def addCollapsedMenu(name):
     tags = comp_config.OpenWebif.webcache.collapsedmenus.value.split("|")
     if name not in tags:

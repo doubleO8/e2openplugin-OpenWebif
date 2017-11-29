@@ -86,9 +86,9 @@ class ApiController(resource.Resource):
         Render response for an HTTP OPTIONS request.
 
         Args:
-                request (:obj:`twisted.web.server.Request`): HTTP request object
+            request (:obj:`twisted.web.server.Request`): HTTP request object
         Returns:
-                HTTP response with headers
+            HTTP response with headers
         """
         for key in self._cors_header:
             request.setHeader(key, self._cors_header[key])

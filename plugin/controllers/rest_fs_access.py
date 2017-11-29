@@ -231,9 +231,9 @@ class RESTFilesystemController(twisted.web.resource.Resource):
         some request attribute values for debugging purposes.
 
         Args:
-                request (twisted.web.server.Request): HTTP request object
+            request (twisted.web.server.Request): HTTP request object
         Returns:
-                (dict): response template data
+            (dict): response template data
         """
         file_path = None
         if request.path.startswith(self._resource_prefix):

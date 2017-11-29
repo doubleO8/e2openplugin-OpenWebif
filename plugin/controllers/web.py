@@ -61,7 +61,8 @@ def whoami(request):
 
 class WebController(BaseController):
     """
-    Fancy WEB
+    Controller implementing *Enigma2 WebInterface API* as described in e.g.
+    https://dream.reichholf.net/e2web/.
     """
     def __init__(self, session, path=""):
         BaseController.__init__(self, path=path, session=session)
@@ -128,6 +129,18 @@ class WebController(BaseController):
         }
 
     def P_about(self, request):
+        """
+        Request handler for the `/web/about` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#about
+
+        Args:
+            request (:obj:`twisted.web.server.Request`): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return {
             "info": getInfo(self.session, need_fullinfo=True),
             "service": getCurrentService(self.session)

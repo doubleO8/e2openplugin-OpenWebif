@@ -113,16 +113,7 @@ class AjaxController(BaseController):
         Returns:
             (:obj:`dict`): key/value pairs
         """
-        info = getInfo(self.session, need_fullinfo=True)
-        type = getBoxType()
-
-        if os.path.isfile(getPublicPath("/images/boxes/" + type + ".png")):
-            info["boximage"] = type + ".png"
-        elif os.path.isfile(getPublicPath("/images/boxes/" + type + ".jpg")):
-            info["boximage"] = type + ".jpg"
-        else:
-            info["boximage"] = "unknown.png"
-        return info
+        return getInfo(self.session, need_fullinfo=True)
 
     def P_epgpop(self, request):
         events = []

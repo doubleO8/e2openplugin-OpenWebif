@@ -17,3 +17,8 @@ RESTful API
 
 .. automodule:: controllers.rest_eventlookup_api
     :members:
+
+#OpenAPI
+#=======
+#
+#.. openapi:: ../../plugin/controllers/swagger.json

@@ -26,6 +26,9 @@ import rest_api_controller
 
 
 class RootController(BaseController):
+    """
+    Web root controller.
+    """
     def __init__(self, session, path=""):
         BaseController.__init__(self, path=path, session=session)
         piconpath = getPiconPath()
@@ -67,12 +70,30 @@ class RootController(BaseController):
         if piconpath:
             self.putChild("picon", static.File(piconpath))
 
-    # this function will be called before a page is loaded
     def prePageLoad(self, request):
-        # we set withMainTemplate here so it's a default for every page
+        """
+        This function will be called before a page is loaded.
+        We set withMainTemplate here so it's a default for every page
+
+        Args:
+            request (:obj:`twisted.web.server.Request`): HTTP request object
+        """
         self.withMainTemplate = True
 
-    # the "pages functions" must be called P_pagename
-    # example http://boxip/index => P_index
     def P_index(self, request):
+        """
+        The "pages functions" must be called `P_pagename`.
+
+
+        Example:
+            Contents for endpoint `/index` will be generated using a method
+            named `P_index`.
+
+        Args:
+            request (:obj:`twisted.web.server.Request`): HTTP request object
+
+        Returns:
+            :obj:`dict`: Parameter values (empty for **index**)
+
+        """
         return {}

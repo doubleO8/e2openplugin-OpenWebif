@@ -27,7 +27,6 @@ from Components.Network import iNetwork
 from Components.Language import language
 from RecordTimer import parseEvent
 from timer import TimerEntry
-from Tools.Directories import fileExists, pathExists
 from enigma import eDVBVolumecontrol, eServiceCenter, eServiceReference, eEnv
 from model_utilities import mangle_epg_text
 
@@ -89,7 +88,7 @@ def getFriendlyImageDistro():
 def getIPMethod(iface):
     # iNetwork.getAdapterAttribute is crap and not portable
     ipmethod = _("SLAAC")
-    if fileExists('/etc/network/interfaces'):
+    if os.path.isfile('/etc/network/interfaces'):
         ifaces = '/etc/network/interfaces'
         for line in file(ifaces).readlines():
             if not line.startswith('#'):
@@ -109,7 +108,7 @@ def getIPMethod(iface):
 def getIPv4Method(iface):
     # iNetwork.getAdapterAttribute is crap and not portable
     ipv4method = _("static")
-    if fileExists('/etc/network/interfaces'):
+    if os.path.isfile('/etc/network/interfaces'):
         ifaces = '/etc/network/interfaces'
         for line in file(ifaces).readlines():
             if not line.startswith('#'):
@@ -178,7 +177,7 @@ def getAdapterIPv6(ifname):
     addr = _("IPv4-only kernel")
     firstpublic = None
 
-    if fileExists('/proc/net/if_inet6'):
+    if os.path.isfile('/proc/net/if_inet6'):
         addr = _("IPv4-only Python/Twisted")
 
         if has_ipv6 and version.major >= 12:
@@ -262,10 +261,10 @@ def getPiconPath():
     ]
 
     for p in pathlist:
-        if pathExists(p + "owipicon/"):
+        if os.path.isdir(p + "owipicon/"):
             PICONPATH = p + "owipicon/"
             return PICONPATH
-        elif pathExists(p + "picon/"):
+        elif os.path.isdir(p + "picon/"):
             PICONPATH = p + "picon/"
             return PICONPATH
 
@@ -273,17 +272,17 @@ def getPiconPath():
 
 
 def _getPiconPath():
-    if pathExists("/media/usb/picon/"):
+    if os.path.isdir("/media/usb/picon/"):
         return "/media/usb/picon/"
-    elif pathExists("/media/cf/picon/"):
+    elif os.path.isdir("/media/cf/picon/"):
         return "/media/cf/picon/"
-    elif pathExists("/media/mmc/picon/"):
+    elif os.path.isdir("/media/mmc/picon/"):
         return "/media/mmc/picon/"
-    elif pathExists("/media/hdd/picon/"):
+    elif os.path.isdir("/media/hdd/picon/"):
         return "/media/hdd/picon/"
-    elif pathExists("/usr/share/enigma2/picon/"):
+    elif os.path.isdir("/usr/share/enigma2/picon/"):
         return "/usr/share/enigma2/picon/"
-    elif pathExists("/picon/"):
+    elif os.path.isdir("/picon/"):
         return "/picon/"
     else:
         return ""
@@ -304,7 +303,7 @@ def getInfo(session=None, need_fullinfo=False):
     }
 
     chipset = "unknown"
-    if fileExists("/etc/.box"):
+    if os.path.isfile("/etc/.box"):
         f = open("/etc/.box", 'r')
         model = f.readline().strip().lower()
         f.close()
@@ -330,7 +329,7 @@ def getInfo(session=None, need_fullinfo=False):
                 chipset = "SH4 @540MHz"
             else:
                 chipset = "SH4 @450MHz"
-    elif fileExists("/proc/stb/info/azmodel"):
+    elif os.path.isfile("/proc/stb/info/azmodel"):
         f = open("/proc/stb/info/model", 'r')
         model = f.readline().strip().lower()
         f.close()
@@ -340,7 +339,7 @@ def getInfo(session=None, need_fullinfo=False):
             chipset = "SIGMA 8653"
         else:
             chipset = "SIGMA 8634"
-    elif fileExists("/proc/stb/info/model"):
+    elif os.path.isfile("/proc/stb/info/model"):
         f = open("/proc/stb/info/model", 'r')
         model = f.readline().strip().lower()
         f.close()
@@ -360,7 +359,7 @@ def getInfo(session=None, need_fullinfo=False):
             else:
                 chipset = "STi7111 @450MHz"
 
-    if fileExists("/proc/stb/info/chipset"):
+    if os.path.isfile("/proc/stb/info/chipset"):
         f = open("/proc/stb/info/chipset", 'r')
         chipset = f.readline().strip()
         f.close()
@@ -523,7 +522,7 @@ def getInfo(session=None, need_fullinfo=False):
     info['shares'] = []
     autofiles = ('/etc/auto.network', '/etc/auto.network_vti')
     for autofs in autofiles:
-        if fileExists(autofs):
+        if os.path.isfile(autofs):
             method = "autofs"
             for line in file(autofs).readlines():
                 if not line.startswith('#'):

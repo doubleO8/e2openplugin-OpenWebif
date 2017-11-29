@@ -10,15 +10,11 @@
 ##############################################################################
 # Simulate the oe-a boxbranding module (Only functions required by OWIF)     #
 ##############################################################################
-
-from Plugins.Extensions.OpenWebif.__init__ import _
-from Components.About import about
-from socket import has_ipv6
-from Tools.Directories import fileExists, pathExists
-import string
 import os
 import hashlib
+import time
 from functools import reduce
+
 
 try:
     from Components.About import about
@@ -43,10 +39,11 @@ def validate_certificate(cert, key):
 
 def get_random():
     try:
-        def xor(a, b): return ''.join(chr(ord(c) ^ ord(d))
+        def xor(a, b):
+            return ''.join(chr(ord(c) ^ ord(d))
                                       for c, d in zip(a, b * 100))
-        random = urandom(8)
-        x = str(time())[-8:]
+        random = os.urandom(8)
+        x = str(time.time())[-8:]
         result = xor(random, x)
 
         return result
@@ -214,11 +211,6 @@ def tpm_check():
             '\x1d',
             ':',
             '?']
-        random = None
-        result = None
-        l2r = False
-        l2k = None
-        l3k = None
 
         l2c = tpm.getData(eTPM.DT_LEVEL2_CERT)
         if l2c is None:
@@ -236,16 +228,16 @@ def tpm_check():
         if l3k is None:
             return 0
 
-        random = get_random()
-        if random is None:
+        random_value = get_random()
+        if random_value is None:
             return 0
 
-        value = tpm.computeSignature(random)
+        value = tpm.computeSignature(random_value)
         result = decrypt_block(value, l3k)
         if result is None:
             return 0
 
-        if result[80:88] != random:
+        if result[80:88] != random_value:
             return 0
 
         return 1
@@ -263,7 +255,7 @@ def getAllInfo():
     if tpmloaded:
         orgdream = tpm_check()
 
-    if fileExists("/proc/stb/info/hwmodel"):
+    if os.path.isfile("/proc/stb/info/hwmodel"):
         brand = "DAGS"
         f = open("/proc/stb/info/hwmodel", 'r')
         procmodel = f.readline().strip()
@@ -292,14 +284,14 @@ def getAllInfo():
                 model = procmodel.replace("revo4k", "Revo4K")
             elif procmodel == "galaxy4k":
                 model = procmodel.replace("galaxy4k", "Galaxy4K")
-    elif fileExists("/proc/stb/info/azmodel"):
+    elif os.path.isfile("/proc/stb/info/azmodel"):
         brand = "AZBox"
         # To-Do: Check if "model" is really correct ...
         f = open("/proc/stb/info/model", 'r')
         procmodel = f.readline().strip()
         f.close()
         model = procmodel.lower()
-    elif fileExists("/proc/stb/info/gbmodel"):
+    elif os.path.isfile("/proc/stb/info/gbmodel"):
         brand = "GigaBlue"
         f = open("/proc/stb/info/gbmodel", 'r')
         procmodel = f.readline().strip()
@@ -310,7 +302,7 @@ def getAllInfo():
                 "PLUS", " Plus")
         elif procmodel == "gb7252":
             model = procmodel.replace("gb7252", "UHD Quad 4k")
-    elif fileExists("/proc/stb/info/vumodel") and not fileExists("/proc/stb/info/boxtype"):
+    elif os.path.isfile("/proc/stb/info/vumodel") and not os.path.isfile("/proc/stb/info/boxtype"):
         brand = "Vu+"
         f = open("/proc/stb/info/vumodel", 'r')
         procmodel = f.readline().strip()
@@ -322,7 +314,7 @@ def getAllInfo():
             "olo2 SE").replace(
             "2",
             "²")
-    elif fileExists("/proc/boxtype"):
+    elif os.path.isfile("/proc/boxtype"):
         f = open("/proc/boxtype", 'r')
         procmodel = f.readline().strip().lower()
         f.close()
@@ -342,7 +334,7 @@ def getAllInfo():
                 model = "UHD 88"
             else:
                 model = "ESI 88"
-    elif fileExists("/proc/stb/info/boxtype"):
+    elif os.path.isfile("/proc/stb/info/boxtype"):
         f = open("/proc/stb/info/boxtype", 'r')
         procmodel = f.readline().strip().lower()
         f.close()
@@ -508,7 +500,7 @@ def getAllInfo():
         elif procmodel == "sf4008":
             brand = "Octagon"
             model = procmodel
-    elif fileExists("/proc/stb/info/model"):
+    elif os.path.isfile("/proc/stb/info/model"):
         f = open("/proc/stb/info/model", 'r')
         procmodel = f.readline().strip().lower()
         f.close()
@@ -534,7 +526,7 @@ def getAllInfo():
         else:
             model = procmodel
 
-    if fileExists("/etc/.box"):
+    if os.path.isfile("/etc/.box"):
         distro = "HDMU"
         f = open("/etc/.box", 'r')
         tempmodel = f.readline().strip().lower()
@@ -692,24 +684,23 @@ def getAllInfo():
     distro = "unknown"
     imagever = "unknown"
     imagebuild = ""
-    driverdate = "unknown"
 
     # Assume OE 1.6
     oever = "OE 1.6"
     if kernel > 2:
         oever = "OE 2.0"
 
-    if fileExists("/etc/.box"):
+    if os.path.isfile("/etc/.box"):
         distro = "HDMU"
         oever = "private"
-    elif fileExists("/etc/bhversion"):
+    elif os.path.isfile("/etc/bhversion"):
         distro = "Black Hole"
         f = open("/etc/bhversion", 'r')
         imagever = f.readline().strip()
         f.close()
         if kernel > 2:
             oever = "OpenVuplus 2.1"
-    elif fileExists("/etc/vtiversion.info"):
+    elif os.path.isfile("/etc/vtiversion.info"):
         distro = "VTi-Team Image"
         f = open("/etc/vtiversion.info", 'r')
         imagever = f.readline().strip().replace(
@@ -728,7 +719,7 @@ def getAllInfo():
             oever = "OpenVuplus 2.1"
         if ((imagever == "5.1") or (imagever[0] > 5)):
             oever = "OpenVuplus 2.1"
-    elif fileExists("/var/grun/grcstype"):
+    elif os.path.isfile("/var/grun/grcstype"):
         distro = "Graterlia OS"
         try:
             imagever = about.getImageVersionString()
@@ -738,7 +729,7 @@ def getAllInfo():
     # detection for your distro here ...
     else:
         # OE 2.2 uses apt, not opkg
-        if not fileExists("/etc/opkg/all-feed.conf"):
+        if not os.path.isfile("/etc/opkg/all-feed.conf"):
             oever = "OE 2.2"
         else:
             try:
@@ -773,7 +764,7 @@ def getAllInfo():
                 pass
 
         if (distro == "unknown" and brand ==
-                "Vu+" and fileExists("/etc/version")):
+                "Vu+" and os.path.isfile("/etc/version")):
             # Since OE-A uses boxbranding and bh or vti can be detected, there
             # isn't much else left for Vu+ boxes
             distro = "Vu+ original"
@@ -783,28 +774,31 @@ def getAllInfo():
             if kernel > 2:
                 oever = "OpenVuplus 2.1"
 
+    first_line = None
     # reporting the installed dvb-module version is as close as we get without
     # too much hassle
-    driverdate = 'unknown'
-    try:
-        driverdate = os.popen(
-            '/usr/bin/opkg -V0 list_installed *dvb-modules*').readline().split()[2]  # nosec
-    except BaseException:
-        try:
-            driverdate = os.popen(
-                '/usr/bin/opkg -V0 list_installed *dvb-proxy*').readline().split()[2]  # nosec
-        except BaseException:
+    if os.path.isfile('/usr/bin/opkg'):
+        line_prod = [
+            '/usr/bin/opkg -V0 list_installed *dvb-modules*',
+            '/usr/bin/opkg -V0 list_installed *dvb-proxy*',
+            '/usr/bin/opkg -V0 list_installed *kernel-core-default-gos*'
+        ]
+        for line_cmd in line_prod:
             try:
-                driverdate = os.popen(
-                    '/usr/bin/opkg -V0 list_installed *kernel-core-default-gos*').readline().split()[2]  # nosec
-            except BaseException:  # nosec
+                first_line = os.popen(line_cmd).readline()
+                break
+            except:
                 pass
+
+    try:
+        info['driverdate'] = first_line.split()[2]
+    except:
+        info['driverdate'] = 'unknown'
 
     info['oever'] = oever
     info['distro'] = distro
     info['imagever'] = imagever
     info['imagebuild'] = imagebuild
-    info['driverdate'] = driverdate
 
     return info
 

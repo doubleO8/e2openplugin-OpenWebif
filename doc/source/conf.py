@@ -18,9 +18,9 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('../../'))
 sys.path.insert(0, os.path.abspath('../../plugin'))
-
 
 # -- General configuration ------------------------------------------------
 
@@ -31,10 +31,14 @@ sys.path.insert(0, os.path.abspath('../../plugin'))
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc',
+extensions = [
+    'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
-    'sphinx.ext.viewcode']
+    'sphinx.ext.viewcode',
+#    'sphinxcontrib.httpdomain',
+#    'sphinxcontrib.openapi',
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -54,6 +58,7 @@ copyright = u'2017, nobody@localhost'
 author = u'nobody@localhost'
 
 import beppo
+
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
@@ -81,13 +86,12 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
-
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -112,12 +116,10 @@ html_sidebars = {
     ]
 }
 
-
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'INSERT_NAME_HEREdoc'
-
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -147,7 +149,6 @@ latex_documents = [
      u'nobody@localhost', 'manual'),
 ]
 
-
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
@@ -156,7 +157,6 @@ man_pages = [
     (master_doc, 'insert_name_here', u'INSERT_NAME_HERE Documentation',
      [author], 1)
 ]
-
 
 # -- Options for Texinfo output -------------------------------------------
 
@@ -169,10 +169,13 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
-
-
-
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {
+    'python': ('http://docs.python.org/2/', None),
+    'twisted': ('https://twistedmatrix.com/documents/16.2.0/api/', None),
+}
 
-autodoc_mock_imports = ["enigma", "Screens", "Plugins", "Components", "RecordTimer", "timer", "Tools", "NavigationInstance", "ServiceReference"]
+autodoc_mock_imports = [
+    "enigma", "Screens", "Plugins", "Components", "RecordTimer",
+    "timer", "Tools", "NavigationInstance", "ServiceReference"
+]

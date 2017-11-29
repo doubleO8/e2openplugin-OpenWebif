@@ -59,16 +59,19 @@ The requested URL was not found on this server.</body></html>
 
 
 class BaseController(resource.Resource):
+    """
+    Basic HTTP requests controller.
+    """
     isLeaf = False
 
     def __init__(self, path="", **kwargs):
         """
 
         Args:
-                path: Base path
-                session: (?) Session instance
-                withMainTemplate: (?)
-                isCustom: (?)
+            path: Base path
+            session: (?) Session instance
+            withMainTemplate: (?)
+            isCustom: (?)
         """
         resource.Resource.__init__(self)
 
@@ -186,9 +189,9 @@ class BaseController(resource.Resource):
         Generate the `dict()` for main template.
 
         Args:
-                request (twisted.web.server.Request): HTTP request object
+            request (:obj:`twisted.web.server.Request`): HTTP request object
         Returns:
-                dict: Parameter values
+            :obj:`dict`: Parameter values
         """
         ret = getCollapsedMenus()
         ret['configsections'] = getConfigsSections()['sections']

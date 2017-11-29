@@ -10,7 +10,12 @@ Welcome to INSERT_NAME_HERE's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   plugin
+   e2webinterface_api
+   restful_api
    controller
+   utilities
+   model
 
 Indices and tables
 ==================

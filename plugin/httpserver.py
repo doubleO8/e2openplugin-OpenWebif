@@ -8,10 +8,10 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
+import os
 from socket import has_ipv6
 
-from Components.config import config
-from Tools.Directories import fileExists
+from Components.config import config as comp_config
 from controllers.root import RootController
 
 from twisted.internet import reactor
@@ -23,17 +23,23 @@ listener = []
 
 
 def HttpdStart(session):
-    if config.OpenWebif.enabled.value:
+    """
+    Helper class to start web server
+
+    Args:
+        session: (?) session object
+    """
+    if comp_config.OpenWebif.enabled.value:
         global listener, site
-        port = config.OpenWebif.port.value
+        port = comp_config.OpenWebif.port.value
 
         root = RootController(session)
         site = server.Site(root)
 
+        ipv6_interface = os.path.isfile('/proc/net/if_inet6')
         # start http webserver on configured port
         try:
-            if has_ipv6 and fileExists(
-                    '/proc/net/if_inet6') and version.major >= 12:
+            if has_ipv6 and ipv6_interface and version.major >= 12:
                 # use ipv6
                 listener.append(reactor.listenTCP(port, site, interface='::'))
             else:
@@ -46,8 +52,7 @@ def HttpdStart(session):
         # Streaming requires listening on 127.0.0.1:80
         if port != 80:
             try:
-                if has_ipv6 and fileExists(
-                        '/proc/net/if_inet6') and version.major >= 12:
+                if has_ipv6 and ipv6_interface and version.major >= 12:
                     # use ipv6
                     # Dear Twisted devs: Learning English, lesson 1 - interface
                     # != address
@@ -75,13 +80,11 @@ def HttpdRestart(session):
     StopServer(session, HttpdStart).doStop()
 
 
-#
-# Helper class to stop running web servers; we use a class here to reduce use
-# of global variables. Resembles code prior found in HttpdStop et. al.
-#
-
-
 class StopServer:
+    """
+    Helper class to stop running web servers; we use a class here to reduce use
+    of global variables. Resembles code prior found in HttpdStop et. al.
+    """
     server_to_stop = 0
 
     def __init__(self, session, callback=None):

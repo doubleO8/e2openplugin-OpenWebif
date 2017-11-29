@@ -1,16 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    B begin
-    C current time
-    I id
-    D duration
-    T title
-    S shortinfo
-    E longinfo
-    R service_reference
-    N service_name
-    n shortservice_name
+
+========== ===========
+Identifier Description
+========== ===========
+         B begin
+         C current time
+         I id
+         D duration
+         T title
+         S shortinfo
+         E longinfo
+         R service_reference
+         N service_name
+         n shortservice_name
+========== ===========
 """
 # The fields fetched by filterName() and convertDesc() all need to be
 # html-escaped, so do it there.
@@ -54,6 +59,7 @@ FLAGS_ALL = ''.join(sorted(
 
 FLAGS_WEB = 'IBDCTSERN'
 
+#: Services Key Map
 SERVICES_KEY_MAP = {
     'id': FLAGS_WEB.index(FLAG_ITEM_ID),
     'begin_timestamp': FLAGS_WEB.index(FLAG_BEGIN),
@@ -66,6 +72,7 @@ SERVICES_KEY_MAP = {
     'now_timestamp': FLAGS_WEB.index(FLAG_CURRENT_TIME),
 }
 
+#: Event Field Map
 EVENT_FIELD_MAP = {
     "B": "begin",
     "C": "current time",
@@ -83,18 +90,17 @@ EVENT_FIELD_MAP = {
 class EventDict(dict):
     """
     Event data container object
+
+    >>> dd_in = (123, 1506020400, 120*60, 1506020440, "DASDING Sprechstunde", None, None, "1:0:2:6F37:431:A401:FFFF0000:0:0:0:", "DASDING")
+    >>> sed = EventDict(dd_in)
+    >>> sed['id']
+    123
+    >>> sed['begin']
+    1506020400
+    >>> sed['duration']
+    7200
     """
     def __init__(self, raw_data, flag_string=None):
-        """
-        >>> dd_in = (123, 1506020400, 120*60, 1506020440, "DASDING Sprechstunde", None, None, "1:0:2:6F37:431:A401:FFFF0000:0:0:0:", "DASDING")
-        >>> sed = EventDict(dd_in)
-        >>> sed['id']
-        123
-        >>> sed['begin']
-        1506020400
-        >>> sed['duration']
-        7200
-        """
         dict.__init__(self)
         if flag_string is None:
             flag_string = FLAGS_WEB
@@ -107,19 +113,17 @@ class EventDict(dict):
 class ServicesEventDict(dict):
     """
     Event data container object as used by EPG lookups in services.py
-    """
 
+    >>> dd_in = (123, 1506020400, 120*60, 1506020440, "DASDING Sprechstunde", None, None, "1:0:2:6F37:431:A401:FFFF0000:0:0:0:", "DASDING")
+    >>> sed = ServicesEventDict(dd_in)
+    >>> sed['id']
+    123
+    >>> sed['begin_timestamp']
+    1506020400
+    >>> sed['duration_sec']
+    7200
+    """
     def __init__(self, raw_data, now_next_mode=False, mangle_html=True):
-        """
-        >>> dd_in = (123, 1506020400, 120*60, 1506020440, "DASDING Sprechstunde", None, None, "1:0:2:6F37:431:A401:FFFF0000:0:0:0:", "DASDING")
-        >>> sed = ServicesEventDict(dd_in)
-        >>> sed['id']
-        123
-        >>> sed['begin_timestamp']
-        1506020400
-        >>> sed['duration_sec']
-        7200
-        """
         dict.__init__(self)
         for key in SERVICES_KEY_MAP:
             idx = SERVICES_KEY_MAP[key]

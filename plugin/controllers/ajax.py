@@ -11,8 +11,7 @@
 import os
 from time import mktime, localtime
 
-from Tools.Directories import fileExists
-from Components.config import config
+from Components.config import config as comp_config
 
 from models.services import getBouquets, getChannels, getSatellites, \
     getProviders, getEventDesc, getChannelEpg, getSearchEpg, \
@@ -34,6 +33,9 @@ except BaseException:
 
 
 class AjaxController(BaseController):
+    """
+    Helper controller class for AJAX requests.
+    """
     def __init__(self, session, path=""):
         BaseController.__init__(self, path=path, session=session)
 
@@ -41,6 +43,14 @@ class AjaxController(BaseController):
         return getCurrentFullInfo(self.session)
 
     def P_bouquets(self, request):
+        """
+        Gather information about available bouquets.
+
+        Args:
+            request (:obj:`twisted.web.server.Request`): HTTP request object
+        Returns:
+            (:obj:`dict`): key/value pairs
+        """
         stype = "tv"
         if "stype" in request.args.keys():
             stype = request.args["stype"][0]
@@ -80,25 +90,30 @@ class AjaxController(BaseController):
     def P_event(self, request):
         event = getEvent(request.args["sref"][0], request.args["idev"][0])
         event['event'][
-            'recording_margin_before'] = config.recording.margin_before.value
+            'recording_margin_before'] = comp_config.recording.margin_before.value
         event['event'][
-            'recording_margin_after'] = config.recording.margin_after.value
+            'recording_margin_after'] = comp_config.recording.margin_after.value
         event['at'] = False
         event['transcoding'] = getTranscodingSupport()
         event['kinopoisk'] = getLanguage()
         return event
 
     def P_boxinfo(self, request):
-        info = getInfo(self.session, need_fullinfo=True)
-        type = getBoxType()
+        """
+        Gather information about current device.
 
-        if fileExists(getPublicPath("/images/boxes/" + type + ".png")):
-            info["boximage"] = type + ".png"
-        elif fileExists(getPublicPath("/images/boxes/" + type + ".jpg")):
-            info["boximage"] = type + ".jpg"
-        else:
-            info["boximage"] = "unknown.png"
-        return info
+        .. deprecated:: 0.26
+
+            Box image files mainly increase disk space used by package.
+            Dubious benefit and unclear licensing/distribution permissions.
+            In best case scenario all but one image file is never used.
+
+        Args:
+            request (:obj:`twisted.web.server.Request`): HTTP request object
+        Returns:
+            (:obj:`dict`): key/value pairs
+        """
+        return getInfo(self.session, need_fullinfo=True)
 
     def P_epgpop(self, request):
         events = []
@@ -128,8 +143,8 @@ class AjaxController(BaseController):
                 at = True
             except ImportError:
                 pass
-        if config.OpenWebif.webcache.theme.value:
-            theme = config.OpenWebif.webcache.theme.value
+        if comp_config.OpenWebif.webcache.theme.value:
+            theme = comp_config.OpenWebif.webcache.theme.value
         else:
             theme = 'original'
         return {
@@ -155,7 +170,7 @@ class AjaxController(BaseController):
             box['brand'] = "iqon"
         elif getMachineBrand() == 'Technomate':
             box['brand'] = "techomate"
-        elif fileExists("/proc/stb/info/azmodel"):
+        elif os.path.isfile("/proc/stb/info/azmodel"):
             box['brand'] = "azbox"
         return {"box": box}
 
@@ -169,7 +184,7 @@ class AjaxController(BaseController):
         movies = getMovieList(request.args)
         movies['transcoding'] = getTranscodingSupport()
 
-        sorttype = config.OpenWebif.webcache.moviesort.value
+        sorttype = comp_config.OpenWebif.webcache.moviesort.value
         unsort = movies['movies']
 
         if sorttype == 'name':
@@ -217,12 +232,12 @@ class AjaxController(BaseController):
             "result": True
         }
         ret['configsections'] = getConfigsSections()['sections']
-        if config.OpenWebif.webcache.theme.value:
+        if comp_config.OpenWebif.webcache.theme.value:
             if os.path.exists(getPublicPath('themes')):
-                ret['themes'] = config.OpenWebif.webcache.theme.choices
+                ret['themes'] = comp_config.OpenWebif.webcache.theme.choices
             else:
                 ret['themes'] = ['original', 'clear']
-            ret['theme'] = config.OpenWebif.webcache.theme.value
+            ret['theme'] = comp_config.OpenWebif.webcache.theme.value
         else:
             ret['themes'] = []
             ret['theme'] = 'original'
@@ -265,9 +280,9 @@ class AjaxController(BaseController):
             except ValueError:
                 pass
         mode = 1
-        if config.OpenWebif.webcache.mepgmode.value:
+        if comp_config.OpenWebif.webcache.mepgmode.value:
             try:
-                mode = int(config.OpenWebif.webcache.mepgmode.value)
+                mode = int(comp_config.OpenWebif.webcache.mepgmode.value)
             except ValueError:
                 pass
         epg = getMultiEpg(self, bref, begintime, endtime, mode)

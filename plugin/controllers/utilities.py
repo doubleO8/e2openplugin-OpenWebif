@@ -71,7 +71,7 @@ def lenient_decode(value, encoding=None):
             value: input value
             encoding: string encoding, defaults to utf-8
     Returns:
-            (unicode) decoded value
+            :obj:`unicode`: decoded value
 
     >>> lenient_decode("Hallo")
     u'Hallo'
@@ -95,7 +95,7 @@ def lenient_force_utf_8(value):
     Args:
             value: input value
     Returns:
-            (basestring) utf-8 encoded value
+            :obj:`basestring` utf-8 encoded value
 
     >>> isinstance(lenient_force_utf_8(''), basestring)
     True
@@ -111,7 +111,7 @@ def sanitise_filename_slashes(value):
     """
 
     Args:
-            value: input value
+            value(basestring): input value
     Returns:
             value w/o multiple slashes
 

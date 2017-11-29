@@ -8,7 +8,6 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
-
 import os
 import re
 import glob
@@ -17,9 +16,11 @@ import json
 
 from twisted.web import static, resource, http
 
-from Components.config import config
-from Tools.Directories import fileExists
+from Components.config import CONFIGFILES, ConfigFiles
 from utilities import lenient_force_utf_8, sanitise_filename_slashes
+
+if not CONFIGFILES:
+    CONFIGFILES = ConfigFiles()
 
 
 def new_getRequestHostname(self):
@@ -52,7 +53,7 @@ class FileController(resource.Resource):
                 if "name" in request.args:
                     name = request.args["name"][0]
 
-                port = config.OpenWebif.port.value
+                port = CONFIGFILES.OpenWebif.port.value
                 proto = 'http'
                 ourhost = request.getHeader('host')
                 m = re.match('.+\:(\d+)$', ourhost)
@@ -92,7 +93,7 @@ class FileController(resource.Resource):
             request.setHeader(
                 "content-type",
                 "application/json; charset=utf-8")
-            if fileExists(path):
+            if os.path.isfile(path):
                 if path == '/':
                     path = ''
                 try:

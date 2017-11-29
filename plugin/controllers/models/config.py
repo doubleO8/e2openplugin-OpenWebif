@@ -1,24 +1,33 @@
 # -*- coding: utf-8 -*-
+"""
+..deprecated:: 0.27
+
+    The entire module is crap.
+"""
 import os
+import logging
+import pprint
 import xml.etree.cElementTree  # nosec
 
 from enigma import eEnv
 from Components.SystemInfo import SystemInfo
-from Components.config import config as comp_config
+from Components.config import config
 
 from Plugins.Extensions.OpenWebif.__init__ import _
-from Plugins.Extensions.OpenWebif.controllers.utilities import get_config_attribute
+from Plugins.Extensions.OpenWebif.controllers.utilities import \
+    get_config_attribute
 
 CONFIGFILES = None
+LOG = logging.getLogger(__name__)
 
 
 def addCollapsedMenu(name):
-    tags = comp_config.OpenWebif.webcache.collapsedmenus.value.split("|")
+    tags = config.OpenWebif.webcache.collapsedmenus.value.split("|")
     if name not in tags:
         tags.append(name)
 
-    comp_config.OpenWebif.webcache.collapsedmenus.value = "|".join(tags).strip("|")
-    comp_config.OpenWebif.webcache.collapsedmenus.save()
+    config.OpenWebif.webcache.collapsedmenus.value = "|".join(tags).strip("|")
+    config.OpenWebif.webcache.collapsedmenus.save()
 
     return {
         "result": True
@@ -26,12 +35,12 @@ def addCollapsedMenu(name):
 
 
 def removeCollapsedMenu(name):
-    tags = comp_config.OpenWebif.webcache.collapsedmenus.value.split("|")
+    tags = config.OpenWebif.webcache.collapsedmenus.value.split("|")
     if name in tags:
         tags.remove(name)
 
-    comp_config.OpenWebif.webcache.collapsedmenus.value = "|".join(tags).strip("|")
-    comp_config.OpenWebif.webcache.collapsedmenus.save()
+    config.OpenWebif.webcache.collapsedmenus.value = "|".join(tags).strip("|")
+    config.OpenWebif.webcache.collapsedmenus.save()
 
     return {
         "result": True
@@ -41,13 +50,13 @@ def removeCollapsedMenu(name):
 def getCollapsedMenus():
     return {
         "result": True,
-        "collapsed": comp_config.OpenWebif.webcache.collapsedmenus.value.split("|")
+        "collapsed": config.OpenWebif.webcache.collapsedmenus.value.split("|")
     }
 
 
 def setZapStream(value):
-    comp_config.OpenWebif.webcache.zapstream.value = value
-    comp_config.OpenWebif.webcache.zapstream.save()
+    config.OpenWebif.webcache.zapstream.value = value
+    config.OpenWebif.webcache.zapstream.save()
     return {
         "result": True
     }
@@ -56,13 +65,13 @@ def setZapStream(value):
 def getZapStream():
     return {
         "result": True,
-        "zapstream": comp_config.OpenWebif.webcache.zapstream.value
+        "zapstream": config.OpenWebif.webcache.zapstream.value
     }
 
 
 def setShowChPicon(value):
-    comp_config.OpenWebif.webcache.showchannelpicon.value = value
-    comp_config.OpenWebif.webcache.showchannelpicon.save()
+    config.OpenWebif.webcache.showchannelpicon.value = value
+    config.OpenWebif.webcache.showchannelpicon.save()
     return {
         "result": True
     }
@@ -71,32 +80,39 @@ def setShowChPicon(value):
 def getShowChPicon():
     return {
         "result": True,
-        "showchannelpicon": comp_config.OpenWebif.webcache.showchannelpicon.value
+        "showchannelpicon": config.OpenWebif.webcache.showchannelpicon.value
     }
 
 
 def getShowName():
     return {
         "result": True,
-        "showname": comp_config.OpenWebif.identifier.value
+        "showname": config.OpenWebif.identifier.value
     }
 
 
 def getCustomName():
     return {
         "result": True,
-        "customname": comp_config.OpenWebif.identifier_custom.value
+        "customname": config.OpenWebif.identifier_custom.value
     }
 
 
 def getBoxName():
     return {
         "result": True,
-        "boxname": comp_config.OpenWebif.identifier_text.value
+        "boxname": config.OpenWebif.identifier_text.value
     }
 
 
 def getJsonFromConfig(cnf):
+    """
+
+    ..deprecated:: 0.27
+
+        This insanity shall be removed.
+
+    """
     if cnf.__class__.__name__ == "ConfigSelection" or cnf.__class__.__name__ == "ConfigSelectionNumber" or cnf.__class__.__name__ == "TconfigSelection":
         if isinstance(cnf.choices.choices, dict):
             choices = []
@@ -161,7 +177,7 @@ def getJsonFromConfig(cnf):
 
 def saveConfig(path, value):
     try:
-        cnf = get_config_attribute(path, root_obj=comp_config)
+        cnf = get_config_attribute(path, root_obj=config)
     except Exception as exc:
         print "[OpenWebif] ", exc
         return {
@@ -171,8 +187,8 @@ def saveConfig(path, value):
 
     try:
         if cnf.__class__.__name__ in (
-            "ConfigBoolean",
-            "ConfigEnableDisable",
+                "ConfigBoolean",
+                "ConfigEnableDisable",
                 "ConfigYesNo"):
             cnf.value = value == "true"
         elif cnf.__class__.__name__ == "ConfigSet":
@@ -212,30 +228,39 @@ def getConfigs(key):
 
     configs = []
     title = None
+    config_entries = None
 
     if not CONFIGFILES:
         CONFIGFILES = ConfigFiles()
 
     if not len(CONFIGFILES.sections):
         CONFIGFILES.getConfigs()
+
     if key in CONFIGFILES.section_config:
         config_entries = CONFIGFILES.section_config[key][1]
         title = CONFIGFILES.section_config[key][0]
+
     if config_entries:
         for entry in config_entries:
+            try:
+                LOG.info("entry.text={!r}".format(entry.text))
+            except Exception as lexc:
+                LOG.error(lexc)
             try:
                 data = getJsonFromConfig(eval(entry.text or ""))  # nosec
                 text = _(entry.get("text", ""))
                 if "limits" in data:
                     text = "%s (%d - %d)" % (text,
-                                             data["limits"][0], data["limits"][1])
+                                             data["limits"][0],
+                                             data["limits"][1])
                 configs.append({
                     "description": text,
                     "path": entry.text or "",
                     "data": data
                 })
             except Exception as e:
-                pass
+                LOG.error(e)
+
     return {
         "result": True,
         "configs": configs,
@@ -270,7 +295,7 @@ def privSettingValues(prefix, top, result):
 
 def getSettings():
     configkeyval = []
-    privSettingValues("config", comp_config.saved_value, configkeyval)
+    privSettingValues("config", config.saved_value, configkeyval)
     return {
         "result": True,
         "settings": configkeyval
@@ -304,12 +329,14 @@ class ConfigFiles:
             "epgsettings",
             "softwareupdate",
             "pluginbrowsersetup"]
+        self.log = logging.getLogger(__name__)
         self.getConfigFiles()
 
     def getConfigFiles(self):
         setupfiles = [eEnv.resolve('${datadir}/enigma2/setup.xml')]
         locations = ('SystemPlugins', 'Extensions')
         libdir = eEnv.resolve('${libdir}')
+
         for location in locations:
             plugins = os.listdir(
                 ('%s/enigma2/python/Plugins/%s' %
@@ -318,18 +345,28 @@ class ConfigFiles:
                 setupfiles.append(
                     ('%s/enigma2/python/Plugins/%s/%s/setup.xml' %
                      (libdir, location, plugin)))
+
+        self.log.info(pprint.pformat({
+            "setupfiles": setupfiles,
+            "locations": locations,
+            "libdir": libdir
+        }))
+
         for setupfile in setupfiles:
             if os.path.exists(setupfile):
                 self.setupfiles.append(setupfile)
 
     def parseConfigFiles(self):
         sections = []
+        self.log.info("parsing configuration files ...")
+
         for setupfile in self.setupfiles:
-            # print "[OpenWebif] loading configuration file :", setupfile
+            self.log.debug("Loading configuration file {!r}".format(setupfile))
             setupfile = file(setupfile, 'r')
             setupdom = xml.etree.cElementTree.parse(setupfile)  # nosec
             setupfile.close()
             xmldata = setupdom.getroot()
+
             for section in xmldata.findall("setup"):
                 configs = []
                 requires = section.get("requires")
@@ -342,17 +379,16 @@ class ConfigFiles:
                         self.allowedsections.append(key)
                     else:
                         continue
-                # print "[OpenWebif] loading configuration section :", key
+                self.log.debug("Loading configuration section {!r}".format(key))
+
                 for entry in section:
                     if entry.tag == "item":
                         requires = entry.get("requires")
                         if requires and not SystemInfo.get(requires, False):
                             continue
 
-                        if int(
-                            entry.get(
-                                "level",
-                                0)) > comp_config.usage.setup_level.index:
+                        if int(entry.get("level",
+                                         0)) > config.usage.setup_level.index:
                             continue
                         configs.append(entry)
                 if len(configs):

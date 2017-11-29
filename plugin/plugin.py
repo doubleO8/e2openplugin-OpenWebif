@@ -119,7 +119,7 @@ config.OpenWebif.epg_encoding = ConfigSelection(
 
 try:
     imagedistro = getInfo()['imagedistro']
-except KeyError:
+except (KeyError, TypeError):
     imagedistro = "unknown"
 
 CONFIG_SCREEN_XML = """

@@ -116,9 +116,10 @@ config.OpenWebif.epg_encoding = ConfigSelection(
         'iso-8859-9',
         'iso-8859-10',
         'iso-8859-16'])
+
 try:
     imagedistro = getInfo()['imagedistro']
-except:
+except KeyError:
     imagedistro = "unknown"
 
 CONFIG_SCREEN_XML = """
@@ -141,8 +142,12 @@ CONFIG_SCREEN_XML = """
             backgroundColor="green" transparent="1" />
     </screen>
 """
-class OpenWebifConfig(Screen, ConfigListScreen):
 
+
+class OpenWebifConfig(Screen, ConfigListScreen):
+    """
+    Enigma2 plugin configuration screen.
+    """
     def __init__(self, session):
         self.skin = CONFIG_SCREEN_XML
         Screen.__init__(self, session)
@@ -246,12 +251,27 @@ class OpenWebifConfig(Screen, ConfigListScreen):
         self.close()
 
 
-def confplug(session, **kwargs):
+def on_configure_plugin(session, **kwargs):
+    """
+    Plugin configured(?) callback function.
+
+    Args:
+        session: (?) Session instance
+    """
+    LOG.info("on_configure_plugin({!r}, {!r})".format(session, kwargs))
+    LOG.debug(dir(session))
     session.open(OpenWebifConfig)
 
 
-def IfUpIfDown(reason, **kwargs):
-    LOG.info("IfUpIfDown({!r})".format(reason))
+def on_network_configuration_read(reason, **kwargs):
+    """
+    Network interface callback function.
+
+    Args:
+        reason: Reason
+    """
+    LOG.info("on_network_configuration_read({!r}, {!r})".format(
+        reason, kwargs))
 
     try:
         if reason is True:
@@ -262,56 +282,65 @@ def IfUpIfDown(reason, **kwargs):
         LOG.error(exc)
 
 
-def startSession(reason, session):
-    LOG.info("startSession({!r})".format(session))
+def on_start_session(reason, session):
+    """
+    Start Session callback function.
+
+    Args:
+        reason: Reason
+        session: (?) Session instance
+    """
+    LOG.info("on_start_session({!r}, {!r})".format(reason, session))
+    LOG.debug(dir(session))
     global global_session
     global_session = session
 
 
-def main_menu(menuid, **kwargs):
-    LOG.info("main_menu({!r})".format(menuid))
+def on_main_menu(menuid, **kwargs):
+    LOG.info("on_main_menu({!r}, {!r})".format(menuid, kwargs))
     if menuid == "network":
-        return [("OpenWebif", confplug, "openwebif", 45)]
+        return [(PLUGIN_NAME, on_configure_plugin, PLUGIN_NAME.lower(), 45)]
     else:
         return []
 
 
 def Plugins(**kwargs):
+    """
+    Plugin loader(?)
+    """
     result = [
         PluginDescriptor(
             where=[PluginDescriptor.WHERE_SESSIONSTART],
-            fnc=startSession),
+            fnc=on_start_session),
         PluginDescriptor(
             where=[PluginDescriptor.WHERE_NETWORKCONFIG_READ],
-            fnc=IfUpIfDown),
+            fnc=on_network_configuration_read),
     ]
     screenwidth = getDesktop(0).size().width()
 
-    if imagedistro in ("openatv",):
+    if imagedistro == "openatv":
         result.append(
             PluginDescriptor(
                 name=PLUGIN_NAME,
                 description=_("OpenWebif Configuration"),
                 where=PluginDescriptor.WHERE_MENU,
-                fnc=main_menu))
+                fnc=on_main_menu))
 
-    if screenwidth and screenwidth == 1920:
+    if screenwidth and screenwidth >= 1920:
         result.append(
             PluginDescriptor(
                 name=PLUGIN_NAME,
                 description=_("OpenWebif Configuration"),
                 icon=PLUGIN_ICON_HD,
-                where=[
-                    PluginDescriptor.WHERE_PLUGINMENU],
-                fnc=confplug))
+                where=[PluginDescriptor.WHERE_PLUGINMENU],
+                fnc=on_configure_plugin))
     else:
         result.append(
             PluginDescriptor(
                 name=PLUGIN_NAME,
                 description=_("OpenWebif Configuration"),
                 icon=PLUGIN_ICON,
-                where=[
-                    PluginDescriptor.WHERE_PLUGINMENU],
-                fnc=confplug))
+                where=[PluginDescriptor.WHERE_PLUGINMENU],
+                fnc=on_configure_plugin))
 
     return result

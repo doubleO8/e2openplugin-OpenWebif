@@ -10,11 +10,7 @@
 ##############################################################################
 from twisted.web import resource
 
-from Components.config import CONFIGFILES, ConfigFiles
-
-if not CONFIGFILES:
-    CONFIGFILES = ConfigFiles()
-
+from Components.config import config as comp_config
 
 def get_transcoding_features(encoder=0):
     features = {
@@ -35,20 +31,20 @@ def get_transcoding_features(encoder=0):
     encoder_features = {}
     for feature in features:
         if encoder == 0:
-            if hasattr(CONFIGFILES.plugins.transcodingsetup, feature):
+            if hasattr(comp_config.plugins.transcodingsetup, feature):
                 try:
                     encoder_features[feature] = getattr(
-                        CONFIGFILES.plugins.transcodingsetup, feature)
+                        comp_config.plugins.transcodingsetup, feature)
                 except KeyError:
                     pass
         else:
             if hasattr(
-                    CONFIGFILES.plugins.transcodingsetup, "%s_%s" %
+                    comp_config.plugins.transcodingsetup, "%s_%s" %
                     (feature, encoder)):
                 try:
                     encoder_features[feature] = getattr(
-                        CONFIGFILES.plugins.transcodingsetup, "%s_%s" %
-                        (feature, encoder))
+                        comp_config.plugins.transcodingsetup, "%s_%s" %
+                                                              (feature, encoder))
                 except KeyError:
                     pass
     return encoder_features
@@ -67,7 +63,7 @@ class TranscodingController(resource.Resource):
         request.setHeader('Content-type', 'application/xhtml+xml')
         request.setHeader('charset', 'UTF-8')
         try:
-            port = CONFIGFILES.plugins.transcodingsetup.port
+            port = comp_config.plugins.transcodingsetup.port
         except KeyError:
             return ERROR_FMT.format('Transcoding Plugin is not installed or '
                                     'your STB does not support transcoding')
@@ -79,8 +75,8 @@ class TranscodingController(resource.Resource):
                 new_port = request.args["port"][0]
                 if new_port not in port.choices:
                     new_port = port.value
-                if new_port != CONFIGFILES.plugins.transcodingsetup.port.value:
-                    CONFIGFILES.plugins.transcodingsetup.port.value = new_port
+                if new_port != comp_config.plugins.transcodingsetup.port.value:
+                    comp_config.plugins.transcodingsetup.port.value = new_port
                     config_changed = True
             encoder = 0
             if "encoder" in request.args:
@@ -121,7 +117,7 @@ class TranscodingController(resource.Resource):
                     response = 'chosen feature %s is not available'.format(arg)
                     return ERROR_FMT.format(response)
             if config_changed:
-                CONFIGFILES.plugins.transcodingsetup.save()
+                comp_config.plugins.transcodingsetup.save()
 
         result = ['<?xml version="1.0" encoding="UTF-8" ?>',
                   '<e2configs>']

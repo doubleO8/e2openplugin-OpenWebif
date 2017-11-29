@@ -16,11 +16,8 @@ import json
 
 from twisted.web import static, resource, http
 
-from Components.config import CONFIGFILES, ConfigFiles
+from Components.config import config as comp_config
 from utilities import lenient_force_utf_8, sanitise_filename_slashes
-
-if not CONFIGFILES:
-    CONFIGFILES = ConfigFiles()
 
 
 def new_getRequestHostname(self):
@@ -53,7 +50,7 @@ class FileController(resource.Resource):
                 if "name" in request.args:
                     name = request.args["name"][0]
 
-                port = CONFIGFILES.OpenWebif.port.value
+                port = comp_config.OpenWebif.port.value
                 proto = 'http'
                 ourhost = request.getHeader('host')
                 m = re.match('.+\:(\d+)$', ourhost)

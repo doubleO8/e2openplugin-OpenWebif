@@ -12,7 +12,7 @@ import re
 
 from Plugins.Extensions.OpenWebif.__init__ import _
 
-from Components.config import CONFIGFILES, ConfigFiles
+from Components.config import config as comp_config
 
 from models.info import getInfo, getCurrentTime, \
     getStatusInfo, getFrontendStatus
@@ -48,11 +48,11 @@ from Screens.InfoBar import InfoBar
 from base import BaseController
 from stream import StreamController
 
-if not CONFIGFILES:
-    CONFIGFILES = ConfigFiles()
+if not comp_config:
+    comp_config = ConfigFiles()
 
 def whoami(request):
-    port = config.OpenWebif.port.value
+    port = comp_config.OpenWebif.port.value
     proto = 'http'
     ourhost = request.getHeader('host')
     m = re.match('.+\:(\d+)$', ourhost)
@@ -105,22 +105,22 @@ class WebController(BaseController):
         return self.P_tstate(request, success)
 
     # TODO: improve after action / save , save+record , nothing
-    # config.timeshift.favoriteSaveAction ....
+    # comp_config.timeshift.favoriteSaveAction ....
     def P_tsstop(self, request):
         success = True
         oldcheck = False
         try:
-            if config.usage.check_timeshift.value:
-                oldcheck = config.usage.check_timeshift.value
+            if comp_config.usage.check_timeshift.value:
+                oldcheck = comp_config.usage.check_timeshift.value
                 # don't ask but also don't save
-                config.usage.check_timeshift.value = False
-                config.usage.check_timeshift.save()
+                comp_config.usage.check_timeshift.value = False
+                comp_config.usage.check_timeshift.save()
             InfoBar.instance.stopTimeshift()
         except Exception as e:
             success = False
-        if config.usage.check_timeshift.value:
-            config.usage.check_timeshift.value = oldcheck
-            config.usage.check_timeshift.save()
+        if comp_config.usage.check_timeshift.value:
+            comp_config.usage.check_timeshift.value = oldcheck
+            comp_config.usage.check_timeshift.save()
         return self.P_tstate(request, success)
 
     def P_tsstate(self, request, success=True):
@@ -290,7 +290,7 @@ class WebController(BaseController):
 
         request.setHeader('Content-Type', 'application/x-mpegurl')
         services = getServices(bRef, False)
-        if config.OpenWebif.auth_for_streaming.value:
+        if comp_config.OpenWebif.auth_for_streaming.value:
             session = GetSession()
             if session.GetAuth(request) is not None:
                 auth = ':'.join(session.GetAuth(request)) + "@"
@@ -490,7 +490,7 @@ class WebController(BaseController):
 
     def P_timerlist(self, request):
         ret = getTimers(self.session)
-        ret["locations"] = config.movielist.videodirs.value
+        ret["locations"] = comp_config.movielist.videodirs.value
         return ret
 
     def P_timeradd(self, request):
@@ -919,9 +919,9 @@ class WebController(BaseController):
     def P_event(self, request):
         event = getEvent(request.args["sref"][0], request.args["idev"][0])
         event['event'][
-            'recording_margin_before'] = config.recording.margin_before.value
+            'recording_margin_before'] = comp_config.recording.margin_before.value
         event['event'][
-            'recording_margin_after'] = config.recording.margin_after.value
+            'recording_margin_after'] = comp_config.recording.margin_after.value
         return event
 
     def P_getcurrent(self, request):
@@ -1255,32 +1255,32 @@ class WebController(BaseController):
     def P_settheme(self, request):
         if "theme" in request.args.keys():
             theme = request.args["theme"][0]
-            config.OpenWebif.webcache.theme.value = theme
-            config.OpenWebif.webcache.theme.save()
+            comp_config.OpenWebif.webcache.theme.value = theme
+            comp_config.OpenWebif.webcache.theme.save()
         return {}
 
     def P_setmoviesort(self, request):
         if "nsort" in request.args.keys():
             nsort = request.args["nsort"][0]
-            config.OpenWebif.webcache.moviesort.value = nsort
-            config.OpenWebif.webcache.moviesort.save()
+            comp_config.OpenWebif.webcache.moviesort.value = nsort
+            comp_config.OpenWebif.webcache.moviesort.save()
         return {}
 
     def P_css(self, request):
         request.setHeader("content-type", "text/css")
         ret = {}
         theme = 'original'
-        if config.OpenWebif.webcache.theme.value:
-            theme = config.OpenWebif.webcache.theme.value
+        if comp_config.OpenWebif.webcache.theme.value:
+            theme = comp_config.OpenWebif.webcache.theme.value
         ret['theme'] = theme
         return ret
 
     def P_setmepgmode(self, request):
         if "mode" in request.args.keys():
             try:
-                config.OpenWebif.webcache.mepgmode.value = int(
+                comp_config.OpenWebif.webcache.mepgmode.value = int(
                     request.args["mode"][0])
-                config.OpenWebif.webcache.mepgmode.save()
+                comp_config.OpenWebif.webcache.mepgmode.save()
             except ValueError:
                 pass
         return {}

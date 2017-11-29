@@ -2,13 +2,10 @@
 
 from __init__ import _
 
-from Components.config import CONFIGFILES, ConfigFiles
-
-if not CONFIGFILES:
-    CONFIGFILES = ConfigFiles()
+from Components.config import config as comp_config
 
 try:
-    AT_unit = CONFIGFILES.plugins.autotimer.unit.value == "hour" and _(
+    AT_unit = comp_config.plugins.autotimer.unit.value == "hour" and _(
         "hour") or _("minute")
 except NameError:
     AT_unit = "hour"

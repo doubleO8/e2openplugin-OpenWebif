@@ -11,7 +11,7 @@
 import os
 from socket import has_ipv6
 
-from Components.config import CONFIGFILES, ConfigFiles
+from Components.config import config as comp_config
 from controllers.root import RootController
 
 from twisted.internet import reactor
@@ -21,9 +21,6 @@ from twisted.internet.error import CannotListenError
 global listener, server_to_stop, site
 listener = []
 
-if not CONFIGFILES:
-    CONFIGFILES = ConfigFiles()
-
 
 def HttpdStart(session):
     """
@@ -32,9 +29,9 @@ def HttpdStart(session):
     Args:
         session: (?) session object
     """
-    if CONFIGFILES.OpenWebif.enabled.value:
+    if comp_config.OpenWebif.enabled.value:
         global listener, site
-        port = CONFIGFILES.OpenWebif.port.value
+        port = comp_config.OpenWebif.port.value
 
         root = RootController(session)
         site = server.Site(root)

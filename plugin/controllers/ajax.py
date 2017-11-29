@@ -11,7 +11,7 @@
 import os
 from time import mktime, localtime
 
-from Components.config import CONFIGFILES, ConfigFiles
+from Components.config import config as comp_config
 
 from models.services import getBouquets, getChannels, getSatellites, \
     getProviders, getEventDesc, getChannelEpg, getSearchEpg, \
@@ -30,9 +30,6 @@ try:
 except BaseException:
     from models.owibranding import getBoxType, getMachineName, \
         getMachineBrand, getMachineBuild
-
-if not CONFIGFILES:
-    CONFIGFILES = ConfigFiles()
 
 
 class AjaxController(BaseController):
@@ -93,9 +90,9 @@ class AjaxController(BaseController):
     def P_event(self, request):
         event = getEvent(request.args["sref"][0], request.args["idev"][0])
         event['event'][
-            'recording_margin_before'] = CONFIGFILES.recording.margin_before.value
+            'recording_margin_before'] = comp_config.recording.margin_before.value
         event['event'][
-            'recording_margin_after'] = CONFIGFILES.recording.margin_after.value
+            'recording_margin_after'] = comp_config.recording.margin_after.value
         event['at'] = False
         event['transcoding'] = getTranscodingSupport()
         event['kinopoisk'] = getLanguage()
@@ -155,8 +152,8 @@ class AjaxController(BaseController):
                 at = True
             except ImportError:
                 pass
-        if CONFIGFILES.OpenWebif.webcache.theme.value:
-            theme = CONFIGFILES.OpenWebif.webcache.theme.value
+        if comp_config.OpenWebif.webcache.theme.value:
+            theme = comp_config.OpenWebif.webcache.theme.value
         else:
             theme = 'original'
         return {
@@ -196,7 +193,7 @@ class AjaxController(BaseController):
         movies = getMovieList(request.args)
         movies['transcoding'] = getTranscodingSupport()
 
-        sorttype = CONFIGFILES.OpenWebif.webcache.moviesort.value
+        sorttype = comp_config.OpenWebif.webcache.moviesort.value
         unsort = movies['movies']
 
         if sorttype == 'name':
@@ -244,12 +241,12 @@ class AjaxController(BaseController):
             "result": True
         }
         ret['configsections'] = getConfigsSections()['sections']
-        if CONFIGFILES.OpenWebif.webcache.theme.value:
+        if comp_config.OpenWebif.webcache.theme.value:
             if os.path.exists(getPublicPath('themes')):
-                ret['themes'] = CONFIGFILES.OpenWebif.webcache.theme.choices
+                ret['themes'] = comp_config.OpenWebif.webcache.theme.choices
             else:
                 ret['themes'] = ['original', 'clear']
-            ret['theme'] = CONFIGFILES.OpenWebif.webcache.theme.value
+            ret['theme'] = comp_config.OpenWebif.webcache.theme.value
         else:
             ret['themes'] = []
             ret['theme'] = 'original'
@@ -292,9 +289,9 @@ class AjaxController(BaseController):
             except ValueError:
                 pass
         mode = 1
-        if CONFIGFILES.OpenWebif.webcache.mepgmode.value:
+        if comp_config.OpenWebif.webcache.mepgmode.value:
             try:
-                mode = int(CONFIGFILES.OpenWebif.webcache.mepgmode.value)
+                mode = int(comp_config.OpenWebif.webcache.mepgmode.value)
             except ValueError:
                 pass
         epg = getMultiEpg(self, bref, begintime, endtime, mode)

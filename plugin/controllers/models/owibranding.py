@@ -10,15 +10,12 @@
 ##############################################################################
 # Simulate the oe-a boxbranding module (Only functions required by OWIF)     #
 ##############################################################################
-
-from Plugins.Extensions.OpenWebif.__init__ import _
-from Components.About import about
-from socket import has_ipv6
-from Tools.Directories import fileExists, pathExists
-import string
 import os
 import hashlib
 from functools import reduce
+
+from Tools.Directories import fileExists
+
 
 try:
     from Components.About import about
@@ -783,28 +780,31 @@ def getAllInfo():
             if kernel > 2:
                 oever = "OpenVuplus 2.1"
 
+    first_line = None
     # reporting the installed dvb-module version is as close as we get without
     # too much hassle
-    driverdate = 'unknown'
-    try:
-        driverdate = os.popen(
-            '/usr/bin/opkg -V0 list_installed *dvb-modules*').readline().split()[2]  # nosec
-    except BaseException:
-        try:
-            driverdate = os.popen(
-                '/usr/bin/opkg -V0 list_installed *dvb-proxy*').readline().split()[2]  # nosec
-        except BaseException:
+    if os.path.isfile('/usr/bin/opkg'):
+        line_prod = [
+            '/usr/bin/opkg -V0 list_installed *dvb-modules*',
+            '/usr/bin/opkg -V0 list_installed *dvb-proxy*',
+            '/usr/bin/opkg -V0 list_installed *kernel-core-default-gos*'
+        ]
+        for line_cmd in line_prod:
             try:
-                driverdate = os.popen(
-                    '/usr/bin/opkg -V0 list_installed *kernel-core-default-gos*').readline().split()[2]  # nosec
-            except BaseException:  # nosec
+                first_line = os.popen(line_cmd).readline()
+                break
+            except:
                 pass
+
+    try:
+        info['driverdate'] = first_line.split()[2]
+    except:
+        info['driverdate'] = 'unknown'
 
     info['oever'] = oever
     info['distro'] = distro
     info['imagever'] = imagever
     info['imagebuild'] = imagebuild
-    info['driverdate'] = driverdate
 
     return info
 

@@ -18,35 +18,35 @@ Example calls using curl
 The following examples assume that the FileController instance is accessible
 as '/fs' on 'localhost', port 18888 (http://localhost:18888/fs).
 
-Fetch list of files and folders in root folder:
+Fetch list of files and folders in root folder::
 
     curl --noproxy localhost -iv http://localhost:18888/fs
 
-Fetch example file 'example.txt'
+Fetch example file `example.txt`::
 
     curl --noproxy localhost -iv http://localhost:18888/fs/example.txt
 
-Fetch gzipped example file 'example.txt'
+Fetch gzipped example file `example.txt`::
 
     curl --compressed -H "Accept-Encoding: gzip" --noproxy localhost -iv \
     http://localhost:18888/fs/example.txt
 
-Delete example file 'example.txt'
+Delete example file `example.txt`::
 
     curl --noproxy localhost -iv -X DELETE \
     http://localhost:18888/fs/example.txt
 
-Create example file 'test.dat' using HTTP POST request on /fs
+Create example file `test.dat` using HTTP POST request on /fs::
 
     curl --noproxy localhost -iv -X POST \
     http://localhost:18888/fs?filename=test.dat -F "data=blabla"
 
-Request file '/etc/sysctl.conf' (compressed)
+Request file '/etc/sysctl.conf' (compressed)::
 
     curl --compressed -H "Accept-Encoding: gzip" --noproxy localhost \
     -I http://localhost/fs/etc/sysctl.conf
 
-Example Response:
+Example Response::
 
     HTTP/1.1 200 OK
     Content-Encoding: gzip
@@ -60,11 +60,11 @@ Example Response:
     Content-Type: text/plain
     Set-Cookie: TWISTED_SESSION=7aa774819460330851b703cb3d82b240; Path=/
 
-Request file '/etc/sysctl.conf' (without compression)
+Request file `/etc/sysctl.conf` (without compression)::
 
     curl --noproxy localhost -I http://localhost/fs/etc/sysctl.conf
 
-Example Response:
+Example Response::
 
     HTTP/1.1 200 OK
     Content-Length: 2065
@@ -83,12 +83,14 @@ request 'test_01.ts' compressed. Because of the file extension the server will
 _not_ return its content gzip encoded and orders the client not to cache the
 result.
 
+Example::
+
     curl --noproxy localhost -iv -X POST \
     http://localhost/fs/tmp?filename=test_01.ts -F "data=dummy"
     curl --compressed -H "Accept-Encoding: gzip" --noproxy localhost -I \
     http://localhost/fs/tmp/test_01.ts
 
-Example response:
+Example response::
 
     HTTP/1.1 200 OK
     Content-Length: 5
@@ -231,7 +233,7 @@ class RESTFilesystemController(twisted.web.resource.Resource):
         Args:
                 request (twisted.web.server.Request): HTTP request object
         Returns:
-                (dict) response template data
+                (dict): response template data
         """
         file_path = None
         if request.path.startswith(self._resource_prefix):

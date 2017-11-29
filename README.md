@@ -56,6 +56,8 @@ src/gz githubio https://doubleo8.github.io/e2openplugin-OpenWebif
 ```bash
 # Remotely logged in via SSH to enigma2 device
 
+wget -q https://doubleo8.github.io/e2openplugin-OpenWebif/github_io.conf \
+-O /etc/opkg/github_io.conf                                         # import repository
 opkg update                                                         # update list of available packages
 opkg install enigma2-plugin-extensions-openwebif                    # upgrade or install package
 init 4                                                              # graceful enigma2 shutdown

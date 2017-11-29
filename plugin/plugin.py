@@ -116,8 +116,10 @@ config.OpenWebif.epg_encoding = ConfigSelection(
         'iso-8859-9',
         'iso-8859-10',
         'iso-8859-16'])
-
-imagedistro = getInfo()['imagedistro']
+try:
+    imagedistro = getInfo()['imagedistro']
+except:
+    imagedistro = "unknown"
 
 CONFIG_SCREEN_XML = """
     <screen position="center,center" size="700,340"

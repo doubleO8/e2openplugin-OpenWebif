@@ -48,8 +48,6 @@ from Screens.InfoBar import InfoBar
 from base import BaseController
 from stream import StreamController
 
-if not comp_config:
-    comp_config = ConfigFiles()
 
 def whoami(request):
     port = comp_config.OpenWebif.port.value

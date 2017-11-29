@@ -3,26 +3,23 @@
 Controller
 ==========
 
-.. automodule:: controllers.rest
-    :members:
-
-.. automodule:: controllers.rest_api_controller
-    :members:
-
-.. automodule:: controllers.rest_fs_access
-    :members:
-
-.. automodule:: controllers.web
-    :members:
-
-.. automodule:: controllers.rest_saveconfig_api
-    :members:
+Basic Controllers
+-----------------
 
 .. automodule:: controllers.root
     :members:
 
+.. automodule:: controllers.base
+    :members:
+
+OpenWebif Specific Controllers
+------------------------------
+
+.. automodule:: controllers.ajax
+    :members:
+
 Utilities
-=========
+---------
 
 .. automodule:: controllers.utilities
     :members:

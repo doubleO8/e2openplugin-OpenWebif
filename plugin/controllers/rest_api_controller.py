@@ -86,7 +86,7 @@ class ApiController(resource.Resource):
         Render response for an HTTP OPTIONS request.
 
         Args:
-                request (twisted.web.server.Request): HTTP request object
+                request (:obj:`twisted.web.server.Request`): HTTP request object
         Returns:
                 HTTP response with headers
         """

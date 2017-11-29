@@ -34,6 +34,9 @@ except BaseException:
 
 
 class AjaxController(BaseController):
+    """
+    Helper controller class for AJAX requests.
+    """
     def __init__(self, session, path=""):
         BaseController.__init__(self, path=path, session=session)
 
@@ -89,6 +92,14 @@ class AjaxController(BaseController):
         return event
 
     def P_boxinfo(self, request):
+        """
+        Gather information about current device.
+
+        Args:
+            request (:obj:`twisted.web.server.Request`): HTTP request object
+        Returns:
+            (:obj:`dict`): key/value pairs
+        """
         info = getInfo(self.session, need_fullinfo=True)
         type = getBoxType()
 

@@ -9,6 +9,7 @@ from Components.config import config
 from Plugins.Extensions.OpenWebif.__init__ import _
 from Plugins.Extensions.OpenWebif.controllers.utilities import get_config_attribute
 
+CONFIGFILES = None
 
 def addCollapsedMenu(name):
     tags = config.OpenWebif.webcache.collapsedmenus.value.split("|")
@@ -206,13 +207,19 @@ def saveConfig(path, value):
 
 
 def getConfigs(key):
+    global CONFIGFILES
+
     configs = []
     title = None
-    if not len(configfiles.sections):
-        configfiles.getConfigs()
-    if key in configfiles.section_config:
-        config_entries = configfiles.section_config[key][1]
-        title = configfiles.section_config[key][0]
+
+    if not CONFIGFILES:
+        CONFIGFILES = ConfigFiles()
+
+    if not len(CONFIGFILES.sections):
+        CONFIGFILES.getConfigs()
+    if key in CONFIGFILES.section_config:
+        config_entries = CONFIGFILES.section_config[key][1]
+        title = CONFIGFILES.section_config[key][0]
     if config_entries:
         for entry in config_entries:
             try:
@@ -236,11 +243,16 @@ def getConfigs(key):
 
 
 def getConfigsSections():
-    if not len(configfiles.sections):
-        configfiles.parseConfigFiles()
+    global CONFIGFILES
+
+    if not CONFIGFILES:
+        CONFIGFILES = ConfigFiles()
+
+    if not len(CONFIGFILES.sections):
+        CONFIGFILES.parseConfigFiles()
     return {
         "result": True,
-        "sections": configfiles.sections
+        "sections": CONFIGFILES.sections
     }
 
 
@@ -351,6 +363,3 @@ class ConfigFiles:
                     self.section_config[key] = (title, configs)
         sections = sorted(sections, key=lambda k: k['description'])
         self.sections = sections
-
-
-configfiles = ConfigFiles()

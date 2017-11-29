@@ -44,6 +44,14 @@ class AjaxController(BaseController):
         return getCurrentFullInfo(self.session)
 
     def P_bouquets(self, request):
+        """
+        Gather information about available bouquets.
+
+        Args:
+            request (:obj:`twisted.web.server.Request`): HTTP request object
+        Returns:
+            (:obj:`dict`): key/value pairs
+        """
         stype = "tv"
         if "stype" in request.args.keys():
             stype = request.args["stype"][0]
@@ -94,6 +102,12 @@ class AjaxController(BaseController):
     def P_boxinfo(self, request):
         """
         Gather information about current device.
+
+        .. deprecated:: 0.26
+
+            Box image files mainly increase disk space used by package.
+            Dubious benefit and unclear licensing/distribution permissions.
+            In best case scenario all but one image file is never used.
 
         Args:
             request (:obj:`twisted.web.server.Request`): HTTP request object

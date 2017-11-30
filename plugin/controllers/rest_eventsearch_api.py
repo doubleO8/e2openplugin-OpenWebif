@@ -28,12 +28,15 @@ class EventSearchApiController(RESTControllerSkeleton):
         request.setHeader(
             'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
 
-        if "flags" in request.args:
-            flags = request.args["flags"][0]
-        else:
-            flags = None
+        mangled_parameters = dict(
+            case_sensitive=False,
+            flags=None,
+            what=None
 
-        mangled_parameters = dict()
+        )
+
+        if "flags" in request.args:
+            mangled_parameters["flags"] = request.args["flags"][0]
 
         for key in ("querytype", "max_rows"):
             try:
@@ -42,13 +45,14 @@ class EventSearchApiController(RESTControllerSkeleton):
                 value = None
             mangled_parameters[key] = value
 
-        case_sensitive = False
         if request.args.get("case_sensitive", [False])[0]:
-            case_sensitive = True
+            mangled_parameters["case_sensitive"] = True
 
         data = {
             "errors": [],
             "result": False,
+            "mangled_parameters": mangled_parameters,
+            "len": 0
         }
 
         try:
@@ -57,27 +61,19 @@ class EventSearchApiController(RESTControllerSkeleton):
             data['errors'].append("Nothing to search for?!")
         except Exception as exc1:
             data['errors'].append(repr(exc1))
-            what = None
 
-        data = {
-            "result": False,
-            "args": {
-                "lookup_flags": flags,
-                "mangled_parameters": mangled_parameters,
-            }
-        }
 
-        if what:
+        if mangled_parameters["what"]:
             try:
                 data['events'] = self.ec_instance.search(
-                    what,
+                    what=mangled_parameters["what"],
                     querytype=mangled_parameters.get("querytype"),
                     max_rows=mangled_parameters.get("max_rows"),
-                    case_sensitive=case_sensitive,
-                    flags=flags)
+                    case_sensitive=mangled_parameters.get("case_sensitive"),
+                    flags=mangled_parameters.get("flags"))
                 data['result'] = True
                 data['len'] = len(data['events'])
             except Exception as exc:
-                data['exception'] = repr(exc)
+                data['errors'].append(repr(exc))
 
         return json_response(request, data)

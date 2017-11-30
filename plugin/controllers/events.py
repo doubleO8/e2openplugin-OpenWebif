@@ -226,9 +226,8 @@ class EventsController(object):
             results = self.epgcache_instance.search(arglist)
             if not results:
                 results = []
-            mangled = results
-            #for data in results:
-            #    mangled.append(EventDict(data, flag_string=flags))
+            for data in results:
+                mangled.append(EventDict(data, flag_string=flags))
         except Exception as exc:
             self.log.error(exc)
             if self.raise_exceptions:

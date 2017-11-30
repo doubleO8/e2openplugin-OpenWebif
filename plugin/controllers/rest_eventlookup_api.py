@@ -4,25 +4,16 @@
 RESTful Controller for /api/eventlookup endpoint
 ================================================
 
-
 """
-from enigma import eEPGCache
 from rest import json_response
 from rest import CORS_DEFAULT_ALLOW_ORIGIN, RESTControllerSkeleton
-
-QUERYTYPE_LOOKUP__BEFORE = -1
-QUERYTYPE_LOOKUP__WHILE = 0
-QUERYTYPE_LOOKUP__AFTER = 1
-QUERYTYPE_LOOKUP__ID = 2
-
-QUERY_TIMESTAMP_CURRENT_TIME = -1
-QUERY_MINUTES_ANY = -1
+from events import EventsController
 
 
 class EventLookupApiController(RESTControllerSkeleton):
     def __init__(self, *args, **kwargs):
         RESTControllerSkeleton.__init__(self, *args, **kwargs)
-        self.epgcache_instance = eEPGCache.getInstance()
+        self.ec_instance = EventsController()
 
     def render_GET(self, request):
         """
@@ -36,48 +27,35 @@ class EventLookupApiController(RESTControllerSkeleton):
         request.setHeader(
             'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
 
-        if "flags" in request.args:
-            flags = request.args["flags"][0]
-        else:
-            flags = 'IBDTSERN'
+        mangled_parameters = dict(
+            flags=None,
+            service_reference='1:0:19:7C:6:85:FFFF0000:0:0:0:'
+        )
 
-        if "sref" in request.args:
-            service_reference = request.args["sref"][0]
-        else:
-            service_reference = '1:0:19:7C:6:85:FFFF0000:0:0:0:'
+        for key in ("flags", "service_reference"):
+            if key in request.args:
+                mangled_parameters[key] = request.args[key][0]
 
-        arg_0 = {
-            "querytype": QUERYTYPE_LOOKUP__WHILE,
-            "begin": QUERY_TIMESTAMP_CURRENT_TIME,
-            "minutes": QUERY_MINUTES_ANY,
-        }
-
-        for key in set(arg_0.keys()):
+        for key in ("querytype", "max_rows", "begin", "minutes"):
             try:
                 value = int(request.args[key][0])
-                arg_0[key] = value
             except:
-                pass
-
-        arglist = (service_reference,
-                   arg_0['querytype'], arg_0['begin'], arg_0['minutes'])
+                value = None
+            mangled_parameters[key] = value
 
         data = {
+            "errors": [],
             "result": False,
-            "args": {
-                "lookup_flags": flags,
-                "service_reference": service_reference,
-                "arg_0": arg_0,
-            }
+            "mangled_parameters": mangled_parameters,
+            "len": 0
         }
 
-        try:
-            data['events'] = self.epgcache_instance.lookupEvent(
-                [flags, arglist]
-            )
-            data['result'] = True
-            data['len'] = len(data['events'])
-        except Exception as exc:
-            data['exception'] = repr(exc)
+        if mangled_parameters["service_reference"]:
+            try:
+                data['events'] = self.ec_instance.lookup(**mangled_parameters)
+                data['result'] = True
+                data['len'] = len(data['events'])
+            except Exception as exc:
+                data['errors'].append(repr(exc))
 
         return json_response(request, data)

@@ -196,6 +196,14 @@ QUERYTYPE_SEARCH__TITLE_SHORT_DESCRIPTION = 4
 QUERYTYPE_SEARCH__EXTENDED_DESCRIPTION = 5
 QUERYTYPE_SEARCH__FULL_DESCRIPTION = 6
 
+QUERYTYPE_LOOKUP__BEFORE = -1
+QUERYTYPE_LOOKUP__WHILE = 0
+QUERYTYPE_LOOKUP__AFTER = 1
+QUERYTYPE_LOOKUP__ID = 2
+
+QUERY_TIMESTAMP_CURRENT_TIME = -1
+QUERY_MINUTES_ANY = -1
+
 
 class EventsController(object):
     def __init__(self, *args, **kwargs):
@@ -226,6 +234,42 @@ class EventsController(object):
             results = self.epgcache_instance.search(arglist)
             if not results:
                 results = []
+            for data in results:
+                mangled.append(EventDict(data, flag_string=flags))
+        except Exception as exc:
+            self.log.error(exc)
+            if self.raise_exceptions:
+                raise
+
+        return mangled
+
+    def lookup(self, service_reference, querytype=None, begin=None,
+               minutes=None, flags=None, max_rows=None):
+        mangled = []
+
+        if flags is None:
+            flags = FLAGS_WEB
+
+        if querytype is None:
+            querytype = QUERYTYPE_SEARCH__PARTIAL_TITLE
+
+        if begin is None:
+            begin = QUERY_TIMESTAMP_CURRENT_TIME
+
+        if minutes is None:
+            minutes = QUERY_MINUTES_ANY
+
+        arglist = (service_reference, querytype, begin, minutes)
+
+        try:
+            results = self.epgcache_instance.lookupEvent(
+                [flags, arglist]
+            )
+
+            if not results:
+                results = []
+            if max_rows:
+                results = results[:max_rows]
             for data in results:
                 mangled.append(EventDict(data, flag_string=flags))
         except Exception as exc:

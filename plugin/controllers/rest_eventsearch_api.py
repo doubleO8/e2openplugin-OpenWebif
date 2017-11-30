@@ -7,7 +7,6 @@ RESTful Controller for /api/eventsearch endpoint
 """
 from rest import json_response
 from rest import CORS_DEFAULT_ALLOW_ORIGIN, RESTControllerSkeleton
-
 from events import EventsController
 
 
@@ -64,12 +63,7 @@ class EventSearchApiController(RESTControllerSkeleton):
 
         if mangled_parameters["what"]:
             try:
-                data['events'] = self.ec_instance.search(
-                    what=mangled_parameters["what"],
-                    querytype=mangled_parameters.get("querytype"),
-                    max_rows=mangled_parameters.get("max_rows"),
-                    case_sensitive=mangled_parameters.get("case_sensitive"),
-                    flags=mangled_parameters.get("flags"))
+                data['events'] = self.ec_instance.search(**mangled_parameters)
                 data['result'] = True
                 data['len'] = len(data['events'])
             except Exception as exc:

@@ -11,6 +11,7 @@ INSERT_NAME_HERE
    :caption: Contents:
 
    plugin
+   web_controller
    e2webinterface_api
    restful_api
    controller

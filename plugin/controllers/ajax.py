@@ -25,17 +25,16 @@ from models.config import getConfigs, getConfigsSections, getZapStream, \
 from base import BaseController
 
 try:
-    from boxbranding import getBoxType, getMachineName, \
-        getMachineBrand, getMachineBuild
+    from boxbranding import getMachineBrand
 except BaseException:
-    from models.owibranding import getBoxType, getMachineName, \
-        getMachineBrand, getMachineBuild
+    from models.owibranding import getMachineBrand
 
 
 class AjaxController(BaseController):
     """
     Helper controller class for AJAX requests.
     """
+
     def __init__(self, session, path=""):
         BaseController.__init__(self, path=path, session=session)
 
@@ -88,11 +87,11 @@ class AjaxController(BaseController):
         return getEventDesc(request.args["sref"][0], request.args["idev"][0])
 
     def P_event(self, request):
+        margin_before = comp_config.recording.margin_before.value
+        margin_after = comp_config.recording.margin_after.value
         event = getEvent(request.args["sref"][0], request.args["idev"][0])
-        event['event'][
-            'recording_margin_before'] = comp_config.recording.margin_before.value
-        event['event'][
-            'recording_margin_after'] = comp_config.recording.margin_after.value
+        event['event']['recording_margin_before'] = margin_before
+        event['event']['recording_margin_after'] = margin_after
         event['at'] = False
         event['transcoding'] = getTranscodingSupport()
         event['kinopoisk'] = getLanguage()
@@ -118,6 +117,7 @@ class AjaxController(BaseController):
     def P_epgpop(self, request):
         events = []
         timers = []
+
         if "sref" in request.args.keys():
             ev = getChannelEpg(request.args["sref"][0])
             events = ev["events"]
@@ -134,32 +134,28 @@ class AjaxController(BaseController):
                 fulldesc,
                 bouquetsonly)
             events = sorted(ev["events"], key=lambda ev: ev['begin_timestamp'])
-        at = False
+
         if len(events) > 0:
             t = getTimers(self.session)
             timers = t["timers"]
-            try:
-                from Plugins.Extensions.AutoTimer.AutoTimer import AutoTimer
-                at = True
-            except ImportError:
-                pass
         if comp_config.OpenWebif.webcache.theme.value:
             theme = comp_config.OpenWebif.webcache.theme.value
         else:
             theme = 'original'
+
         return {
             "theme": theme,
             "events": events,
             "timers": timers,
-            "at": at,
+            "at": False,
             "kinopoisk": getLanguage()}
 
     def P_epgdialog(self, request):
         return self.P_epgpop(request)
 
     def P_screenshot(self, request):
-        box = {}
-        box['brand'] = "dmm"
+        box = {'brand': "dmm"}
+
         if getMachineBrand() == 'Vu+':
             box['brand'] = "vuplus"
         elif getMachineBrand() == 'GigaBlue':
@@ -172,6 +168,7 @@ class AjaxController(BaseController):
             box['brand'] = "techomate"
         elif os.path.isfile("/proc/stb/info/azmodel"):
             box['brand'] = "azbox"
+
         return {"box": box}
 
     def P_powerstate(self, request):
@@ -274,9 +271,8 @@ class AjaxController(BaseController):
                 if day > 0 or wadd > 0:
                     now = localtime()
                     begintime = mktime(
-                        (
-                        now.tm_year, now.tm_mon, now.tm_mday + day + wadd, 0, 0,
-                        0, -1, -1, -1))
+                        (now.tm_year, now.tm_mon, now.tm_mday + day + wadd,
+                         0, 0, 0, -1, -1, -1))
             except ValueError:
                 pass
         mode = 1

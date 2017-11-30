@@ -29,7 +29,7 @@ class EventLookupApiController(RESTControllerSkeleton):
 
         mangled_parameters = dict(
             flags=None,
-            service_reference='1:0:19:7C:6:85:FFFF0000:0:0:0:'
+            service_reference=None  # '1:0:19:7C:6:85:FFFF0000:0:0:0:'
         )
 
         for key in ("flags", "service_reference"):
@@ -39,7 +39,7 @@ class EventLookupApiController(RESTControllerSkeleton):
         for key in ("querytype", "max_rows", "begin", "minutes"):
             try:
                 value = int(request.args[key][0])
-            except:
+            except (KeyError, TypeError, ValueError):
                 value = None
             mangled_parameters[key] = value
 

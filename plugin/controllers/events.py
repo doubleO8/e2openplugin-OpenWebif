@@ -221,8 +221,8 @@ class EventsController(object):
         Search EPG events
 
         Args:
-                what (basestring): query value
-                querytype (int): type of query
+                what (:obj:` basestring`): query value
+                querytype (:obj:`int`): type of query
                 case_sensitive (:obj:`bool`): True if case sensitive search
                 flags(:obj:`basestring`): query flags
                 max_rows (:obj:`int`): maximum number of results

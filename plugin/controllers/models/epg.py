@@ -1,21 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
+.. seealso::
 
-========== ===========
-Identifier Description
-========== ===========
-         B begin
-         C current time
-         I id
-         D duration
-         T title
-         S shortinfo
-         E longinfo
-         R service_reference
-         N service_name
-         n shortservice_name
-========== ===========
+    :ref:`event_format-label`
 """
 # The fields fetched by filterName() and convertDesc() all need to be
 # html-escaped, so do it there.
@@ -108,6 +96,14 @@ class EventDict(dict):
         for flag_key, value in zip(flags, raw_data):
             key = EVENT_FIELD_MAP[flag_key]
             self[key] = value
+        self._mangle()
+
+    def _mangle(self):
+        text_keys = ("shortinfo", "longinfo", "title",
+                     "service_name", "shortservice_name")
+        for tkey in text_keys:
+            if tkey in self:
+                self[tkey] = mangle_epg_text(self[tkey])
 
 
 class ServicesEventDict(dict):

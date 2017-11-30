@@ -56,7 +56,7 @@ class EventSearchApiController(RESTControllerSkeleton):
         }
 
         try:
-            what = request.args["what"][0]
+            mangled_parameters["what"] = request.args["what"][0]
         except KeyError:
             data['errors'].append("Nothing to search for?!")
         except Exception as exc1:

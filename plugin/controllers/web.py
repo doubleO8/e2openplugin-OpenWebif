@@ -190,6 +190,10 @@ class WebController(BaseController):
         """
         Request handler for the `/statusinfo` endpoint.
 
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
         Args:
             request (twisted.web.server.Request): HTTP request object
         Returns:
@@ -254,9 +258,33 @@ class WebController(BaseController):
         return res
 
     def P_getaudiotracks(self, request):
+        """
+        Request handler for the `/getaudiotracks` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#getaudiotracks
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return getAudioTracks(self.session)
 
     def P_selectaudiotrack(self, request):
+        """
+        Request handler for the `/selectaudiotrack` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#selectaudiotrack
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         try:
             track_id = int(request.args["id"][0])
         except Exception as e:
@@ -265,6 +293,18 @@ class WebController(BaseController):
         return setAudioTrack(self.session, track_id)
 
     def P_zap(self, request):
+        """
+        Request handler for the `/zap` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#zap
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["sRef"])
         if res:
             return res

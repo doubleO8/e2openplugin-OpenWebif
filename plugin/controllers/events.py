@@ -1,20 +1,58 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Controller for handling event items
-===================================
-
 .. seealso::
 
     http://mslowik.blogspot.de/
 
-Search
-------
+
+.. _event_format-label:
+
+Possible Values of the Format Field
++++++++++++++++++++++++++++++++++++
+
++------+----------------------------------------------------------------------+
+|VALUE | DESCRIPTION                                                          |
++======+======================================================================+
+| 0    | PyLong (0)                                                           |
++------+----------------------------------------------------------------------+
+| I    | Event Id                                                             |
++------+----------------------------------------------------------------------+
+| B    | Event Begin Time                                                     |
++------+----------------------------------------------------------------------+
+| D    | Event Duration                                                       |
++------+----------------------------------------------------------------------+
+| T    | Event Title                                                          |
++------+----------------------------------------------------------------------+
+| S    | Event Short Description                                              |
++------+----------------------------------------------------------------------+
+| E    | Event Extended Description (extended event description)              |
++------+----------------------------------------------------------------------+
+| C    | Current Time                                                         |
++------+----------------------------------------------------------------------+
+| R    | Service Reference                                                    |
++------+----------------------------------------------------------------------+
+| N    | Service Name                                                         |
++------+----------------------------------------------------------------------+
+| n    | Short Service Name                                                   |
++------+----------------------------------------------------------------------+
+| X    | A flag not associated with the returned result indicating that the   |
+|      | minimum of one item in the result table is to be returned            |
+|      | corresponding to each service, even if no service events are found.  |
+|      | In cases where no event is found in the resulting rows of the table, |
+|      | undefined values are returned as None                                |
++------+----------------------------------------------------------------------+
+
+Event Search
+============
 
 .. note::
 
     Method signature:
     search((fmt, int size, int querytype, int PE1, int PE2))
+
+Description of Search Parameters
+++++++++++++++++++++++++++++++++
 
 +-----------+----------+------------------------------------------------------+
 | PARAMETER | REQUIRED | DESCRIPTION                                          |
@@ -66,14 +104,16 @@ Example (https://mslowik.blogspot.de)::
 
 
 
-Lookup
-------
+Event Lookup
+============
 
 .. note::
 
     Method signature:
     lookupEvent([fmt, (eServiceReference ref, int querytyoe, int PE1, int PE2)])
 
+Description of Lookup Parameters
+++++++++++++++++++++++++++++++++
 
 +-----------+----------+------------------------------------------------------+
 | PARAMETER | REQUIRED | DESCRIPTION                                          |
@@ -91,42 +131,6 @@ Lookup
 |           |          |                                                      |
 +-----------+----------+------------------------------------------------------+
 
-.. _event_format-label:
-
-Possible Values of the Format Field
-+++++++++++++++++++++++++++++++++++
-
-+------+----------------------------------------------------------------------+
-|VALUE | DESCRIPTION                                                          |
-+======+======================================================================+
-| 0    | PyLong (0)                                                           |
-+------+----------------------------------------------------------------------+
-| I    | Event Id                                                             |
-+------+----------------------------------------------------------------------+
-| B    | Event Begin Time                                                     |
-+------+----------------------------------------------------------------------+
-| D    | Event Duration                                                       |
-+------+----------------------------------------------------------------------+
-| T    | Event Title                                                          |
-+------+----------------------------------------------------------------------+
-| S    | Event Short Description                                              |
-+------+----------------------------------------------------------------------+
-| E    | Event Extended Description (extended event description)              |
-+------+----------------------------------------------------------------------+
-| C    | Current Time                                                         |
-+------+----------------------------------------------------------------------+
-| R    | Service Reference                                                    |
-+------+----------------------------------------------------------------------+
-| N    | Service Name                                                         |
-+------+----------------------------------------------------------------------+
-| n    | Short Service Name                                                   |
-+------+----------------------------------------------------------------------+
-| X    | A flag not associated with the returned result indicating that the   |
-|      | minimum of one item in the result table is to be returned            |
-|      | corresponding to each service, even if no service events are found.  |
-|      | In cases where no event is found in the resulting rows of the table, |
-|      | undefined values are returned as None                                |
-+------+----------------------------------------------------------------------+
 
 .. _event_lookup_parameters-label:
 
@@ -182,7 +186,7 @@ import logging
 
 from enigma import eEPGCache
 
-from models.epg import FLAGS_WEB, EventDict
+from models.epg import FLAGS_WEB, EventDict, FLAGS_ALL
 
 CASE_SENSITIVE = 0
 CASE_INSENSITIVE = 1
@@ -214,6 +218,7 @@ class EventsController(object):
         self.log = logging.getLogger(__name__)
         self.epgcache_instance = eEPGCache.getInstance()
         self.raise_exceptions = kwargs.get("may_raise", False)
+        self.fallback_flags = kwargs.get("fallback_flags", FLAGS_ALL)
 
     def search(self, what, querytype=None, case_sensitive=False, flags=None,
                max_rows=None):
@@ -234,7 +239,7 @@ class EventsController(object):
         case = CASE_INSENSITIVE
 
         if flags is None:
-            flags = FLAGS_WEB
+            flags = self.fallback_flags
 
         if case_sensitive:
             case = CASE_SENSITIVE
@@ -279,7 +284,7 @@ class EventsController(object):
         mangled = []
 
         if flags is None:
-            flags = FLAGS_WEB
+            flags = self.fallback_flags
 
         if querytype is None:
             querytype = QUERYTYPE_SEARCH__PARTIAL_TITLE

@@ -63,7 +63,7 @@ SERVICES_KEY_MAP = {
 #: Event Field Map
 EVENT_FIELD_MAP = {
     "B": "begin",
-    "C": "current time",
+    "C": "current_time",
     "I": "id",
     "D": "duration",
     "T": "title",
@@ -109,6 +109,8 @@ class EventDict(dict):
 class ServicesEventDict(dict):
     """
     Event data container object as used by EPG lookups in services.py
+
+    .. deprecated:: 0.31 replaced by :obj:`EventDict`
 
     >>> dd_in = (123, 1506020400, 120*60, 1506020440, "DASDING Sprechstunde", None, None, "1:0:2:6F37:431:A401:FFFF0000:0:0:0:", "DASDING")
     >>> sed = ServicesEventDict(dd_in)

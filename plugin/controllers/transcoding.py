@@ -12,6 +12,7 @@ from twisted.web import resource
 
 from Components.config import config as comp_config
 
+
 def get_transcoding_features(encoder=0):
     features = {
         "automode": "automode",
@@ -38,13 +39,11 @@ def get_transcoding_features(encoder=0):
                 except KeyError:
                     pass
         else:
-            if hasattr(
-                    comp_config.plugins.transcodingsetup, "%s_%s" %
-                    (feature, encoder)):
+            attr_name = "%s_%s" % (feature, encoder)
+            if hasattr(comp_config.plugins.transcodingsetup, attr_name):
                 try:
                     encoder_features[feature] = getattr(
-                        comp_config.plugins.transcodingsetup, "%s_%s" %
-                                                              (feature, encoder))
+                        comp_config.plugins.transcodingsetup, attr_name)
                 except KeyError:
                     pass
     return encoder_features

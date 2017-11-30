@@ -31,7 +31,7 @@ from Plugins.Extensions.OpenWebif.controllers.utilities import \
     parse_servicereference, SERVICE_TYPE_LOOKUP, NS_LOOKUP
 
 from model_utilities import mangle_epg_text
-from epg import FLAGS_WEB, ServicesEventDict, convertDesc, filterName
+from events import FLAGS_WEB, ServicesEventDict, convertDesc, filterName
 
 
 def getServiceInfoString(info, what):

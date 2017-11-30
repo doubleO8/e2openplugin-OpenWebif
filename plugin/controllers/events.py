@@ -186,7 +186,7 @@ import logging
 
 from enigma import eEPGCache
 
-from models.epg import FLAGS_WEB, EventDict, FLAGS_ALL
+from models.events import FLAGS_WEB, EventDict, FLAGS_ALL
 
 CASE_SENSITIVE = 0
 CASE_INSENSITIVE = 1

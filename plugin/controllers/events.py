@@ -206,6 +206,10 @@ QUERY_MINUTES_ANY = -1
 
 
 class EventsController(object):
+    """
+    Events controller.
+    """
+
     def __init__(self, *args, **kwargs):
         self.log = logging.getLogger(__name__)
         self.epgcache_instance = eEPGCache.getInstance()
@@ -217,14 +221,14 @@ class EventsController(object):
         Search EPG events
 
         Args:
-            what (:obj:`basestring`): query value
-            querytype (:obj:`int`): type of query
-            case_sensitive (:obj:`bool`): True if case sensitive search
-            flags(:obj:`basestring`): query flags
-            max_rows (:obj:`int`): maximum number of results
+                what (basestring): query value
+                querytype (int): type of query
+                case_sensitive (:obj:`bool`): True if case sensitive search
+                flags(:obj:`basestring`): query flags
+                max_rows (:obj:`int`): maximum number of results
 
         Returns:
-            list of matching items
+                list of matching items
         """
         mangled = []
         case = CASE_INSENSITIVE
@@ -258,6 +262,20 @@ class EventsController(object):
 
     def lookup(self, service_reference, querytype=None, begin=None,
                minutes=None, flags=None, max_rows=None):
+        """
+        Lookup EPG events
+
+        Args:
+                service_reference (:obj:`basestring`): service reference
+                querytype (:obj:`int`): type of query
+                begin (:obj:`int`): begin timestamp
+                minutes (:obj:`int`): query's time range in minutes
+                flags(:obj:`basestring`): query flags
+                max_rows (:obj:`int`): maximum number of results
+
+        Returns:
+                list of matching items
+        """
         mangled = []
 
         if flags is None:

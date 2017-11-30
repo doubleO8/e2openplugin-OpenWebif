@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Controller for handling *event* items
-=====================================
+Controller for handling event items
+===================================
 
 .. seealso::
 
@@ -213,6 +213,20 @@ class EventsController(object):
 
     def search(self, what, querytype=None, case_sensitive=False, flags=None,
                max_rows=None):
+        """
+        Search EPG events
+
+        Args:
+            what (:obj:`basestring`): query value
+            querytype (:obj:`int`): type of query
+            case_sensitive (:obj:`bool`): True if case sensitive search
+            flags(:obj:`basestring`): query flags
+            max_rows (:obj:`int`): maximum number of results
+
+        Returns:
+            list of matching items
+        """
+        mangled = []
         case = CASE_INSENSITIVE
 
         if flags is None:
@@ -228,7 +242,6 @@ class EventsController(object):
             max_rows = 64
 
         arglist = (flags, max_rows, querytype, what, case)
-        mangled = []
 
         try:
             results = self.epgcache_instance.search(arglist)
@@ -262,9 +275,7 @@ class EventsController(object):
         arglist = (service_reference, querytype, begin, minutes)
 
         try:
-            results = self.epgcache_instance.lookupEvent(
-                [flags, arglist]
-            )
+            results = self.epgcache_instance.lookupEvent([flags, arglist])
 
             if not results:
                 results = []

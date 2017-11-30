@@ -26,3 +26,9 @@ OpenWebif Specific Controllers
 
 .. automodule:: controllers.transcoding
     :members:
+
+Events
+------
+
+.. automodule:: controllers.events
+    :members:

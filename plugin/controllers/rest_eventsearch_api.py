@@ -62,7 +62,6 @@ class EventSearchApiController(RESTControllerSkeleton):
         except Exception as exc1:
             data['errors'].append(repr(exc1))
 
-
         if mangled_parameters["what"]:
             try:
                 data['events'] = self.ec_instance.search(

@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-RESTful Controller for /api/eventlookup endpoint
-================================================
-
-"""
 from rest import json_response
 from rest import CORS_DEFAULT_ALLOW_ORIGIN, RESTControllerSkeleton
 from events import EventsController
 
 
 class EventLookupApiController(RESTControllerSkeleton):
+    """
+    RESTful Controller for /api/eventlookup endpoint
+    """
     def __init__(self, *args, **kwargs):
         RESTControllerSkeleton.__init__(self, *args, **kwargs)
         self.ec_instance = EventsController()

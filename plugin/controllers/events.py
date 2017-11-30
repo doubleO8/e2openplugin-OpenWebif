@@ -46,9 +46,9 @@ Possible Values of the Format Field
 Event Search
 ============
 
-.. note::
 
-    Method signature:
+Method signature::
+
     search((fmt, int size, int querytype, int PE1, int PE2))
 
 Description of Search Parameters
@@ -94,8 +94,9 @@ Description of Parameters Related to Search Querytype
     * This function searches for event information for the specified parameters.
     * The information is returned in the form of a two-dimensional array, \
     where the first dimension defines the individual elements of the cursor \
-    (the searched events), and the second dimension is the value corresponding \
-    to the event that is specified by the Format field (single event data).
+    (the searched events), and the second dimension is the value \
+    corresponding to the event that is specified by the Format field \
+    (single event data).
 
 Example (https://mslowik.blogspot.de)::
 
@@ -107,10 +108,12 @@ Example (https://mslowik.blogspot.de)::
 Event Lookup
 ============
 
-.. note::
 
-    Method signature:
-    lookupEvent([fmt, (eServiceReference ref, int querytyoe, int PE1, int PE2)])
+Method signature::
+
+    lookupEvent([fmt,
+                (eServiceReference ref, int querytype, int PE1, int PE2)])
+
 
 Description of Lookup Parameters
 ++++++++++++++++++++++++++++++++
@@ -157,7 +160,8 @@ Description of Parameters Related to Querytype
     where the first dimension defines the individual elements of the cursor \
     (the searched events), and the second dimension is the value corresponding \
     to the event that is specified by the Format field (single event data).
-    * Time zones of type NUMBER are defined as the number of seconds since the EPOCH date (in the unix systems beginning in 1970).
+    * Time zones of type NUMBER are defined as the number of seconds since \
+    the EPOCH date (in the unix systems beginning in 1970).
 
 .. note::
 
@@ -167,7 +171,8 @@ Description of Parameters Related to Querytype
 
 Examples (https://mslowik.blogspot.de)::
 
-    events = eEPGCache.getInstance ().lookupEvent (['IBDTSENC', (ref, 0, begintime, endtime)])
+    events = eEPGCache.getInstance ().lookupEvent(
+        ['IBDTSENC', (ref, 0, begintime, endtime)])
 
     search = ['IBDCTSERNX']
     if services: # It's a Bouquet
@@ -226,11 +231,11 @@ class EventsController(object):
         Search EPG events
 
         Args:
-                what (:obj:` basestring`): query value
-                querytype (:obj:`int`): type of query
-                case_sensitive (:obj:`bool`): True if case sensitive search
-                flags(:obj:`basestring`): query flags
-                max_rows (:obj:`int`): maximum number of results
+                what (basestring): query value
+                querytype (int): type of query
+                case_sensitive (bool): True if case sensitive search
+                flags(basestring): query flags
+                max_rows (int): maximum number of results
 
         Returns:
                 list of matching items
@@ -271,12 +276,12 @@ class EventsController(object):
         Lookup EPG events
 
         Args:
-                service_reference (:obj:`basestring`): service reference
-                querytype (:obj:`int`): type of query
-                begin (:obj:`int`): begin timestamp
-                minutes (:obj:`int`): query's time range in minutes
-                flags(:obj:`basestring`): query flags
-                max_rows (:obj:`int`): maximum number of results
+                service_reference (basestring): service reference
+                querytype (int): type of query
+                begin (int): begin timestamp
+                minutes (int): query's time range in minutes
+                flags(basestring): query flags
+                max_rows (int): maximum number of results
 
         Returns:
                 list of matching items

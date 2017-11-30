@@ -4,11 +4,10 @@
 RESTful Controller for /api/saveconfig endpoint.
 POST requests are proxied through `controllers.web.WebController`.
 
-TODO:
+MISSING:
 
     * sane implementation of POST request handling
     * extend OpenAPI specification in swagger.json
-    * add documentation
 """
 from web import WebController
 from rest import json_response

@@ -46,9 +46,9 @@ class AjaxController(BaseController):
         Gather information about available bouquets.
 
         Args:
-            request (:obj:`twisted.web.server.Request`): HTTP request object
+            request (twisted.web.server.Request): HTTP request object
         Returns:
-            (:obj:`dict`): key/value pairs
+            dict: key/value pairs
         """
         stype = "tv"
         if "stype" in request.args.keys():
@@ -108,9 +108,9 @@ class AjaxController(BaseController):
             In best case scenario all but one image file is never used.
 
         Args:
-            request (:obj:`twisted.web.server.Request`): HTTP request object
+            request (twisted.web.server.Request): HTTP request object
         Returns:
-            (:obj:`dict`): key/value pairs
+            dict: key/value pairs
         """
         return getInfo(self.session, need_fullinfo=True)
 
@@ -226,9 +226,10 @@ class AjaxController(BaseController):
 
     def P_settings(self, request):
         ret = {
-            "result": True
+            "result": True,
+            'configsections': getConfigsSections()['sections']
         }
-        ret['configsections'] = getConfigsSections()['sections']
+
         if comp_config.OpenWebif.webcache.theme.value:
             if os.path.exists(getPublicPath('themes')):
                 ret['themes'] = comp_config.OpenWebif.webcache.theme.choices

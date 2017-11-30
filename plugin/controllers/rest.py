@@ -43,6 +43,9 @@ def json_response(request, data, indent=1):
 
 
 class RESTControllerSkeleton(resource.Resource):
+    """
+    Skeleton implementation of a RESTful contoller class.
+    """
     isLeaf = True
 
     def __init__(self, *args, **kwargs):
@@ -116,6 +119,9 @@ class RESTControllerSkeleton(resource.Resource):
 
 
 class SimpleRootController(resource.Resource):
+    """
+    Simple (Web) Root Controller.
+    """
     isLeaf = False
 
     def __init__(self):

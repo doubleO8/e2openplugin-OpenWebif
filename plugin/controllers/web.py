@@ -73,7 +73,7 @@ class WebController(BaseController):
         Callback function - right before page loading.
 
         Args:
-            request (:obj:`twisted.web.server.Request`): HTTP request object
+            request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
         """
@@ -105,7 +105,7 @@ class WebController(BaseController):
             Not available in *Enigma2 WebInterface API*.
 
         Args:
-            request (:obj:`twisted.web.server.Request`): HTTP request object
+            request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
         """
@@ -129,7 +129,7 @@ class WebController(BaseController):
         config.timeshift.favoriteSaveAction ....*
 
         Args:
-            request (:obj:`twisted.web.server.Request`): HTTP request object
+            request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
         """
@@ -159,7 +159,7 @@ class WebController(BaseController):
             Not available in *Enigma2 WebInterface API*.
 
         Args:
-            request (:obj:`twisted.web.server.Request`): HTTP request object
+            request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
         """
@@ -177,7 +177,7 @@ class WebController(BaseController):
             https://dream.reichholf.net/e2web/#about
 
         Args:
-            request (:obj:`twisted.web.server.Request`): HTTP request object
+            request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
         """
@@ -191,7 +191,7 @@ class WebController(BaseController):
         Request handler for the `/statusinfo` endpoint.
 
         Args:
-            request (:obj:`twisted.web.server.Request`): HTTP request object
+            request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
         """
@@ -207,7 +207,7 @@ class WebController(BaseController):
             Probably https://dream.reichholf.net/e2web/#signal
 
         Args:
-            request (:obj:`twisted.web.server.Request`): HTTP request object
+            request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
         """
@@ -223,7 +223,7 @@ class WebController(BaseController):
             https://dream.reichholf.net/e2web/#vol
 
         Args:
-            request (:obj:`twisted.web.server.Request`): HTTP request object
+            request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
         """

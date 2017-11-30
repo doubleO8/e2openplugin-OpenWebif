@@ -3,8 +3,8 @@
 Model Classes
 =============
 
-EPG
----
+Events
+------
 
-.. automodule:: controllers.models.epg
+.. automodule:: controllers.models.events
     :members:

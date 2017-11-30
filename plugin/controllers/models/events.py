@@ -25,26 +25,38 @@ def convertDesc(val):
             quote=True)
     return val
 
-
+#: Begin
 FLAG_BEGIN = "B"
+#: Current Time
 FLAG_CURRENT_TIME = "C"
+#: Long Event Information
 FLAG_LONGINFO = "E"
+#: Duration
 FLAG_DURATION = "D"
+#: ID
 FLAG_ITEM_ID = "I"
+#: Service Name
 FLAG_SERVICE_NAME = "N"
+#: Short Service Name
 FLAG_SHORT_SERVICE_NAME = "n"
+#: Service Reference
 FLAG_SERVICE_REFERENCE = "R"
+#: Short Event Information
 FLAG_SHORTINFO = "S"
+#: Event Title
 FLAG_TITLE = "T"
 
+#: Event Flags including Current Time Field
 FLAGS_FULL = ''.join(sorted(
     [FLAG_BEGIN, FLAG_CURRENT_TIME, FLAG_LONGINFO, FLAG_DURATION, FLAG_ITEM_ID,
      FLAG_SERVICE_NAME, FLAG_SERVICE_REFERENCE, FLAG_SHORTINFO, FLAG_TITLE]))
 
+#: Event Flags without Current Time Field
 FLAGS_ALL = ''.join(sorted(
     [FLAG_BEGIN, FLAG_LONGINFO, FLAG_DURATION, FLAG_ITEM_ID,
      FLAG_SERVICE_NAME, FLAG_SERVICE_REFERENCE, FLAG_SHORTINFO, FLAG_TITLE]))
 
+#: Event Flags as used in :py:class:`controllers.web`
 FLAGS_WEB = 'IBDCTSERN'
 
 #: Services Key Map

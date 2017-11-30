@@ -5,7 +5,8 @@ RESTful API access using HTTP
 -----------------------------
 
 This controller exposes the application programming interface (API) as
-implemented by the ``web`` and ``ajax`` controller.
+implemented by the :py:class:`controllers.web` and :py:class:`controllers.ajax`
+controllers.
 
 The generated responses are returned as JSON data with appropriate HTTP headers.
 Output will be compressed using gzip if requested by client.

@@ -31,45 +31,23 @@ from httpserver import HttpdStart, HttpdStop, HttpdRestart
 
 from __init__ import _
 
+PLUGIN_NAME = 'OpenWebif'
+PLUGIN_ICON_HD = 'openwebifhd.png'
+PLUGIN_ICON = 'openwebif.png'
+
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(name)-60s %(levelname)-8s '
                            '%(funcName)-32s (#%(lineno)04d): %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
-                    filename="/media/hdd/openwebif.log")
+                    filename="/media/hdd/{:s}.log".format(PLUGIN_NAME.lower()))
 
 LOG = logging.getLogger("PLUGIN")
 
-# not used redmond -> original , trontastic , ui-lightness
 THEMES = [
-    'original',
-    'base',
-    'black-tie',
-    'blitzer',
-    'clear',
-    'cupertino',
-    'dark-hive',
-    'dot-luv',
-    'eggplant',
-    'excite-bike',
-    'flick',
-    'hot-sneaks',
-    'humanity',
-    'le-frog',
-    'mint-choc',
-    'overcast',
-    'pepper-grinder',
-    'smoothness',
-    'south-street',
-    'start',
-    'sunny',
-    'swanky-purse',
-    'ui-darkness',
-    'vader',
-    'original-small-screen']
-
-PLUGIN_NAME = 'OpenWebif'
-PLUGIN_ICON_HD = 'openwebifhd.png'
-PLUGIN_ICON = 'openwebif.png'
+    'original-small-screen',
+    'original-small-screen',
+    'original-small-screen :)'
+]
 
 config.OpenWebif = ConfigSubsection()
 config.OpenWebif.enabled = ConfigYesNo(default=True)
@@ -86,7 +64,7 @@ config.OpenWebif.webcache.collapsedmenus = ConfigText(
     default="", fixed_size=False)
 config.OpenWebif.webcache.zapstream = ConfigYesNo(default=False)
 config.OpenWebif.webcache.theme = ConfigSelection(
-    default='original', choices=THEMES)
+    default='original-small-screen', choices=THEMES)
 config.OpenWebif.webcache.moviesort = ConfigSelection(
     default='name', choices=['name', 'named', 'date', 'dated'])
 config.OpenWebif.webcache.showchannelpicon = ConfigYesNo(default=True)
@@ -149,6 +127,7 @@ class OpenWebifConfig(Screen, ConfigListScreen):
     """
     Enigma2 plugin configuration screen.
     """
+
     def __init__(self, session):
         self.skin = CONFIG_SCREEN_XML
         Screen.__init__(self, session)

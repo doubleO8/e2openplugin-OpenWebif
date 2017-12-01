@@ -61,7 +61,7 @@ class HarvestKeitel(object):
                     filename='github_io.conf',
                     description="opkg feed configuration file"),
                 dict(
-                    filename='doc/index.html',
+                    filename='documentation/index.html',
                     description="documentation"),
             ],
             "meta": PACKAGE_META,
@@ -86,7 +86,7 @@ class HarvestKeitel(object):
 
     def update_documentation(self):
         subprocess.check_call("make html", cwd='./doc', shell=True)
-        doc_target = os.path.join(self.ghpages_output_path, 'doc')
+        doc_target = os.path.join(self.ghpages_output_path, 'documentation')
 
         if os.path.isdir(doc_target):
             shutil.rmtree(doc_target)

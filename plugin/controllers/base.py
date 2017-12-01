@@ -101,6 +101,8 @@ class BaseController(resource.Resource):
         self.themes_support = os.path.exists(getPublicPath('themes'))
 
     def loadTemplate(self, path, module, args):
+        self.log.debug("path={!r} module={!r} args={!r}".format(
+            path, module, args))
         trunk = getViewsPath(path)
         template_file = None
 
@@ -172,6 +174,7 @@ class BaseController(resource.Resource):
                 module = module.strip("/")
                 module = module.replace(".", "")
                 out = self.loadTemplate(module, self.path, data)
+                self.log.debug("out={!r}".format(out))
                 if out is None:
                     self.log.error("Template not found for page {!r}".format(
                         request.uri))

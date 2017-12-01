@@ -33,11 +33,11 @@ class ServiceListsManager(object):
             },
             SLM_MODE_TRANSPONDERS: {
                 "description": "reloading transponders",
-                "funcs": (self.reloadTransponders,)
+                "funcs": (self._reload_transponders,)
             },
             SLM_MODE_PARENTALCONTROL: {
                 "description": "reloading parental control white-/blacklists",
-                "funcs": (self.reloadParentalControl,)
+                "funcs": (self._reload_parental_control_lists,)
             }
         }
 
@@ -59,7 +59,7 @@ class ServiceListsManager(object):
         """
         return self.eDVBDB.reloadBouquets()
 
-    def reloadTransponders(self):
+    def _reload_transponders(self):
         """
         Reload Transponders.
 
@@ -68,7 +68,7 @@ class ServiceListsManager(object):
         """
         return nimmanager.readTransponders()
 
-    def reloadParentalControl(self):
+    def _reload_parental_control_lists(self):
         """
         Reload Parental Control Black/White Lists.
 
@@ -77,12 +77,12 @@ class ServiceListsManager(object):
         """
         return Components.ParentalControl.parentalControl.open()
 
-    def reloadServicesLists(self, mode=None):
+    def reload(self, mode=None):
         """
         Reload items based on *mode*.
 
         Args:
-            request:
+            mode (basestring): Reload mode indicator
 
         Returns:
             dict: resultset

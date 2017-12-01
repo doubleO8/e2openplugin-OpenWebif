@@ -1228,7 +1228,7 @@ class WebController(BaseController):
             HTTP response with headers
         """
         slm = ServiceListsManager()
-        return slm.reloadServicesLists(request.args.get("mode"))
+        return slm.reload(request.args.get("mode"))
 
     def P_tvbrowser(self, request):
         return tvbrowser(self.session, request)

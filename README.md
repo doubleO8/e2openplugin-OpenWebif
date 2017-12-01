@@ -27,8 +27,9 @@ Some features of the original plugin have been removed:
 * bouquet editor
 * support for shellinaboxd
 * support for lcd4linux web portions
-* images files of enigma devices
+* image files of enigma devices
 * themes
+* image files and HTML maps of remotes
 
 # Latest Package
 

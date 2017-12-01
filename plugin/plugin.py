@@ -32,7 +32,8 @@ from httpserver import HttpdStart, HttpdStop, HttpdRestart
 from __init__ import _
 
 logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)-8s %(message)s',
+                    format='%(asctime)s %(name)-40s %(levelname)-8s '
+                           '%(funcName)-20s (#%(lineno)04d): %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
                     filename="/media/hdd/openwebif.log")
 

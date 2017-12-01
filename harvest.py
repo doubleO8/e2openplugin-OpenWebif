@@ -91,10 +91,11 @@ class HarvestKeitel(object):
         if os.path.isdir(doc_target):
             shutil.rmtree(doc_target)
 
-        shutil.copytree('./doc/build/html', doc_target)
         mr_hyde = "./doc/build/html/.nojekyll"
         with open(mr_hyde, "wb") as tgt:
             tgt.write("NO!")
+
+        shutil.copytree('./doc/build/html', doc_target)
 
 
 if __name__ == '__main__':

@@ -38,7 +38,6 @@ from models.config import getSettings, addCollapsedMenu, removeCollapsedMenu, \
     setZapStream, saveConfig, getZapStream, setShowChPicon, \
     getConfigs, getConfigsSections
 from models.stream import getStream, getTS, getStreamSubservices, GetSession
-from models.servicelist import reloadServicesLists
 from models.mediaplayer import mediaPlayerAdd, mediaPlayerRemove, \
     mediaPlayerPlay, mediaPlayerCommand, mediaPlayerCurrent, mediaPlayerList, \
     mediaPlayerLoad, mediaPlayerSave, mediaPlayerFindFile
@@ -47,7 +46,7 @@ from Screens.InfoBar import InfoBar
 
 from base import BaseController
 from stream import StreamController
-
+from servicelists import ServiceListsManager
 
 def whoami(request):
     port = comp_config.OpenWebif.port.value
@@ -1215,7 +1214,21 @@ class WebController(BaseController):
         return getStreamSubservices(self.session, request)
 
     def P_servicelistreload(self, request):
-        return reloadServicesLists(self.session, request)
+        """
+        Reload service lists, transponders, parental control black-/white lists
+        or/and lamedb.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#servicelistreload
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
+        slm = ServiceListsManager()
+        return slm.reloadServicesLists(request.args.get("mode"))
 
     def P_tvbrowser(self, request):
         return tvbrowser(self.session, request)

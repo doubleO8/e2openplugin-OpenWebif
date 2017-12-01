@@ -26,3 +26,9 @@ OpenWebif Specific Controllers
 
 .. automodule:: controllers.transcoding
     :members:
+
+Utility Functions
+-----------------
+
+.. automodule:: controllers.models.services
+    :members:

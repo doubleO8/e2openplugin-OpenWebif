@@ -1431,15 +1431,6 @@ class WebController(BaseController):
             comp_config.OpenWebif.webcache.moviesort.save()
         return {}
 
-    def P_css(self, request):
-        request.setHeader("content-type", "text/css")
-        ret = {}
-        theme = 'original'
-        if comp_config.OpenWebif.webcache.theme.value:
-            theme = comp_config.OpenWebif.webcache.theme.value
-        ret['theme'] = theme
-        return ret
-
     def P_setmepgmode(self, request):
         if "mode" in request.args.keys():
             try:

@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import logging
+import pprint
+
 from enigma import eDVBDB
 from Components.NimManager import nimmanager
 import Components.ParentalControl
@@ -16,7 +19,9 @@ class ServiceListsManager(object):
     Controller for reloading service lists, transponders,
     parental control black-/white lists and lamedb.
     """
+
     def __init__(self):
+        self.log = logging.getLogger(__name__)
         self.eDVBDB = eDVBDB.getInstance()
         self.mode_map = {
             SLM_MODE_BOTH: {
@@ -48,6 +53,7 @@ class ServiceListsManager(object):
         Returns:
             ?
         """
+        self.log.debug("reloading")
         return self.eDVBDB.reloadServicelist()
 
     def _reload_user_bouquets(self):
@@ -57,6 +63,7 @@ class ServiceListsManager(object):
         Returns:
             ?
         """
+        self.log.debug("reloading")
         return self.eDVBDB.reloadBouquets()
 
     def _reload_transponders(self):
@@ -66,6 +73,7 @@ class ServiceListsManager(object):
         Returns:
             ?
         """
+        self.log.debug("reloading")
         return nimmanager.readTransponders()
 
     def _reload_parental_control_lists(self):
@@ -75,6 +83,7 @@ class ServiceListsManager(object):
         Returns:
             ?
         """
+        self.log.debug("reloading")
         return Components.ParentalControl.parentalControl.open()
 
     def reload(self, mode=None):
@@ -93,6 +102,7 @@ class ServiceListsManager(object):
 
         if mode is not None:
             mode = mode[0]
+        self.log.debug("mode={!r}".format(mode))
 
         try:
             plan = self.mode_map[mode]
@@ -110,5 +120,8 @@ class ServiceListsManager(object):
             result['message'] = ', '.join(message_parts)
         except Exception as gexc:
             result['message'] = repr(gexc)
+
+        self.log.debug("result:")
+        [self.log.debug(line) for line in pprint.pformat(result).split("\n")]
 
         return result

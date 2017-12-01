@@ -321,19 +321,21 @@ class EventsController(object):
 
         return mangled
 
-    def lookup_event(self, service_reference, event_id):
+    def lookup_event(self, service_reference, event_id, flags=None):
         """
         Lookup EPG event by ID
 
         Args:
                 service_reference (basestring): service reference
                 event_id (int): Event ID
+                flags(basestring): query flags
 
         Returns:
                 models.events.EventDict: matching item or None
         """
         result = self.lookup(service_reference,
-                             querytype=QUERYTYPE_LOOKUP__ID, begin=event_id)
+                             querytype=QUERYTYPE_LOOKUP__ID, begin=event_id,
+                             flags=flags)
         if result:
             return result[0]
         return None

@@ -41,17 +41,17 @@
 #def remoteMenu
 <div style="width:100%; text-align:center;">
 		<ul>
-		<li style="margin-bottom:5px;margin-top:5px;">
-		<div class="tbl"><div>
-		<div><a class="fbb" href='#' title=$tstrings['powercontrol'].replace(" ","&nbsp;") onclick="load_dm('ajax/powerstate','$tstrings["powercontrol"]');this.blur();return false;"><i class="fa fa-power-off" aria-hidden="true"></i></a></div>
-	<!--<div><a class="lmc fbb" href="ajax/screenshot" title=$tstrings['grabscreenshot'].replace(" ","&nbsp;")><i class="fa fa-camera-retro" aria-hidden="true"></i></a></div> -->
-		<div><a class="fbb" href='#' title=$tstrings['sendamessage'].replace(" ","&nbsp;") onclick="load_message_dm('ajax/message','$tstrings["sendamessage"]');this.blur();return false;"><i class="fa fa-envelope-o" aria-hidden="true"></i></a></div>
-		<div><a class="fbb" href='#' title=$tstrings['showfullremote'].replace(" ","&nbsp;") onclick="toggleFullRemote();return false;"><i class="fa fa-expand" aria-hidden="true"></i></a></div>
-		</div></div>
-		</li>
+			<li style="margin-bottom:5px;margin-top:5px;">
+				<div class="tbl">
+					<div>
+						<div><a class="fbb" href='#' title=$tstrings['powercontrol'].replace(" ","&nbsp;") onclick="load_dm('ajax/powerstate','$tstrings["powercontrol"]');this.blur();return false;"><i class="fa fa-power-off" aria-hidden="true"></i></a></div>
+						<div><a class="fbb" href='#' title=$tstrings['sendamessage'].replace(" ","&nbsp;") onclick="load_message_dm('ajax/message','$tstrings["sendamessage"]');this.blur();return false;"><i class="fa fa-envelope-o" aria-hidden="true"></i></a></div>
+					</div>
+				</div>
+			</li>
 		</ul>
 		<div class="ui-widget-header" style="border-bottom: none;background: none;margin-left: 5px;margin-right: 5px;"></div>
-	<img src="images/remotes/ow_remote.png" width="135" height="183" usemap="#menuremote" border="0">
+	<img src="/images/remotes/ow_remote.png" width="135" height="183" usemap="#menuremote" border="0">
 	<map name="menuremote" >
 		<area shape="circle" coords="67,148,13" alt="ok" onclick="pressMenuRemote('352');">
 		<area shape="circle" coords="68,173,9" alt="down" onclick="pressMenuRemote('108');">

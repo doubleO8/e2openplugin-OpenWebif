@@ -753,10 +753,8 @@ def getSearchEpg(sstr, endtime=None, fulldesc=False, bouquetsonly=False):
         if hasattr(eEPGCache, 'FULL_DESCRIPTION_SEARCH'):
             search_type = eEPGCache.FULL_DESCRIPTION_SEARCH
     events = epgcache.search(('IBDTSENR', 128, search_type, sstr, 1))
+
     if events is not None:
-        # TODO : discuss #677
-        # events.sort(key = lambda x: (x[1],x[6])) # sort by date,sname
-        # events.sort(key = lambda x: x[1]) # sort by date
         if bouquetsonly:
             # collect service references from TV bouquets
             for service in getAllServices('tv')['services']:

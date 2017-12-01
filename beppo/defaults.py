@@ -20,7 +20,7 @@ PACKAGE_OUTPUT_PATH = 'pack'
 TARGET_PATH_REL = 'usr/lib/enigma2/python/Plugins/Extensions/OpenWebif'
 
 #: relative path to be used for the 'latest opk' symlink
-LATEST_OPK_PATH_REL = 'lates.opk'
+LATEST_OPK_PATH_REL = 'latest.opk'
 
 #: relative path of build tag information file
 TAG_PATH_REL = "public/tag.json"

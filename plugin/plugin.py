@@ -32,8 +32,8 @@ from httpserver import HttpdStart, HttpdStop, HttpdRestart
 from __init__ import _
 
 logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(name)-40s %(levelname)-8s '
-                           '%(funcName)-20s (#%(lineno)04d): %(message)s',
+                    format='%(asctime)s %(name)-60s %(levelname)-8s '
+                           '%(funcName)-32s (#%(lineno)04d): %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
                     filename="/media/hdd/openwebif.log")
 
@@ -260,7 +260,14 @@ def on_configure_plugin(session, **kwargs):
         session: (?) Session instance
     """
     LOG.info("on_configure_plugin({!r}, {!r})".format(session, kwargs))
-    LOG.debug(dir(session))
+    # LOG.debug(dir(session))
+    # ['__doc__', '__init__', '__module__', 'close', 'create',
+    #  'current_dialog', 'delay_timer', 'deleteDialog', 'desktop',
+    #  'dialog_stack', 'doInstantiateDialog', 'execBegin', 'execDialog',
+    #  'execEnd', 'in_exec', 'instantiateDialog', 'instantiateSummaryDialog',
+    #  'nav', 'open', 'openWithCallback', 'popCurrent', 'popSummary',
+    #  'processDelay', 'pushCurrent', 'pushSummary', 'screen', 'summary',
+    #  'summary_desktop', 'summary_stack']
     session.open(OpenWebifConfig)
 
 

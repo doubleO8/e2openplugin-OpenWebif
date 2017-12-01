@@ -10,6 +10,7 @@ Basic Controllers
     :members:
 
 .. automodule:: controllers.base
+    :special-members:
     :members:
 
 OpenWebif Specific Controllers

@@ -49,42 +49,30 @@ class ServiceListsManager(object):
     def _reload_lamedb(self):
         """
         Reload lamedb.
-
-        Returns:
-            ?
         """
         self.log.debug("reloading")
-        return self.eDVBDB.reloadServicelist()
+        self.eDVBDB.reloadServicelist()
 
     def _reload_user_bouquets(self):
         """
         Reload User Bouquets.
-
-        Returns:
-            ?
         """
         self.log.debug("reloading")
-        return self.eDVBDB.reloadBouquets()
+        self.eDVBDB.reloadBouquets()
 
     def _reload_transponders(self):
         """
         Reload Transponders.
-
-        Returns:
-            ?
         """
         self.log.debug("reloading")
-        return nimmanager.readTransponders()
+        nimmanager.readTransponders()
 
     def _reload_parental_control_lists(self):
         """
         Reload Parental Control Black/White Lists.
-
-        Returns:
-            ?
         """
         self.log.debug("reloading")
-        return Components.ParentalControl.parentalControl.open()
+        Components.ParentalControl.parentalControl.open()
 
     def reload(self, mode=None):
         """
@@ -107,10 +95,8 @@ class ServiceListsManager(object):
         try:
             plan = self.mode_map[mode]
             result['message'] = plan['description']
-            result['rcs'] = list()
             for func in plan['funcs']:
-                rc = func()
-                result['rcs'].append(repr(rc))
+                func()
             result['result'] = True
         except KeyError:
             message_parts = ['missing or wrong parameter mode. Dial ']

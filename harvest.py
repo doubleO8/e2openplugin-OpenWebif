@@ -3,6 +3,7 @@
 import os
 import shutil
 import json
+import subprocess
 
 from jinja2 import Environment, PackageLoader
 
@@ -33,6 +34,7 @@ class HarvestKeitel(object):
 
     def harvest(self):
         self.copy_package()
+        self.update_documentation()
         self.create_ghpages_index()
         self.create_ghpages_latest_package_link()
 
@@ -58,6 +60,9 @@ class HarvestKeitel(object):
                 dict(
                     filename='github_io.conf',
                     description="opkg feed configuration file"),
+                dict(
+                    filename='doc/index.html',
+                    description="documentation"),
             ],
             "meta": PACKAGE_META,
             "tag_data": self.tag_data,
@@ -78,6 +83,15 @@ class HarvestKeitel(object):
         os.symlink(os.path.basename(self.package_source),
                    os.path.basename(current_opk_link))
         os.chdir(old_cwd)
+
+    def update_documentation(self):
+        subprocess.check_call("make html", cwd='./doc', shell=True)
+        doc_target = os.path.join(self.ghpages_output_path, 'doc')
+
+        if os.path.isdir(doc_target):
+            shutil.rmtree(doc_target)
+
+        shutil.copytree('./doc/build/html', doc_target)
 
 
 if __name__ == '__main__':

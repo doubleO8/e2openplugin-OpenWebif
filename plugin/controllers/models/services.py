@@ -739,22 +739,35 @@ def getNowNextEpg(ref, servicetype, mangle_html=True):
 
 
 def getSearchEpg(sstr, endtime=None, fulldesc=False, bouquetsonly=False):
+    """
+    Search for EPG events.
+
+    Args:
+        sstr (basestring): search term
+        endtime (int): timetamp
+        fulldesc (bool): search in event's description field too
+        bouquetsonly (bool): limit results to services in known bouquets
+
+    Returns:
+        list: event datasets
+    """
     bsref = {}
-    ret = []
-    ev = {}
+    events = []
+    epgcache = eEPGCache.getInstance()
+    search_type = eEPGCache.PARTIAL_TITLE_SEARCH
+
     if config.OpenWebif.epg_encoding.value != 'utf-8':
         try:
             sstr = sstr.encode(config.OpenWebif.epg_encoding.value)
         except UnicodeEncodeError:
             pass
-    epgcache = eEPGCache.getInstance()
-    search_type = eEPGCache.PARTIAL_TITLE_SEARCH
+
     if fulldesc:
         if hasattr(eEPGCache, 'FULL_DESCRIPTION_SEARCH'):
             search_type = eEPGCache.FULL_DESCRIPTION_SEARCH
-    events = epgcache.search(('IBDTSENR', 128, search_type, sstr, 1))
+    results = epgcache.search(('IBDTSENR', 128, search_type, sstr, 1))
 
-    if events is not None:
+    if results:
         if bouquetsonly:
             # collect service references from TV bouquets
             for service in getAllServices('tv')['services']:
@@ -763,10 +776,10 @@ def getSearchEpg(sstr, endtime=None, fulldesc=False, bouquetsonly=False):
                 else:
                     bsref[service['servicereference']] = True
 
-        for event in events:
+        for event in results:
             if bouquetsonly and not event[7] in bsref:
                 continue
-            ev = {}
+            ev = dict()
             ev['id'] = event[0]
             ev['date'] = "%s %s" % (tstrings[(
                 "day_" + strftime("%w", (localtime(event[1]))))],
@@ -784,13 +797,13 @@ def getSearchEpg(sstr, endtime=None, fulldesc=False, bouquetsonly=False):
             ev['picon'] = getPicon(event[7])
             ev['now_timestamp'] = None
             if endtime:
-                # don't show events if begin after endtime
+                # don't show events if begin is after endtime
                 if event[1] <= endtime:
-                    ret.append(ev)
+                    events.append(ev)
             else:
-                ret.append(ev)
+                events.append(ev)
 
-    return {"events": ret, "result": True}
+    return {"events": events, "result": True}
 
 
 def getSearchSimilarEpg(ref, eventid):

@@ -91,7 +91,8 @@ Description of Parameters Related to Search Querytype
 
 .. note::
 
-    * This function searches for event information for the specified parameters.
+    * This function searches for event information for the specified \
+    parameters.
     * The information is returned in the form of a two-dimensional array, \
     where the first dimension defines the individual elements of the cursor \
     (the searched events), and the second dimension is the value \
@@ -155,11 +156,13 @@ Description of Parameters Related to Querytype
 .. note::
 
     * **-1** for *time horizon* is current date.
-    * This function searches for event information for the specified parameters.
+    * This function searches for event information for the specified \
+    parameters.
     * The information is returned in the form of a two-dimensional array, \
     where the first dimension defines the individual elements of the cursor \
-    (the searched events), and the second dimension is the value corresponding \
-    to the event that is specified by the Format field (single event data).
+    (the searched events), and the second dimension is the value \
+    corresponding to the event that is specified by the Format field \
+    (single event data).
     * Time zones of type NUMBER are defined as the number of seconds since \
     the EPOCH date (in the unix systems beginning in 1970).
 
@@ -191,7 +194,7 @@ import logging
 
 from enigma import eEPGCache
 
-from models.events import FLAGS_WEB, EventDict, FLAGS_ALL
+from models.events import EventDict, FLAGS_ALL
 
 CASE_SENSITIVE = 0
 CASE_INSENSITIVE = 1
@@ -330,7 +333,7 @@ class EventsController(object):
                 models.events.EventDict: matching item or None
         """
         result = self.lookup(service_reference,
-                           querytype=QUERYTYPE_LOOKUP__ID, begin=event_id)
+                             querytype=QUERYTYPE_LOOKUP__ID, begin=event_id)
         if result:
             return result[0]
         return None

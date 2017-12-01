@@ -12,10 +12,11 @@ from time import time, strftime, localtime, mktime
 from urllib import unquote
 
 from enigma import eEPGCache, eServiceReference
-from Components.UsageConfig import preferredTimerPath, preferredInstantRecordPath
+from Components.UsageConfig import preferredTimerPath, \
+    preferredInstantRecordPath
 from Components.config import config
 from Components.TimerSanityCheck import TimerSanityCheck
-from RecordTimer import RecordTimerEntry, RecordTimer, parseEvent, AFTEREVENT
+from RecordTimer import RecordTimerEntry, parseEvent, AFTEREVENT
 from ServiceReference import ServiceReference
 from info import GetWithAlternative
 from Plugins.Extensions.OpenWebif.__init__ import _
@@ -99,7 +100,8 @@ def getTimers(session):
             {
                 "serviceref": str(
                     timer.service_ref),
-                "servicename": mangle_epg_text(timer.service_ref.getServiceName()),
+                "servicename": mangle_epg_text(
+                    timer.service_ref.getServiceName()),
                 "eit": timer.eit,
                 "name": timer.name,
                 "description": timer.description,
@@ -203,7 +205,8 @@ def addTimer(
                     {
                         "serviceref": str(
                             conflict.service_ref),
-                        "servicename": mangle_epg_text(conflict.service_ref.getServiceName()),
+                        "servicename": mangle_epg_text(
+                            conflict.service_ref.getServiceName()),
                         "name": conflict.name,
                         "begin": conflict.begin,
                         "end": conflict.end,
@@ -365,7 +368,8 @@ def editTimer(
                         {
                             "serviceref": str(
                                 conflict.service_ref),
-                            "servicename": mangle_epg_text(conflict.service_ref.getServiceName()),
+                            "servicename": mangle_epg_text(
+                                conflict.service_ref.getServiceName()),
                             "name": conflict.name,
                             "begin": conflict.begin,
                             "end": conflict.end,
@@ -655,7 +659,8 @@ def tvbrowser(session, request):
             repeated,
             begin,
             end,
-            serviceref)
+            # serviceref
+        )
     else:
         return {
             "result": False,
@@ -671,7 +676,7 @@ def getSleepTimer(session):
                 "minutes": session.nav.SleepTimer.getCurrentSleepTime(),
                 "action": config.SleepTimer.action.value,
                 "message": _("Sleeptimer is enabled") if session.nav.SleepTimer.isActive() else _("Sleeptimer is disabled")}
-        except Exception as e:
+        except Exception:
             return {
                 "result": False,
                 "message": _("SleepTimer error")
@@ -691,9 +696,16 @@ def getSleepTimer(session):
                     enabled = True
                     if int(timer.disabled) == 1:
                         enabled = False
-                    return {"enabled": enabled, "minutes": minutes, "action": action, "message": _(
-                        "Sleeptimer is enabled") if enabled else _("Sleeptimer is disabled")}
-        except Exception as e:
+                    if enabled:
+                        message = _("Sleeptimer is enabled")
+                    else:
+                        message = _("Sleeptimer is disabled")
+                    return {
+                        "enabled": enabled,
+                        "minutes": minutes,
+                        "action": action,
+                        "message": message}
+        except Exception:
             return {
                 "result": False,
                 "message": _("SleepTimer error")

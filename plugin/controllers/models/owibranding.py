@@ -15,7 +15,6 @@ import hashlib
 import time
 from functools import reduce
 
-
 try:
     from Components.About import about
 except ImportError:
@@ -24,6 +23,7 @@ except ImportError:
 tpmloaded = 1
 try:
     from enigma import eTPM
+
     if not hasattr(eTPM, 'getData'):
         tpmloaded = 0
 except BaseException:
@@ -40,8 +40,8 @@ def validate_certificate(cert, key):
 def get_random():
     try:
         def xor(a, b):
-            return ''.join(chr(ord(c) ^ ord(d))
-                                      for c, d in zip(a, b * 100))
+            return ''.join(chr(ord(c) ^ ord(d)) for c, d in zip(a, b * 100))
+
         random = os.urandom(8)
         x = str(time.time())[-8:]
         result = xor(random, x)
@@ -261,7 +261,7 @@ def getAllInfo():
         procmodel = f.readline().strip()
         f.close()
         if (procmodel.startswith("optimuss")
-                or procmodel.startswith("pingulux")):
+            or procmodel.startswith("pingulux")):
             brand = "Edision"
             model = procmodel.replace(
                 "optimmuss",
@@ -270,7 +270,10 @@ def getAllInfo():
                 " Plus").replace(
                 " os",
                 " OS")
-        elif (procmodel.startswith("fusion") or procmodel.startswith("purehd") or procmodel.startswith("revo4k") or procmodel.startswith("galaxy4k")):
+        elif (procmodel.startswith("fusion") or
+                  procmodel.startswith("purehd") or
+                  procmodel.startswith("revo4k") or
+                  procmodel.startswith("galaxy4k")):
             brand = "Xsarius"
             if procmodel == "fusionhd":
                 model = procmodel.replace("fusionhd", "Fusion HD")
@@ -302,7 +305,8 @@ def getAllInfo():
                 "PLUS", " Plus")
         elif procmodel == "gb7252":
             model = procmodel.replace("gb7252", "UHD Quad 4k")
-    elif os.path.isfile("/proc/stb/info/vumodel") and not os.path.isfile("/proc/stb/info/boxtype"):
+    elif os.path.isfile("/proc/stb/info/vumodel") and not os.path.isfile(
+            "/proc/stb/info/boxtype"):
         brand = "Vu+"
         f = open("/proc/stb/info/vumodel", 'r')
         procmodel = f.readline().strip()
@@ -568,14 +572,14 @@ def getAllInfo():
 
     remote = "dmm"
     if procmodel in (
-        "solo",
-        "duo",
-        "uno",
-        "solo2",
-        "solose",
-        "zero",
-        "solo4k",
-        "uno4k",
+            "solo",
+            "duo",
+            "uno",
+            "solo2",
+            "solose",
+            "zero",
+            "solo4k",
+            "uno4k",
             "ultimo4k"):
         remote = "vu_normal"
     elif procmodel == "duo2":
@@ -610,7 +614,8 @@ def getAllInfo():
         remote = "formuler1"
     elif procmodel in ("azboxme", "azboxminime", "me", "minime"):
         remote = "me"
-    elif procmodel in ("optimussos1", "optimussos1plus", "optimussos2", "optimussos2plus"):
+    elif procmodel in (
+    "optimussos1", "optimussos1plus", "optimussos2", "optimussos2plus"):
         remote = "optimuss"
     elif procmodel in ("premium", "premium+"):
         remote = "premium"
@@ -634,13 +639,17 @@ def getAllInfo():
         remote = "xp1000"
     elif procmodel.startswith("xpeedlx"):
         remote = "xpeedlx"
-    elif procmodel in ("adb2850", "adb2849", "bska", "bsla", "bxzb", "bzzb", "esi88", "uhd88", "dsi87", "arivalink200"):
+    elif procmodel in (
+    "adb2850", "adb2849", "bska", "bsla", "bxzb", "bzzb", "esi88", "uhd88",
+    "dsi87", "arivalink200"):
         remote = "nbox"
-    elif procmodel in ("hd1100", "hd1200", "hd1265", "hd1400", "hd51", "hd11", "hd500c", "hd530c"):
+    elif procmodel in (
+    "hd1100", "hd1200", "hd1265", "hd1400", "hd51", "hd11", "hd500c", "hd530c"):
         remote = "hd1x00"
     elif procmodel == "hd2400":
         remote = "hd2400"
-    elif procmodel in ("spycat", "spycatmini", "spycatminiplus", "spycat4kmini"):
+    elif procmodel in (
+    "spycat", "spycatmini", "spycatminiplus", "spycat4kmini"):
         remote = "spycat"
     elif procmodel.startswith("ixuss"):
         remote = procmodel.replace(" ", "")
@@ -648,7 +657,9 @@ def getAllInfo():
         remote = "xcombo"
     elif procmodel == "dm8000" and orgdream:
         remote = "dmm1"
-    elif procmodel in ("dm7080", "dm7020hd", "dm7020hdv2", "dm800sev2", "dm500hdv2", "dm520", "dm820", "dm900"):
+    elif procmodel in (
+    "dm7080", "dm7020hd", "dm7020hdv2", "dm800sev2", "dm500hdv2", "dm520",
+    "dm820", "dm900"):
         remote = "dmm2"
     elif procmodel == "wetekplay":
         remote = procmodel
@@ -764,7 +775,7 @@ def getAllInfo():
                 pass
 
         if (distro == "unknown" and brand ==
-                "Vu+" and os.path.isfile("/etc/version")):
+            "Vu+" and os.path.isfile("/etc/version")):
             # Since OE-A uses boxbranding and bh or vti can be detected, there
             # isn't much else left for Vu+ boxes
             distro = "Vu+ original"

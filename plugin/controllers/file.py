@@ -60,8 +60,8 @@ class FileController(resource.Resource):
                 response = "#EXTM3U\n#EXTVLCOPT--http-reconnect=true\n" \
                            "#EXTINF:-1,%s\n%s://%s:%s/file" \
                            "?action=download&file=%s" % (
-                    name, proto, request.getRequestHostname(), port,
-                    quote(filename))
+                               name, proto, request.getRequestHostname(), port,
+                               quote(filename))
                 request.setHeader(
                     "Content-Disposition",
                     'attachment;filename="%s.m3u"' %

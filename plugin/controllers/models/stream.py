@@ -48,7 +48,7 @@ def getStream(session, request, m3ufile):
 
     if sRef.startswith("1:134:"):
         if currentServiceRef is None:
-            currentServiceRef = session.nav.getCurrentlyPlayingServiceReference()
+            currentServiceRef = session.nav.getCurrentlyPlayingServiceReference()  # NOQA
         if currentServiceRef is None:
             currentServiceRef = eServiceReference()
         ref = getBestPlayableServiceReference(
@@ -112,17 +112,16 @@ def getStream(session, request, m3ufile):
                 bitrate = config.plugins.transcodingsetup.bitrate.value
                 resolution = config.plugins.transcodingsetup.resolution.value
                 (width, height) = tuple(resolution.split('x'))
-                framrate = config.plugins.transcodingsetup.framerate.value
+                # framrate = config.plugins.transcodingsetup.framerate.value
                 aspectratio = config.plugins.transcodingsetup.aspectratio.value
                 interlaced = config.plugins.transcodingsetup.interlaced.value
-                args = "?bitrate=%s?width=%s?height=%s?aspectratio=%s?interlaced=%s" % (
-                    bitrate, width, height, aspectratio, interlaced)
+                args = "?bitrate=%s?width=%s?height=%s?aspectratio=%s?interlaced=%s" % (bitrate, width, height, aspectratio, interlaced)  # NOQA
     if machinebuild in ('ew7356', 'formuler1tc', 'tiviaraplus'):
         transcoder_port = 8001
         if "device" in request.args:
             if request.args["device"][0] == "phone":
                 bitrate = config.plugins.transcodingsetup.bitrate.value
-                framrate = config.plugins.transcodingsetup.framerate.value
+                # framrate = config.plugins.transcodingsetup.framerate.value
                 args = "?bitrate=%s" % (bitrate)
 
     # When you use EXTVLCOPT:program in a transcoded stream, VLC does not play
@@ -170,9 +169,9 @@ def getTS(self, request):
             line2 = metafile.readline()  # name
             if line2:
                 name = line2.strip()
-            line3 = metafile.readline()  # description
-            line4 = metafile.readline()  # recording time
-            line5 = metafile.readline()  # tags
+            line3 = metafile.readline()  # description  # NOQA
+            line4 = metafile.readline()  # recording time  # NOQA
+            line5 = metafile.readline()  # tags  # NOQA
             line6 = metafile.readline()  # length
 
             if line6:
@@ -229,22 +228,21 @@ def getTS(self, request):
                     bitrate = config.plugins.transcodingsetup.bitrate.value
                     resolution = config.plugins.transcodingsetup.resolution.value
                     (width, height) = tuple(resolution.split('x'))
-                    framrate = config.plugins.transcodingsetup.framerate.value
+                    # framrate = config.plugins.transcodingsetup.framerate.value
                     aspectratio = config.plugins.transcodingsetup.aspectratio.value
                     interlaced = config.plugins.transcodingsetup.interlaced.value
-                    args = "?bitrate=%s?width=%s?height=%s?aspectratio=%s?interlaced=%s" % (
-                        bitrate, width, height, aspectratio, interlaced)
+                    args = "?bitrate=%s?width=%s?height=%s?aspectratio=%s?interlaced=%s" % (bitrate, width, height, aspectratio, interlaced)  # NOQA
         elif machinebuild in ('ew7356', 'formuler1tc', 'tiviaraplus'):
             if "device" in request.args:
                 if request.args["device"][0] == "phone":
                     portNumber = config.OpenWebif.streamport.value
                     bitrate = config.plugins.transcodingsetup.bitrate.value
-                    framrate = config.plugins.transcodingsetup.framerate.value
+                    # framrate = config.plugins.transcodingsetup.framerate.value
                     args = "?bitrate=%s" % (bitrate)
 
         # When you use EXTVLCOPT:program in a transcoded stream, VLC does not
         # play stream
-        if config.OpenWebif.service_name_for_stream.value and sRef != '' and portNumber != transcoder_port:
+        if config.OpenWebif.service_name_for_stream.value and sRef != '' and portNumber != transcoder_port:  # NOQA
             progopt = "%s#EXTVLCOPT:program=%d\n" % (
                 progopt, int(sRef.split(':')[3], 16))
 
@@ -255,7 +253,7 @@ def getTS(self, request):
             if m is not None:
                 portNumber = m.group(1)
 
-        response = "#EXTM3U \n#EXTVLCOPT--http-reconnect=true \n%s%s://%s:%s/file?file=%s%s\n" % (
+        response = "#EXTM3U \n#EXTVLCOPT--http-reconnect=true \n%s%s://%s:%s/file?file=%s%s\n" % (  # NOQA
             (progopt, proto, request.getRequestHostname(), portNumber,
              quote(filename), args))
         request.setHeader('Content-Type', 'application/x-mpegurl')
@@ -269,8 +267,8 @@ def getStreamSubservices(session, request):
     currentServiceRef = session.nav.getCurrentlyPlayingServiceReference()
 
     # TODO : this will only work if sref = current channel
-    # the DMM webif can also show subservices for other channels like the current
-    # ideas are welcome
+    # the DMM webif can also show subservices for other channels
+    # like the current ideas are welcome
 
     if "sRef" in request.args:
         currentServiceRef = eServiceReference(request.args["sRef"][0])

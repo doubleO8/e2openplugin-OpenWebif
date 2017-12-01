@@ -25,6 +25,7 @@ def convertDesc(val):
             quote=True)
     return val
 
+
 #: Begin
 FLAG_BEGIN = "B"
 #: Current Time
@@ -91,7 +92,7 @@ class EventDict(dict):
     """
     Event data container object
 
-    >>> dd_in = (123, 1506020400, 120*60, 1506020440, "DASDING Sprechstunde", None, None, "1:0:2:6F37:431:A401:FFFF0000:0:0:0:", "DASDING")
+    >>> dd_in = (123, 1506020400, 120*60, 1506020440, "DASDING Sprechstunde", None, None, "1:0:2:6F37:431:A401:FFFF0000:0:0:0:", "DASDING")  # NOQA
     >>> sed = EventDict(dd_in)
     >>> sed['id']
     123
@@ -124,7 +125,7 @@ class ServicesEventDict(dict):
 
     .. deprecated:: 0.31 replaced by :obj:`EventDict`
 
-    >>> dd_in = (123, 1506020400, 120*60, 1506020440, "DASDING Sprechstunde", None, None, "1:0:2:6F37:431:A401:FFFF0000:0:0:0:", "DASDING")
+    >>> dd_in = (123, 1506020400, 120*60, 1506020440, "DASDING Sprechstunde", None, None, "1:0:2:6F37:431:A401:FFFF0000:0:0:0:", "DASDING")  # NOQA
     >>> sed = ServicesEventDict(dd_in)
     >>> sed['id']
     123

@@ -38,7 +38,7 @@ class EventSearchApiController(RESTControllerSkeleton):
         for key in ("querytype", "max_rows"):
             try:
                 value = int(request.args[key][0])
-            except:
+            except Exception:
                 value = None
             mangled_parameters[key] = value
 

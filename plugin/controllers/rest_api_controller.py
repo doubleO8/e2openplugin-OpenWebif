@@ -8,8 +8,8 @@ This controller exposes the application programming interface (API) as
 implemented by the :py:class:`controllers.web` and :py:class:`controllers.ajax`
 controllers.
 
-The generated responses are returned as JSON data with appropriate HTTP headers.
-Output will be compressed using gzip if requested by client.
+The generated responses are returned as JSON data with appropriate HTTP
+headers. Output will be compressed using gzip if requested by client.
 
 A swagger v2 (https://swagger.io/) compatible API specification will be
 returned when accessing the /api/ endpoint. The API specification is consumable

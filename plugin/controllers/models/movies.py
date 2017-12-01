@@ -17,6 +17,7 @@ from Components.config import config
 from Components.MovieList import MovieList
 from Tools.Directories import fileExists
 from Screens import MovieSelection
+from Plugins.Extensions.OpenWebif.__init__ import _
 
 from model_utilities import mangle_epg_text
 MOVIETAGFILE = "/etc/enigma2/movietags"
@@ -41,7 +42,7 @@ def getPosition(cutfile, movie_len):
                 data = data[12:]
                 cue = struct.unpack('>QI', packedCue)
                 cut_list.append(cue)
-        except Exception as ex:
+        except Exception:
             return 0
     else:
         return 0
@@ -178,9 +179,11 @@ def getMovieList(rargs=None, locations=None):
                 'filesize_readable': '',
                 'recordingtime': rtime,
                 'begintime': 'undefined',
-                'eventname': mangle_epg_text(ServiceReference(serviceref).getServiceName()),
+                'eventname': mangle_epg_text(
+                    ServiceReference(serviceref).getServiceName()),
                 'servicename': mangle_epg_text(sourceRef.getServiceName()),
-                'tags': info.getInfoString(serviceref, iServiceInformation.sTags),
+                'tags': info.getInfoString(serviceref,
+                                           iServiceInformation.sTags),
                 'fullname': serviceref.toString(),
             }
 
@@ -207,7 +210,7 @@ def getMovieList(rargs=None, locations=None):
                         txtdesc = ''.join(handle.readlines())
 
                 event = info.getEvent(serviceref)
-                extended_description = event and event.getExtendedDescription() or ""
+                extended_description = event and event.getExtendedDescription() or ""  # NOQA
                 if extended_description == '' and txtdesc != '':
                     extended_description = txtdesc
                 movie['descriptionExtended'] = unicode(
@@ -278,7 +281,8 @@ def removeMovie(session, sRef, Force=False):
             srcpath = '/'.join(fullpath.split('/')[:-1]) + '/'
             # TODO: check trash
             # TODO: check enable trash default value
-            if '.Trash' not in fullpath and config.usage.movielist_trashcan.value:
+            if '.Trash' not in fullpath \
+                    and config.usage.movielist_trashcan.value:
                 result = False
                 message = "trashcan"
                 try:
@@ -286,7 +290,7 @@ def removeMovie(session, sRef, Force=False):
                     trash = Tools.Trashcan.createTrashFolder(srcpath)
                     MovieSelection.moveServiceFiles(service.ref, trash)
                     result = True
-                    message = "The recording '%s' has been successfully moved to trashcan" % name
+                    message = "The recording '%s' has been successfully moved to trashcan" % name  # NOQA
                 except ImportError:
                     message = "trashcan exception"
                     pass
@@ -296,7 +300,8 @@ def removeMovie(session, sRef, Force=False):
                 deleted = True
         elif hasattr(config.usage, 'movielist_use_trash_dir'):
             fullpath = service.ref.getPath()
-            if TRASHDIRNAME not in fullpath and config.usage.movielist_use_trash_dir.value:
+            if TRASHDIRNAME not in fullpath \
+                    and config.usage.movielist_use_trash_dir.value:
                 message = "trashdir"
                 try:
                     from Screens.MovieSelection import getTrashDir
@@ -314,11 +319,13 @@ def removeMovie(session, sRef, Force=False):
                                 src_file, dst_file, False, False, "%s : %s" %
                                 (text, src_file)))
                         # No Result because of async job
-                        message = "The recording '%s' has been successfully moved to trashcan" % name
+                        message = "The recording '%s' has been successfully moved to trashcan" % name  # NOQA
                         result = True
                     else:
                         message = _(
-                            "Delete failed, because there is no movie trash !\nDisable movie trash in configuration to delete this item")
+                            "Delete failed, because there is no movie trash "
+                            "!\nDisable movie trash in configuration to "
+                            "delete this item")
                 except ImportError:
                     message = "trashdir exception"
                     pass
@@ -370,9 +377,11 @@ def _moveMovie(session, sRef, destpath=None, newname=None):
             move = os.rename
             errorlist = []
             if fileExt == '.ts':
-                suffixes = ".ts.meta", ".ts.cuts", ".ts.ap", ".ts.sc", ".eit", ".ts", ".jpg", ".ts_mp.jpg"
+                suffixes = ".ts.meta", ".ts.cuts", ".ts.ap", ".ts.sc", \
+                           ".eit", ".ts", ".jpg", ".ts_mp.jpg"
             else:
-                suffixes = "%s.ts.meta" % fileExt, "%s.cuts" % fileExt, fileExt, '.jpg', '.eit'
+                suffixes = "%s.ts.meta" % fileExt, \
+                           "%s.cuts" % fileExt, fileExt, '.jpg', '.eit'
 
             for suffix in suffixes:
                 src = srcpath + fileName + suffix
@@ -388,7 +397,8 @@ def _moveMovie(session, sRef, destpath=None, newname=None):
                                         lines.append(line)
                                 lines[1] = newname + '\n'
                                 lines[4] = '\n'
-                                with open(srcpath + newname + suffix, 'w') as fout:
+                                foutname = srcpath + newname + suffix
+                                with open(foutname, 'w') as fout:
                                     fout.write(''.join(lines))
                                 os.remove(src)
                             else:
@@ -438,12 +448,14 @@ def _moveMovie(session, sRef, destpath=None, newname=None):
         etxt = "move"
     if result is False:
         return {
-            "result": False, "message": "Could not %s recording '%s' Err: '%s'" %
-            (etxt, name, errText)}
+            "result": False,
+            "message": "Could not %s recording '%s' Err: '%s'" % (
+                etxt, name, errText)}
     else:
         return {
-            "result": True, "message": "The recording '%s' has been %sd successfully" %
-            (name, etxt)}
+            "result": True,
+            "message": "The recording '%s' has been %sd successfully" % (
+                name, etxt)}
 
 
 def moveMovie(session, sRef, destpath):

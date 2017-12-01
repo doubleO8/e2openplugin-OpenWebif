@@ -216,7 +216,7 @@ def parse_servicereference(serviceref, separators=None):
     >>> result2 = parse_servicereference(sref2)
     >>> result2
     {'service_type': 10, 'oid': 0, 'tsid': 0, 'ns': 0, 'sid': 0}
-    >>> sref3 = '1:0:0:0:0:0:0:0:0:0:/media/hdd/movie/20170921 2055 - DASDING - DASDING Sprechstunde - .ts'
+    >>> sref3 = '1:0:0:0:0:0:0:0:0:0:/media/hdd/movie/20170921 2055 - DASDING - DASDING Sprechstunde - .ts'  # NOQA
     >>> result3 = parse_servicereference(sref3)
     >>> result3
     {'service_type': 0, 'oid': 0, 'tsid': 0, 'ns': 0, 'sid': 0}

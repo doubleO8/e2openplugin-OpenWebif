@@ -36,7 +36,7 @@ def addLocation(dirname, create):
         if create:
             try:
                 os.makedirs(dirname)
-            except Exception as e:
+            except Exception:
                 return {
                     "result": False,
                     "message": "Creation of folder '%s' failed" % dirname
@@ -77,8 +77,9 @@ def removeLocation(dirname, remove):
             try:
                 os.rmdir(dirname)
                 msg = "Location and Folder '%s' removed succesfully" % dirname
-            except Exception as e:
-                msg = "Location '%s' removed succesfully but the Folder not exists or is not empty" % dirname
+            except Exception:
+                msg = "Location '%s' removed succesfully but the Folder " \
+                      "not exists or is not empty" % dirname
         else:
             msg = "Location '%s' removed succesfully" % dirname
     return {

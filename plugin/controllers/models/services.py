@@ -14,6 +14,7 @@ from time import time, localtime, strftime, mktime
 from urllib import quote, unquote
 from collections import OrderedDict
 
+from Plugins.Extensions.OpenWebif.__init__ import _
 from Tools.Directories import fileExists
 from Components.Sources.ServiceList import ServiceList
 from Components.ParentalControl import parentalControl
@@ -146,7 +147,9 @@ def getCurrentFullInfo(session):
         while idx < n:
             i = audio.getTrackInfo(idx)
             description = i.getDescription()
-            if "AC3" in description or "DTS" in description or "Dolby Digital" in description:
+            if "AC3" in description \
+                    or "DTS" in description \
+                    or "Dolby Digital" in description:
                 inf['dolby'] = True
             idx += 1
     try:

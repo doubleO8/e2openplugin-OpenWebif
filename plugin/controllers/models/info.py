@@ -40,7 +40,6 @@ except BaseException:
         getMachineName, getImageDistro, getImageVersion, getImageBuild, \
         getOEVersion, getDriverDate
 
-
     def getEnigmaVersionString():
         return about.getEnigmaVersionString()
 
@@ -193,9 +192,7 @@ def getAdapterIPv6(ifname):
                     tmpaddr = ":".join([tmp[0][i:i + 4]
                                         for i in range(0, len(tmp[0]), 4)])
 
-                    if firstpublic is None and (
-                                tmpaddr.startswith('2') or tmpaddr.startswith(
-                                '3')):
+                    if firstpublic is None and tmpaddr[0] in ('2', '3'):
                         firstpublic = normalize_ipv6(tmpaddr)
 
                     if tmp[2].lower() != "ff":
@@ -245,8 +242,10 @@ def getPiconPath():
     if PICONPATH is not None:
         return PICONPATH
 
-    # Alternative locations need to come first, as the default location always exists and needs to be the last resort
-    # Sort alternative locations in order of likelyness that they are non-rotational media:
+    # Alternative locations need to come first, as the default location always
+    # exists and needs to be the last resort
+    # Sort alternative locations in order of likelyness that they are
+    # non-rotational media:
     # CF/MMC are always memory cards
     # USB can be memory stick or magnetic hdd or SSD, but stick is most likely
     # HDD can be magnetic hdd, SSD or even memory stick (if no hdd present) or

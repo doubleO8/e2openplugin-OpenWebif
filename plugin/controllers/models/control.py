@@ -10,8 +10,6 @@
 ##############################################################################
 from Components.config import config
 from enigma import eServiceReference, eActionMap, eServiceCenter
-from urllib import unquote
-from services import getProtection
 from Screens.InfoBar import InfoBar, MoviePlayer
 import NavigationInstance
 import os
@@ -32,7 +30,7 @@ def checkIsQPiP():
 def getPlayingref(ref):
     playingref = None
     if NavigationInstance.instance:
-        playingref = NavigationInstance.instance.getCurrentlyPlayingServiceReference()
+        playingref = NavigationInstance.instance.getCurrentlyPlayingServiceReference()  # NOQA
     if not playingref:
         playingref = eServiceReference()
     return playingref
@@ -48,12 +46,22 @@ def zapInServiceList(service):
     servicelist = InfoBar_Instance.servicelist
     if config.usage.multibouquet.value:
         rootstrings = (
-            '1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "bouquets.tv" ORDER BY bouquet',
-            '1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "bouquets.radio" ORDER BY bouquet')
+            '1:7:1:0:0:0:0:0:0:0:'
+            'FROM BOUQUET "bouquets.tv" ORDER BY bouquet',
+            '1:7:1:0:0:0:0:0:0:0:'
+            'FROM BOUQUET "bouquets.radio" ORDER BY bouquet')
     else:
         rootstrings = (
-            '1:7:1:0:0:0:0:0:0:0:(type == 1) || (type == 17) || (type == 22) || (type == 25) || (type == 134) || (type == 195) FROM BOUQUET "userbouquet.favourites.tv" ORDER BY bouquet',
-            '1:7:2:0:0:0:0:0:0:0:(type == 2) || (type == 10) FROM BOUQUET "userbouquet.favourites.radio" ORDER BY bouquet')
+            '1:7:1:0:0:0:0:0:0:0:(type == 1) || '
+            '(type == 17) || '
+            '(type == 22) || '
+            '(type == 25) || '
+            '(type == 134) || '
+            '(type == 195) '
+            'FROM BOUQUET "userbouquet.favourites.tv" ORDER BY bouquet',
+            '1:7:2:0:0:0:0:0:0:0:(type == 2) || '
+            '(type == 10) '
+            'FROM BOUQUET "userbouquet.favourites.radio" ORDER BY bouquet')
     bouquet_found = False
     for bouquet_rootstr in rootstrings:
         servicelist.bouquet_root = eServiceReference(bouquet_rootstr)
@@ -70,8 +78,9 @@ def zapInServiceList(service):
                     new_service = reflist.getNext()
                     if not new_service.valid():  # check if end of list
                         break
-                    if new_service.flags & (
-                            eServiceReference.isDirectory | eServiceReference.isMarker):
+                    dir_or_marker = (eServiceReference.isDirectory |
+                                     eServiceReference.isMarker)
+                    if new_service.flags & dir_or_marker:
                         continue
                     if new_service == service:
                         bouquet_found = True
@@ -129,7 +138,8 @@ def zapService(session, id, title="", stream=False):
         else:
             if stream:
                 stop_text = ""
-                if session.nav.getCurrentlyPlayingServiceReference() and isPlayableForCur(service):
+                if session.nav.getCurrentlyPlayingServiceReference() \
+                        and isPlayableForCur(service):
                     session.nav.stopService()
                     stop_text = ": simple stop current service"
                 return {

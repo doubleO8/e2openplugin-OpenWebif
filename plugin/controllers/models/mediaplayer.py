@@ -10,8 +10,8 @@ import fnmatch
 
 def getMpInstance(session):
     try:
-        from Plugins.Extensions.MediaPlayer.plugin import MediaPlayer, MyPlayList
-    except Exception as e:
+        from Plugins.Extensions.MediaPlayer.plugin import MediaPlayer
+    except Exception:
         return None
 
     if isinstance(session.current_dialog, MediaPlayer):
@@ -24,8 +24,8 @@ def getMpInstance(session):
 
 def getOrCreateMpInstance(session):
     try:
-        from Plugins.Extensions.MediaPlayer.plugin import MediaPlayer, MyPlayList
-    except Exception as e:
+        from Plugins.Extensions.MediaPlayer.plugin import MediaPlayer
+    except Exception:
         return None
 
     mp = getMpInstance(session)
@@ -52,7 +52,7 @@ def mediaPlayerAdd(session, filename):
         return {
             "result": False,
             "message": "'%s' is neither a valid reference nor a valid file" %
-            filename}
+                       filename}
 
     mp.playlist.addFile(service)
     mp.playlist.updateList()
@@ -79,7 +79,7 @@ def mediaPlayerRemove(session, filename):
         return {
             "result": False,
             "message": "'%s' is neither a valid reference nor a valid file" %
-            filename}
+                       filename}
 
     count = 0
     removed = False
@@ -120,7 +120,7 @@ def mediaPlayerPlay(session, filename, root):
         return {
             "result": False,
             "message": "'%s' is neither a valid reference nor a valid file" %
-            filename}
+                       filename}
 
     if root != "playlist":
         mp.playlist.addFile(service)
@@ -189,7 +189,8 @@ def mediaPlayerCurrent(session):
 
 def mediaPlayerList(session, path, types):
     if types == "video":
-        mpattern = "(?i)^.*\.(ts|mts|m2ts|e2pls|mpg|vob|avi|divx|m4v|mkv|mp4|dat|flv|mov|dts)"
+        mpattern = "(?i)^.*\.(ts|mts|m2ts|e2pls|mpg|vob|avi|divx|m4v|mkv|" \
+                   "mp4|dat|flv|mov|dts)"
         mserviceref = True
     elif types == "audio":
         mserviceref = True
@@ -197,7 +198,9 @@ def mediaPlayerList(session, path, types):
     elif types == "any" or types == "":
         mserviceref = True
         # complete pattern from mediaplayer
-        mpattern = "(?i)^.*\.(mp2|mp3|ogg|ts|mts|m2ts|wav|wave|m3u|pls|e2pls|mpg|vob|avi|divx|m4v|mkv|mp4|m4a|dat|flac|flv|mov|dts)"
+        mpattern = "(?i)^.*\.(mp2|mp3|ogg|ts|mts|m2ts|wav|wave|m3u|pls|" \
+                   "e2pls|mpg|vob|avi|divx|m4v|mkv|mp4|m4a|dat|flac|flv|" \
+                   "mov|dts)"
     else:
         mserviceref = False
         mpattern = types

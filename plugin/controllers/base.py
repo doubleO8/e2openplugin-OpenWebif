@@ -38,9 +38,9 @@ http.Request.getRequestHostname = new_getRequestHostname
 REMOTE = ''
 
 try:
-    from boxbranding import getBoxType, getMachineName
+    from boxbranding import getBoxType
 except BaseException:
-    from models.owibranding import getBoxType, getMachineName
+    from models.owibranding import getBoxType
 
 try:
     from Components.RcModel import rc_model

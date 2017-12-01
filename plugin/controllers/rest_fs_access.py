@@ -98,7 +98,7 @@ Example response::
     Expires: -1
     Server: TwistedWeb/16.2.0
     Last-Modified: Wed, 27 Sep 2017 17:33:08 GMT
-    Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0
+    Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0  # NOQA
     Date: Wed, 27 Sep 2017 17:33:19 GMT
     Access-Control-Allow-Origin: *
     Content-Type: video/MP2T

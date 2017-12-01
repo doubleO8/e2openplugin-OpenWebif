@@ -48,6 +48,7 @@ from base import BaseController
 from stream import StreamController
 from servicelists import ServiceListsManager
 
+
 def whoami(request):
     port = comp_config.OpenWebif.port.value
     proto = 'http'
@@ -63,6 +64,7 @@ class WebController(BaseController):
     Controller implementing *Enigma2 WebInterface API* as described in e.g.
     https://dream.reichholf.net/e2web/.
     """
+
     def __init__(self, session, path=""):
         BaseController.__init__(self, path=path, session=session)
         self.putChild("stream", StreamController(session))
@@ -111,7 +113,7 @@ class WebController(BaseController):
         success = True
         try:
             InfoBar.instance.startTimeshift()
-        except Exception as e:
+        except Exception:
             success = False
         return self.P_tstate(request, success)
 
@@ -141,7 +143,7 @@ class WebController(BaseController):
                 comp_config.usage.check_timeshift.value = False
                 comp_config.usage.check_timeshift.save()
             InfoBar.instance.stopTimeshift()
-        except Exception as e:
+        except Exception:
             success = False
         if comp_config.usage.check_timeshift.value:
             comp_config.usage.check_timeshift.value = oldcheck
@@ -242,12 +244,12 @@ class WebController(BaseController):
         elif request.args["set"][0][:3] == "set":
             try:
                 return setVolume(int(request.args["set"][0][3:]))
-            except Exception as e:
+            except Exception:
                 res = getVolumeStatus()
                 res["result"] = False
                 res["message"] = _(
-                    "Wrong parameter format 'set=%s'. Use set=set15 ") % \
-                                 request.args["set"][0]
+                    "Wrong parameter format 'set=%s'. Use set=set15 "
+                ) % request.args["set"][0]
                 return res
 
         res = getVolumeStatus()
@@ -286,7 +288,7 @@ class WebController(BaseController):
         """
         try:
             track_id = int(request.args["id"][0])
-        except Exception as e:
+        except Exception:
             track_id = -1
 
         return setAudioTrack(self.session, track_id)
@@ -323,7 +325,7 @@ class WebController(BaseController):
 
         try:
             key_id = int(request.args["command"][0])
-        except Exception as e:
+        except Exception:
             return {
                 "result": False,
                 "message": _("The parameter 'command' must be a number")
@@ -486,8 +488,9 @@ class WebController(BaseController):
         except ValueError:
             return {
                 "result": False,
-                "message": _("type %s is not a number") %
-                           request.args["type"][0]}
+                "message": _(
+                    "type %s is not a number"
+                ) % request.args["type"][0]}
 
         timeout = -1
         if "timeout" in request.args.keys():
@@ -632,10 +635,9 @@ class WebController(BaseController):
             justplay = request.args["justplay"][0] == "1"
 
         afterevent = 3
-        if "afterevent" in request.args.keys() and request.args["afterevent"][
-            0] in [
-            "1", "2", "3"]:
-            afterevent = int(request.args["afterevent"][0])
+        if "afterevent" in request.args.keys():
+            if request.args["afterevent"][0] in ["1", "2", "3"]:
+                afterevent = int(request.args["afterevent"][0])
 
         dirname = None
         if "dirname" in request.args.keys() and len(
@@ -660,13 +662,8 @@ class WebController(BaseController):
             eventid = request.args["eit"][0]
         else:
             from enigma import eEPGCache, eServiceReference
-            queryTime = int(request.args["begin"][0]) + (
-                                                            int(request.args[
-                                                                    "end"][
-                                                                    0]) - int(
-                                                                request.args[
-                                                                    "begin"][
-                                                                    0])) / 2
+            begin_i = int(request.args["begin"][0])
+            queryTime = begin_i + (int(request.args["end"][0]) - begin_i) / 2
             event = eEPGCache.getInstance().lookupEventTime(
                 eServiceReference(request.args["sRef"][0]), queryTime)
             eventid = event and event.getEventId()
@@ -716,7 +713,7 @@ class WebController(BaseController):
 
         try:
             eventid = int(request.args["eventid"][0])
-        except Exception as e:
+        except Exception:
             return {
                 "result": False,
                 "message": "The parameter 'eventid' must be a number"
@@ -753,10 +750,9 @@ class WebController(BaseController):
             justplay = request.args["justplay"][0] == "1"
 
         afterevent = 3
-        if "afterevent" in request.args.keys() and request.args["afterevent"][
-            0] in [
-            "0", "1", "2", "3"]:
-            afterevent = int(request.args["afterevent"][0])
+        if "afterevent" in request.args.keys():
+            if request.args["afterevent"][0] in ["0", "1", "2", "3"]:
+                afterevent = int(request.args["afterevent"][0])
 
         dirname = None
         if "dirname" in request.args.keys() and len(
@@ -777,7 +773,7 @@ class WebController(BaseController):
 
         try:
             beginOld = int(request.args["beginOld"][0])
-        except Exception as e:
+        except Exception:
             return {
                 "result": False,
                 "message": "The parameter 'beginOld' must be a number"
@@ -785,7 +781,7 @@ class WebController(BaseController):
 
         try:
             endOld = int(request.args["endOld"][0])
-        except Exception as e:
+        except Exception:
             return {
                 "result": False,
                 "message": "The parameter 'endOld' must be a number"
@@ -821,7 +817,7 @@ class WebController(BaseController):
             return res
         try:
             begin = int(request.args["begin"][0])
-        except Exception as e:
+        except Exception:
             return {
                 "result": False,
                 "message": "The parameter 'begin' must be a number"
@@ -829,7 +825,7 @@ class WebController(BaseController):
 
         try:
             end = int(request.args["end"][0])
-        except Exception as e:
+        except Exception:
             return {
                 "result": False,
                 "message": "The parameter 'end' must be a number"
@@ -845,7 +841,7 @@ class WebController(BaseController):
 
         try:
             begin = int(request.args["begin"][0])
-        except Exception as e:
+        except Exception:
             return {
                 "result": False,
                 "message": "The parameter 'begin' must be a number"
@@ -853,7 +849,7 @@ class WebController(BaseController):
 
         try:
             end = int(request.args["end"][0])
-        except Exception as e:
+        except Exception:
             return {
                 "result": False,
                 "message": "The parameter 'end' must be a number"
@@ -872,7 +868,7 @@ class WebController(BaseController):
 
     def P_recordnow(self, request):
         infinite = False
-        if "undefinitely" in request.args.keys() or "infinite" in request.args.keys():
+        if set(request.args.keys()) & {"undefinitely", "infinite"}:
             infinite = True
         return recordNow(self.session, infinite)
 
@@ -1068,11 +1064,11 @@ class WebController(BaseController):
         return getSearchSimilarEpg(request.args["sRef"][0], eventid)
 
     def P_event(self, request):
+        margin_before = comp_config.recording.margin_before.value
+        margin_after = comp_config.recording.margin_after.value
         event = getEvent(request.args["sref"][0], request.args["idev"][0])
-        event['event'][
-            'recording_margin_before'] = comp_config.recording.margin_before.value
-        event['event'][
-            'recording_margin_after'] = comp_config.recording.margin_after.value
+        event['event']['recording_margin_before'] = margin_before
+        event['event']['recording_margin_after'] = margin_after
         return event
 
     def P_getcurrent(self, request):
@@ -1128,7 +1124,7 @@ class WebController(BaseController):
                     mnow["duration_sec"] = movie.getDuration()
                     mnow["remaining"] = movie.getDuration()
                     mnow["id"] = movie.getEventId()
-            except Exception as e:
+            except Exception:
                 mnow = now
         elif mnow["sref"] == '':
             serviceref = self.session.nav.getCurrentlyPlayingServiceReference()
@@ -1145,7 +1141,7 @@ class WebController(BaseController):
                         if servicepath and servicepath.startswith("/"):
                             mnow["filename"] = servicepath
                             mnow["sref"] = serviceref.toString()
-                except Exception as e:  # nosec
+                except Exception:  # nosec
                     pass
         return {
             "info": info,
@@ -1347,18 +1343,18 @@ class WebController(BaseController):
         ret = getSleepTimer(self.session)
 
         if cmd != "set":
-            ret[
-                "message"] = "ERROR: Obligatory parameter 'cmd' [get,set] has unspecified value '%s'" % cmd
+            ret["message"] = "ERROR: Obligatory parameter 'cmd' [get,set] " \
+                             "has unspecified value '%s'" % cmd
             return ret
 
         if time is None and enabled:  # it's used only if the timer is enabled
-            ret[
-                "message"] = "ERROR: Obligatory parameter 'time' [0-999] is missing"
+            ret["message"] = "ERROR: Obligatory parameter 'time' [0-999] is " \
+                             "missing"
             return ret
 
         if enabled is None:
-            ret[
-                "message"] = "Obligatory parameter 'enabled' [True,False] is missing"
+            ret["message"] = "Obligatory parameter 'enabled' [True,False] " \
+                             "is missing"
             return ret
 
         return setSleepTimer(self.session, time, action, enabled)
@@ -1370,7 +1366,7 @@ class WebController(BaseController):
             return {
                 "plugins": loaded_plugins
             }
-        except Exception as e:
+        except Exception:
             return {
                 "plugins": []
             }

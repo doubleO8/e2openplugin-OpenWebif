@@ -21,15 +21,15 @@ class ServiceListsManager(object):
         self.mode_map = {
             SLM_MODE_BOTH: {
                 "description": "reloading lamedb and user bouquets",
-                "funcs": (self.reloadLameDB, self.reloadUserBouquets)
+                "funcs": (self._reload_lamedb, self._reload_user_bouquets)
             },
             SLM_MODE_LAMEDB: {
                 "description": "reloading lamedb",
-                "funcs": (self.reloadLameDB,)
+                "funcs": (self._reload_lamedb,)
             },
             SLM_MODE_BOUQUET: {
                 "description": "reloading user bouquets",
-                "funcs": (self.reloadUserBouquets,)
+                "funcs": (self._reload_user_bouquets,)
             },
             SLM_MODE_TRANSPONDERS: {
                 "description": "reloading transponders",
@@ -41,7 +41,7 @@ class ServiceListsManager(object):
             }
         }
 
-    def reloadLameDB(self):
+    def _reload_lamedb(self):
         """
         Reload lamedb.
 
@@ -50,7 +50,7 @@ class ServiceListsManager(object):
         """
         return self.eDVBDB.reloadServicelist()
 
-    def reloadUserBouquets(self):
+    def _reload_user_bouquets(self):
         """
         Reload User Bouquets.
 

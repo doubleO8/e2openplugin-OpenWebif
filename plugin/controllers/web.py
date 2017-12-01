@@ -959,6 +959,33 @@ class WebController(BaseController):
         return ret
 
     def P_epgsearch(self, request):
+        """
+        EPG event search and lookup handler.
+
+        .. note::
+
+            One may use
+            :py:func:`controllers.events.EventsController.lookup_event`
+            for looking up events.
+            One may use
+            :py:func:`controllers.events.EventsController.search` for
+            searching events.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#epgsearch
+
+        .. deprecated:: 0.34
+
+            This implementation cowardly mixes *search* and *lookup*.
+            Lookup feature is not available in *Enigma2 WebInterface API* thus
+            this crap will be removed some day :)
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         if "search" in request.args.keys():
             endtime = None
             if "endtime" in request.args.keys():

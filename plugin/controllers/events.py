@@ -232,7 +232,7 @@ class EventsController(object):
 
         Args:
                 what (basestring): query value
-                querytype (int): type of query
+                querytype (int): see :ref:`event_search_parameters-label`
                 case_sensitive (bool): True if case sensitive search
                 flags(basestring): query flags
                 max_rows (int): maximum number of results
@@ -277,14 +277,14 @@ class EventsController(object):
 
         Args:
                 service_reference (basestring): service reference
-                querytype (int): type of query
+                querytype (int): see :ref:`event_lookup_parameters-label`
                 begin (int): begin timestamp
                 minutes (int): query's time range in minutes
                 flags(basestring): query flags
                 max_rows (int): maximum number of results
 
         Returns:
-                list of matching items
+                list: matching items
         """
         mangled = []
 
@@ -317,3 +317,20 @@ class EventsController(object):
                 raise
 
         return mangled
+
+    def lookup_event(self, service_reference, event_id):
+        """
+        Lookup EPG event by ID
+
+        Args:
+                service_reference (basestring): service reference
+                event_id (int): Event ID
+
+        Returns:
+                models.events.EventDict: matching item or None
+        """
+        result = self.lookup(service_reference,
+                           querytype=QUERYTYPE_LOOKUP__ID, begin=event_id)
+        if result:
+            return result[0]
+        return None

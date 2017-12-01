@@ -739,6 +739,7 @@ def getNowNextEpg(ref, servicetype, mangle_html=True):
 
 
 def getSearchEpg(sstr, endtime=None, fulldesc=False, bouquetsonly=False):
+    bsref = {}
     ret = []
     ev = {}
     if config.OpenWebif.epg_encoding.value != 'utf-8':
@@ -758,7 +759,6 @@ def getSearchEpg(sstr, endtime=None, fulldesc=False, bouquetsonly=False):
         # events.sort(key = lambda x: x[1]) # sort by date
         if bouquetsonly:
             # collect service references from TV bouquets
-            bsref = {}
             for service in getAllServices('tv')['services']:
                 for service2 in service['subservices']:
                     bsref[service2['servicereference']] = True

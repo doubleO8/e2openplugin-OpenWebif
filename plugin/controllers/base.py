@@ -51,11 +51,28 @@ except BaseException:
 
     REMOTE = rc_model().getRcFolder()
 
+#: HTTP 404 Not Found response content
 FOUR_O_FOUR = """
 <html><head><title>Open Webif</title></head>
 <body><h1>Error 404: Page not found</h1><br/>
 The requested URL was not found on this server.</body></html>
 """
+
+
+def error404(request):
+    """
+    HTTP 404 Not Found response.
+
+    Args:
+        request (twisted.web.server.Request): HTTP request object
+
+    Returns:
+        HTTP 404 Not Found response
+    """
+    request.setHeader("content-type", "text/html")
+    request.setResponseCode(http.NOT_FOUND)
+    request.write(FOUR_O_FOUR)
+    request.finish()
 
 
 class BaseController(resource.Resource):
@@ -66,12 +83,13 @@ class BaseController(resource.Resource):
 
     def __init__(self, path="", **kwargs):
         """
+        Constructor
 
         Args:
-            path: Base path
-            session: (?) Session instance
-            withMainTemplate: (?)
-            isCustom: (?)
+            path (basestring): Base path
+            session: enigma2 Session instance
+            withMainTemplate (bool): use main template
+            isCustom (bool): custom output (?)
         """
         resource.Resource.__init__(self)
 
@@ -80,12 +98,7 @@ class BaseController(resource.Resource):
         self.withMainTemplate = kwargs.get("withMainTemplate", False)
         self.isCustom = kwargs.get("isCustom", False)
         self.log = logging.getLogger(__name__)
-
-    def error404(self, request):
-        request.setHeader("content-type", "text/html")
-        request.setResponseCode(http.NOT_FOUND)
-        request.write(FOUR_O_FOUR)
-        request.finish()
+        self.themes_support = os.path.exists(getPublicPath('themes'))
 
     def loadTemplate(self, path, module, args):
         trunk = getViewsPath(path)
@@ -142,7 +155,7 @@ class BaseController(resource.Resource):
 
             data = func(request)
             if data is None:
-                self.error404(request)
+                error404(request)
             elif self.isCustom:
                 request.write(data)
                 request.finish()
@@ -162,7 +175,7 @@ class BaseController(resource.Resource):
                 if out is None:
                     self.log.error("Template not found for page {!r}".format(
                         request.uri))
-                    self.error404(request)
+                    error404(request)
                 else:
                     if self.withMainTemplate:
                         args = self.prepareMainTemplate(request)
@@ -175,7 +188,7 @@ class BaseController(resource.Resource):
 
         else:
             self.log.error("Page {!r} not found".format(request.uri))
-            self.error404(request)
+            error404(request)
 
         # restore cached data
         self.withMainTemplate = withMainTemplate
@@ -189,18 +202,19 @@ class BaseController(resource.Resource):
         Generate the `dict()` for main template.
 
         Args:
-            request (:obj:`twisted.web.server.Request`): HTTP request object
+            request (twisted.web.server.Request): HTTP request object
         Returns:
-            :obj:`dict`: Parameter values
+            dict: Parameter values
         """
         ret = getCollapsedMenus()
+        ginfo = getInfo()
         ret['configsections'] = getConfigsSections()['sections']
         ret['showname'] = getShowName()['showname']
         ret['customname'] = getCustomName()['customname']
         ret['boxname'] = getBoxName()['boxname']
 
         if not ret['boxname'] or not ret['customname']:
-            ret['boxname'] = getInfo()['brand'] + " " + getInfo()['model']
+            ret['boxname'] = ginfo['brand'] + " " + ginfo['model']
         ret['box'] = getBoxType()
         ret["remote"] = REMOTE
 
@@ -208,7 +222,6 @@ class BaseController(resource.Resource):
             ret['epgsearchcaps'] = True
         else:
             ret['epgsearchcaps'] = False
-        extras = [{'key': 'ajax/settings', 'description': _("Settings")}]
 
         ret['extras'] = [
             {'key': 'ajax/settings', 'description': _("Settings")}
@@ -218,7 +231,7 @@ class BaseController(resource.Resource):
         if config.OpenWebif.webcache.theme.value:
             theme = config.OpenWebif.webcache.theme.value
 
-        if not os.path.exists(getPublicPath('themes')):
+        if not self.themes_support:
             if not (theme == 'original' or theme == 'clear'):
                 theme = 'original'
                 config.OpenWebif.webcache.theme.value = theme

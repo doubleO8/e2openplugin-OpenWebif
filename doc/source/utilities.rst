@@ -8,3 +8,9 @@ Utilities
 
 .. automodule:: controllers.models.model_utilities
     :members:
+
+Packaging
+=========
+
+.. automodule:: beppo.defaults
+    :members:

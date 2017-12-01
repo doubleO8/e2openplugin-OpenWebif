@@ -46,7 +46,7 @@ class ServiceListsManager(object):
         Reload lamedb.
 
         Returns:
-
+            ?
         """
         return self.eDVBDB.reloadServicelist()
 
@@ -55,7 +55,7 @@ class ServiceListsManager(object):
         Reload User Bouquets.
 
         Returns:
-
+            ?
         """
         return self.eDVBDB.reloadBouquets()
 
@@ -64,7 +64,7 @@ class ServiceListsManager(object):
         Reload Transponders.
 
         Returns:
-
+            ?
         """
         return nimmanager.readTransponders()
 
@@ -73,7 +73,7 @@ class ServiceListsManager(object):
         Reload Parental Control Black/White Lists.
 
         Returns:
-
+            ?
         """
         return Components.ParentalControl.parentalControl.open()
 

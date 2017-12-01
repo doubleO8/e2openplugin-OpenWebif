@@ -91,7 +91,7 @@ class HarvestKeitel(object):
         if os.path.isdir(doc_target):
             shutil.rmtree(doc_target)
 
-        mr_hyde = "./doc/build/html/.nojekyll"
+        mr_hyde = os.path.join(self.ghpages_output_path, ".nojekyll")
         with open(mr_hyde, "wb") as tgt:
             tgt.write("NO!")
 

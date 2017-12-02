@@ -92,8 +92,7 @@ class RootController(BaseController):
 
     def P_index(self, request):
         """
-        The "pages functions" must be called `P_pagename`.
-
+        The "pages functions" must be called `P_<pagename>`.
 
         Example:
             Contents for endpoint `/index` will be generated using a method

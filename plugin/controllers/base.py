@@ -101,8 +101,9 @@ class BaseController(resource.Resource):
         self._module_override = []
 
     def loadTemplate(self, template_trunk_relpath, module, args):
-        self.log.debug("path={!r} module={!r} args={!r}".format(
-            template_trunk_relpath, module, args))
+        #self.log.debug(
+        #    "template_trunk_relpath={!r} module={!r} args={!r}".format(
+        #    template_trunk_relpath, module, args))
         trunk = getViewsPath(template_trunk_relpath)
         template_file = None
 
@@ -115,7 +116,7 @@ class BaseController(resource.Resource):
         if template_file is None:
             return None
 
-        self.log.debug(">> {!r}".format(template_file))
+        # self.log.debug(">> {!r}".format(template_file))
         if template_file[-1] in ('o', 'y'):
             if template_file.endswith("o"):
                 template = imp.load_compiled(module, template_file)

@@ -610,12 +610,13 @@ def getAllInfo():
         remote = "gbquadplus"
     elif procmodel == "gb7252":
         remote = "gb7252"
-    elif procmodel in ("formuler1", "formuler3", "formuler4", "formuler4turbo"):
+    elif procmodel in ("formuler1", "formuler3",
+                       "formuler4", "formuler4turbo"):
         remote = "formuler1"
     elif procmodel in ("azboxme", "azboxminime", "me", "minime"):
         remote = "me"
-    elif procmodel in (
-    "optimussos1", "optimussos1plus", "optimussos2", "optimussos2plus"):
+    elif procmodel in ("optimussos1", "optimussos1plus",
+                       "optimussos2", "optimussos2plus"):
         remote = "optimuss"
     elif procmodel in ("premium", "premium+"):
         remote = "premium"
@@ -643,8 +644,8 @@ def getAllInfo():
     "adb2850", "adb2849", "bska", "bsla", "bxzb", "bzzb", "esi88", "uhd88",
     "dsi87", "arivalink200"):
         remote = "nbox"
-    elif procmodel in (
-    "hd1100", "hd1200", "hd1265", "hd1400", "hd51", "hd11", "hd500c", "hd530c"):
+    elif procmodel in ("hd1100", "hd1200", "hd1265", "hd1400", "hd51",
+                       "hd11", "hd500c", "hd530c"):
         remote = "hd1x00"
     elif procmodel == "hd2400":
         remote = "hd2400"

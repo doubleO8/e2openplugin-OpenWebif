@@ -125,16 +125,7 @@ class BaseController(resource.Resource):
         self.session = kwargs.get("session")
         self.isCustom = kwargs.get("isCustom", False)
         self.log = logging.getLogger(__name__)
-        self._module_override = []
         self.verbose = 11
-
-    def _push_module_template(self, trunk, module_name=None, prefix=None):
-        if module_name is None:
-            module_name = trunk
-        if prefix is not None:
-            trunk = '/'.join((trunk, prefix))
-
-        self._module_override.append((trunk, module_name))
 
     def loadTemplate(self, template_trunk_relpath, module, args):
         if self.verbose > 10:
@@ -207,20 +198,16 @@ class BaseController(resource.Resource):
                 request.write(data)
                 request.finish()
             else:
-                try:
-                    (tmpl_trunk,
-                     template_module_name) = self._module_override.pop()
-                except IndexError:
-                    tmpl_trunk = request.path
-                    template_module_name = self.path
+                tmpl_trunk = request.path
+                template_module_name = self.path
 
-                    if tmpl_trunk[-1] == "/":
-                        tmpl_trunk += "index"
-                    elif tmpl_trunk[-5:] != "index" and self.path == "index":
-                        tmpl_trunk += "/index"
+                if tmpl_trunk[-1] == "/":
+                    tmpl_trunk += "index"
+                elif tmpl_trunk[-5:] != "index" and self.path == "index":
+                    tmpl_trunk += "/index"
 
-                    tmpl_trunk = tmpl_trunk.strip("/")
-                    tmpl_trunk = tmpl_trunk.replace(".", "")
+                tmpl_trunk = tmpl_trunk.strip("/")
+                tmpl_trunk = tmpl_trunk.replace(".", "")
 
                 if tmpl_trunk in TEMPLATE_ALIASES:
                     the_alias =TEMPLATE_ALIASES[tmpl_trunk]

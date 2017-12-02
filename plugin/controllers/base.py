@@ -135,7 +135,9 @@ class BaseController(resource.Resource):
             request.path = request.path.replace('signal', 'tunersignal')
         self.path = self.path.replace(".", "")
 
-        func = getattr(self, OWIF_PREFIX + self.path, None)
+        owif_func = OWIF_PREFIX + self.path
+        self.log.warning(owif_func)
+        func = getattr(self, owif_func, None)
         if callable(func):
             request.setResponseCode(http.OK)
 

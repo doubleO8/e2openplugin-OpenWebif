@@ -76,7 +76,7 @@ class BaseController(resource.Resource):
         self.isCustom = kwargs.get("isCustom", False)
         self.log = logging.getLogger(__name__)
         self._module_override = []
-        self.verbose = 1
+        self.verbose = 11
 
     def _push_module_template(self, trunk, module_name=None, prefix=None):
         if module_name is None:

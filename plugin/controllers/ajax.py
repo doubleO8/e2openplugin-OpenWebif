@@ -295,10 +295,6 @@ class AjaxController(BaseController):
         """
         Request handler for the `/statusinfo` endpoint.
 
-        .. note::
-
-            Not available in *Enigma2 WebInterface API*.
-
         Args:
             request (twisted.web.server.Request): HTTP request object
         Returns:

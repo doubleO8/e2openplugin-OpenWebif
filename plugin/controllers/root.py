@@ -81,15 +81,6 @@ class RootController(BaseController):
         if piconpath:
             self.putChild("picon", static.File(piconpath))
 
-    def prePageLoad(self, request):
-        """
-        This function will be called before a page is loaded.
-
-        Args:
-            request (twisted.web.server.Request): HTTP request object
-        """
-        # self._push_module_template("main")
-
     def P_index(self, request):
         """
         The "pages functions" must be called `P_<pagename>`.

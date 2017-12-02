@@ -95,4 +95,4 @@ class RootController(BaseController):
             dict: Parameter values (empty for **index**)
 
         """
-        return self.prepareMainTemplate()
+        return self.prepareMainTemplate(request)

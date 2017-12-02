@@ -13,14 +13,10 @@ import imp
 import logging
 
 from twisted.web import server, http, resource
-
-from Plugins.Extensions.OpenWebif.__init__ import _
 from Cheetah.Template import Template
-from enigma import eEPGCache
 
-from models.info import getInfo, getPublicPath, getViewsPath
-from models.config import getCollapsedMenus, getConfigsSections
-from models.config import getShowName, getCustomName, getBoxName
+from models.info import getViewsPath
+from rest_api_controller import OWIF_PREFIX
 
 
 def new_getRequestHostname(self):
@@ -33,22 +29,6 @@ def new_getRequestHostname(self):
 
 
 http.Request.getRequestHostname = new_getRequestHostname
-
-REMOTE = ''
-
-try:
-    from boxbranding import getBoxType
-except BaseException:
-    from models.owibranding import getBoxType
-
-try:
-    from Components.RcModel import rc_model
-
-    REMOTE = rc_model.getRcFolder() + "/remote"
-except BaseException:
-    from models.owibranding import rc_model
-
-    REMOTE = rc_model().getRcFolder()
 
 #: HTTP 404 Not Found response content
 FOUR_O_FOUR = """
@@ -95,7 +75,6 @@ class BaseController(resource.Resource):
         self.session = kwargs.get("session")
         self.isCustom = kwargs.get("isCustom", False)
         self.log = logging.getLogger(__name__)
-        self.themes_support = os.path.exists(getPublicPath('themes'))
         self._module_override = []
         self.verbose = 1
 
@@ -108,10 +87,10 @@ class BaseController(resource.Resource):
         self._module_override.append((trunk, module_name))
 
     def loadTemplate(self, template_trunk_relpath, module, args):
-        if self.verbose > 0:
+        if self.verbose > 10:
             self.log.debug(
                 "template_trunk_relpath={!r} module={!r} args={!r}".format(
-                template_trunk_relpath, module, args))
+                    template_trunk_relpath, module, args))
 
         trunk = getViewsPath(template_trunk_relpath)
         template_file = None
@@ -156,7 +135,7 @@ class BaseController(resource.Resource):
             request.path = request.path.replace('signal', 'tunersignal')
         self.path = self.path.replace(".", "")
 
-        func = getattr(self, "P_" + self.path, None)
+        func = getattr(self, OWIF_PREFIX + self.path, None)
         if callable(func):
             request.setResponseCode(http.OK)
 
@@ -200,7 +179,6 @@ class BaseController(resource.Resource):
                 else:
                     request.write(out)
                     request.finish()
-
         else:
             self.log.error("Page {!r} not found".format(request.uri))
             error404(request)
@@ -210,36 +188,3 @@ class BaseController(resource.Resource):
         self.isCustom = isCustom
 
         return server.NOT_DONE_YET
-
-    def prepareMainTemplate(self, request):
-        """
-        Generate the `dict()` for main template.
-
-        Args:
-            request (twisted.web.server.Request): HTTP request object
-        Returns:
-            dict: Parameter values
-        """
-        ret = getCollapsedMenus()
-        ginfo = getInfo()
-        ret['configsections'] = getConfigsSections()['sections']
-        ret['showname'] = getShowName()['showname']
-        ret['customname'] = getCustomName()['customname']
-        ret['boxname'] = getBoxName()['boxname']
-
-        if not ret['boxname'] or not ret['customname']:
-            ret['boxname'] = ginfo['brand'] + " " + ginfo['model']
-        ret['box'] = getBoxType()
-        ret["remote"] = REMOTE
-
-        if hasattr(eEPGCache, 'FULL_DESCRIPTION_SEARCH'):
-            ret['epgsearchcaps'] = True
-        else:
-            ret['epgsearchcaps'] = False
-
-        ret['extras'] = [
-            {'key': 'ajax/settings', 'description': _("Settings")}
-        ]
-        ret['theme'] = 'original-small-screen'
-        ret['content'] = ''
-        return ret

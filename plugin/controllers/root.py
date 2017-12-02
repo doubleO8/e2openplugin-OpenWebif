@@ -14,7 +14,12 @@ from twisted.web import static
 from twisted.web.resource import EncodingResourceWrapper
 from twisted.web.server import GzipEncoderFactory
 
-from models.info import getPublicPath, getPiconPath
+from Plugins.Extensions.OpenWebif.__init__ import _
+from enigma import eEPGCache
+from models.config import getCollapsedMenus, getConfigsSections
+from models.config import getShowName, getCustomName, getBoxName
+
+from models.info import getPublicPath, getPiconPath, getInfo
 from models.grab import grabScreenshot
 from base import BaseController
 from web import WebController
@@ -24,11 +29,17 @@ from file import FileController
 import rest_fs_access
 import rest_api_controller
 
+try:
+    from boxbranding import getBoxType
+except BaseException:
+    from models.owibranding import getBoxType
+
 
 class RootController(BaseController):
     """
     Web root controller.
     """
+
     def __init__(self, session, path=""):
         BaseController.__init__(self, path=path, session=session)
         piconpath = getPiconPath()
@@ -92,7 +103,27 @@ class RootController(BaseController):
             request (twisted.web.server.Request): HTTP request object
 
         Returns:
-            dict: Parameter values (empty for **index**)
-
+            dict: Parameter values
         """
-        return self.prepareMainTemplate(request)
+        ret = getCollapsedMenus()
+        ginfo = getInfo()
+        ret['configsections'] = getConfigsSections()['sections']
+        ret['showname'] = getShowName()['showname']
+        ret['customname'] = getCustomName()['customname']
+        ret['boxname'] = getBoxName()['boxname']
+
+        if not ret['boxname'] or not ret['customname']:
+            ret['boxname'] = ginfo['brand'] + " " + ginfo['model']
+        ret['box'] = getBoxType()
+
+        if hasattr(eEPGCache, 'FULL_DESCRIPTION_SEARCH'):
+            ret['epgsearchcaps'] = True
+        else:
+            ret['epgsearchcaps'] = False
+
+        ret['extras'] = [
+            {'key': 'ajax/settings', 'description': _("Settings")}
+        ]
+        ret['theme'] = 'original-small-screen'
+        ret['content'] = ''
+        return ret

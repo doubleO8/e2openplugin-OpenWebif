@@ -99,11 +99,12 @@ class BaseController(resource.Resource):
         self.isCustom = kwargs.get("isCustom", False)
         self.log = logging.getLogger(__name__)
         self.themes_support = os.path.exists(getPublicPath('themes'))
+        self._module_override = []
 
-    def loadTemplate(self, path, module, args):
+    def loadTemplate(self, template_trunk_relpath, module, args):
         self.log.debug("path={!r} module={!r} args={!r}".format(
-            path, module, args))
-        trunk = getViewsPath(path)
+            template_trunk_relpath, module, args))
+        trunk = getViewsPath(template_trunk_relpath)
         template_file = None
 
         for ext in ('pyo', 'py', 'tmpl'):
@@ -166,15 +167,19 @@ class BaseController(resource.Resource):
                 request.write(data)
                 request.finish()
             else:
-                module = request.path
-                if module[-1] == "/":
-                    module += "index"
-                elif module[-5:] != "index" and self.path == "index":
-                    module += "/index"
-                module = module.strip("/")
-                module = module.replace(".", "")
+                try:
+                    module = self._module_override.pop()
+                except IndexError:
+                    module = request.path
+                    if module[-1] == "/":
+                        module += "index"
+                    elif module[-5:] != "index" and self.path == "index":
+                        module += "/index"
+                    module = module.strip("/")
+                    module = module.replace(".", "")
+
+                # out => content
                 out = self.loadTemplate(module, self.path, data)
-                self.log.debug("out={!r}".format(out))
                 if out is None:
                     self.log.error("Template not found for page {!r}".format(
                         request.uri))

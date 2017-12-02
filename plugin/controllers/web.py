@@ -1224,6 +1224,7 @@ class WebController(BaseController):
             HTTP response with headers
         """
         slm = ServiceListsManager()
+        self._module_override.append("web/_status.tmpl")
         return slm.reload(request.args.get("mode"))
 
     def P_tvbrowser(self, request):
@@ -1393,6 +1394,7 @@ class WebController(BaseController):
         return saveEpg()
 
     def P_loadepg(self, request):
+        self._module_override.append("web/_status.tmpl")
         return loadEpg()
 
     def P_getsubtitles(self, request):

@@ -196,10 +196,12 @@ class BaseController(resource.Resource):
             request.uri = request.uri.replace('signal', 'tunersignal')
             request.path = request.path.replace('signal', 'tunersignal')
         self.path = self.path.replace(".", "")
+        owif_callback_name = OWIF_PREFIX + self.path
+        func = getattr(self, owif_callback_name, None)
 
-        owif_func = OWIF_PREFIX + self.path
-        self.log.warning(owif_func)
-        func = getattr(self, owif_func, None)
+        if self.verbose > 10:
+            self.log.info('{!r} {!r}'.format(owif_callback_name, func))
+
         if callable(func):
             request.setResponseCode(http.OK)
 
@@ -210,6 +212,8 @@ class BaseController(resource.Resource):
 
             data = func(request)
             if data is None:
+                self.log.warning('{!r} {!r} returned None'.format(
+                    owif_callback_name, func))
                 error404(request)
             elif self.isCustom:
                 request.write(data)
@@ -240,14 +244,16 @@ class BaseController(resource.Resource):
                 # out => content
                 out = self.loadTemplate(tmpl_trunk, template_module_name, data)
                 if out is None:
-                    self.log.error("Template not found for page {!r}".format(
-                        request.uri))
+                    self.log.error(
+                        "Template not loadable for {!r} (page {!r})".format(
+                            owif_callback_name, request.uri))
                     error404(request)
                 else:
                     request.write(out)
                     request.finish()
         else:
-            self.log.error("Page {!r} not found".format(request.uri))
+            self.log.error("Callback {!r} for page {!r} not found".format(
+                owif_callback_name, request.uri))
             error404(request)
 
         # restore cached data

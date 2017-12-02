@@ -361,7 +361,7 @@ class ConfigFiles:
         self.log.info("parsing configuration files ...")
 
         for setupfile in self.setupfiles:
-            self.log.debug("Loading configuration file {!r}".format(setupfile))
+            self.log.debug("Loading {!r}".format(setupfile))
             setupfile = file(setupfile, 'r')
             setupdom = xml.etree.cElementTree.parse(setupfile)  # nosec
             setupfile.close()
@@ -379,7 +379,7 @@ class ConfigFiles:
                         self.allowedsections.append(key)
                     else:
                         continue
-                self.log.debug("Loading configuration section {!r}".format(key))
+                self.log.debug("Loading section {!r}".format(key))
 
                 for entry in section:
                     if entry.tag == "item":

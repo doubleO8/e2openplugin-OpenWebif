@@ -141,7 +141,7 @@ class BaseController(resource.Resource):
         isCustom = self.isCustom
 
         self.log.info(
-            "{!r}: withMainTemplate={!r} (self.withMainTemplate={!r}".format(
+            "{!r:20}: withMainTemplate={!r} (self.w..={!r}".format(
                 path, withMainTemplate, self.withMainTemplate))
 
         if self.path == "":

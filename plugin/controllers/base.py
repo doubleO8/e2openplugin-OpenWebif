@@ -140,6 +140,10 @@ class BaseController(resource.Resource):
         path = self.path
         isCustom = self.isCustom
 
+        self.log.info(
+            "{!r}: withMainTemplate={!r} (self.withMainTemplate={!r}".format(
+                path, withMainTemplate, self.withMainTemplate))
+
         if self.path == "":
             self.path = "index"
         elif self.path == "signal":

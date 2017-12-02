@@ -278,7 +278,7 @@ def on_start_session(reason, session):
         session: (?) Session instance
     """
     LOG.info("on_start_session({!r}, {!r})".format(reason, session))
-    LOG.debug(dir(session))
+    # LOG.debug(dir(session))
     global global_session
     global_session = session
 

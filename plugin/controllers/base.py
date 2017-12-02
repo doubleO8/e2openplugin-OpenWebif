@@ -241,5 +241,5 @@ class BaseController(resource.Resource):
             {'key': 'ajax/settings', 'description': _("Settings")}
         ]
         ret['theme'] = 'original-small-screen'
-
+        ret['content'] = ''
         return ret

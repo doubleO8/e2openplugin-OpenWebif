@@ -16,8 +16,8 @@ from Components.config import config as comp_config
 from models.services import getBouquets, getChannels, getSatellites, \
     getProviders, getEventDesc, getChannelEpg, getSearchEpg, \
     getCurrentFullInfo, getMultiEpg, getEvent
-from models.info import getInfo, getPublicPath, \
-    getTranscodingSupport, getLanguage
+from models.info import getInfo, getPublicPath, getTranscodingSupport, \
+    getLanguage, getStatusInfo
 from models.movies import getMovieList
 from models.timers import getTimers
 from models.config import getConfigs, getConfigsSections, getZapStream, \
@@ -290,3 +290,18 @@ class AjaxController(BaseController):
         epg['mode'] = mode
         epg['epgmode'] = epgmode
         return epg
+
+    def P_statusinfo(self, request):
+        """
+        Request handler for the `/statusinfo` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
+        return getStatusInfo(self)

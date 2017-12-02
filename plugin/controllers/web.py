@@ -187,22 +187,6 @@ class WebController(BaseController):
             "service": getCurrentService(self.session)
         }
 
-    def P_statusinfo(self, request):
-        """
-        Request handler for the `/statusinfo` endpoint.
-
-        .. note::
-
-            Not available in *Enigma2 WebInterface API*.
-
-        Args:
-            request (twisted.web.server.Request): HTTP request object
-        Returns:
-            HTTP response with headers
-        """
-        self.isCustom = True
-        return getStatusInfo(self)
-
     def P_tunersignal(self, request):
         """
         Request handler for the `tunersignal` endpoint.

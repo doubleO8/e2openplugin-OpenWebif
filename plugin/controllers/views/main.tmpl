@@ -146,33 +146,6 @@
 				$menu($tstrings['extras'], "extras", $extrasMenu)
 				$menu($tstrings['epgsearch'], "search", $searchMenu)
 			</div>
-
-			<div id="remotecontainer" style="display: none;">
-				<div class="some-leftmenu-main">
-					<div class="some-leftmenu-top ui-widget-header">$tstrings['remote']</div>
-					<div style="width:100%; text-align:center;">
-						<ul>
-							<li style="margin-bottom:5px;">
-								<div class="tbl"><div>
-								<div><a class="fbb" href='#' title=$tstrings['powercontrol'].replace(" ","&nbsp;") onclick="load_dm('ajax/powerstate','$tstrings["powercontrol"]');this.blur();return false;"><i class="fa fa-power-off" aria-hidden="true"></i></a></div>
-							<!--<div><a class="fbb" href='#' title=$tstrings['grabscreenshot'].replace(" ","&nbsp;") onclick="load_maincontent('ajax/screenshot');return false;"><i class="fa fa-camera-retro" aria-hidden="true"></i></a></div> -->
-								<div><a class="fbb" href='#' title=$tstrings['sendamessage'].replace(" ","&nbsp;") onclick="load_message_dm('ajax/message','$tstrings["sendamessage"]');this.blur();return false;"><i class="fa fa-envelope-o" aria-hidden="true"></i></a></div>
-								<div><a class="fbb" href='#' title=$tstrings['hidefullremote'].replace(" ","&nbsp;") onclick="toggleFullRemote();return false;"><i class="fa fa-compress" aria-hidden="true"></i></a></div>
-								</div></div>
-							</li>
-						</ul>
-
-						<div id="remote_container" style="width:100%; text-align:center;"></div>
-						<div class="help">
-							$tstrings['shiftforlong']
-						</div>
-						<ul>
-							<li style="margin-bottom:5px;">
-							<input type="checkbox" class="remotegrabscreen" name="remotegrabscreen2" /><span style="cursor:pointer;" title="Enable/Disable Screenhot on key press or $tstrings['grabscreenshot']" onclick="load_maincontent('ajax/screenshot');return false;">$tstrings['grabscreenshot']</span></li>
-						</ul>
-					</div>
-				</div>
-			</div>
 		</div>
 
 		<div id="content">
@@ -212,7 +185,6 @@
 		document.body.appendChild(css);
 
 		\$(document).ready(function() {
-			\$("#remote_container").load("static/remotes/${remote}.html");
 			directlink();
 			\$('a.lmc').on("click", function() {
 				var target_url = \$(this).prop("href");

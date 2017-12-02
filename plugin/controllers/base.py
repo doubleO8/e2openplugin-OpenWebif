@@ -17,7 +17,6 @@ from twisted.web import server, http, resource
 from Plugins.Extensions.OpenWebif.__init__ import _
 from Cheetah.Template import Template
 from enigma import eEPGCache
-from Components.config import config
 
 from models.info import getInfo, getPublicPath, getViewsPath
 from models.config import getCollapsedMenus, getConfigsSections
@@ -169,20 +168,22 @@ class BaseController(resource.Resource):
                 request.finish()
             else:
                 try:
-                    (template_trunk_relpath,
+                    (tmpl_trunk,
                      template_module_name) = self._module_override.pop()
                 except IndexError:
-                    template_trunk_relpath = request.path
+                    tmpl_trunk = request.path
                     template_module_name = self.path
-                    if template_trunk_relpath[-1] == "/":
-                        template_trunk_relpath += "index"
-                    elif template_trunk_relpath[-5:] != "index" and self.path == "index":
-                        template_trunk_relpath += "/index"
-                    template_trunk_relpath = template_trunk_relpath.strip("/")
-                    template_trunk_relpath = template_trunk_relpath.replace(".", "")
+
+                    if tmpl_trunk[-1] == "/":
+                        tmpl_trunk += "index"
+                    elif tmpl_trunk[-5:] != "index" and self.path == "index":
+                        tmpl_trunk += "/index"
+
+                    tmpl_trunk = tmpl_trunk.strip("/")
+                    tmpl_trunk = tmpl_trunk.replace(".", "")
 
                 # out => content
-                out = self.loadTemplate(template_trunk_relpath, template_module_name, data)
+                out = self.loadTemplate(tmpl_trunk, template_module_name, data)
                 if out is None:
                     self.log.error("Template not found for page {!r}".format(
                         request.uri))
@@ -237,16 +238,6 @@ class BaseController(resource.Resource):
         ret['extras'] = [
             {'key': 'ajax/settings', 'description': _("Settings")}
         ]
-        theme = 'original'
-
-        if config.OpenWebif.webcache.theme.value:
-            theme = config.OpenWebif.webcache.theme.value
-
-        if not self.themes_support:
-            if not (theme == 'original' or theme == 'clear'):
-                theme = 'original'
-                config.OpenWebif.webcache.theme.value = theme
-                config.OpenWebif.webcache.theme.save()
-        ret['theme'] = theme
+        ret['theme'] = 'original-small-screen'
 
         return ret

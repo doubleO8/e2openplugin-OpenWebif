@@ -26,11 +26,19 @@ FOUR_O_FOUR = """
 The requested URL was not found on this server.</body></html>
 """
 
+#: template for simple XML result
 TEMPLATE_E2_SIMPLE_XML_RESULT = "web/e2simplexmlresult"
+
+#: template for enigma2 event list
 TEMPLATE_E2_EVENT_LIST = "web/e2eventlist"
+
+#: template for enigma2 service list
 TEMPLATE_E2_SERVICE_LIST = "web/e2servicelist"
+
+#: template for enigma2 tags
 TEMPLATE_E2_TAGS = "web/e2tags"
 
+#: template aliases
 TEMPLATE_ALIASES = {
     "web/loadepg": TEMPLATE_E2_SIMPLE_XML_RESULT,
     "web/epgbouquet": TEMPLATE_E2_EVENT_LIST,
@@ -210,7 +218,7 @@ class BaseController(resource.Resource):
                 tmpl_trunk = tmpl_trunk.replace(".", "")
 
                 if tmpl_trunk in TEMPLATE_ALIASES:
-                    the_alias =TEMPLATE_ALIASES[tmpl_trunk]
+                    the_alias = TEMPLATE_ALIASES[tmpl_trunk]
                     template_module_name = os.path.basename(the_alias)
                     self.log.warning("Template alias {!r} -> {!r}".format(
                         tmpl_trunk, the_alias))

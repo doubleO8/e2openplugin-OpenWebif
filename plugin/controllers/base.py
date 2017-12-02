@@ -16,7 +16,15 @@ from twisted.web import server, http, resource
 from Cheetah.Template import Template
 
 from models.info import getViewsPath
-from rest_api_controller import OWIF_PREFIX
+
+OWIF_PREFIX = 'P_'
+
+#: HTTP 404 Not Found response content
+FOUR_O_FOUR = """
+<html><head><title>Open Webif</title></head>
+<body><h1>Error 404: Page not found</h1><br/>
+The requested URL was not found on this server.</body></html>
+"""
 
 
 def new_getRequestHostname(self):
@@ -29,13 +37,6 @@ def new_getRequestHostname(self):
 
 
 http.Request.getRequestHostname = new_getRequestHostname
-
-#: HTTP 404 Not Found response content
-FOUR_O_FOUR = """
-<html><head><title>Open Webif</title></head>
-<body><h1>Error 404: Page not found</h1><br/>
-The requested URL was not found on this server.</body></html>
-"""
 
 
 def error404(request):

@@ -200,6 +200,7 @@ class WebController(BaseController):
         Returns:
             HTTP response with headers
         """
+        self.isCustom = True
         return getStatusInfo(self)
 
     def P_tunersignal(self, request):

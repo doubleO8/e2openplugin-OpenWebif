@@ -72,7 +72,7 @@ TEMPLATE_ALIASES = {
     "web/epgsimilar": TEMPLATE_E2_EVENT_LIST,
     "web/epgnext": TEMPLATE_E2_EVENT_LIST,
     "web/epgnownext": TEMPLATE_E2_EVENT_LIST,
-    "web/epgnow": TEMPLATE_E2_EVENT_LIST
+    "web/epgnow": TEMPLATE_E2_EVENT_LIST,
 }
 
 

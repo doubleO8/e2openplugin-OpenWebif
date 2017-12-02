@@ -14,8 +14,7 @@ from Plugins.Extensions.OpenWebif.__init__ import _
 
 from Components.config import config as comp_config
 
-from models.info import getInfo, getCurrentTime, \
-    getStatusInfo, getFrontendStatus
+from models.info import getInfo, getCurrentTime, getFrontendStatus
 from models.services import getCurrentService, getBouquets, getServices, \
     getSubServices, getSatellites, getBouquetEpg, getBouquetNowNextEpg, \
     getServicesNowNextEpg, getSearchEpg, getChannelEpg, getNowNextEpg, \
@@ -1209,7 +1208,6 @@ class WebController(BaseController):
             HTTP response with headers
         """
         slm = ServiceListsManager()
-        self._module_override.append(("web/generic_status", "generic_status"))
         return slm.reload(request.args.get("mode"))
 
     def P_tvbrowser(self, request):
@@ -1379,7 +1377,6 @@ class WebController(BaseController):
         return saveEpg()
 
     def P_loadepg(self, request):
-        self._module_override.append(("web/generic_status", "generic_status"))
         return loadEpg()
 
     def P_getsubtitles(self, request):

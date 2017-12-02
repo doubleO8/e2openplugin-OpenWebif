@@ -116,6 +116,7 @@ class BaseController(resource.Resource):
         if template_file is None:
             return None
 
+        self.log.debug(">> {!r}".format(template_file))
         if template_file[-1] in ('o', 'y'):
             if template_file.endswith("o"):
                 template = imp.load_compiled(module, template_file)

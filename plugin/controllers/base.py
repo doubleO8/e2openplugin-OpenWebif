@@ -133,9 +133,22 @@ class BaseController(resource.Resource):
         self.session = kwargs.get("session")
         self.isCustom = kwargs.get("isCustom", False)
         self.log = logging.getLogger(__name__)
-        self.verbose = 11
+        self.verbose = 0
 
     def loadTemplate(self, template_trunk_relpath, module, args):
+        """
+        Try to generate template contents by trying to load optimised bytecode,
+        python sourcefile and `.tmpl` file (in that order).
+
+        Args:
+            template_trunk_relpath (basestring): template filename trunk
+            module (basestring): module name
+            args (dict): template parameters
+
+        Returns:
+            str: template content
+
+        """
         if self.verbose > 10:
             self.log.debug(
                 "template_trunk_relpath={!r} module={!r} args={!r}".format(

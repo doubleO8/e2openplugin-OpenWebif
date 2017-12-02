@@ -32,6 +32,10 @@ TEMPLATE_E2_SERVICE_LIST = "web/e2servicelist"
 TEMPLATE_E2_TAGS = "web/e2tags"
 
 TEMPLATE_ALIASES = {
+    "web/loadepg": TEMPLATE_E2_SIMPLE_XML_RESULT,
+    "web/epgbouquet": TEMPLATE_E2_EVENT_LIST,
+    "web/getservices": TEMPLATE_E2_SERVICE_LIST,
+    "web/gettags": TEMPLATE_E2_TAGS,
     "web/epgservicenow": TEMPLATE_E2_EVENT_LIST,
     "web/timeraddbyeventid": TEMPLATE_E2_SIMPLE_XML_RESULT,
     "web/mediaplayerplay": TEMPLATE_E2_SIMPLE_XML_RESULT,

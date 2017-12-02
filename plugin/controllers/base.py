@@ -32,7 +32,7 @@ TEMPLATE_WEB_GETSERVICES = "web/getservices"
 TEMPLATE_WEB_GETTAGS = "web/gettags"
 
 TEMPLATE_ALIASES = {
-    "web/epgservicenow": "web/epgbouquet",
+    "web/epgservicenow": TEMPLATE_WEB_EPGBOUQUET,
     "web/timeraddbyeventid": TEMPLATE_WEB_LOADEPG,
     "web/mediaplayerplay": TEMPLATE_WEB_LOADEPG,
     "web/streamsubservices": TEMPLATE_WEB_GETSERVICES,

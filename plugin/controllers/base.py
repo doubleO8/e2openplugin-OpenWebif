@@ -26,6 +26,46 @@ FOUR_O_FOUR = """
 The requested URL was not found on this server.</body></html>
 """
 
+TEMPLATE_ALIASES = {
+    "epgservicenow": "epgbouquet",
+    "timeraddbyeventid": "loadepg",
+    "mediaplayerplay": "addlocation",
+    "streamsubservices": "getservices",
+    "timertogglestatus": "addlocation",
+    "subservices": "getservices",
+    "timerlistwrite": "loadepg",
+    "recordnow": "loadepg",
+    "epgmulti": "epgbouquet",
+    "epgservicenext": "epgbouquet",
+    "message": "loadepg",
+    "pluginlistread": "loadepg",
+    "moviedelete": "loadepg",
+    "timeradd": "loadepg",
+    "removelocation": "addlocation",
+    "timerdelete": "loadepg",
+    "moviemove": "loadepg",
+    "mediaplayercmd": "addlocation",
+    "zap": "loadepg",
+    "movierename": "loadepg",
+    "parentcontrollist": "getservices",
+    "saveepg": "loadepg",
+    "epgsearch": "epgbouquet",
+    "mediaplayeradd": "addlocation",
+    "mediaplayerwrite": "addlocation",
+    "movietags": "gettags",
+    "messageanswer": "loadepg",
+    "servicelistreload": "loadepg",
+    "mediaplayerload": "addlocation",
+    "epgservice": "epgbouquet",
+    "timerchange": "loadepg",
+    "timercleanup": "loadepg",
+    "mediaplayerremove": "addlocation",
+    "epgsimilar": "epgbouquet",
+    "epgnext": "epgbouquet",
+    "epgnownext": "epgbouquet",
+    "epgnow": "epgbouquet"
+}
+
 
 def new_getRequestHostname(self):
     host = self.getHeader(b'host')
@@ -172,6 +212,12 @@ class BaseController(resource.Resource):
 
                     tmpl_trunk = tmpl_trunk.strip("/")
                     tmpl_trunk = tmpl_trunk.replace(".", "")
+
+                if tmpl_trunk in TEMPLATE_ALIASES:
+                    the_alias =TEMPLATE_ALIASES[tmpl_trunk]
+                    self.log.warning("Template alias {!r} -> {!r}".format(
+                        tmpl_trunk, the_alias))
+                    tmpl_trunk = the_alias
 
                 # out => content
                 out = self.loadTemplate(tmpl_trunk, template_module_name, data)

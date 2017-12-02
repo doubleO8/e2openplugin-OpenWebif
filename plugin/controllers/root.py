@@ -73,12 +73,11 @@ class RootController(BaseController):
     def prePageLoad(self, request):
         """
         This function will be called before a page is loaded.
-        We set withMainTemplate here so it's a default for every page
 
         Args:
-            request (:obj:`twisted.web.server.Request`): HTTP request object
+            request (twisted.web.server.Request): HTTP request object
         """
-        self.withMainTemplate = True
+        self._push_module_template("main")
 
     def P_index(self, request):
         """
@@ -90,10 +89,10 @@ class RootController(BaseController):
             named `P_index`.
 
         Args:
-            request (:obj:`twisted.web.server.Request`): HTTP request object
+            request (twisted.web.server.Request): HTTP request object
 
         Returns:
-            :obj:`dict`: Parameter values (empty for **index**)
+            dict: Parameter values (empty for **index**)
 
         """
-        return {}
+        return self.prepareMainTemplate()

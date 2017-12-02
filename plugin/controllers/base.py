@@ -87,23 +87,32 @@ class BaseController(resource.Resource):
         Args:
             path (basestring): Base path
             session: enigma2 Session instance
-            withMainTemplate (bool): use main template
             isCustom (bool): custom output (?)
         """
         resource.Resource.__init__(self)
 
         self.path = path
         self.session = kwargs.get("session")
-        self.withMainTemplate = kwargs.get("withMainTemplate", False)
         self.isCustom = kwargs.get("isCustom", False)
         self.log = logging.getLogger(__name__)
         self.themes_support = os.path.exists(getPublicPath('themes'))
         self._module_override = []
+        self.verbose = 1
+
+    def _push_module_template(self, trunk, module_name=None, prefix=None):
+        if module_name is None:
+            module_name = trunk
+        if prefix is not None:
+            trunk = '/'.join((trunk, prefix))
+
+        self._module_override.append((trunk, module_name))
 
     def loadTemplate(self, template_trunk_relpath, module, args):
-        #self.log.debug(
-        #    "template_trunk_relpath={!r} module={!r} args={!r}".format(
-        #    template_trunk_relpath, module, args))
+        if self.verbose > 0:
+            self.log.debug(
+                "template_trunk_relpath={!r} module={!r} args={!r}".format(
+                template_trunk_relpath, module, args))
+
         trunk = getViewsPath(template_trunk_relpath)
         template_file = None
 
@@ -136,13 +145,8 @@ class BaseController(resource.Resource):
 
     def render(self, request):
         # cache data
-        withMainTemplate = self.withMainTemplate
         path = self.path
         isCustom = self.isCustom
-
-        self.log.info(
-            "{!r:20}: withMainTemplate={!r} (self.w..={!r}".format(
-                path, withMainTemplate, self.withMainTemplate))
 
         if self.path == "":
             self.path = "index"
@@ -150,8 +154,8 @@ class BaseController(resource.Resource):
             self.path = "tunersignal"
             request.uri = request.uri.replace('signal', 'tunersignal')
             request.path = request.path.replace('signal', 'tunersignal')
-
         self.path = self.path.replace(".", "")
+
         func = getattr(self, "P_" + self.path, None)
         if callable(func):
             request.setResponseCode(http.OK)
@@ -194,12 +198,6 @@ class BaseController(resource.Resource):
                         request.uri))
                     error404(request)
                 else:
-                    if self.withMainTemplate:
-                        args = self.prepareMainTemplate(request)
-                        args["content"] = out
-                        nout = self.loadTemplate("main", "main", args)
-                        if nout:
-                            out = nout
                     request.write(out)
                     request.finish()
 
@@ -208,7 +206,6 @@ class BaseController(resource.Resource):
             error404(request)
 
         # restore cached data
-        self.withMainTemplate = withMainTemplate
         self.path = path
         self.isCustom = isCustom
 

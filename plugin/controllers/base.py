@@ -215,6 +215,7 @@ class BaseController(resource.Resource):
 
                 if tmpl_trunk in TEMPLATE_ALIASES:
                     the_alias =TEMPLATE_ALIASES[tmpl_trunk]
+                    template_module_name = os.path.basename(the_alias)
                     self.log.warning("Template alias {!r} -> {!r}".format(
                         tmpl_trunk, the_alias))
                     tmpl_trunk = the_alias

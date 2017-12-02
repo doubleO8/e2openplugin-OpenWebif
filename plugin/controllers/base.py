@@ -169,19 +169,20 @@ class BaseController(resource.Resource):
                 request.finish()
             else:
                 try:
-                    (module, module_path) = self._module_override.pop()
+                    (template_trunk_relpath,
+                     template_module_name) = self._module_override.pop()
                 except IndexError:
-                    module = request.path
-                    module_path = self.path
-                    if module[-1] == "/":
-                        module += "index"
-                    elif module[-5:] != "index" and self.path == "index":
-                        module += "/index"
-                    module = module.strip("/")
-                    module = module.replace(".", "")
+                    template_trunk_relpath = request.path
+                    template_module_name = self.path
+                    if template_trunk_relpath[-1] == "/":
+                        template_trunk_relpath += "index"
+                    elif template_trunk_relpath[-5:] != "index" and self.path == "index":
+                        template_trunk_relpath += "/index"
+                    template_trunk_relpath = template_trunk_relpath.strip("/")
+                    template_trunk_relpath = template_trunk_relpath.replace(".", "")
 
                 # out => content
-                out = self.loadTemplate(module, module_path, data)
+                out = self.loadTemplate(template_trunk_relpath, template_module_name, data)
                 if out is None:
                     self.log.error("Template not found for page {!r}".format(
                         request.uri))

@@ -27,7 +27,7 @@ The requested URL was not found on this server.</body></html>
 """
 
 TEMPLATE_ALIASES = {
-    "epgservicenow": "epgbouquet",
+    "web/epgservicenow": "web/epgbouquet",
     "timeraddbyeventid": "loadepg",
     "mediaplayerplay": "addlocation",
     "streamsubservices": "getservices",

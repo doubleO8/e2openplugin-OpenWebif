@@ -88,7 +88,7 @@ class RootController(BaseController):
         Args:
             request (twisted.web.server.Request): HTTP request object
         """
-        self._push_module_template("main")
+        # self._push_module_template("main")
 
     def P_index(self, request):
         """

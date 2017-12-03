@@ -170,7 +170,7 @@ class WebController(BaseController):
 
     def P_about(self, request):
         """
-        Request handler for the `/web/about` endpoint.
+        Request handler for the `about` endpoint.
 
         .. seealso::
 
@@ -711,19 +711,67 @@ class WebController(BaseController):
             timeout)
 
     def P_messageanswer(self, request):
+        """
+        Request handler for the `messageanswer` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#messageanswer
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return getMessageAnswer()
 
     def P_movielist(self, request):
+        """
+        Request handler for the `movielist` endpoint.
+        Retrieve list of movie items.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#movielist
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return getMovieList(request.args)
 
-    def P_fullmovielist(self, request):
-        return getAllMovies()
-
     def P_movielisthtml(self, request):
+        """
+        Request handler for the `movielisthtml` endpoint.
+        Retrieve list of movie items in HTML format.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#movielist.html
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         request.setHeader("content-type", "text/html")
         return getMovieList(request.args)
 
     def P_movielistm3u(self, request):
+        """
+        Request handler for the `movielistm3u` endpoint.
+        Retrieve list of movie items in M3U format.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#movielist.m3u
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         request.setHeader('Content-Type', 'application/x-mpegurl')
         movielist = getMovieList(request.args)
         movielist["host"] = "%s://%s:%s" % (
@@ -732,13 +780,54 @@ class WebController(BaseController):
         return movielist
 
     def P_movielistrss(self, request):
+        """
+        Request handler for the `movielistrss` endpoint.
+        Retrieve list of movie items in RSS format.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#movielist.rss
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         movielist = getMovieList(request.args)
         movielist["host"] = "%s://%s:%s" % (
             whoami(request)['proto'], request.getRequestHostname(),
             whoami(request)['port'])
         return movielist
 
+    def P_fullmovielist(self, request):
+        """
+        Request handler for the `movielist` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
+        return getAllMovies()
+
     def P_moviedelete(self, request):
+        """
+        Request handler for the `moviedelete` endpoint.
+        Delete movie file.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#moviedelete
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["sRef"])
         if res:
             return res
@@ -748,6 +837,19 @@ class WebController(BaseController):
         return removeMovie(self.session, request.args["sRef"][0], force)
 
     def P_moviemove(self, request):
+        """
+        Request handler for the `moviemove` endpoint.
+        Move movie file.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#moviemove
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["sRef"])
         if res:
             return res
@@ -761,6 +863,19 @@ class WebController(BaseController):
             request.args["dirname"][0])
 
     def P_movierename(self, request):
+        """
+        Request handler for the `movierename` endpoint.
+        Rename movie file.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#movierename
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["sRef"])
         if res:
             return res
@@ -774,6 +889,19 @@ class WebController(BaseController):
             request.args["newname"][0])
 
     def P_movietags(self, request):
+        """
+        Request handler for the `movietags` endpoint.
+        Add/Remove tags to movie file.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#movietags
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         _add = None
         _del = None
         _sref = None
@@ -785,12 +913,40 @@ class WebController(BaseController):
             _sref = request.args["sref"][0]
         return getMovieTags(_sref, _add, _del)
 
-    # a duplicate api ??
     def P_gettags(self, request):
+        """
+        Request handler for the `gettags` endpoint.
+        Get tags of movie file (?).
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#gettags
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return getMovieTags()
 
     # VPS Plugin
     def vpsparams(self, request):
+        """
+        Request handler for the `vpsparams` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        .. deprecated:: 0.46
+
+            To be dropped.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         vpsplugin_enabled = None
         if "vpsplugin_enabled" in request.args:
             vpsplugin_enabled = True if request.args["vpsplugin_enabled"][
@@ -820,12 +976,57 @@ class WebController(BaseController):
             "vpsplugin_enabled": vpsplugin_enabled
         }
 
+    def P_vpschannels(self, request):
+        """
+        Request handler for the `vpschannels` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        .. deprecated:: 0.46
+
+            To be dropped.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
+        return getVPSChannels(self.session)
+
     def P_timerlist(self, request):
+        """
+        Request handler for the `timerlist` endpoint.
+        Retrieve list of timers.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#timerlist
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         ret = getTimers(self.session)
         ret["locations"] = comp_config.movielist.videodirs.value
         return ret
 
     def P_timeradd(self, request):
+        """
+        Request handler for the `timeradd` endpoint.
+        Add timer
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#timeradd
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(
             request, ["sRef", "begin", "end", "name"])
         if res:
@@ -899,6 +1100,19 @@ class WebController(BaseController):
         )
 
     def P_timeraddbyeventid(self, request):
+        """
+        Request handler for the `timeraddbyeventid` endpoint.
+        Add timer by event ID
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#timeraddbyeventid
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["sRef", "eventid"])
         if res:
             return res
@@ -940,6 +1154,19 @@ class WebController(BaseController):
         )
 
     def P_timerchange(self, request):
+        """
+        Request handler for the `timerchange` endpoint.
+        Change timer
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#timerchange
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(
             request, ["sRef", "begin", "end", "name", "channelOld", "beginOld",
                       "endOld"])
@@ -1017,6 +1244,18 @@ class WebController(BaseController):
         )
 
     def P_timertogglestatus(self, request):
+        """
+        Request handler for the `timertogglestatus` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["sRef", "begin", "end"])
         if res:
             return res
@@ -1040,6 +1279,19 @@ class WebController(BaseController):
             self.session, request.args["sRef"][0], begin, end)
 
     def P_timerdelete(self, request):
+        """
+        Request handler for the `timerdelete` endpoint.
+        Delete timer
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#timerdelete
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["sRef", "begin", "end"])
         if res:
             return res
@@ -1063,24 +1315,81 @@ class WebController(BaseController):
         return removeTimer(self.session, request.args["sRef"][0], begin, end)
 
     def P_timercleanup(self, request):
+        """
+        Request handler for the `timercleanup` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#timercleanup
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return cleanupTimer(self.session)
 
     def P_timerlistwrite(self, request):
+        """
+        Request handler for the `timerlistwrite` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#timerlistwrite
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return writeTimerList(self.session)
 
-    def P_vpschannels(self, request):
-        return getVPSChannels(self.session)
-
     def P_recordnow(self, request):
+        """
+        Request handler for the `recordnow` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#recordnow
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         infinite = False
         if set(request.args.keys()) & {"undefinitely", "infinite"}:
             infinite = True
         return recordNow(self.session, infinite)
 
     def P_currenttime(self, request):
+        """
+        Request handler for the `currenttime` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#currenttime
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return getCurrentTime()
 
     def P_deviceinfo(self, request):
+        """
+        Request handler for the `deviceinfo` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#deviceinfo
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return getInfo(session=self.session, need_fullinfo=True)
 
     def P_getipv6(self, request):
@@ -1365,24 +1674,84 @@ class WebController(BaseController):
         }
 
     def P_collapsemenu(self, request):
+        """
+        Request handler for the `collapsemenu` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        .. deprecated:: 0.46
+
+            To be dropped.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["name"])
         if res:
             return res
         return addCollapsedMenu(request.args["name"][0])
 
     def P_expandmenu(self, request):
+        """
+        Request handler for the `expandmenu` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        .. deprecated:: 0.46
+
+            To be dropped.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["name"])
         if res:
             return res
         return removeCollapsedMenu(request.args["name"][0])
 
     def P_zapstream(self, request):
+        """
+        Request handler for the `zapstream` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["checked"])
         if res:
             return res
         return setZapStream(request.args["checked"][0] == "true")
 
     def P_showchannelpicon(self, request):
+        """
+        Request handler for the `showchannelpicon` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        .. deprecated:: 0.46
+
+            To be dropped.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["checked"])
         if res:
             return res
@@ -1586,6 +1955,18 @@ class WebController(BaseController):
         return getBouquets(stype)
 
     def P_epgmultigz(self, request):
+        """
+        Request handler for the `epgmultigz` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return self.P_epgmulti(request)
 
     def P_getsatellites(self, request):
@@ -1595,12 +1976,48 @@ class WebController(BaseController):
         return getSatellites(stype)
 
     def P_saveepg(self, request):
+        """
+        Request handler for the `saveepg` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return saveEpg()
 
     def P_loadepg(self, request):
+        """
+        Request handler for the `loadepg` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return loadEpg()
 
     def P_getsubtitles(self, request):
+        """
+        Request handler for the `getsubtitles` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         service = self.session.nav.getCurrentService()
         ret = {"subtitlelist": [], "result": False}
         subtitle = service and service.subtitle()
@@ -1619,6 +2036,22 @@ class WebController(BaseController):
         return ret
 
     def P_settheme(self, request):
+        """
+        Request handler for the `settheme` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        .. deprecated:: 0.46
+
+            To be dropped.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         if "theme" in request.args.keys():
             theme = request.args["theme"][0]
             comp_config.OpenWebif.webcache.theme.value = theme
@@ -1626,6 +2059,22 @@ class WebController(BaseController):
         return {}
 
     def P_setmoviesort(self, request):
+        """
+        Request handler for the `setmoviesort` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        .. deprecated:: 0.46
+
+            To be dropped.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         if "nsort" in request.args.keys():
             nsort = request.args["nsort"][0]
             comp_config.OpenWebif.webcache.moviesort.value = nsort
@@ -1633,6 +2082,22 @@ class WebController(BaseController):
         return {}
 
     def P_setmepgmode(self, request):
+        """
+        Request handler for the `setepgmode` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        .. deprecated:: 0.46
+
+            To be dropped.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         if "mode" in request.args.keys():
             try:
                 comp_config.OpenWebif.webcache.mepgmode.value = int(
@@ -1643,6 +2108,18 @@ class WebController(BaseController):
         return {}
 
     def P_config(self, request):
+        """
+        Request handler for the `config` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         if "section" in request.args.keys():
             return getConfigs(request.args["section"][0])
         else:

@@ -837,16 +837,17 @@ i.fa-mobile {font-size: 22px;}
 @import "original-small-screen";
 
 div.volume_image {
+  margin-left:5px;
   width: 24px;
   height: 24px;
-  background-color: #000000;
-  background-image: url('/images/volume_mute.png');
-  border: 1px solid black;
+  // background-color: #000000;
+  background-image: url('/images/volume.png');
+  // border: 1px solid black;
   background-repeat: no-repeat;
   background-size: contain;
 }
 
 div.volume_mute {
   background-image: url('/images/volume_mute.png');
-  background-color: #aa0000;
+  // background-color: #aa0000;
 }

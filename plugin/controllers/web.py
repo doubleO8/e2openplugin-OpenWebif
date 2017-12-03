@@ -455,6 +455,19 @@ class WebController(BaseController):
         return getCurrentLocation()
 
     def P_getallservices(self, request):
+        """
+        Request handler for the `getallservices` endpoint.
+        Retrieve list of services in bouquets.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#getallservices
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         kind = "tv"
 
         if "type" in request.args.keys():
@@ -473,17 +486,45 @@ class WebController(BaseController):
         return bouquets
 
     def P_getservices(self, request):
+        """
+        Request handler for the `getservices` endpoint.
+        Retrieve list of bouquets.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#getservices
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         if "sRef" in request.args.keys():
             sRef = request.args["sRef"][0]
         else:
             sRef = ""
+
         if "hidden" in request.args.keys():
             hidden = request.args["hidden"][0] == "1"
         else:
             hidden = False
+
         return getServices(sRef, True, hidden)
 
     def P_servicesm3u(self, request):
+        """
+        Request handler for the `servicesm3u` endpoint.
+        Retrieve list of bouquets(?) in M3U format.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#services.m3u
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         if "bRef" in request.args.keys():
             bRef = request.args["bRef"][0]
         else:
@@ -504,12 +545,49 @@ class WebController(BaseController):
         return services
 
     def P_subservices(self, request):
+        """
+        Request handler for the `subservices` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#subservices
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return getSubServices(self.session)
 
     def P_parentcontrollist(self, request):
+        """
+        Request handler for the `parentcontrollist` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#parentcontrollist
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return getParentalControlList()
 
     def P_servicelistplayable(self, request):
+        """
+        Request handler for the `servicelistplayable` endpoint.
+        Retrieve list of 'playable' bouquets.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#servicelistplayable
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         sRef = ""
         if "sRef" in request.args.keys():
             sRef = request.args["sRef"][0]
@@ -521,6 +599,19 @@ class WebController(BaseController):
         return getPlayableServices(sRef, sRefPlaying)
 
     def P_serviceplayable(self, request):
+        """
+        Request handler for the `serviceplayable` endpoint.
+        Check if referenced service is 'playable'.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#serviceplayable
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         sRef = ""
         if "sRef" in request.args.keys():
             sRef = request.args["sRef"][0]
@@ -532,6 +623,19 @@ class WebController(BaseController):
         return getPlayableService(sRef, sRefPlaying)
 
     def P_addlocation(self, request):
+        """
+        Request handler for the `addlocation` endpoint.
+        Add a path to the list of paths where video files are stored.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#addlocation
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["dirname"])
         if res:
             return res
@@ -543,6 +647,19 @@ class WebController(BaseController):
         return addLocation(request.args["dirname"][0], create)
 
     def P_removelocation(self, request):
+        """
+        Request handler for the `removelocation` endpoint.
+        Remove a path from the list of paths where video files are stored.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#removelocation
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["dirname"])
         if res:
             return res
@@ -554,6 +671,19 @@ class WebController(BaseController):
         return removeLocation(request.args["dirname"][0], remove)
 
     def P_message(self, request):
+        """
+        Request handler for the `message` endpoint.
+        Display a message on the screen attached to enigma2 device.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#message
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["text", "type"])
         if res:
             return res

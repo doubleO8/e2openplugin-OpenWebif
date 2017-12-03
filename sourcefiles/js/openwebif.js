@@ -411,7 +411,7 @@ function load_maincontent_spin(url) {
 }
 
 function webapi_execute(url, callback) {
-	var jqxhr = $.ajax({ url: url, cache: false, async: false}).done(function() { 
+	var jqxhr = $.ajax({ url: url, cache: false}).done(function() {
 	if (typeof callback !== 'undefined') {
 			callback();
 		}
@@ -501,7 +501,6 @@ function TimerConflict(conflicts,sRef, eventId, justplay)
 
 function webapi_execute_result(url, callback) {
 	$.ajax({
-		async: false,
 		url: url,
 		cache : false,
 		success: function(data) {
@@ -673,7 +672,6 @@ function cleanupTimer() {
 function webapi_execute_movie(url,callback)
 {
 	$.ajax({
-		async: false,
 		url: url,
 		cache : false,
 		success: function(data) {
@@ -983,7 +981,7 @@ function toggleFullRemote() {
 }
 
 function saveConfig(key, value) {
-	$.ajax({ url: "/api/saveconfig?key=" + escape(key) + "&value=" + escape(value), cache: false, async: true, type: "POST"}).done(function() { 
+	$.ajax({ url: "/api/saveconfig?key=" + escape(key) + "&value=" + escape(value), cache: false, type: "POST"}).done(function() {
 		if (key == "config.usage.setup_level") {
 			// TODO: refresh the menu box with new sections list
 			$("#content_container").load(lastcontenturl);

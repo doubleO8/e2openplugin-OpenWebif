@@ -280,6 +280,7 @@ class WebController(BaseController):
     def P_zap(self, request):
         """
         Request handler for the `/zap` endpoint.
+        Zap to requested service_reference.
 
         .. seealso::
 
@@ -303,6 +304,19 @@ class WebController(BaseController):
         return zapService(self.session, request.args["sRef"][0])
 
     def P_remotecontrol(self, request):
+        """
+        Request handler for the `remotecontrol` endpoint.
+        Send remote control codes.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#remotecontrol
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["command"])
         if res:
             return res
@@ -326,6 +340,19 @@ class WebController(BaseController):
         return remoteControl(key_id, pressed_type, rcu)
 
     def P_powerstate(self, request):
+        """
+        Request handler for the `powerstate` endpoint.
+        Get/set power state of enigma2 device.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#powerstate
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         if "shift" in request.args.keys():
             self.P_set_powerup_without_waking_tv(request)
         if "newstate" in request.args.keys():
@@ -333,6 +360,23 @@ class WebController(BaseController):
         return getStandbyState(self.session)
 
     def P_supports_powerup_without_waking_tv(self, request):
+        """
+        Request handler for the `supports_powerup_without_waking_tv` endpoint.
+        Check if 'powerup without waking TV' is available.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        .. deprecated:: 0.46
+
+            To be dropped.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         try:
             # returns 'True' if the image supports the function "Power on
             # without TV":
@@ -348,6 +392,23 @@ class WebController(BaseController):
             return False
 
     def P_set_powerup_without_waking_tv(self, request):
+        """
+        Request handler for the `set_powerup_without_waking_tv` endpoint.
+        Mark 'powerup without waking TV' being available.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        .. deprecated:: 0.46
+
+            To be dropped.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         if self.P_supports_powerup_without_waking_tv(request):
             try:
                 # write "True" to file so that the box will power on ONCE
@@ -362,9 +423,35 @@ class WebController(BaseController):
             return False
 
     def P_getlocations(self, request):
+        """
+        Request handler for the `getlocations` endpoint.
+        Retrieve paths where video files are stored.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#getlocations
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return getLocations()
 
     def P_getcurrlocation(self, request):
+        """
+        Request handler for the `getcurrlocation` endpoint.
+        Get currently selected path where video files are to be stored.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#getcurrlocation
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return getCurrentLocation()
 
     def P_getallservices(self, request):

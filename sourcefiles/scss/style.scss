@@ -121,7 +121,6 @@ FIXME : complete reorg header
 	height: 24px;
 	width: 80%;
 	margin-left: 5px;
-	margin-top: 18px;
 	overflow:hidden;
 }
 
@@ -854,9 +853,13 @@ div.volume_mute {
 }
 
 div.standby_image {
-  width: 28px;
-  height: 15px;
+  width: 56px;
   background-image: url('/images/ico_on.png');
+}
+
+#recording-indicator,
+div.standby_image {
+  height: 30px;
 }
 
 div.in_standby {
@@ -864,10 +867,13 @@ div.in_standby {
 }
 
 #recording-indicator {
-  border: 1px solid red;
   div.led {
     visibility: hidden;
   }
+}
+
+#standby-indicator {
+  float: right;
 }
 
 #recording-indicator.is_recording {

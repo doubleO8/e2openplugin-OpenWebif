@@ -12,6 +12,7 @@ import os
 from time import mktime, localtime
 
 from Components.config import config as comp_config
+from Plugins.Extensions.OpenWebif.__init__ import _
 
 from models.services import getBouquets, getChannels, getSatellites, \
     getProviders, getEventDesc, getChannelEpg, getSearchEpg, \
@@ -37,6 +38,22 @@ class AjaxController(BaseController):
 
     def __init__(self, session, path=""):
         BaseController.__init__(self, path=path, session=session)
+
+    def testMandatoryArguments(self, request, keys):
+        for key in keys:
+            if key not in request.args.keys():
+                return {
+                    "result": False,
+                    "message": _("Missing mandatory parameter '%s'") % key
+                }
+
+            if len(request.args[key][0]) == 0:
+                return {
+                    "result": False,
+                    "message": _("The parameter '%s' can't be empty") % key
+                }
+
+        return None
 
     def P_current(self, request):
         return getCurrentFullInfo(self.session)

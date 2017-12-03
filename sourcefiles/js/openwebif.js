@@ -61,13 +61,13 @@ try {
 		}
 	});
 	
-	$('#volimage').click(function(){
+	$('#volume-indicator').click(function(){
 		if (mutestatus === 0) {
 			mutestatus = 1;
-			$("#volimage").attr("src","/images/volume_mute.png");
+			$("#volume-indicator").toggleClass("volume_mute", true);
 		} else  {
 			mutestatus = 0;
-			$("#volimage").attr("src","/images/volume.png");
+			$("#volume-indicator").toggleClass("volume_mute", false);
 		}
 		$.ajax("web/vol?set=mute");
 	});
@@ -86,9 +86,9 @@ try {
 		},
 		stop: function( event, ui ) {	
 			if ( ui.value == 0) {
-				$("#volimage").attr("src","/images/volume_mute.png");
+				$("#volume-indicator").toggleClass("volume_mute", true);
 			} else  {
-				$("#volimage").attr("src","/images/volume.png");
+				$("#volume-indicator").toggleClass("volume_mute", false);
 			} 
 			var jqxhr = $.ajax( "web/vol?set=set" + ui.value );
 			return false;
@@ -795,10 +795,10 @@ function getStatusInfo() {
 		// Set Mute Status
 		if (statusinfo['muted'] == true) {
 			mutestatus = 1;
-			$("#volimage").attr("src","/images/volume_mute.png");
+			$("#volume-indicator").toggleClass("volume_mute", true);
 		} else {
 			mutestatus = 0;
-			$("#volimage").attr("src","/images/volume.png");
+			$("#volume-indicator").toggleClass("volume_mute", false);
 		}
 		
 		setOSD(statusinfo);

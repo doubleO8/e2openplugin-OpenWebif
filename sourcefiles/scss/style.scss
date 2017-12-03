@@ -835,3 +835,18 @@ i.fa-mobile {font-size: 22px;}
 #tbl1 .border{border-right: 1px solid;}
 
 @import "original-small-screen";
+
+div.volume_image {
+  width: 24px;
+  height: 24px;
+  background-color: #000000;
+  background-image: url('/images/volume_mute.png');
+  border: 1px solid black;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+div.volume_mute {
+  background-image: url('/images/volume_mute.png');
+  background-color: #aa0000;
+}

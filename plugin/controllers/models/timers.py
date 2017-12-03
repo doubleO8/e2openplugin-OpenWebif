@@ -39,12 +39,12 @@ def getTimers(session):
 
         try:
             filename = timer.Filename
-        except Exception as e:
+        except Exception:
             pass
 
         try:
             nextactivation = timer.next_activation
-        except Exception as e:
+        except Exception:
             pass
 
         disabled = 0
@@ -313,8 +313,7 @@ def editTimer(
     rt = session.nav.RecordTimer
     for timer in rt.timer_list + rt.processed_timers:
         needed_ref = ':'.join(
-            timer.service_ref.ref.toString().split(':')[
-                :11]) == channelOld_str
+            timer.service_ref.ref.toString().split(':')[:11]) == channelOld_str
         if needed_ref and int(
                 timer.begin) == beginOld and int(
                 timer.end) == endOld:
@@ -325,7 +324,7 @@ def editTimer(
             timer.name = name
             timer.description = description
             # TODO : EIT
-            #timer.eit = eit
+            # timer.eit = eit
             timer.disabled = disabled
             timer.justplay = justplay
             timer.afterEvent = afterEvent
@@ -390,10 +389,10 @@ def editTimer(
                     "conflicts": conflictinfo
                 }
 
+    msg = _("Could not find timer '%s' with given start and end time!") % name
     return {
         "result": False,
-        "message": _("Could not find timer '%s' with given start and end time!") %
-        name}
+        "message": msg}
 
 
 def removeTimer(session, serviceref, begin, end):
@@ -443,17 +442,21 @@ def toggleTimerStatus(session, serviceref, begin, end):
                         (timer.name)}
             else:
                 if timer.isRunning():
+                    msg = _("The timer '%s' now recorded! Not disabled!") % \
+                          timer.name
                     return {
                         "result": False,
-                        "message": _("The timer '%s' now recorded! Not disabled!") %
-                        (timer.name)}
+                        "message": msg}
                 else:
                     timer.disable()
                     effect = "disabled"
             rt.timeChanged(timer)
+            msg = _("The timer '%s' has been %s successfully") % (timer.name,
+                                                                  effect)
             return {
-                "result": True, "message": _("The timer '%s' has been %s successfully") %
-                (timer.name, effect), "disabled": timer.disabled}
+                "result": True,
+                "message": msg,
+                "disabled": timer.disabled}
 
     return {
         "result": False,
@@ -567,8 +570,7 @@ def tvbrowser(session, request):
 
     afterevent = 3
     if 'afterevent' in request.args:
-        if (request.args['afterevent'][0] == "0") or (
-                request.args['afterevent'][0] == "1") or (request.args['afterevent'][0] == "2"):
+        if request.args['afterevent'][0] in ("0", "1", "2"):
             afterevent = int(request.args['afterevent'][0])
 
     location = preferredTimerPath()
@@ -671,18 +673,22 @@ def tvbrowser(session, request):
 def getSleepTimer(session):
     if hasattr(session.nav, "SleepTimer"):
         try:
+            msg = _("Sleeptimer is disabled")
+            if session.nav.SleepTimer.isActive():
+                msg = _("Sleeptimer is enabled")
             return {
                 "enabled": session.nav.SleepTimer.isActive(),
                 "minutes": session.nav.SleepTimer.getCurrentSleepTime(),
                 "action": config.SleepTimer.action.value,
-                "message": _("Sleeptimer is enabled") if session.nav.SleepTimer.isActive() else _("Sleeptimer is disabled")}
+                "message": msg}
         except Exception:
             return {
                 "result": False,
                 "message": _("SleepTimer error")
             }
     else:
-        # use powertimer , this works only if there is one of the standby OR deepstandby entries
+        # use powertimer , this works only if there is one of the standby OR
+        # deepstandby entries
         # todo : do not use repeated entries
         try:
             timer_list = session.nav.PowerTimer.timer_list
@@ -721,8 +727,8 @@ def setSleepTimer(session, time, action, enabled):
             ret = getSleepTimer(session)
             from Screens.Standby import inStandby
             if inStandby is not None:
-                ret["message"] = _(
-                    "ERROR: Cannot set SleepTimer while device is in Standby-Mode")
+                ret["message"] = _("ERROR: Cannot set SleepTimer while device "
+                                   "is in Standby-Mode")
                 return ret
             if not enabled:
                 session.nav.SleepTimer.clear()
@@ -735,7 +741,7 @@ def setSleepTimer(session, time, action, enabled):
             ret = getSleepTimer(session)
             ret["message"] = _("Sleeptimer set to %d minutes") % time
             return ret
-        except Exception as e:
+        except Exception:
             return {
                 "result": False,
                 "message": _("SleepTimer Error")
@@ -816,7 +822,7 @@ def setSleepTimer(session, time, action, enabled):
                     "result": True,
                     "message": _("Sleeptimer has been disabled")
                 }
-        except Exception as e:
+        except Exception:
             return {
                 "result": False,
                 "message": _("SleepTimer Error")
@@ -845,7 +851,7 @@ def getVPSChannels(session):
                 "result": True,
                 "channels": channels
             }
-        except Exception as e:
+        except Exception:
             return {
                 "result": False,
                 "message": _("Error parsing vps.xml")

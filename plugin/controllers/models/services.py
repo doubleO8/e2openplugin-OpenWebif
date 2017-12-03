@@ -414,11 +414,13 @@ def getChannels(idbouquet, stype):
                     chan['next_begin'] = strftime(
                         "%H:%M", (localtime(nextevent[0][1])))
                     chan['next_end'] = strftime(
-                        "%H:%M", (localtime(nextevent[0][1] + nextevent[0][2])))
+                        "%H:%M", (
+                            localtime(nextevent[0][1] + nextevent[0][2])))
                     chan['next_duration'] = int(nextevent[0][2] / 60)
                     chan['next_ev_id'] = nextevent[0][3]
                     chan['next_idp'] = "nextd" + str(idp)
-                else:  # Have to fudge one in, as rest of OWI code expects it...
+                else:
+                    # Have to fudge one in, as rest of OWI code expects it...
                     chan['next_title'] = filterName("<<absent>>")
                     chan['next_begin'] = chan['now_end']
                     chan['next_end'] = chan['now_end']
@@ -786,11 +788,11 @@ def getSearchEpg(sstr, endtime=None, fulldesc=False, bouquetsonly=False):
         for event in results:
             if bouquetsonly and not event[7] in bsref:
                 continue
+            day_val = strftime("%w", (localtime(event[1])))
+            date_val = strftime("%d.%m.%Y", (localtime(event[1])))
             ev = dict()
             ev['id'] = event[0]
-            ev['date'] = "%s %s" % (tstrings[(
-                "day_" + strftime("%w", (localtime(event[1]))))],
-                                    strftime("%d.%m.%Y", (localtime(event[1]))))
+            ev['date'] = "%s %s" % (tstrings[("day_" + day_val)], date_val)
             ev['begin_timestamp'] = event[1]
             ev['begin'] = strftime("%H:%M", (localtime(event[1])))
             ev['duration_sec'] = event[2]
@@ -816,20 +818,18 @@ def getSearchEpg(sstr, endtime=None, fulldesc=False, bouquetsonly=False):
 def getSearchSimilarEpg(ref, eventid):
     ref = unquote(ref)
     ret = []
-    ev = {}
     epgcache = eEPGCache.getInstance()
     events = epgcache.search(
-        ('IBDTSENR', 128, eEPGCache.SIMILAR_BROADCASTINGS_SEARCH, ref, eventid))
+        ('IBDTSENR', 128, eEPGCache.SIMILAR_BROADCASTINGS_SEARCH,
+         ref, eventid))
+
     if events is not None:
-        # TODO : discuss #677
-        # events.sort(key = lambda x: (x[1],x[6])) # sort by date,sname
-        # events.sort(key = lambda x: x[1]) # sort by date
         for event in events:
+            day_val = strftime("%w", (localtime(event[1])))
+            date_val = strftime("%d.%m.%Y", (localtime(event[1])))
             ev = {}
             ev['id'] = event[0]
-            ev['date'] = "%s %s" % (tstrings[(
-                "day_" + strftime("%w", (localtime(event[1]))))],
-                                    strftime("%d.%m.%Y", (localtime(event[1]))))
+            ev['date'] = "%s %s" % (tstrings[("day_" + day_val)], date_val)
             ev['begin_timestamp'] = event[1]
             ev['begin'] = strftime("%H:%M", (localtime(event[1])))
             ev['duration_sec'] = event[2]
@@ -896,8 +896,8 @@ def getMultiEpg(self, ref, begintime=-1, endtime=None, Mode=1):
             timerlist[str(timer.service_ref)].append(timer)
 
         if begintime == -1:
-            # If no start time is requested, use current time as start time and extend
-            # show all events until 6:00 next day
+            # If no start time is requested, use current time as start time
+            # and extend show all events until 6:00 next day
             bt = localtime()
             offset = mktime(
                 (bt.tm_year, bt.tm_mon, bt.tm_mday, bt.tm_hour - bt.tm_hour %

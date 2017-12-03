@@ -260,20 +260,17 @@ def getAllInfo():
         f = open("/proc/stb/info/hwmodel", 'r')
         procmodel = f.readline().strip()
         f.close()
-        if (procmodel.startswith("optimuss")
-            or procmodel.startswith("pingulux")):
+
+        if (procmodel.startswith("optimuss") or
+                procmodel.startswith("pingulux")):
             brand = "Edision"
             model = procmodel.replace(
-                "optimmuss",
-                "Optimuss ").replace(
-                "plus",
-                " Plus").replace(
-                " os",
-                " OS")
+                "optimmuss", "Optimuss ").replace(
+                "plus", " Plus").replace(" os", " OS")
         elif (procmodel.startswith("fusion") or
-                  procmodel.startswith("purehd") or
-                  procmodel.startswith("revo4k") or
-                  procmodel.startswith("galaxy4k")):
+              procmodel.startswith("purehd") or
+              procmodel.startswith("revo4k") or
+              procmodel.startswith("galaxy4k")):
             brand = "Xsarius"
             if procmodel == "fusionhd":
                 model = procmodel.replace("fusionhd", "Fusion HD")
@@ -641,8 +638,9 @@ def getAllInfo():
     elif procmodel.startswith("xpeedlx"):
         remote = "xpeedlx"
     elif procmodel in (
-    "adb2850", "adb2849", "bska", "bsla", "bxzb", "bzzb", "esi88", "uhd88",
-    "dsi87", "arivalink200"):
+            "adb2850", "adb2849", "bska", "bsla", "bxzb", "bzzb", "esi88",
+            "uhd88",
+            "dsi87", "arivalink200"):
         remote = "nbox"
     elif procmodel in ("hd1100", "hd1200", "hd1265", "hd1400", "hd51",
                        "hd11", "hd500c", "hd530c"):
@@ -650,7 +648,7 @@ def getAllInfo():
     elif procmodel == "hd2400":
         remote = "hd2400"
     elif procmodel in (
-    "spycat", "spycatmini", "spycatminiplus", "spycat4kmini"):
+            "spycat", "spycatmini", "spycatminiplus", "spycat4kmini"):
         remote = "spycat"
     elif procmodel.startswith("ixuss"):
         remote = procmodel.replace(" ", "")
@@ -659,8 +657,9 @@ def getAllInfo():
     elif procmodel == "dm8000" and orgdream:
         remote = "dmm1"
     elif procmodel in (
-    "dm7080", "dm7020hd", "dm7020hdv2", "dm800sev2", "dm500hdv2", "dm520",
-    "dm820", "dm900"):
+            "dm7080", "dm7020hd", "dm7020hdv2", "dm800sev2", "dm500hdv2",
+            "dm520",
+            "dm820", "dm900"):
         remote = "dmm2"
     elif procmodel == "wetekplay":
         remote = procmodel
@@ -775,8 +774,8 @@ def getAllInfo():
             except BaseException:  # nosec
                 pass
 
-        if (distro == "unknown" and brand ==
-            "Vu+" and os.path.isfile("/etc/version")):
+        if (distro == "unknown" and brand == "Vu+" and
+                os.path.isfile("/etc/version")):
             # Since OE-A uses boxbranding and bh or vti can be detected, there
             # isn't much else left for Vu+ boxes
             distro = "Vu+ original"
@@ -800,12 +799,12 @@ def getAllInfo():
                 first_line = os.popen(line_cmd).readline().strip()
                 if first_line:
                     break
-            except:
+            except Exception:
                 pass
 
     try:
         info['driverdate'] = first_line.split()[2]
-    except:
+    except Exception:
         info['driverdate'] = 'unknown'
 
     info['oever'] = oever

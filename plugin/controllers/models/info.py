@@ -423,11 +423,10 @@ def getInfo(session=None, need_fullinfo=False):
             "7425",
             "7429"):
         friendlychipsettext = "Broadcom " + friendlychipsettext
+
     if not (info['fp_version'] is None or info['fp_version'] == 0):
-        friendlychipsetdescription = friendlychipsetdescription + \
-                                     " (" + _("Frontprocessor Version") + ")"
-        friendlychipsettext = friendlychipsettext + \
-                              " (" + str(info['fp_version']) + ")"
+        friendlychipsetdescription += " (" + _("Frontprocessor Version") + ")"
+        friendlychipsettext += " (" + str(info['fp_version']) + ")"
 
     info['friendlychipsetdescription'] = friendlychipsetdescription
     info['friendlychipsettext'] = friendlychipsettext
@@ -525,9 +524,10 @@ def getInfo(session=None, need_fullinfo=False):
             method = "autofs"
             for line in file(autofs).readlines():
                 if not line.startswith('#'):
-                    # Replace escaped spaces that can appear inside credentials with underscores
-                    # Not elegant but we wouldn't want to expose credentials on
-                    # the OWIF anyways
+                    # Replace escaped spaces that can appear inside
+                    # credentials with underscores
+                    # Not elegant but we wouldn't want to expose credentials
+                    # on the OWIF anyways
                     tmpline = line.replace("\ ", "_")
                     tmp = tmpline.split()
                     if not len(tmp) == 3:
@@ -610,14 +610,16 @@ def getInfo(session=None, need_fullinfo=False):
     )
 
     if info['model'] in TC_MODELS or info['machinebuild'] in TC_MACHINEBUILD:
-        if os.path.exists(
-                eEnv.resolve(
-                    '${libdir}/enigma2/python/Plugins/SystemPlugins/TransCodingSetup/plugin.pyo')) or os.path.exists(
-            eEnv.resolve(
-                '${libdir}/enigma2/python/Plugins/SystemPlugins/TranscodingSetup/plugin.pyo')) or os.path.exists(
-            eEnv.resolve(
-                '${libdir}/enigma2/python/Plugins/SystemPlugins/MultiTransCodingSetup/plugin.pyo')):
-            info['transcoding'] = True
+        prefixes = (
+            'enigma2/python/Plugins/SystemPlugins/TransCodingSetup',
+            'enigma2/python/Plugins/SystemPlugins/TranscodingSetup',
+            'enigma2/python/Plugins/SystemPlugins/MultiTransCodingSetup'
+        )
+        for pfx in prefixes:
+            path = '/'.join(('${libdir}', pfx, 'plugin.pyo'))
+            if os.path.exists(eEnv.resolve(path)):
+                info['transcoding'] = True
+                break
 
     info['kinopoisk'] = False
     lang = ['ru', 'uk', 'lv', 'lt', 'et']
@@ -641,13 +643,10 @@ def getInfo(session=None, need_fullinfo=False):
                 print "[OpenWebif] -D- streamList count '%d'" % len(streamList)
                 if len(streamList) == 1:
                     from Screens.ChannelSelection import service_types_tv
-                    from enigma import eEPGCache
-                    epgcache = eEPGCache.getInstance()
-                    serviceHandler = eServiceCenter.getInstance()
-                    services = serviceHandler.list(
+                    service_handler = eServiceCenter.getInstance()
+                    services = service_handler.list(
                         eServiceReference(
-                            '%s ORDER BY name' %
-                            (service_types_tv)))
+                            '%s ORDER BY name' % service_types_tv))
                     channels = services and services.getContent("SN", True)
                     s = streamList[0]
                     srefs = s.ref.toString()
@@ -663,11 +662,13 @@ def getInfo(session=None, need_fullinfo=False):
 
                 sname = ''
                 timers = []
-                for timer in NavigationInstance.instance.RecordTimer.timer_list:
+                r_timers = NavigationInstance.instance.RecordTimer.timer_list
+                for timer in r_timers:
                     if timer.isRunning() and not timer.justplay:
+                        sname = timer.service_ref.getServiceName()
                         timers.append(mangle_epg_text(
                             timer.service_ref.getServiceName()))
-                        print "[OpenWebif] -D- timer '%s'" % timer.service_ref.getServiceName()
+                        print "[OpenWebif] -D- timer '%s'" % s_name
                 # only one recording
                 if len(timers) == 1:
                     sname = timers[0]
@@ -683,13 +684,13 @@ def getInfo(session=None, need_fullinfo=False):
                     if frontend_data is not None:
                         cur_info = feinfo.getTransponderData(True)
                         if cur_info:
-                            ti_nr = info['tuners'][frontend_data['tuner_number']]
+                            tno = info['tuners'][frontend_data['tuner_number']]
                             label = getOrbitalText(cur_info) + ' / ' + sname
-                            ti_nr['rec'] = mangle_epg_text(label)
+                            tno['rec'] = mangle_epg_text(label)
 
             service = session.nav.getCurrentService()
             if service is not None:
-                service_reference = session.nav.getCurrentlyPlayingServiceReference()
+                s_reference = session.nav.getCurrentlyPlayingServiceReference()
                 service_information = service.info()
                 sname = service_information.getName()
                 feinfo = service.frontendInfo()
@@ -698,12 +699,12 @@ def getInfo(session=None, need_fullinfo=False):
                 if frontend_data is not None:
                     cur_info = feinfo.getTransponderData(True)
                     if cur_info:
-                        ti_nr = info['tuners'][frontend_data['tuner_number']]
+                        tno = info['tuners'][frontend_data['tuner_number']]
                         label = getOrbitalText(cur_info) + ' / ' + sname
-                        ti_nr['live'] = mangle_epg_text(label)
-                        ti_nr['live_meta'] = {
+                        tno['live'] = mangle_epg_text(label)
+                        tno['live_meta'] = {
                             'service_name': mangle_epg_text(sname),
-                            'service_reference': service_reference.toString()
+                            'service_reference': s_reference.toString()
                         }
 
         except Exception as error:
@@ -825,10 +826,10 @@ def getStatusInfo(self):
     if event is not None:
         # (begin, end, name, description, eit)
         curEvent = parseEvent(event)
-        begin_timestamp = int(
-            curEvent[0]) + (config.recording.margin_before.value * 60)
-        end_timestamp = int(curEvent[1]) - \
-                        (config.recording.margin_after.value * 60)
+        margin_before = config.recording.margin_before.value
+        margin_after = config.recording.margin_after.value
+        begin_timestamp = int(curEvent[0]) + (margin_before * 60)
+        end_timestamp = int(curEvent[1]) - (margin_after * 60)
         statusinfo['currservice_name'] = mangle_epg_text(curEvent[2])
         statusinfo['currservice_serviceref'] = serviceref_string
         statusinfo['currservice_begin'] = time.strftime(
@@ -880,8 +881,9 @@ def getStatusInfo(self):
         for timer in NavigationInstance.instance.RecordTimer.timer_list:
             if timer.state == TimerEntry.StateRunning:
                 if not timer.justplay:
-                    statusinfo['Recording_list'] += mangle_epg_text(
-                        timer.service_ref.getServiceName()) + ": " + timer.name + "\n"
+                    s_name = timer.service_ref.getServiceName()
+                    label = mangle_epg_text(s_name) + ": " + timer.name + "\n"
+                    statusinfo['Recording_list'] += label
 
     if statusinfo['state']['recording']:
         statusinfo['isRecording'] = "true"

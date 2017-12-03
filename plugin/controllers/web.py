@@ -455,17 +455,21 @@ class WebController(BaseController):
         return getCurrentLocation()
 
     def P_getallservices(self, request):
-        type = "tv"
+        kind = "tv"
+
         if "type" in request.args.keys():
-            type = "radio"
-        bouquets = getAllServices(type)
+            kind = "radio"
+        bouquets = getAllServices(kind)
+
         if "renameserviceforxmbc" in request.args.keys():
             for bouquet in bouquets["services"]:
                 for service in bouquet["subservices"]:
                     if not int(service["servicereference"].split(":")[1]) & 64:
-                        service["servicename"] = "%d - %s" % (
-                            service["pos"], service["servicename"])
+                        sname = "%d - %s" % (service["pos"],
+                                             service["servicename"])
+                        service["servicename"] = sname
             return bouquets
+
         return bouquets
 
     def P_getservices(self, request):

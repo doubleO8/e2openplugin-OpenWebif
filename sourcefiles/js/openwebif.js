@@ -814,7 +814,7 @@ function getStatusInfo() {
 		if (statusinfo['isRecording'] == 'true') {
 			status = "<a href='#' onClick='load_maincontent(\"ajax/timers\"); return false;'><div title='" + tstr_rec_status + statusinfo['Recording_list'] + "' class='led-box'><div class='led-red'></div></div></a>";
 		}
-		
+		/*
 		//status += "<div class='pwrbtncontout'><div class='pwrbtncont' title='" + tit + "'><label class='label pwrbtn'><input type='checkbox' "+sb+" id='pwrbtn' onchange='toggleStandby();return true;' /><div class='pwrbtn-control'></div></label></div></div>";
 		
 		status += "<a href='#' onClick='toggleStandby();return false'><img src='../images/ico_";
@@ -824,8 +824,15 @@ function getStatusInfo() {
 			status += "on.png' title='" + tstr_standby + "' alt='" + tstr_on;
 		}
 		status += "' width='56' height='29' /></a>";
-		
+		*/
+		status += '<div id="standby-indicator" class="standby_image">&nbsp;</div>';
 		$("#osd_status").html(status);
+		var standby_indicator = $('#standby-indicator');
+		standby_indicator.toggleClass("in_standby", statusinfo.state['standby']);
+		standby_indicator.on("click", function(event) {
+			event.preventDefault();
+			toggleStandby();
+		});
 	} , error: function() {
 		$("#osd, #osd_bottom").html("");
 	}

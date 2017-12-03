@@ -810,29 +810,37 @@ function getStatusInfo() {
 			tit = tstr_on;
 		}
 
-		var status = "";
-		if (statusinfo['isRecording'] == 'true') {
-			status = "<a href='#' onClick='load_maincontent(\"ajax/timers\"); return false;'><div title='" + tstr_rec_status + statusinfo['Recording_list'] + "' class='led-box'><div class='led-red'></div></div></a>";
+		var osd_status = $("#osd_status");
+		if (osd_status.length == 0) {
+			$('body').append('<div id="osd_status"></div>');
+			osd_status = $("#osd_status");
 		}
-		/*
-		//status += "<div class='pwrbtncontout'><div class='pwrbtncont' title='" + tit + "'><label class='label pwrbtn'><input type='checkbox' "+sb+" id='pwrbtn' onchange='toggleStandby();return true;' /><div class='pwrbtn-control'></div></label></div></div>";
-		
-		status += "<a href='#' onClick='toggleStandby();return false'><img src='../images/ico_";
-		if (statusinfo['inStandby'] == 'true') {
-			status += "standby.png' title='" + tstr_on + "' alt='" + tstr_standby;
-		} else {
-			status += "on.png' title='" + tstr_standby + "' alt='" + tstr_on;
+
+		var recording_indicator = $("#recording-indicator");
+		if(recording_indicator.length == 0) {
+			osd_status.append('<div id="recording-indicator" class="led-box"><div class="led led-red"></div></div>');
+			recording_indicator = $("#recording-indicator");
 		}
-		status += "' width='56' height='29' /></a>";
-		*/
-		status += '<div id="standby-indicator" class="standby_image">&nbsp;</div>';
-		$("#osd_status").html(status);
+		recording_indicator.off();
+		recording_indicator.toggleClass("is_recording", statusinfo.state['recording']);
+		recording_indicator.on("click", function(event) {
+			event.preventDefault();
+			load_maincontent("ajax/timers");
+		});
+
 		var standby_indicator = $('#standby-indicator');
+		if(standby_indicator.length == 0) {
+			osd_status.append('<div id="standby-indicator" class="standby_image">&nbsp;</div>');
+			standby_indicator = $('#standby-indicator');
+		}
+
+		standby_indicator.off();
 		standby_indicator.toggleClass("in_standby", statusinfo.state['standby']);
 		standby_indicator.on("click", function(event) {
 			event.preventDefault();
 			toggleStandby();
 		});
+
 	} , error: function() {
 		$("#osd, #osd_bottom").html("");
 	}

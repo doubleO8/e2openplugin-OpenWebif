@@ -866,3 +866,16 @@ div.standby_image {
 div.in_standby {
   background-image: url('/images/ico_standby.png');
 }
+
+#recording-indicator {
+  border: 1px solid red;
+  div.led {
+    visibility: hidden;
+  }
+}
+
+#recording-indicator.is_recording {
+  div.led {
+    visibility: visible;
+  }
+}

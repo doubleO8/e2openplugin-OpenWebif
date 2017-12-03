@@ -932,15 +932,7 @@ class WebController(BaseController):
     # VPS Plugin
     def vpsparams(self, request):
         """
-        Request handler for the `vpsparams` endpoint.
-
-        .. note::
-
-            Not available in *Enigma2 WebInterface API*.
-
-        .. deprecated:: 0.46
-
-            To be dropped.
+        VPS related helper function(?)
 
         Args:
             request (twisted.web.server.Request): HTTP request object
@@ -1112,6 +1104,15 @@ class WebController(BaseController):
             request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:get:: /web/timeraddbyeventid
+
+            :query string sRef: service reference
+            :query int eventid: Event ID
+            :query int justplay: *Just Play* indicator
+            :query string dirname: target path(?)
+            :query string tags: tags to add(?)
+            :query int always_zap: always zap first(?)
         """
         res = self.testMandatoryArguments(request, ["sRef", "eventid"])
         if res:
@@ -1166,6 +1167,23 @@ class WebController(BaseController):
             request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:get:: /web/timeraddbyeventid
+
+            :query string sRef: service reference
+            :query int begin: begin timestamp
+            :query int end: end timestamp
+            :query string name: name
+            :query string description: description
+            :query string channelOld: old channel(?)
+            :query int beginOld: old begin timestamp(?)
+            :query int endOld: old end timestamp(?)
+            :query int justplay: *Just Play* indicator
+            :query string dirname: target path(?)
+            :query string tags: tags to add(?)
+            :query int always_zap: always zap first(?)
+            :query int disabled: disabled state
+            :query int afterevent: afterevent state
         """
         res = self.testMandatoryArguments(
             request, ["sRef", "begin", "end", "name", "channelOld", "beginOld",
@@ -1586,6 +1604,22 @@ class WebController(BaseController):
         return event
 
     def P_getcurrent(self, request):
+        """
+        Request handler for the `getcurrent` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#getcurrent
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+
+
+        .. http:get:: /web/getcurrent
+
+        """
         info = getCurrentService(self.session)
         now = getNowNextEpg(info["ref"], 0)
         if len(now["events"]) > 0:
@@ -1664,6 +1698,18 @@ class WebController(BaseController):
         }
 
     def P_getpid(self, request):
+        """
+        Request handler for the `getpid` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#getpid
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         request.setHeader("content-type", "text/html")
         info = getCurrentService(self.session)
         return {
@@ -1758,6 +1804,18 @@ class WebController(BaseController):
         return setShowChPicon(request.args["checked"][0] == "true")
 
     def P_streamm3u(self, request):
+        """
+        Request handler for the `streamm3u` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#stream.m3u
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         self.isCustom = True
         if getZapStream()['zapstream']:
             if "ref" in request.args:
@@ -1769,6 +1827,18 @@ class WebController(BaseController):
         return getStream(self.session, request, "stream.m3u")
 
     def P_tsm3u(self, request):
+        """
+        Request handler for the `tsm3u` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#ts.m3u
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         self.isCustom = True
         return getTS(self.session, request)
 
@@ -1777,10 +1847,34 @@ class WebController(BaseController):
         return getStream(self.session, request, "video.m3u")
 
     def P_streamcurrentm3u(self, request):
+        """
+        Request handler for the `streamcurrentm3u` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#streamcurrent.m3u
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         self.isCustom = True
         return getStream(self.session, request, "streamcurrent.m3u")
 
     def P_streamsubservices(self, request):
+        """
+        Request handler for the `streamsubservices` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#streamsubservices
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return getStreamSubservices(self.session, request)
 
     def P_servicelistreload(self, request):
@@ -1801,9 +1895,33 @@ class WebController(BaseController):
         return slm.reload(request.args.get("mode"))
 
     def P_tvbrowser(self, request):
+        """
+        Request handler for the `tvbrowser` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#tvbrowser
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return tvbrowser(self.session, request)
 
     def P_saveconfig(self, request):
+        """
+        Request handler for the `saveconfig` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         if request.method == b'POST':
             res = self.testMandatoryArguments(request, ["key", "value"])
             if res:
@@ -1876,9 +1994,33 @@ class WebController(BaseController):
         return mediaPlayerSave(self.session, request.args["filename"][0])
 
     def P_pluginlistread(self, request):
+        """
+        Request handler for the `pluginlistread` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#pluginlistread
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return reloadPlugins()
 
     def P_restarttwisted(self, request):
+        """
+        Request handler for the `restarttwisted` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#restarttwisted
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         from ..httpserver import HttpdRestart
         HttpdRestart(self.session)
         return ""
@@ -1934,6 +2076,18 @@ class WebController(BaseController):
         return setSleepTimer(self.session, time, action, enabled)
 
     def P_external(self, request):
+        """
+        Request handler for the `external` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#external
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         try:
             from Plugins.Extensions.WebInterface.WebChilds.Toplevel import \
                 loaded_plugins
@@ -1946,9 +2100,36 @@ class WebController(BaseController):
             }
 
     def P_settings(self, request):
+        """
+        Request handler for the `settings` endpoint.
+        Retrieve list of key/kalue pairs of device configuration.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#settings
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         return getSettings()
 
     def P_bouquets(self, request):
+        """
+        Request handler for the `boquets` endpoint.
+        Get list of tuples (bouquet reference, bouquet name) for available
+        bouquets.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         stype = "tv"
         if "stype" in request.args.keys():
             stype = request.args["stype"][0]

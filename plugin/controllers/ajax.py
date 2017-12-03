@@ -354,3 +354,45 @@ class AjaxController(BaseController):
             HTTP response with headers
         """
         return getStatusInfo(self)
+
+    def P_setmoviesort(self, request):
+        """
+        Request handler for the `setmoviesort` endpoint.
+
+        .. deprecated:: 0.46
+
+            To be dropped.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
+        if "nsort" in request.args.keys():
+            nsort = request.args["nsort"][0]
+            comp_config.OpenWebif.webcache.moviesort.value = nsort
+            comp_config.OpenWebif.webcache.moviesort.save()
+        return {}
+
+    def P_settheme(self, request):
+        """
+        Request handler for the `settheme` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        .. deprecated:: 0.46
+
+            To be dropped.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
+        if "theme" in request.args.keys():
+            theme = request.args["theme"][0]
+            comp_config.OpenWebif.webcache.theme.value = theme
+            comp_config.OpenWebif.webcache.theme.save()
+        return {}

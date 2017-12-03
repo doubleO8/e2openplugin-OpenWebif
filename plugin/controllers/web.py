@@ -1437,6 +1437,18 @@ class WebController(BaseController):
         return getBouquetEpg(request.args["bRef"][0], begintime)
 
     def P_epgmulti(self, request):
+        """
+        Request handler for the `epgmulti` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         res = self.testMandatoryArguments(request, ["bRef"])
         if res:
             return res
@@ -1455,6 +1467,21 @@ class WebController(BaseController):
             except ValueError:
                 pass
         return getBouquetEpg(request.args["bRef"][0], begintime, endtime)
+
+    def P_epgmultigz(self, request):
+        """
+        Request handler for the `epgmultigz` endpoint.
+
+        .. note::
+
+            Not available in *Enigma2 WebInterface API*.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
+        return self.P_epgmulti(request)
 
     def P_epgnow(self, request):
         res = self.testMandatoryArguments(request, ["bRef"])
@@ -2090,21 +2117,6 @@ class WebController(BaseController):
             stype = request.args["stype"][0]
         return getBouquets(stype)
 
-    def P_epgmultigz(self, request):
-        """
-        Request handler for the `epgmultigz` endpoint.
-
-        .. note::
-
-            Not available in *Enigma2 WebInterface API*.
-
-        Args:
-            request (twisted.web.server.Request): HTTP request object
-        Returns:
-            HTTP response with headers
-        """
-        return self.P_epgmulti(request)
-
     def P_getsatellites(self, request):
         stype = "tv"
         if "stype" in request.args.keys():
@@ -2170,75 +2182,3 @@ class WebController(BaseController):
                     "lang": subt[4]
                 })
         return ret
-
-    def P_settheme(self, request):
-        """
-        Request handler for the `settheme` endpoint.
-
-        .. note::
-
-            Not available in *Enigma2 WebInterface API*.
-
-        .. deprecated:: 0.46
-
-            To be dropped.
-
-        Args:
-            request (twisted.web.server.Request): HTTP request object
-        Returns:
-            HTTP response with headers
-        """
-        if "theme" in request.args.keys():
-            theme = request.args["theme"][0]
-            comp_config.OpenWebif.webcache.theme.value = theme
-            comp_config.OpenWebif.webcache.theme.save()
-        return {}
-
-    def P_setmoviesort(self, request):
-        """
-        Request handler for the `setmoviesort` endpoint.
-
-        .. note::
-
-            Not available in *Enigma2 WebInterface API*.
-
-        .. deprecated:: 0.46
-
-            To be dropped.
-
-        Args:
-            request (twisted.web.server.Request): HTTP request object
-        Returns:
-            HTTP response with headers
-        """
-        if "nsort" in request.args.keys():
-            nsort = request.args["nsort"][0]
-            comp_config.OpenWebif.webcache.moviesort.value = nsort
-            comp_config.OpenWebif.webcache.moviesort.save()
-        return {}
-
-    def P_setmepgmode(self, request):
-        """
-        Request handler for the `setepgmode` endpoint.
-
-        .. note::
-
-            Not available in *Enigma2 WebInterface API*.
-
-        .. deprecated:: 0.46
-
-            To be dropped.
-
-        Args:
-            request (twisted.web.server.Request): HTTP request object
-        Returns:
-            HTTP response with headers
-        """
-        if "mode" in request.args.keys():
-            try:
-                comp_config.OpenWebif.webcache.mepgmode.value = int(
-                    request.args["mode"][0])
-                comp_config.OpenWebif.webcache.mepgmode.save()
-            except ValueError:
-                pass
-        return {}

@@ -18,6 +18,8 @@ INSERT_NAME_HERE
    utilities
    model
 
+`HTTP Routing Table <http-routingtable.html>`_
+
 Indices and tables
 ==================
 

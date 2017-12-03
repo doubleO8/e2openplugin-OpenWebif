@@ -73,7 +73,7 @@ def getCurrentService(session):
             "iswidescreen": info.getInfo(iServiceInformation.sAspect) in (
                 3, 4, 7, 8, 0xB, 0xC, 0xF, 0x10)
         }
-    except Exception as e:
+    except Exception:
         return {
             "result": False,
             "name": "",
@@ -278,7 +278,7 @@ def getSatellites(stype):
             if orbpos < 0:
                 orbpos += 3600
             if service.getPath().find("FROM PROVIDER") != -1:
-                #				service_type = _("Providers")
+                # service_type = _("Providers")
                 continue
             elif service.getPath().find(
                             "flags == %d" % (FLAG_SERVICE_NEW_FOUND)) != -1:
@@ -336,26 +336,30 @@ def sortSatellites(satList):
 
 
 def getProtection(sref):
-    isProtected = "0"
-    if config.ParentalControl.configured.value and config.ParentalControl.servicepinactive.value:
+    is_protected = "0"
+    configured = config.ParentalControl.configured.value
+    servicepinactive = config.ParentalControl.servicepinactive.value
+
+    if configured and servicepinactive:
         protection = parentalControl.getProtectionLevel(sref)
         if protection != -1:
             if config.ParentalControl.type.value == "blacklist":
                 if sref in parentalControl.blacklist:
                     if "SERVICE" in parentalControl.blacklist[sref]:
-                        isProtected = '1'
+                        is_protected = '1'
                     elif "BOUQUET" in parentalControl.blacklist[sref]:
-                        isProtected = '2'
+                        is_protected = '2'
                     else:
-                        isProtected = '3'
+                        is_protected = '3'
             elif config.ParentalControl.type.value == "whitelist":
                 if sref not in parentalControl.whitelist:
                     service = eServiceReference(sref)
                     if service.flags & eServiceReference.isGroup:
-                        isprotected = '5'
+                        is_protected = '5'
                     else:
-                        isProtected = '4'
-    return isProtected
+                        is_protected = '4'
+
+    return is_protected
 
 
 def getChannels(idbouquet, stype):
@@ -490,8 +494,8 @@ def getPlayableServices(sRef, sRefPlaying):
     servicelist2 = servicelist and servicelist.getContent('S') or []
 
     for service in servicelist2:
-        if not int(service.split(":")[
-                       1]) & 512:  # 512 is hidden service on sifteam image. Doesn't affect other images
+        # 512 is hidden service on sifteam image. Doesn't affect other images
+        if not int(service.split(":")[1]) & 512:
             service2 = {}
             service2['servicereference'] = service
             info = servicecenter.info(eServiceReference(service))

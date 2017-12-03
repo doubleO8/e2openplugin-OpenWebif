@@ -818,7 +818,7 @@ function getStatusInfo() {
 
 		var recording_indicator = $("#recording-indicator");
 		if(recording_indicator.length == 0) {
-			osd_status.append('<div id="recording-indicator" class="led-box"><div class="led led-red"></div></div>');
+			osd_status.append('<span id="recording-indicator" class="led-box"><div class="led led-red"></div></span>');
 			recording_indicator = $("#recording-indicator");
 		}
 		recording_indicator.off();

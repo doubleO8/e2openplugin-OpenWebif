@@ -136,10 +136,10 @@ FIXME : complete reorg header
 	margin-top: 1px;
 	overflow:hidden;
 }
+
 #osd_status
 {
 	float:right;
-	margin-top: 22px;
 }
 
 .led-box {
@@ -838,7 +838,6 @@ i.fa-mobile {font-size: 22px;}
 
 div.standby_image,
 div.volume_image {
-  // border: 1px solid black;
   background-repeat: no-repeat;
   background-size: contain;
 }
@@ -855,8 +854,8 @@ div.volume_mute {
 }
 
 div.standby_image {
-  width: 112px;
-  height: 59px;
+  width: 28px;
+  height: 15px;
   background-image: url('/images/ico_on.png');
 }
 

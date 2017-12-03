@@ -21,7 +21,7 @@ from models.info import getInfo, getPublicPath, getTranscodingSupport, \
 from models.movies import getMovieList
 from models.timers import getTimers
 from models.config import getConfigs, getConfigsSections, getZapStream, \
-    getShowChPicon
+    getShowChPicon, addCollapsedMenu, removeCollapsedMenu
 from base import BaseController
 
 try:
@@ -219,10 +219,46 @@ class AjaxController(BaseController):
         return {"epgmode": epgmode}
 
     def P_config(self, request):
+        """
+        Request handler for the `config` endpoint.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         section = "usage"
         if "section" in request.args.keys():
             section = request.args["section"][0]
         return getConfigs(section)
+
+    def P_collapsemenu(self, request):
+        """
+        Request handler for the `collapsemenu` endpoint.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
+        res = self.testMandatoryArguments(request, ["name"])
+        if res:
+            return res
+        return addCollapsedMenu(request.args["name"][0])
+
+    def P_expandmenu(self, request):
+        """
+        Request handler for the `expandmenu` endpoint.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
+        res = self.testMandatoryArguments(request, ["name"])
+        if res:
+            return res
+        return removeCollapsedMenu(request.args["name"][0])
 
     def P_settings(self, request):
         ret = {

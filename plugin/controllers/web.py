@@ -33,9 +33,8 @@ from models.timers import getTimers, addTimer, addTimerByEventId, editTimer, \
 from models.message import sendMessage, getMessageAnswer
 from models.movies import getMovieList, removeMovie, getMovieTags, moveMovie, \
     renameMovie, getAllMovies
-from models.config import getSettings, addCollapsedMenu, removeCollapsedMenu, \
-    setZapStream, saveConfig, getZapStream, setShowChPicon, \
-    getConfigs, getConfigsSections
+from models.config import getSettings,  \
+    setZapStream, saveConfig, getZapStream, setShowChPicon
 from models.stream import getStream, getTS, getStreamSubservices, GetSession
 from models.mediaplayer import mediaPlayerAdd, mediaPlayerRemove, \
     mediaPlayerPlay, mediaPlayerCommand, mediaPlayerCurrent, mediaPlayerList, \
@@ -1719,50 +1718,6 @@ class WebController(BaseController):
             "host": request.getRequestHostname()
         }
 
-    def P_collapsemenu(self, request):
-        """
-        Request handler for the `collapsemenu` endpoint.
-
-        .. note::
-
-            Not available in *Enigma2 WebInterface API*.
-
-        .. deprecated:: 0.46
-
-            To be dropped.
-
-        Args:
-            request (twisted.web.server.Request): HTTP request object
-        Returns:
-            HTTP response with headers
-        """
-        res = self.testMandatoryArguments(request, ["name"])
-        if res:
-            return res
-        return addCollapsedMenu(request.args["name"][0])
-
-    def P_expandmenu(self, request):
-        """
-        Request handler for the `expandmenu` endpoint.
-
-        .. note::
-
-            Not available in *Enigma2 WebInterface API*.
-
-        .. deprecated:: 0.46
-
-            To be dropped.
-
-        Args:
-            request (twisted.web.server.Request): HTTP request object
-        Returns:
-            HTTP response with headers
-        """
-        res = self.testMandatoryArguments(request, ["name"])
-        if res:
-            return res
-        return removeCollapsedMenu(request.args["name"][0])
-
     def P_zapstream(self, request):
         """
         Request handler for the `zapstream` endpoint.
@@ -2287,21 +2242,3 @@ class WebController(BaseController):
             except ValueError:
                 pass
         return {}
-
-    def P_config(self, request):
-        """
-        Request handler for the `config` endpoint.
-
-        .. note::
-
-            Not available in *Enigma2 WebInterface API*.
-
-        Args:
-            request (twisted.web.server.Request): HTTP request object
-        Returns:
-            HTTP response with headers
-        """
-        if "section" in request.args.keys():
-            return getConfigs(request.args["section"][0])
-        else:
-            return getConfigsSections()

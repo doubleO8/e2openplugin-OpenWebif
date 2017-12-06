@@ -39,6 +39,7 @@ if HAVE_E2_CONTROLLER:
     from rest_saveconfig_api import SaveConfigApiController
     from rest_eventlookup_api import EventLookupApiController
     from rest_eventsearch_api import EventSearchApiController
+    from evil_proxy import EvilProxyController
 
 #: OpenAPI specification source (swagger.json)
 SWAGGER_TEMPLATE = os.path.join(
@@ -61,6 +62,7 @@ class ApiController(resource.Resource):
                           SaveConfigApiController(session=session, path=path))
             self.putChild("eventlookup", EventLookupApiController())
             self.putChild("eventsearch", EventSearchApiController())
+            self.putChild("evil", EvilProxyController(session=session))
 
             #: web controller instance
             self.web_instance = WebController(session, path)

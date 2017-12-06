@@ -28,6 +28,12 @@ OpenWebif Specific Controllers
 .. automodule:: controllers.transcoding
     :members:
 
+Other Controllers
+-----------------
+
+.. automodule:: controllers.evil_proxy
+    :members:
+
 Utility Functions
 -----------------
 

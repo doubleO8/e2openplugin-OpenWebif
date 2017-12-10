@@ -3,6 +3,7 @@
 import os
 import time
 import datetime
+import logging
 from wsgiref.handlers import format_date_time
 
 from twisted.web import http
@@ -19,6 +20,7 @@ class RESTMovieController(RESTControllerSkeleton):
 
     def __init__(self, *args, **kwargs):
         RESTControllerSkeleton.__init__(self, *args, **kwargs)
+        self.log = logging.getLogger(__name__)
         self.movie_controller = MoviesController()
 
     def _cache(self, request, expires=False):

@@ -54,7 +54,7 @@ class RESTMovieController(RESTControllerSkeleton):
                     pass
             data["items"].append(item)
             if item["path"].startswith(self.root):
-                item["path"] = item["path"][len(self.root):]
+                item["path"] = request.path + item["path"][len(self.root):]
 
         if data["items"]:
             self._cache(request, expires=30)

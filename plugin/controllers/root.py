@@ -75,11 +75,11 @@ class RootController(BaseController):
         self.putChild("movies", movie_controller_instance)
         self.putChild("file", FileController())
         self.putChild("grab", grabScreenshot(session))
-        self.putChild("js", static.File(publicpath + "/js"))
-        self.putChild("css", static.File(publicpath + "/css"))
-        self.putChild("static", static.File(publicpath + "/static"))
-        self.putChild("images", static.File(publicpath + "/images"))
-        self.putChild("fonts", static.File(publicpath + "/fonts"))
+
+        for shortcut in ('js', 'css', 'static', 'images', 'fonts'):
+            self.putChild(shortcut,
+                          static.File('/'.join((publicpath, shortcut))))
+
         self.putChild("transcoding", TranscodingController())
         if piconpath:
             self.putChild("picon", static.File(piconpath))

@@ -148,14 +148,14 @@ def mangle_servicereference(servicereference):
 class MoviesController(object):
     def __init__(self, *args, **kwargs):
         self.log = logging.getLogger(__name__)
-        self.ech = enigma.eServiceCenter.getInstance()
+        self.service_center_instance = enigma.eServiceCenter.getInstance()
         self.events_with_component_data = kwargs.get("component_data", False)
 
     def mangle_servicereference_information(self, servicereference):
         data = dict()
         meta = dict()
 
-        cs_info = self.ech.info(servicereference)
+        cs_info = self.service_center_instance.info(servicereference)
 
         for fkey in SERVICE_INFORMATION_FIELDS:
             try:
@@ -170,9 +170,6 @@ class MoviesController(object):
                 if current_value == -1:
                     continue
                 key = fkey[1:]
-                self.log.debug(
-                    '%s', "{:3d} {!s:40}: {!r}".format(
-                        const_value, key, current_value))
                 meta[key] = current_value
                 if key == 'FileSize':
                     meta[key] = current_value & 0xffffffff
@@ -193,7 +190,7 @@ class MoviesController(object):
         root_servicereference = eServiceReference(
             eServiceReference.idFile, 0, root_path)
 
-        list_result = self.ech.list(root_servicereference)
+        list_result = self.service_center_instance.list(root_servicereference)
         items = list_result.getContent("NR", True)
         for (shortinfo, serviceref) in items:
             item = mangle_servicereference(serviceref)

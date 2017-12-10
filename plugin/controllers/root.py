@@ -80,8 +80,6 @@ class RootController(BaseController):
         self.putChild("static", static.File(publicpath + "/static"))
         self.putChild("images", static.File(publicpath + "/images"))
         self.putChild("fonts", static.File(publicpath + "/fonts"))
-        if os.path.exists(getPublicPath('themes')):
-            self.putChild("themes", static.File(publicpath + "/themes"))
         self.putChild("transcoding", TranscodingController())
         if piconpath:
             self.putChild("picon", static.File(piconpath))

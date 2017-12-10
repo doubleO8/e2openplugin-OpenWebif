@@ -69,10 +69,10 @@ class RootController(BaseController):
         )
         self.putChild("fs", wrapped_fs_controller)
 
-        movie_controller_instanc = EncodingResourceWrapper(
+        movie_controller_instance = EncodingResourceWrapper(
             rest_movie_controller.RESTMovieController(),
             [GzipEncoderFactory()])
-        self.putChild("movies", movie_controller_instanc)
+        self.putChild("movies", movie_controller_instance)
         self.putChild("file", FileController())
         self.putChild("grab", grabScreenshot(session))
         self.putChild("js", static.File(publicpath + "/js"))

@@ -7,11 +7,6 @@ import Screens
 from Components.MovieList import MovieList
 #print dir(Screens.ChannelSelection)
 
-if 22 == 33:
-    print dir(eServiceReference)
-    print("service_types_tv={!r}".format(service_types_tv))
-    print("service_types_radio={!r}".format(service_types_radio))
-
 ech = enigma.eServiceCenter.getInstance()
 
 if 1 == 2:
@@ -300,3 +295,12 @@ if 1 == 3:
 if 4 == 5:
     dump_servicereference(eServiceReference(1, 17, "haha"))
 
+
+if 22 == 22:
+    print dir(eServiceReference)
+    print("service_types_tv={!r}".format(service_types_tv))
+    print("service_types_radio={!r}".format(service_types_radio))
+    #service_types_tv = '1:7:1:0:0:0:0:0:0:0:(type == 1) || ' \
+    #                   '(type == 17) || (type == 22) || (type == 25) || ' \
+    #                   '(type == 31) || (type == 134) || (type == 195)'
+    #service_types_radio = '1:7:2:0:0:0:0:0:0:0:(type == 2) || (type == 10)'

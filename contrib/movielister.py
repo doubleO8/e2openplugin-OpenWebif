@@ -164,20 +164,23 @@ def mangle_servicereference_information(servicereference):
     return data
 
 
+def flags_description(flags):
+    global SERVICE_REFERENCE_FLAG
+
+    flag_list = []
+    for flag in SERVICE_REFERENCE_FLAG:
+        if flags & flag:
+            flag_list.append(SERVICE_REFERENCE_FLAG[flag])
+
+    return flag_list
+
 def mangle_servicereference(servicereference):
     global SERVICE_REFERENCE_ID
-    global SERVICE_REFERENCE_FLAG
     global eServiceReference
     data = dict()
 
     if isinstance(servicereference, basestring):
         servicereference = eServiceReference(servicereference)
-
-    flag_list = []
-    for flag in SERVICE_REFERENCE_FLAG:
-        if servicereference.flags & flag:
-            flag_list.append(SERVICE_REFERENCE_FLAG[flag])
-    data['flag_list'] = flag_list
 
     data['kind'] = SERVICE_REFERENCE_ID.get(servicereference.type, "INVALID")
     data['path'] = servicereference.getPath().decode("utf-8")
@@ -185,16 +188,32 @@ def mangle_servicereference(servicereference):
     data['flags'] = servicereference.flags
     return data
 
-ech = enigma.eServiceCenter.getInstance()
 
 root_path = '/media/hdd/movie/'
-root_servicereference = eServiceReference(
-    eServiceReference.idFile, 0, root_path)
+ech = enigma.eServiceCenter.getInstance()
 
-list_result = ech.list(root_servicereference)
-items = list_result.getContent("NR", True)
 
-for (shortinfo, serviceref) in items[:10]:
-    item = mangle_servicereference(serviceref)
-    item.update(mangle_servicereference_information(serviceref))
+def list_movies(root_path):
+    global ech
+    global mangle_servicereference
+    global mangle_servicereference_information
+    global list_movies
+    global flags_description
+
+    root_servicereference = eServiceReference(
+        eServiceReference.idFile, 0, root_path)
+
+    list_result = ech.list(root_servicereference)
+    items = list_result.getContent("NR", True)
+    for (shortinfo, serviceref) in items:
+        item = mangle_servicereference(serviceref)
+        if item['flags'] & eServiceReference.isDirectory:
+            for sub_item in list_movies(serviceref.getPath()):
+                yield sub_item
+        else:
+            item.update(mangle_servicereference_information(serviceref))
+            yield item
+
+for item in list_movies(root_path):
+    print("{!r}".format(item['path']))
     pprint.pprint(item)

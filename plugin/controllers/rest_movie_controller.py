@@ -38,9 +38,12 @@ class RESTMovieController(RESTControllerSkeleton):
         request.setHeader(
             'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
 
-        target_path = request.args.postpath.join("/")
+        if len(request.postpath) == 0 or request.postpath[0] == '':
+            target_path = '/media/hdd/movie'
+        else:
+            target_path = '/'.join(request.postpath)
 
-        if not os.path.isdir(target_path):
+        if os.path.isdir(target_path):
             return self.render_path_listing(request, target_path)
 
         return self.error_response(

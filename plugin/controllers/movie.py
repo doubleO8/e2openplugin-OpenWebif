@@ -194,6 +194,7 @@ class MoviesController(object):
         items = list_result.getContent("NR", True)
         for (shortinfo, serviceref) in items:
             item = mangle_servicereference(serviceref)
+            item['label'] = shortinfo.decode("utf-8")
             if item['flags'] & eServiceReference.isDirectory:
                 for sub_item in self.list_movies(serviceref.getPath()):
                     yield sub_item

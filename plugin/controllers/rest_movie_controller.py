@@ -22,6 +22,7 @@ class RESTMovieController(RESTControllerSkeleton):
         RESTControllerSkeleton.__init__(self, *args, **kwargs)
         self.log = logging.getLogger(__name__)
         self.movie_controller = MoviesController()
+        self.root = kwargs.get("root", '/media/hdd/movie/')
 
     def _cache(self, request, expires=False):
         headers = {}
@@ -47,6 +48,8 @@ class RESTMovieController(RESTControllerSkeleton):
             del item["servicereference"]
             del item["flags"]
             data["items"].append(item)
+            if data["path"].startswith(self.root):
+                data["path"] = data["path"][len(self.root):]
 
         if data["items"]:
             self._cache(request, expires=300)
@@ -70,9 +73,10 @@ class RESTMovieController(RESTControllerSkeleton):
             'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
 
         if len(request.postpath) == 0 or request.postpath[0] == '':
-            target_path = '/media/hdd/movie/'
+            target_path = self.root
         else:
-            target_path = '/'.join(request.postpath)
+            target_path = os.path.join(self.root,
+                                       '/'.join(request.postpath))
 
         if os.path.isdir(target_path):
             return self.render_path_listing(request, target_path)
@@ -92,7 +96,8 @@ class RESTMovieController(RESTControllerSkeleton):
         request.setHeader(
             'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
 
-        target_path = '/'.join(request.postpath)
+        target_path = os.path.join(self.root,
+                                   '/'.join(request.postpath))
 
         if os.path.isfile(target_path):
             return self.remove(request, target_path)

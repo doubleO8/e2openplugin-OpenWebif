@@ -12,6 +12,8 @@ def mangle_epg_text(value):
     Returns:
         (:obj:`basestring`): mangled EPG text
     """
+    if value is None:
+        return value
     return value.replace(
         '\xc2\x86', '').replace('\xc2\x87', '').replace('\xc2\x8a', '\n')
 

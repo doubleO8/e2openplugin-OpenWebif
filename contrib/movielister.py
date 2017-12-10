@@ -118,7 +118,7 @@ SERVICE_REFERENCE_FLAG = {
 def mangle_event(event_obj):
     data = dict(
         start_time=event_obj.getBeginTime(),
-        duration=event_obj.getBeginTime(),
+        duration=event_obj.getDuration(),
         title=event_obj.getEventName().decode("utf-8"),
         shortinfo=event_obj.getShortDescription().decode("utf-8"),
         longinfo=event_obj.getExtendedDescription().decode("utf-8"),
@@ -202,7 +202,7 @@ def list_movies(root_path):
 
     root_servicereference = eServiceReference(
         eServiceReference.idFile, 0, root_path)
-
+    print root_servicereference.toString()
     list_result = ech.list(root_servicereference)
     items = list_result.getContent("NR", True)
     for (shortinfo, serviceref) in items:
@@ -216,4 +216,4 @@ def list_movies(root_path):
 
 for item in list_movies(root_path):
     print("{!r}".format(item['path']))
-    pprint.pprint(item)
+    #pprint.pprint(item)

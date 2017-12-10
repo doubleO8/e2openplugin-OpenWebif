@@ -87,16 +87,19 @@ EVENT_FIELD_MAP = {
     "n": "shortservice_name",
 }
 
-def mangle_event(event_obj):
+def mangle_event(event_obj, encoding="utf-8", with_component_data=True):
     data = dict(
         start_time=event_obj.getBeginTime(),
-        duration=event_obj.getBeginTime(),
-        title=event_obj.getEventName().decode("utf-8"),
-        shortinfo=event_obj.getShortDescription().decode("utf-8"),
-        longinfo=event_obj.getExtendedDescription().decode("utf-8"),
+        duration=event_obj.getDuration(),
+        title=event_obj.getEventName().decode(encoding),
+        shortinfo=event_obj.getShortDescription().decode(encoding),
+        longinfo=event_obj.getExtendedDescription().decode(encoding),
         item_id=event_obj.getEventId(),
     )
-    data['component_data'] = event_obj.getComponentData()
+
+    if with_component_data:
+        data['component_data'] = event_obj.getComponentData()
+
     return data
 
 class EventDict(dict):

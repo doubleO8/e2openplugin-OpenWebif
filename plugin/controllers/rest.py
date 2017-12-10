@@ -117,7 +117,6 @@ class RESTControllerSkeleton(resource.Resource):
 
         return json_response(request, data)
 
-
     def error_response(self, request, response_code=None, **kwargs):
         """
         Create and return an HTTP error response with data as JSON.

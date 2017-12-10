@@ -87,6 +87,7 @@ EVENT_FIELD_MAP = {
     "n": "shortservice_name",
 }
 
+
 def mangle_event(event_obj, encoding="utf-8", with_component_data=True):
     data = dict(
         start_time=event_obj.getBeginTime(),
@@ -102,6 +103,7 @@ def mangle_event(event_obj, encoding="utf-8", with_component_data=True):
 
     return data
 
+
 class EventDict(dict):
     """
     Event data container object
@@ -115,6 +117,7 @@ class EventDict(dict):
     >>> sed['duration']
     7200
     """
+
     def __init__(self, raw_data, flag_string=None):
         dict.__init__(self)
         if flag_string is None:
@@ -148,6 +151,7 @@ class ServicesEventDict(dict):
     >>> sed['duration_sec']
     7200
     """
+
     def __init__(self, raw_data, now_next_mode=False, mangle_html=True):
         dict.__init__(self)
         for key in SERVICES_KEY_MAP:

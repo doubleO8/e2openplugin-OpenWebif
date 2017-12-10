@@ -5,7 +5,7 @@ import logging
 import enigma
 from enigma import eServiceReference, iServiceInformation
 
-from events import mangle_event
+from models.events import mangle_event
 
 SERVICE_INFORMATION_FIELDS = [
     'sAspect',

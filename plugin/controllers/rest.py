@@ -3,7 +3,7 @@
 import json
 import copy
 
-from twisted.web import resource
+from twisted.web import resource, http
 
 #: CORS - HTTP headers the client may use
 CORS_ALLOWED_CLIENT_HEADERS = [
@@ -116,6 +116,36 @@ class RESTControllerSkeleton(resource.Resource):
         }
 
         return json_response(request, data)
+
+
+    def error_response(self, request, response_code=None, **kwargs):
+        """
+        Create and return an HTTP error response with data as JSON.
+
+        Args:
+                request (twisted.web.server.Request): HTTP request object
+                response_code: HTTP Status Code (default is 500)
+                **kwargs: additional key/value pairs
+        Returns:
+                JSON encoded data with appropriate HTTP headers
+        """
+        if response_code is None:
+            response_code = http.INTERNAL_SERVER_ERROR
+
+        response_data = {
+            "_request": {
+                "path": request.path,
+                "postpath": request.postpath,
+                "uri": request.uri,
+                "method": request.method,
+            },
+            "result": False,
+        }
+
+        response_data.update(**kwargs)
+
+        request.setResponseCode(response_code)
+        return json_response(request, response_data)
 
 
 class SimpleRootController(resource.Resource):

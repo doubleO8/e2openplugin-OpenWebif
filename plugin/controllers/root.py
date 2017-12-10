@@ -28,6 +28,7 @@ from transcoding import TranscodingController
 from file import FileController
 import rest_fs_access
 import rest_api_controller
+import rest_movie_controller
 
 try:
     from boxbranding import getBoxType
@@ -68,6 +69,10 @@ class RootController(BaseController):
         )
         self.putChild("fs", wrapped_fs_controller)
 
+        movie_controller_instanc = EncodingResourceWrapper(
+            rest_movie_controller.RESTMovieController(),
+            [GzipEncoderFactory()])
+        self.putChild("movies", movie_controller_instanc)
         self.putChild("file", FileController())
         self.putChild("grab", grabScreenshot(session))
         self.putChild("js", static.File(publicpath + "/js"))

@@ -15,7 +15,7 @@ from movie import MoviesController
 
 class RESTMovieController(RESTControllerSkeleton):
     """
-    RESTful Controller for /api/eventlookup endpoint
+    RESTful Controller for /movies endpoint
     """
 
     def __init__(self, *args, **kwargs):

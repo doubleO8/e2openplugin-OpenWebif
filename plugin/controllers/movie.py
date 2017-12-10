@@ -130,17 +130,18 @@ def flags_description(flags):
     return flag_list
 
 
-def mangle_servicereference(servicereference):
+def mangle_servicereference(servicereference, encoding=None):
     global SERVICE_REFERENCE_ID
+    if encoding is None:
+        encoding = "utf-8"
     data = dict()
 
     if isinstance(servicereference, basestring):
         servicereference = eServiceReference(servicereference)
 
-    data['kind'] = SERVICE_REFERENCE_ID.get(servicereference.type,
-                                            "INVALID")
-    data['path'] = servicereference.getPath().decode("utf-8")
-    data['servicereference'] = servicereference.toString().decode("utf-8")
+    data['kind'] = SERVICE_REFERENCE_ID.get(servicereference.type, "INVALID")
+    data['path'] = servicereference.getPath().decode(encoding)
+    data['servicereference'] = servicereference.toString().decode(encoding)
     data['flags'] = servicereference.flags
     return data
 
@@ -150,6 +151,7 @@ class MoviesController(object):
         self.log = logging.getLogger(__name__)
         self.service_center_instance = enigma.eServiceCenter.getInstance()
         self.events_with_component_data = kwargs.get("component_data", False)
+        self.encoding = kwargs.get("encoding", "utf-8")
 
     def mangle_servicereference_information(self, servicereference):
         data = dict()
@@ -161,16 +163,20 @@ class MoviesController(object):
             try:
                 const_value = getattr(iServiceInformation, fkey)
                 current_value = cs_info.getInfo(servicereference, const_value)
+
                 if current_value == -2:
                     current_value = cs_info.getInfoString(
-                        servicereference, const_value).decode("utf-8")
+                        servicereference, const_value).decode(self.encoding)
                 elif current_value == -3:
                     current_value = cs_info.getInfoObject(servicereference,
                                                           const_value)
+
                 if current_value == -1:
                     continue
+
                 key = fkey[1:]
                 meta[key] = current_value
+
                 if key == 'FileSize':
                     meta[key] = current_value & 0xffffffff
             except Exception as exc:
@@ -185,16 +191,15 @@ class MoviesController(object):
         return data
 
     def list_movies(self, root_path):
-        self.log.debug('%s',
-                       "Trying to list files in {!r}".format(root_path))
+        self.log.debug('%s', "Trying to list files in {!r}".format(root_path))
         root_servicereference = eServiceReference(
             eServiceReference.idFile, 0, root_path)
 
         list_result = self.service_center_instance.list(root_servicereference)
         items = list_result.getContent("NR", True)
         for (shortinfo, serviceref) in items:
-            item = mangle_servicereference(serviceref)
-            item['label'] = shortinfo.decode("utf-8")
+            item = mangle_servicereference(serviceref, encoding=self.encoding)
+            item['label'] = shortinfo.decode(self.encoding)
             if item['flags'] & eServiceReference.isDirectory:
                 for sub_item in self.list_movies(serviceref.getPath()):
                     yield sub_item

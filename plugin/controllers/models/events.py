@@ -75,7 +75,7 @@ SERVICES_KEY_MAP = {
 
 #: Event Field Map
 EVENT_FIELD_MAP = {
-    "B": "begin",
+    "B": "start_time",
     "C": "current_time",
     "I": "id",
     "D": "duration",
@@ -87,6 +87,17 @@ EVENT_FIELD_MAP = {
     "n": "shortservice_name",
 }
 
+def mangle_event(event_obj):
+    data = dict(
+        start_time=event_obj.getBeginTime(),
+        duration=event_obj.getBeginTime(),
+        title=event_obj.getEventName().decode("utf-8"),
+        shortinfo=event_obj.getShortDescription().decode("utf-8"),
+        longinfo=event_obj.getExtendedDescription().decode("utf-8"),
+        item_id=event_obj.getEventId(),
+    )
+    data['component_data'] = event_obj.getComponentData()
+    return data
 
 class EventDict(dict):
     """
@@ -96,7 +107,7 @@ class EventDict(dict):
     >>> sed = EventDict(dd_in)
     >>> sed['id']
     123
-    >>> sed['begin']
+    >>> sed['start_time']
     1506020400
     >>> sed['duration']
     7200

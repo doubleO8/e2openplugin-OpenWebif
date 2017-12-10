@@ -42,6 +42,11 @@ class EvilProxyController(RESTControllerSkeleton):
             request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:post:: /api/evil
+
+            :query string uma: python code snippet to be executed
+
         """
         request.setHeader(
             'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)

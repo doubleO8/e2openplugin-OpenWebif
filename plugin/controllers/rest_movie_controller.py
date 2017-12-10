@@ -44,15 +44,20 @@ class RESTMovieController(RESTControllerSkeleton):
 
     def render_path_listing(self, request, root_path):
         data = dict(result=True, items=[])
+        removed_keys = ('servicereference', 'flags', 'kind',)
+
         for item in self.movie_controller.list_movies(root_path):
-            del item["servicereference"]
-            del item["flags"]
+            for rkey in removed_keys:
+                try:
+                    del item[rkey]
+                except KeyError:
+                    pass
             data["items"].append(item)
             if item["path"].startswith(self.root):
                 item["path"] = item["path"][len(self.root):]
 
         if data["items"]:
-            self._cache(request, expires=300)
+            self._cache(request, expires=30)
 
         return json_response(request, data)
 

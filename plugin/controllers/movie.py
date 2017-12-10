@@ -186,6 +186,7 @@ class MoviesController(object):
         return data
 
     def list_movies(self, root_path):
+        self.log.info("Trying to list files in {!r}".format(root_path))
         root_servicereference = eServiceReference(
             eServiceReference.idFile, 0, root_path)
 

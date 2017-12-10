@@ -73,6 +73,11 @@ class RESTMovieController(RESTControllerSkeleton):
             request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:get:: /movies/{basestring:path}
+
+            :statuscode 200: no error
+            :statuscode 404: not found
         """
         request.setHeader(
             'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
@@ -97,6 +102,11 @@ class RESTMovieController(RESTControllerSkeleton):
             request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:delete:: /movies/{basestring:path}
+
+            :statuscode 200: no error
+            :statuscode 404: not found
         """
         request.setHeader(
             'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)

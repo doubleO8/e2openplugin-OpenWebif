@@ -9,6 +9,9 @@ RESTful API
 .. automodule:: controllers.rest_api_controller
     :members:
 
+.. automodule:: controllers.rest_movie_controller
+    :members:
+
 .. automodule:: controllers.rest_fs_access
     :members:
 
@@ -20,3 +23,4 @@ RESTful API
 
 .. automodule:: controllers.rest_eventsearch_api
     :members:
+

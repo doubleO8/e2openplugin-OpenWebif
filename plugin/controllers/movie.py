@@ -146,9 +146,10 @@ def mangle_servicereference(servicereference):
 
 
 class MoviesController(object):
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         self.log = logging.getLogger(__name__)
         self.ech = enigma.eServiceCenter.getInstance()
+        self.events_with_component_data = kwargs.get("component_data", False)
 
     def mangle_servicereference_information(self, servicereference):
         data = dict()
@@ -181,12 +182,14 @@ class MoviesController(object):
         data['meta'] = meta
         event = cs_info.getEvent(servicereference)
         if event:
-            data['event'] = mangle_event(event)
+            data['event'] = mangle_event(
+                event, with_component_data=self.events_with_component_data)
 
         return data
 
     def list_movies(self, root_path):
-        self.log.info("Trying to list files in {!r}".format(root_path))
+        self.log.debug('%s',
+                       "Trying to list files in {!r}".format(root_path))
         root_servicereference = eServiceReference(
             eServiceReference.idFile, 0, root_path)
 

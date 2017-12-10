@@ -48,8 +48,8 @@ class RESTMovieController(RESTControllerSkeleton):
             del item["servicereference"]
             del item["flags"]
             data["items"].append(item)
-            if data["path"].startswith(self.root):
-                data["path"] = data["path"][len(self.root):]
+            if item["path"].startswith(self.root):
+                item["path"] = item["path"][len(self.root):]
 
         if data["items"]:
             self._cache(request, expires=300)

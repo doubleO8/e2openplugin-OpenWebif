@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import time
+import datetime
+from wsgiref.handlers import format_date_time
 
 from twisted.web import http
 
@@ -18,12 +21,38 @@ class RESTMovieController(RESTControllerSkeleton):
         RESTControllerSkeleton.__init__(self, *args, **kwargs)
         self.movie_controller = MoviesController()
 
+    def _cache(self, request, expires=False):
+        headers = {}
+        if expires is False:
+            headers[
+                'Cache-Control'] = 'no-store, no-cache, must-revalidate, ' \
+                                   'post-check=0, pre-check=0, max-age=0'
+            headers['Expires'] = '-1'
+        else:
+            now = datetime.datetime.now()
+            expires_time = now + datetime.timedelta(seconds=expires)
+            headers['Cache-Control'] = 'public'
+            headers['Expires'] = format_date_time(
+                time.mktime(expires_time.timetuple()))
+        for key in headers:
+            self.log.debug(
+                "CACHE: {key}={val}".format(key=key, val=headers[key]))
+            request.setHeader(key, headers[key])
+
     def render_path_listing(self, request, root_path):
         data = dict(result=True, items=[])
         for item in self.movie_controller.list_movies(root_path):
             del item["servicereference"]
             del item["flags"]
             data["items"].append(item)
+
+        if data["items"]:
+            self._cache(request, expires=300)
+
+        return json_response(request, data)
+
+    def remove(self, request, target_path):
+        data = dict(result=False)
         return json_response(request, data)
 
     def render_GET(self, request):
@@ -39,12 +68,32 @@ class RESTMovieController(RESTControllerSkeleton):
             'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
 
         if len(request.postpath) == 0 or request.postpath[0] == '':
-            target_path = '/media/hdd/movie'
+            target_path = '/media/hdd/movie/'
         else:
             target_path = '/'.join(request.postpath)
 
         if os.path.isdir(target_path):
             return self.render_path_listing(request, target_path)
+
+        return self.error_response(
+            request, response_code=http.NOT_FOUND, message="not found")
+
+    def render_DELETE(self, request):
+        """
+        HTTP DELETE request handler deleting a movie item
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
+        request.setHeader(
+            'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
+
+        target_path = '/'.join(request.postpath)
+
+        if os.path.isfile(target_path):
+            return self.remove(request, target_path)
 
         return self.error_response(
             request, response_code=http.NOT_FOUND, message="not found")

@@ -73,6 +73,8 @@ class RootController(BaseController):
             rest_movie_controller.RESTMovieController(),
             [GzipEncoderFactory()])
         self.putChild("movies", movie_controller_instance)
+        self.putChild("movie", static.File("/media/hdd/movie/"))
+
         self.putChild("file", FileController())
         self.putChild("grab", grabScreenshot(session))
 

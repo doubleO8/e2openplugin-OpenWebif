@@ -45,6 +45,10 @@ class RESTMovieController(RESTControllerSkeleton):
     def render_path_listing(self, request, root_path):
         data = dict(result=True, items=[])
         removed_keys = ('servicereference', 'flags', 'kind',)
+        r_path = request.path
+
+        if r_path.endswith('/'):
+            r_path = r_path[:-1]
 
         for item in self.movie_controller.list_movies(root_path):
             for rkey in removed_keys:
@@ -52,17 +56,37 @@ class RESTMovieController(RESTControllerSkeleton):
                     del item[rkey]
                 except KeyError:
                     pass
+
             data["items"].append(item)
             if item["path"].startswith(self.root):
-                item["path"] = request.path + item["path"][len(self.root):]
+                item["path"] = '/'.join(
+                    (r_path, item["path"][len(self.root):]))
 
         if data["items"]:
-            self._cache(request, expires=30)
+            # self._cache(request, expires=30)
+            self._cache(request)
 
         return json_response(request, data)
 
     def remove(self, request, target_path):
         data = dict(result=False)
+        e_ext_level1 = ('ts', 'eit',)
+        e_ext_level2 = ('ap', 'cuts', 'meta', 'sc',)
+        (trunk, _) = os.path.splitext(target_path)
+        files_to_remove = []
+
+        for ext1 in e_ext_level1:
+            current = '.'.join((trunk, ext1))
+            if os.path.isfile(current):
+                files_to_remove.append(current)
+
+        ext1 = e_ext_level1[0]
+        for ext2 in e_ext_level2:
+            current = '.'.join((trunk, ext1, ext2))
+            if os.path.isfile(current):
+                files_to_remove.append(current)
+
+        data["files"] = files_to_remove
         return json_response(request, data)
 
     def render_GET(self, request):
@@ -90,6 +114,10 @@ class RESTMovieController(RESTControllerSkeleton):
 
         if os.path.isdir(target_path):
             return self.render_path_listing(request, target_path)
+        elif os.path.isfile(target_path):
+            url = "/movie/" + '/'.join(request.postpath)
+            request.redirect(url)
+            return ''
 
         return self.error_response(
             request, response_code=http.NOT_FOUND, message="not found")

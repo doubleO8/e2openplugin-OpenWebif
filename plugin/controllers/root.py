@@ -26,7 +26,6 @@ from web import WebController
 from ajax import AjaxController
 from transcoding import TranscodingController
 from file import FileController
-import rest_fs_access
 import rest_api_controller
 import rest_movie_controller
 from movie import MOVIES_ROOT_PATH, MOVIE_ENDPOINT_PATH
@@ -53,22 +52,6 @@ class RootController(BaseController):
             [GzipEncoderFactory()])
         self.putChild("api", api_controller_instance)
         self.putChild("ajax", AjaxController(session))
-
-        encoder_factory = rest_fs_access.GzipEncodeByFileExtensionFactory(
-            extensions=[
-                'txt', 'json', 'html', 'xml', 'js', 'conf', 'cfg',
-                'eit', 'sc', 'ap'
-            ])
-
-        #: gzip compression enabled file controller
-        wrapped_fs_controller = EncodingResourceWrapper(
-            rest_fs_access.RESTFilesystemController(
-                root='/',
-                resource_prefix="/fs",
-                session=session),
-            [encoder_factory]
-        )
-        self.putChild("fs", wrapped_fs_controller)
 
         movie_controller_instance = EncodingResourceWrapper(
             rest_movie_controller.RESTMovieController(),

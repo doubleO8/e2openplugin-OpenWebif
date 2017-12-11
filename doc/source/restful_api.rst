@@ -12,9 +12,6 @@ RESTful API
 .. automodule:: controllers.rest_movie_controller
     :members:
 
-.. automodule:: controllers.rest_fs_access
-    :members:
-
 .. automodule:: controllers.rest_saveconfig_api
     :members:
 

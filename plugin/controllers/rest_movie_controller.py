@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+Movie Items
+-----------
+
+Listing of movie items on current device.
+Removing of movie item files including meta data.
+"""
 import os
 import time
 import datetime
@@ -10,17 +17,12 @@ from twisted.web import http
 
 from rest import json_response
 from rest import CORS_DEFAULT_ALLOW_ORIGIN, RESTControllerSkeleton
-from movie import MoviesController, MOVIES_ROOT_PATH
+from movie import MoviesController, MOVIES_ROOT_PATH, MOVIE_ENDPOINT_URL
 
 
 class RESTMovieController(RESTControllerSkeleton):
     """
     RESTful Controller for /movies endpoint.
-    Goals:
-
-        * Listing of movie items on current device
-        * Reming of movie item file including meta data files
-
     """
     def __init__(self, *args, **kwargs):
         RESTControllerSkeleton.__init__(self, *args, **kwargs)
@@ -47,6 +49,15 @@ class RESTMovieController(RESTControllerSkeleton):
             request.setHeader(key, headers[key])
 
     def render_path_listing(self, request, root_path):
+        """
+        Generate a list of movie items available on current device.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+            root_path (basestring): Movie item to remove
+        Returns:
+            HTTP response with headers
+        """
         data = dict(result=True, items=[])
         removed_keys = ('servicereference', 'flags', 'kind',)
         r_path = request.path
@@ -66,13 +77,18 @@ class RESTMovieController(RESTControllerSkeleton):
                 item["path"] = '/'.join(
                     (r_path, item["path"][len(self.root):]))
 
-        if data["items"]:
-            # self._cache(request, expires=30)
-            self._cache(request)
-
         return json_response(request, data)
 
     def remove(self, request, target_path):
+        """
+        Remove movie file including meta data files.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+            target_path (basestring): Movie item to remove
+        Returns:
+            HTTP response with headers
+        """
         data = dict(result=False)
         e_ext_level1 = ('ts', 'eit',)
         e_ext_level2 = ('ap', 'cuts', 'meta', 'sc',)
@@ -119,7 +135,7 @@ class RESTMovieController(RESTControllerSkeleton):
         if os.path.isdir(target_path):
             return self.render_path_listing(request, target_path)
         elif os.path.isfile(target_path):
-            url = "/movie/" + '/'.join(request.postpath)
+            url = MOVIE_ENDPOINT_URL + '/'.join(request.postpath)
             request.redirect(url)
             return ''
 
@@ -149,5 +165,4 @@ class RESTMovieController(RESTControllerSkeleton):
         if os.path.isfile(target_path):
             return self.remove(request, target_path)
 
-        return self.error_response(
-            request, response_code=http.NOT_FOUND, message="not found")
+        return self.error_response(request, message="not supported")

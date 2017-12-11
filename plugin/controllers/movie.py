@@ -8,6 +8,8 @@ from enigma import eServiceReference, iServiceInformation
 from models.events import mangle_event
 
 MOVIES_ROOT_PATH = '/media/hdd/movie/'
+MOVIE_ENDPOINT_PATH = 'movie'
+MOVIE_ENDPOINT_URL = ''.join(('/', MOVIE_ENDPOINT_PATH, '/'))
 
 SERVICE_INFORMATION_FIELDS = [
     'sAspect',

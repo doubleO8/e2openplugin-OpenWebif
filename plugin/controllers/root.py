@@ -29,6 +29,7 @@ from file import FileController
 import rest_fs_access
 import rest_api_controller
 import rest_movie_controller
+from movie import MOVIES_ROOT_PATH
 
 try:
     from boxbranding import getBoxType
@@ -73,7 +74,7 @@ class RootController(BaseController):
             rest_movie_controller.RESTMovieController(),
             [GzipEncoderFactory()])
         self.putChild("movies", movie_controller_instance)
-        self.putChild("movie", static.File("/media/hdd/movie/"))
+        self.putChild("movie", static.File(MOVIES_ROOT_PATH))
 
         self.putChild("file", FileController())
         self.putChild("grab", grabScreenshot(session))

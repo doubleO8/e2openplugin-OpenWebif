@@ -10,19 +10,23 @@ from twisted.web import http
 
 from rest import json_response
 from rest import CORS_DEFAULT_ALLOW_ORIGIN, RESTControllerSkeleton
-from movie import MoviesController
+from movie import MoviesController, MOVIES_ROOT_PATH
 
 
 class RESTMovieController(RESTControllerSkeleton):
     """
-    RESTful Controller for /movies endpoint
-    """
+    RESTful Controller for /movies endpoint.
+    Goals:
 
+        * Listing of movie items on current device
+        * Reming of movie item file including meta data files
+
+    """
     def __init__(self, *args, **kwargs):
         RESTControllerSkeleton.__init__(self, *args, **kwargs)
         self.log = logging.getLogger(__name__)
         self.movie_controller = MoviesController()
-        self.root = kwargs.get("root", '/media/hdd/movie/')
+        self.root = kwargs.get("root", MOVIES_ROOT_PATH)
 
     def _cache(self, request, expires=False):
         headers = {}

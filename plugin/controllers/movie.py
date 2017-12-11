@@ -7,6 +7,8 @@ from enigma import eServiceReference, iServiceInformation
 
 from models.events import mangle_event
 
+MOVIES_ROOT_PATH = '/media/hdd/movie/'
+
 SERVICE_INFORMATION_FIELDS = [
     'sAspect',
     'sAudioPID',

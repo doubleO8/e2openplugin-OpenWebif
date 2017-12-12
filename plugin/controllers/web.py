@@ -531,16 +531,8 @@ class WebController(BaseController):
 
         request.setHeader('Content-Type', 'application/x-mpegurl')
         services = getServices(bRef, False)
-        if comp_config.OpenWebif.auth_for_streaming.value:
-            session = GetSession()
-            if session.GetAuth(request) is not None:
-                auth = ':'.join(session.GetAuth(request)) + "@"
-            else:
-                auth = '-sid:' + str(session.GetSID(request)) + "@"
-        else:
-            auth = ''
         services["host"] = "%s:8001" % request.getRequestHostname()
-        services["auth"] = auth
+        services["auth"] = ''
         return services
 
     def P_subservices(self, request):

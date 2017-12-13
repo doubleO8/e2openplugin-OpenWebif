@@ -12,12 +12,17 @@ import urllib
 import urlparse
 import os
 import re
+import logging
+import pprint
 
 from enigma import eServiceReference, getBestPlayableServiceReference
 from ServiceReference import ServiceReference
 from Components.config import config
-from info import getInfo
 
+from twisted.web import http
+
+from info import getInfo
+from ..utilities import require_valid_file_parameter
 
 MODEL_TRANSCODING = (
     "Uno4K",
@@ -54,6 +59,8 @@ MACHINEBUILD_TRANSCODING_NORMAL = (
 
 MACHINEBUILD_TRANSCODING_ANY = MACHINEBUILD_TRANSCODING_DYNAMIC + \
                                MACHINEBUILD_TRANSCODING_NORMAL
+
+SLOG = logging.getLogger("stream")
 
 
 def build_url(hostname, path, args, scheme="http", port=None):
@@ -205,14 +212,16 @@ def create_file_m3u(request):
     Returns:
         M3U contents
     """
-    if "file" not in request.args:
-        return "Missing file parameter"
-
-    filename = request.args["file"][0].decode(
-        'utf-8', 'ignore').encode('utf-8')
-
-    if not os.path.exists(filename):
-        return "File '%s' not found" % (filename)
+    try:
+        filename = require_valid_file_parameter(request, "file")
+    except ValueError as verr:
+        request.setResponseCode(http.BAD_REQUEST)
+        SLOG.error(verr)
+        return ''
+    except IOError as ioerr:
+        SLOG.error(ioerr)
+        request.setResponseCode(http.NOT_FOUND)
+        return ''
 
     for_phone = False
     if "device" in request.args:
@@ -225,7 +234,6 @@ def create_file_m3u(request):
         '#EXTM3U',
         '#EXTVLCOPT--http-reconnect=true',
     ]
-
 
     if config.OpenWebif.service_name_for_stream.value:
         metafilename = filename + '.meta'
@@ -289,7 +297,7 @@ def create_file_m3u(request):
     args['file'] = filename
     source_url = build_url(
         hostname=request.getRequestHostname(), port=portNumber,
-        path=sRef, args=args)
+        path="/file", args=args)
     progopt.append(source_url)
     request.setHeader('Content-Type', 'application/x-mpegurl')
     return "\n".join(progopt)

@@ -11,13 +11,16 @@
 import os
 import re
 import glob
+import urllib
 from urllib import quote
 import json
+import logging
+import pprint
 
 from twisted.web import static, resource, http
 
 from Components.config import config as comp_config
-from utilities import lenient_force_utf_8, sanitise_filename_slashes
+from utilities import require_valid_file_parameter
 
 
 def new_getRequestHostname(self):
@@ -31,6 +34,7 @@ def new_getRequestHostname(self):
 
 http.Request.getRequestHostname = new_getRequestHostname
 
+FLOG = logging.getLogger("filecrap")
 
 class FileController(resource.Resource):
     def render(self, request):
@@ -39,11 +43,16 @@ class FileController(resource.Resource):
             action = request.args["action"][0]
 
         if "file" in request.args:
-            filename = lenient_force_utf_8(request.args["file"][0])
-            filename = sanitise_filename_slashes(os.path.realpath(filename))
-
-            if not os.path.exists(filename):
-                return "File '%s' not found" % (filename)
+            try:
+                filename = require_valid_file_parameter(request, "file")
+            except ValueError as verr:
+                request.setResponseCode(http.BAD_REQUEST)
+                FLOG.error(verr)
+                return ''
+            except IOError as ioerr:
+                FLOG.error(ioerr)
+                request.setResponseCode(http.NOT_FOUND)
+                return ''
 
             if action == "stream":
                 name = "stream"

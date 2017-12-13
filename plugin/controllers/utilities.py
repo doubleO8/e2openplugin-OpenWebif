@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 import re
+import urllib
 
 MANY_SLASHES_PATTERN = r'[\/]+'
 MANY_SLASHES_REGEX = re.compile(MANY_SLASHES_PATTERN)
@@ -280,6 +282,33 @@ def create_servicereference(*args, **kwargs):
         tsid,
         oid,
         ns)
+
+
+def require_valid_file_parameter(request, parameter_key):
+    """
+
+    Args:
+        request (twisted.web.server.Request): HTTP request object
+        parameter_key: filename parameter key
+
+    Returns:
+        basestring: existing filename
+
+    Raises:
+        ValueError: If *parameter_key* is missing.
+        IOError: If filename does not point to an existing file path
+    """
+    if parameter_key not in request.args:
+        raise ValueError("Missing parameter: {!r}".format(parameter_key))
+
+    filename = lenient_force_utf_8(
+        urllib.unquote_plus(request.args[parameter_key][0]))
+    filename = sanitise_filename_slashes(os.path.realpath(filename))
+
+    if not os.path.exists(filename):
+        raise IOError("Not a file: {!r}".format(filename))
+
+    return filename
 
 
 if __name__ == '__main__':

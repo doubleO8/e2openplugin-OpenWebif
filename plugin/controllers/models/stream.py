@@ -166,7 +166,7 @@ def create_stream_m3u(session, request, m3ufile):
     return response
 
 
-def create_file_m3u(session, request):
+def create_file_m3u(request):
     if "file" not in request.args:
         return "Missing file parameter"
 

@@ -1814,7 +1814,7 @@ class WebController(BaseController):
             HTTP response with headers
         """
         self.isCustom = True
-        return create_file_m3u(self.session, request)
+        return create_file_m3u(request)
 
     def P_videom3u(self, request):
         self.isCustom = True

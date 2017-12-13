@@ -8,12 +8,8 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
-import urllib
-import urlparse
-import os
 import re
 import logging
-import pprint
 
 from enigma import eServiceReference, getBestPlayableServiceReference
 from ServiceReference import ServiceReference
@@ -22,7 +18,7 @@ from Components.config import config
 from twisted.web import http
 
 from info import getInfo
-from ..utilities import require_valid_file_parameter
+from ..utilities import require_valid_file_parameter, build_url
 
 MODEL_TRANSCODING = (
     "Uno4K",
@@ -61,28 +57,6 @@ MACHINEBUILD_TRANSCODING_ANY = MACHINEBUILD_TRANSCODING_DYNAMIC + \
                                MACHINEBUILD_TRANSCODING_NORMAL
 
 SLOG = logging.getLogger("stream")
-
-
-def build_url(hostname, path, args, scheme="http", port=None):
-    """
-    Create an URL based on parameters.
-
-    Args:
-        hostname: hostname portion
-        path: path portion
-        args: query parameters
-        scheme: scheme portion
-        port: port portion
-
-    Returns:
-        basestring: Generated URL
-    """
-    netloc = hostname
-    if port:
-        netloc = '{:s}:{!s}'.format(hostname, port)
-    path_q = urllib.quote(path)
-    args_e = urllib.urlencode(args)
-    return urlparse.urlunparse((scheme, netloc, path_q, None, args_e, None))
 
 
 def create_transcoding_args(machinebuild, for_phone):

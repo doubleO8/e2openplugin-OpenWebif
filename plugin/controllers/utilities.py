@@ -3,6 +3,7 @@
 import os
 import re
 import urllib
+import urlparse
 
 MANY_SLASHES_PATTERN = r'[\/]+'
 MANY_SLASHES_REGEX = re.compile(MANY_SLASHES_PATTERN)
@@ -309,6 +310,28 @@ def require_valid_file_parameter(request, parameter_key):
         raise IOError("Not a file: {!r}".format(filename))
 
     return filename
+
+
+def build_url(hostname, path, args, scheme="http", port=None):
+    """
+    Create an URL based on parameters.
+
+    Args:
+        hostname: hostname portion
+        path: path portion
+        args: query parameters
+        scheme: scheme portion
+        port: port portion
+
+    Returns:
+        basestring: Generated URL
+    """
+    netloc = hostname
+    if port:
+        netloc = '{:s}:{!s}'.format(hostname, port)
+    path_q = urllib.quote(path)
+    args_e = urllib.urlencode(args)
+    return urlparse.urlunparse((scheme, netloc, path_q, None, args_e, None))
 
 
 if __name__ == '__main__':

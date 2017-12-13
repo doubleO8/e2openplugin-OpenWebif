@@ -152,8 +152,7 @@ def getStream(session, request, m3ufile):
         # #EXTINF:-1,%s\n adding back to show service name in programs like VLC
         if "name" in request.args:
             name = request.args["name"][0]
-            if config.OpenWebif.service_name_for_stream.value:
-                progopt = "#EXTINF:-1,%s\n" % name
+            progopt = "#EXTINF:-1,%s\n" % name
 
         # When you use EXTVLCOPT:program in a transcoded stream, VLC does
         # not play stream

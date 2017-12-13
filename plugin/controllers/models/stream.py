@@ -98,8 +98,7 @@ def create_transcoding_args(machinebuild, for_phone):
 def getStream(session, request, m3ufile):
     progopt = ''
     if "ref" in request.args:
-        sRef = request.args["ref"][0].decode(
-            'utf-8', 'ignore').encode('utf-8')
+        sRef = request.args["ref"][0].decode('utf-8', 'ignore').encode('utf-8')
     else:
         sRef = ""
 
@@ -186,28 +185,22 @@ def getTS(self, request):
     sRef = ""
     progopt = ''
 
-    if os.path.exists(filename + '.meta'):
-        metafile = open(filename + '.meta', "r")
-        name = ''
-        seconds = -1  # unknown duration default
-        line = metafile.readline()  # service ref
-        if line:
-            sRef = eServiceReference(line.strip()).toString()
-        line2 = metafile.readline()  # name
-        if line2:
-            name = line2.strip()
-        line3 = metafile.readline()  # description  # NOQA
-        line4 = metafile.readline()  # recording time  # NOQA
-        line5 = metafile.readline()  # tags  # NOQA
-        line6 = metafile.readline()  # length
-
-        if line6:
-            seconds = float(line6.strip()) / 90000  # In seconds
-
-        if config.OpenWebif.service_name_for_stream.value:
-            progopt += "#EXTINF:%d,%s\n" % (seconds, name)
-
-        metafile.close()
+    if config.OpenWebif.service_name_for_stream.value:
+        metafilename = filename + '.meta'
+        try:
+            with open(metafilename, "rb") as src:
+                lines = [x.strip() for x in src.readlines()]
+                name = ''
+                seconds = -1  # unknown duration default
+                if lines[0]:  # service ref
+                    sRef = eServiceReference(lines[0]).toString()
+                if lines[1]:  # name
+                    name = lines[1]
+                if lines[5]:  # length
+                    seconds = float(lines[5]) / 90000  # In seconds
+                progopt += "#EXTINF:%d,%s\n" % (seconds, name)
+        except (IOError, ValueError, IndexError):
+            pass
 
     portNumber = None
     info = getInfo()
@@ -221,8 +214,7 @@ def getTS(self, request):
 
     if model in MODEL_TRANSCODING or machinebuild in MACHINEBUILD_TRANSCODING:
         try:
-            transcoder_port = int(
-                config.plugins.transcodingsetup.port.value)
+            transcoder_port = int(config.plugins.transcodingsetup.port.value)
         except Exception:
             # Transcoding Plugin is not installed or your STB does not
             # support transcoding

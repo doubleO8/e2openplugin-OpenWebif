@@ -9,6 +9,9 @@ Utilities
 .. automodule:: controllers.models.model_utilities
     :members:
 
+.. automodule:: controllers.models.stream
+    :members:
+
 Packaging
 =========
 

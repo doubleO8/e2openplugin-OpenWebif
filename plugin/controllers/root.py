@@ -8,8 +8,6 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
-import os
-
 from twisted.web import static
 from twisted.web.resource import EncodingResourceWrapper
 from twisted.web.server import GzipEncoderFactory

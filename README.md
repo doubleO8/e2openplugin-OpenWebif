@@ -8,7 +8,7 @@ pursuing a different set of goals.
 ## Goals
 
 * Create a Developer Friendly Web Interface for Enigma2 based set-top boxes.
-  * Clean Python Code (hopefully [PEP 8]( https://www.python.org/dev/peps/pep-0008/) compliant some day)
+  * ~~Clean Python Code (hopefully [PEP 8]( https://www.python.org/dev/peps/pep-0008/) compliant some day)~~
   * Clean and Valid ECMAScript Code
   * Unit Tests and Documentation
   * Separation of Code and Representation

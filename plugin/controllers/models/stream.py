@@ -122,7 +122,10 @@ def create_stream_m3u(session, request, m3ufile):
     Returns:
         M3U contents
     """
-    progopt = ''
+    progopt = [
+        '#EXTM3U',
+        '#EXTVLCOPT--http-reconnect=true',
+    ]
     sRef = ""
     currentServiceRef = None
 
@@ -174,22 +177,22 @@ def create_stream_m3u(session, request, m3ufile):
         transcoder_port = 8001
 
     if config.OpenWebif.service_name_for_stream.value:
-        # #EXTINF:-1,%s\n adding back to show service name in programs like VLC
         if "name" in request.args:
             name = request.args["name"][0]
-            progopt = "#EXTINF:-1,%s\n" % name
+            progopt.append("#EXTINF:-1,%s" % name)
 
         # When you use EXTVLCOPT:program in a transcoded stream, VLC does
         # not play stream
         if sRef != '' and portNumber != transcoder_port:
-            progopt += "#EXTVLCOPT:program=%d\n" % (
-                int(sRef.split(':')[3], 16))
+            progopt.append("#EXTVLCOPT:program=%d" % (
+                int(sRef.split(':')[3], 16)))
 
-    response = "#EXTM3U \n#EXTVLCOPT--http-reconnect=true \n%s%s\n" % (
-        progopt, build_url(hostname=request.getRequestHostname(),
-                           port=portNumber, path=sRef, args=args))
+    source_url = build_url(
+        hostname=request.getRequestHostname(), port=portNumber,
+        path=sRef, args=args)
+    progopt.append(source_url)
     request.setHeader('Content-Type', 'application/x-mpegurl')
-    return response
+    return "\n".join(progopt)
 
 
 def create_file_m3u(request):
@@ -218,7 +221,11 @@ def create_file_m3u(request):
     # ServiceReference is not part of filename so look in
     # the '.ts.meta' file
     sRef = ""
-    progopt = ''
+    progopt = [
+        '#EXTM3U',
+        '#EXTVLCOPT--http-reconnect=true',
+    ]
+
 
     if config.OpenWebif.service_name_for_stream.value:
         metafilename = filename + '.meta'
@@ -233,7 +240,7 @@ def create_file_m3u(request):
                     name = lines[1]
                 if lines[5]:  # length
                     seconds = float(lines[5]) / 90000  # In seconds
-                progopt += "#EXTINF:%d,%s\n" % (seconds, name)
+                progopt.append("#EXTINF:%d,%s" % (seconds, name))
         except (IOError, ValueError, IndexError):
             pass
 
@@ -269,7 +276,8 @@ def create_file_m3u(request):
     # play stream
     use_s_name = config.OpenWebif.service_name_for_stream.value
     if use_s_name and sRef != '' and portNumber != transcoder_port:
-        progopt += "#EXTVLCOPT:program=%d\n" % (int(sRef.split(':')[3], 16))
+        progopt.append("#EXTVLCOPT:program=%d" % (int(
+            sRef.split(':')[3], 16)))
 
     if portNumber is None:
         portNumber = config.OpenWebif.port.value
@@ -279,12 +287,12 @@ def create_file_m3u(request):
             portNumber = m.group(1)
 
     args['file'] = filename
-    response = "#EXTM3U \n#EXTVLCOPT--http-reconnect=true \n%s%s\n" % (
-        (progopt, build_url(
-            hostname=request.getRequestHostname(),
-            port=portNumber, path="file", args=args)))
+    source_url = build_url(
+        hostname=request.getRequestHostname(), port=portNumber,
+        path=sRef, args=args)
+    progopt.append(source_url)
     request.setHeader('Content-Type', 'application/x-mpegurl')
-    return response
+    return "\n".join(progopt)
 
 
 def getStreamSubservices(session, request):

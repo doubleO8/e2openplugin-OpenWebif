@@ -166,7 +166,7 @@ def getStream(session, request, m3ufile):
     return response
 
 
-def getTS(self, request):
+def getTS(session, request):
     if "file" not in request.args:
         return "Missing file parameter"
 

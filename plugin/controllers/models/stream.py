@@ -11,7 +11,9 @@
 from enigma import eServiceReference, getBestPlayableServiceReference
 from ServiceReference import ServiceReference
 from info import getInfo
-from urllib import unquote, quote
+import urllib
+import urlparse
+from urllib import quote
 import os
 import re
 from Components.config import config
@@ -30,8 +32,71 @@ class GetSession(Resource):
         else:
             return None
 
+MODEL_TRANSCODING = (
+    "Uno4K",
+    "Ultimo4K",
+    "Solo4K",
+    "Solo²",
+    "Duo²",
+    "Solo SE",
+    "Quad",
+    "Quad Plus",
+)
+
+MACHINEBUILD_TRANSCODING = (
+    'dags7356',
+    'dags7252',
+    'gb7252',
+    'gb7356',
+)
+
+MACHINEBUILD_TRANSCODING_DYNAMIC = (
+    'inihdp',
+    'hd2400',
+    'et10000',
+    'et13000',
+    'sf5008',
+    '8100s',
+)
+
+MACHINEBUILD_TRANSCODING_NORMAL = (
+    'ew7356',
+    'formuler1tc',
+    'tiviaraplus'
+)
+
+MACHINEBUILD_TRANSCODING_ANY = MACHINEBUILD_TRANSCODING_DYNAMIC + MACHINEBUILD_TRANSCODING_NORMAL
+
+def build_url(hostname, path, args, scheme="http", port=None):
+    netloc = hostname
+    if port:
+        netloc = '{:s}:{!s}'.format(hostname, port)
+    path_q = urllib.quote(path)
+    args_e = urllib.urlencode(args)
+    return urlparse.urlunparse((scheme, netloc, path_q, None, args_e, None))
+
+def create_transcoding_args(machinebuild, for_phone):
+    args = dict()
+    if not for_phone:
+        return args
+
+    if machinebuild in MACHINEBUILD_TRANSCODING_DYNAMIC:
+        args = dict(
+            bitrate=config.plugins.transcodingsetup.bitrate.value,
+            resolution=config.plugins.transcodingsetup.resolution.value,
+            aspectratio=config.plugins.transcodingsetup.aspectratio.value,
+            interlaced=config.plugins.transcodingsetup.interlaced.value,
+        )
+        (args['width'], args['height']) = args['resolution'].split('x')
+    elif machinebuild in MACHINEBUILD_TRANSCODING_NORMAL:
+        args = dict(
+            bitrate=config.plugins.transcodingsetup.bitrate.value
+        )
+
+    return args
 
 def getStream(session, request, m3ufile):
+    progopt = ''
     if "ref" in request.args:
         sRef = request.args["ref"][0].decode(
             'utf-8', 'ignore').encode('utf-8')
@@ -59,39 +124,20 @@ def getStream(session, request, m3ufile):
         else:
             sRef = ref.toString()
 
-    name = "stream"
-    # #EXTINF:-1,%s\n adding back to show service name in programs like VLC
-    progopt = ''
-    if "name" in request.args:
-        name = request.args["name"][0]
-        if config.OpenWebif.service_name_for_stream.value:
-            progopt = "#EXTINF:-1,%s\n" % name
-
     portNumber = config.OpenWebif.streamport.value
     info = getInfo()
     model = info["model"]
     machinebuild = info["machinebuild"]
     transcoder_port = None
-    args = ""
-    if model in (
-            "Uno4K",
-            "Ultimo4K",
-            "Solo4K",
-            "Solo²",
-            "Duo²",
-            "Solo SE",
-            "Quad",
-            "Quad Plus") or machinebuild in (
-            'dags7356',
-            'dags7252',
-            'gb7252',
-            'gb7356'):
+    args = create_transcoding_args(machinebuild, for_phone)
+
+    if model in MODEL_TRANSCODING or machinebuild in MACHINEBUILD_TRANSCODING:
         try:
             transcoder_port = int(config.plugins.transcodingsetup.port.value)
         except Exception:
             # Transcoding Plugin is not installed or your STB does not support
             # transcoding
-            transcoder_port = None
+            pass
         if for_phone:
             portNumber = transcoder_port
         if "port" in request.args:
@@ -99,39 +145,25 @@ def getStream(session, request, m3ufile):
 
     # INI use dynamic encoder allocation, and each stream can have diffrent
     # parameters
-    if machinebuild in (
-            'inihdp',
-            'hd2400',
-            'et10000',
-            'et13000',
-            'sf5008',
-            '8100s'):
+    if machinebuild in MACHINEBUILD_TRANSCODING_ANY:
         transcoder_port = 8001
-        if for_phone:
-            bitrate = config.plugins.transcodingsetup.bitrate.value
-            resolution = config.plugins.transcodingsetup.resolution.value
-            (width, height) = tuple(resolution.split('x'))
-            # framrate = config.plugins.transcodingsetup.framerate.value
-            aspectratio = config.plugins.transcodingsetup.aspectratio.value
-            interlaced = config.plugins.transcodingsetup.interlaced.value
-            args = "?bitrate=%s?width=%s?height=%s?aspectratio=%s?interlaced=%s" % (bitrate, width, height, aspectratio, interlaced)  # NOQA
 
-    if machinebuild in ('ew7356', 'formuler1tc', 'tiviaraplus'):
-        transcoder_port = 8001
-        if for_phone:
-            bitrate = config.plugins.transcodingsetup.bitrate.value
-            # framrate = config.plugins.transcodingsetup.framerate.value
-            args = "?bitrate=%s" % (bitrate)
+    if config.OpenWebif.service_name_for_stream.value:
+        # #EXTINF:-1,%s\n adding back to show service name in programs like VLC
+        if "name" in request.args:
+            name = request.args["name"][0]
+            if config.OpenWebif.service_name_for_stream.value:
+                progopt = "#EXTINF:-1,%s\n" % name
 
-    # When you use EXTVLCOPT:program in a transcoded stream, VLC does not play
-    # stream
-    use_s_name = config.OpenWebif.service_name_for_stream.value
-    if use_s_name and sRef != '' and portNumber != transcoder_port:
-        progopt = "%s#EXTVLCOPT:program=%d\n" % (
-            progopt, int(sRef.split(':')[3], 16))
+        # When you use EXTVLCOPT:program in a transcoded stream, VLC does
+        # not play stream
+        if sRef != '' and portNumber != transcoder_port:
+            progopt += "#EXTVLCOPT:program=%d\n" % (
+                int(sRef.split(':')[3], 16))
 
-    response = "#EXTM3U \n#EXTVLCOPT--http-reconnect=true \n%shttp://%s:%s/%s%s\n" % (  # NOQA
-        progopt, request.getRequestHostname(), portNumber, sRef, args)
+    response = "#EXTM3U \n#EXTVLCOPT--http-reconnect=true \n%s%s\n" % (
+        progopt, build_url(hostname=request.getRequestHostname(),
+                           port=portNumber, path=sRef, args=args))
     request.setHeader('Content-Type', 'application/x-mpegurl')
     return response
 
@@ -140,7 +172,7 @@ def getTS(self, request):
     if "file" not in request.args:
         return "Missing file parameter"
 
-    filename =  request.args["file"][0].decode(
+    filename = request.args["file"][0].decode(
         'utf-8', 'ignore').encode('utf-8')
 
     if not os.path.exists(filename):
@@ -174,73 +206,44 @@ def getTS(self, request):
             seconds = float(line6.strip()) / 90000  # In seconds
 
         if config.OpenWebif.service_name_for_stream.value:
-            progopt = "%s#EXTINF:%d,%s\n" % (progopt, seconds, name)
+            progopt += "#EXTINF:%d,%s\n" % (seconds, name)
 
         metafile.close()
 
     portNumber = None
-    proto = 'http'
     info = getInfo()
     model = info["model"]
     machinebuild = info["machinebuild"]
     transcoder_port = None
-    args = ""
-    if model in (
-            "Uno4K",
-            "Ultimo4K",
-            "Solo4K",
-            "Solo²",
-            "Duo²",
-            "Solo SE",
-            "Quad",
-            "Quad Plus") or machinebuild in (
-            'gb7252',
-            'gb7356'):
+
+    # INI use dynamic encoder allocation, and each stream can have
+    # different parameters
+    args = create_transcoding_args(machinebuild, for_phone)
+
+    if model in MODEL_TRANSCODING or machinebuild in MACHINEBUILD_TRANSCODING:
         try:
             transcoder_port = int(
                 config.plugins.transcodingsetup.port.value)
         except Exception:
             # Transcoding Plugin is not installed or your STB does not
             # support transcoding
-            transcoder_port = None
+            pass
+
         if for_phone:
             portNumber = transcoder_port
+
     if "port" in request.args:
         portNumber = request.args["port"][0]
 
-    # INI use dynamic encoder allocation, and each stream can have
-    # different parameters
-    if machinebuild in (
-            'inihdp',
-            'hd2400',
-            'et10000',
-            'et13000',
-            'sf5008',
-            '8100s'):
-        if for_phone:
+    if for_phone:
+        if machinebuild in MACHINEBUILD_TRANSCODING_ANY:
             portNumber = config.OpenWebif.streamport.value
-            bitrate = config.plugins.transcodingsetup.bitrate.value
-            resolution = config.plugins.transcodingsetup.resolution.value  # NOQA
-            (width, height) = tuple(resolution.split('x'))
-            # framrate =
-            # config.plugins.transcodingsetup.framerate.value
-            aspectratio = config.plugins.transcodingsetup.aspectratio.value  # NOQA
-            interlaced = config.plugins.transcodingsetup.interlaced.value  # NOQA
-            args = "?bitrate=%s?width=%s?height=%s?aspectratio=%s?interlaced=%s" % (bitrate, width, height, aspectratio, interlaced)  # NOQA
-    elif machinebuild in ('ew7356', 'formuler1tc', 'tiviaraplus'):
-        if for_phone:
-            portNumber = config.OpenWebif.streamport.value
-            bitrate = config.plugins.transcodingsetup.bitrate.value
-            # framrate =
-            # config.plugins.transcodingsetup.framerate.value
-            args = "?bitrate=%s" % (bitrate)
 
     # When you use EXTVLCOPT:program in a transcoded stream, VLC does not
     # play stream
     use_s_name = config.OpenWebif.service_name_for_stream.value
     if use_s_name and sRef != '' and portNumber != transcoder_port:
-        progopt = "%s#EXTVLCOPT:program=%d\n" % (
-            progopt, int(sRef.split(':')[3], 16))
+        progopt += "#EXTVLCOPT:program=%d\n" % (int(sRef.split(':')[3], 16))
 
     if portNumber is None:
         portNumber = config.OpenWebif.port.value
@@ -249,9 +252,11 @@ def getTS(self, request):
         if m is not None:
             portNumber = m.group(1)
 
-    response = "#EXTM3U \n#EXTVLCOPT--http-reconnect=true \n%s%s://%s:%s/file?file=%s%s\n" % (  # NOQA
-        (progopt, proto, request.getRequestHostname(), portNumber,
-         quote(filename), args))
+    args['file'] = filename
+    response = "#EXTM3U \n#EXTVLCOPT--http-reconnect=true \n%s%s\n" % (
+        (progopt, build_url(
+            hostname=request.getRequestHostname(),
+            port=portNumber, path="file", args=args)))
     request.setHeader('Content-Type', 'application/x-mpegurl')
     return response
 

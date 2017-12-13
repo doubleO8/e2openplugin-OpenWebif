@@ -52,10 +52,24 @@ MACHINEBUILD_TRANSCODING_NORMAL = (
     'tiviaraplus'
 )
 
-MACHINEBUILD_TRANSCODING_ANY = MACHINEBUILD_TRANSCODING_DYNAMIC + MACHINEBUILD_TRANSCODING_NORMAL
+MACHINEBUILD_TRANSCODING_ANY = MACHINEBUILD_TRANSCODING_DYNAMIC + \
+                               MACHINEBUILD_TRANSCODING_NORMAL
 
 
 def build_url(hostname, path, args, scheme="http", port=None):
+    """
+    Create an URL based on parameters.
+
+    Args:
+        hostname: hostname portion
+        path: path portion
+        args: query parameters
+        scheme: scheme portion
+        port: port portion
+
+    Returns:
+        basestring: Generated URL
+    """
     netloc = hostname
     if port:
         netloc = '{:s}:{!s}'.format(hostname, port)
@@ -65,6 +79,17 @@ def build_url(hostname, path, args, scheme="http", port=None):
 
 
 def create_transcoding_args(machinebuild, for_phone):
+    """
+    Create transcoding query parameters `dict` based on *machine build* and
+    *is mobile device* option.
+
+    Args:
+        machinebuild: machine build indicator
+        for_phone: for mobile device indicator
+
+    Returns:
+        dict: query parameters
+    """
     args = dict()
     if not for_phone:
         return args
@@ -86,17 +111,28 @@ def create_transcoding_args(machinebuild, for_phone):
 
 
 def create_stream_m3u(session, request, m3ufile):
+    """
+    Create M3U contents for service streaming.
+
+    Args:
+        session: enigma session object
+        request (twisted.web.server.Request): HTTP request object
+        m3ufile: M3U filename
+
+    Returns:
+        M3U contents
+    """
     progopt = ''
+    sRef = ""
+    currentServiceRef = None
+
     if "ref" in request.args:
         sRef = request.args["ref"][0].decode('utf-8', 'ignore').encode('utf-8')
-    else:
-        sRef = ""
 
     for_phone = False
     if "device" in request.args:
         for_phone = request.args["device"][0] == "phone"
 
-    currentServiceRef = None
     if m3ufile == "streamcurrent.m3u":
         currentServiceRef = session.nav.getCurrentlyPlayingServiceReference()
         sRef = currentServiceRef.toString()
@@ -157,6 +193,15 @@ def create_stream_m3u(session, request, m3ufile):
 
 
 def create_file_m3u(request):
+    """
+    Create M3U contents for file streaming.
+
+    Args:
+        request (twisted.web.server.Request): HTTP request object
+
+    Returns:
+        M3U contents
+    """
     if "file" not in request.args:
         return "Missing file parameter"
 

@@ -524,6 +524,10 @@ class WebController(BaseController):
             request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:get:: /web/services.m3u
+
+            :query string bRef: bouquet reference
         """
         if "bRef" in request.args.keys():
             bRef = request.args["bRef"][0]
@@ -1849,6 +1853,10 @@ class WebController(BaseController):
             request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:get:: /web/streamsubservices
+
+            :query string sRef: service reference
         """
         return getStreamSubservices(self.session, request)
 

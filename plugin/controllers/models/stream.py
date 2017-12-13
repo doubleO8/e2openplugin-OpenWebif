@@ -8,29 +8,16 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
-from enigma import eServiceReference, getBestPlayableServiceReference
-from ServiceReference import ServiceReference
-from info import getInfo
 import urllib
 import urlparse
-from urllib import quote
 import os
 import re
+
+from enigma import eServiceReference, getBestPlayableServiceReference
+from ServiceReference import ServiceReference
 from Components.config import config
-from twisted.web.resource import Resource
+from info import getInfo
 
-
-class GetSession(Resource):
-    def GetSID(self, request):
-        sid = request.getSession().uid
-        return sid
-
-    def GetAuth(self, request):
-        session = request.getSession().sessionNamespaces
-        if "pwd" in session.keys() and session["pwd"] is not None:
-            return (session["user"], session["pwd"])
-        else:
-            return None
 
 MODEL_TRANSCODING = (
     "Uno4K",
@@ -67,6 +54,7 @@ MACHINEBUILD_TRANSCODING_NORMAL = (
 
 MACHINEBUILD_TRANSCODING_ANY = MACHINEBUILD_TRANSCODING_DYNAMIC + MACHINEBUILD_TRANSCODING_NORMAL
 
+
 def build_url(hostname, path, args, scheme="http", port=None):
     netloc = hostname
     if port:
@@ -74,6 +62,7 @@ def build_url(hostname, path, args, scheme="http", port=None):
     path_q = urllib.quote(path)
     args_e = urllib.urlencode(args)
     return urlparse.urlunparse((scheme, netloc, path_q, None, args_e, None))
+
 
 def create_transcoding_args(machinebuild, for_phone):
     args = dict()
@@ -94,6 +83,7 @@ def create_transcoding_args(machinebuild, for_phone):
         )
 
     return args
+
 
 def create_stream_m3u(session, request, m3ufile):
     progopt = ''

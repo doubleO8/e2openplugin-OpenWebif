@@ -35,7 +35,8 @@ from models.movies import getMovieList, removeMovie, getMovieTags, moveMovie, \
     renameMovie, getAllMovies
 from models.config import getSettings,  \
     setZapStream, saveConfig, getZapStream, setShowChPicon
-from models.stream import create_stream_m3u, create_file_m3u, getStreamSubservices, GetSession
+from models.stream import create_stream_m3u, create_file_m3u, \
+    getStreamSubservices
 from models.mediaplayer import mediaPlayerAdd, mediaPlayerRemove, \
     mediaPlayerPlay, mediaPlayerCommand, mediaPlayerCurrent, mediaPlayerList, \
     mediaPlayerLoad, mediaPlayerSave, mediaPlayerFindFile

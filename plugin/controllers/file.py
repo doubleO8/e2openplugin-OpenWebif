@@ -11,16 +11,13 @@
 import os
 import re
 import glob
-import urllib
-from urllib import quote
 import json
 import logging
-import pprint
 
 from twisted.web import static, resource, http
 
 from Components.config import config as comp_config
-from utilities import require_valid_file_parameter
+from utilities import require_valid_file_parameter, build_url
 
 
 def new_getRequestHostname(self):
@@ -35,6 +32,7 @@ def new_getRequestHostname(self):
 http.Request.getRequestHostname = new_getRequestHostname
 
 FLOG = logging.getLogger("filecrap")
+
 
 class FileController(resource.Resource):
     def render(self, request):
@@ -56,27 +54,34 @@ class FileController(resource.Resource):
 
             if action == "stream":
                 name = "stream"
+                m3u_content = [
+                    '#EXTM3U',
+                    '#EXTVLCOPT--http-reconnect=true',
+                ]
+
                 if "name" in request.args:
                     name = request.args["name"][0]
+                    m3u_content.append("#EXTINF:-1,%s" % name)
 
                 port = comp_config.OpenWebif.port.value
-                proto = 'http'
                 ourhost = request.getHeader('host')
                 m = re.match('.+\:(\d+)$', ourhost)
                 if m is not None:
                     port = m.group(1)
 
-                response = "#EXTM3U\n#EXTVLCOPT--http-reconnect=true\n" \
-                           "#EXTINF:-1,%s\n%s://%s:%s/file" \
-                           "?action=download&file=%s" % (
-                               name, proto, request.getRequestHostname(), port,
-                               quote(filename))
+                args = {
+                    "action": "download",
+                    "file": filename
+                }
+                source_url = build_url(hostname=request.getRequestHostname(),
+                                       path="file", args=args, port=port)
+                m3u_content.append(source_url)
                 request.setHeader(
                     "Content-Disposition",
                     'attachment;filename="%s.m3u"' %
                     name)
                 request.setHeader("Content-Type", "application/x-mpegurl")
-                return response
+                return "\n".join(m3u_content)
             elif action == "delete":
                 request.setResponseCode(http.OK)
                 return "TODO: DELETE FILE: %s" % (filename)

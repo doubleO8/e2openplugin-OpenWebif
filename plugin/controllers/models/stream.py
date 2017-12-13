@@ -95,7 +95,7 @@ def create_transcoding_args(machinebuild, for_phone):
 
     return args
 
-def getStream(session, request, m3ufile):
+def create_stream_m3u(session, request, m3ufile):
     progopt = ''
     if "ref" in request.args:
         sRef = request.args["ref"][0].decode('utf-8', 'ignore').encode('utf-8')
@@ -166,7 +166,7 @@ def getStream(session, request, m3ufile):
     return response
 
 
-def getTS(session, request):
+def create_file_m3u(session, request):
     if "file" not in request.args:
         return "Missing file parameter"
 

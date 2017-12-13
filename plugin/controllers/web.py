@@ -35,7 +35,7 @@ from models.movies import getMovieList, removeMovie, getMovieTags, moveMovie, \
     renameMovie, getAllMovies
 from models.config import getSettings,  \
     setZapStream, saveConfig, getZapStream, setShowChPicon
-from models.stream import getStream, getTS, getStreamSubservices, GetSession
+from models.stream import create_stream_m3u, create_file_m3u, getStreamSubservices, GetSession
 from models.mediaplayer import mediaPlayerAdd, mediaPlayerRemove, \
     mediaPlayerPlay, mediaPlayerCommand, mediaPlayerCurrent, mediaPlayerList, \
     mediaPlayerLoad, mediaPlayerSave, mediaPlayerFindFile
@@ -1798,7 +1798,7 @@ class WebController(BaseController):
                     request.args["ref"][0],
                     request.args["name"][0],
                     stream=True)
-        return getStream(self.session, request, "stream.m3u")
+        return create_stream_m3u(self.session, request, "stream.m3u")
 
     def P_tsm3u(self, request):
         """
@@ -1814,11 +1814,11 @@ class WebController(BaseController):
             HTTP response with headers
         """
         self.isCustom = True
-        return getTS(self.session, request)
+        return create_file_m3u(self.session, request)
 
     def P_videom3u(self, request):
         self.isCustom = True
-        return getStream(self.session, request, "video.m3u")
+        return create_stream_m3u(self.session, request, "video.m3u")
 
     def P_streamcurrentm3u(self, request):
         """
@@ -1834,7 +1834,7 @@ class WebController(BaseController):
             HTTP response with headers
         """
         self.isCustom = True
-        return getStream(self.session, request, "streamcurrent.m3u")
+        return create_stream_m3u(self.session, request, "streamcurrent.m3u")
 
     def P_streamsubservices(self, request):
         """

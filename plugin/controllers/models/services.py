@@ -524,6 +524,7 @@ def getPlayableService(sRef, sRefPlaying):
 
 
 def getSubServices(session):
+    #TODO: duplicated .. stream/getStreamSubservices
     services = []
     service = session.nav.getCurrentService()
     if service is not None:

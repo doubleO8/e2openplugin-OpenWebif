@@ -225,7 +225,7 @@ class TwoFaceApiController(RESTControllerSkeleton):
             return self.render_list_all(request)
 
         try:
-            service_reference, item_id = self._mangle_args(request)
+            service_reference, item_id = self._mangle_args(request, needed=1)
         except ValueError as vexc:
             item_id = None
             service_reference = None

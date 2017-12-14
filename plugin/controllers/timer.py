@@ -6,7 +6,7 @@ import enigma
 from enigma import eServiceReference, iServiceInformation
 
 from events import EventsController
-
+from models.timers import TimerDict
 
 class TimersController(object):
     """
@@ -53,9 +53,7 @@ class TimersController(object):
             timer_sref, timer_id = str(timer_item.service_ref), timer_item.eit
             e_data = None
             # TODO: use `dict` based model class
-            data = {
-                "timer": timer_item,
-            }
+            data = TimerDict(timer_item)
 
             if timer_sref and timer_id:
                 e_data = self.egon.lookup_event(timer_sref, timer_id)

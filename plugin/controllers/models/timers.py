@@ -23,6 +23,82 @@ from Plugins.Extensions.OpenWebif.__init__ import _
 
 from model_utilities import mangle_epg_text
 
+TIMER_STATE_LOOKUP = {
+    0: 'waiting',
+    1: 'prepared',
+    2: 'running',
+    3: 'ended'
+}
+
+TIMER_FAKE_BOOLEAN = [
+    'disabled',
+    'justplay',
+    'justremind',
+    'repeated',
+    'zapbeforerecord',
+]
+
+TIMER_ATTRIBUTES = [
+    'PVRFilename',
+    ('begin', 'start_time'),
+    'cancelled',
+    ('description', 'shortinfo'),
+    'dirname',
+    'dirnameHadToFallback',
+    'disabled',
+    'dontSave',
+    ('eit', 'id'),
+    ('end', 'end_time'),
+    'first_try_prepare',
+    'is_timeshift',
+    'is_transformed_timeshift',
+    'justplay',
+    'justremind',
+    'log_entries',
+    ('name', 'title'),
+    # 'notify_t',
+    'prepare_time',
+    'pvrConvert',
+    'receiveRecordEvents',
+    'record_ecm',
+    'record_service',
+    'repeated',
+    'repeatedbegindate',
+    # 'service_ref',
+    # 'shutdown_t',
+    # 'standby_t',
+    'start_prepare',
+    'state',
+    'tags',
+    # 'timer',
+    # 'virtual_video_dir',
+    # 'wakeup_t',
+    'zapbeforerecord',
+]
+
+
+class TimerDict(dict):
+    def __init__(self, item):
+        dict.__init__(self)
+        self["service_reference"] = str(item.service_ref)
+
+        for attr_data in TIMER_ATTRIBUTES:
+            try:
+                source_k, target_k = attr_data
+            except (TypeError, ValueError):
+                source_k = target_k = attr_data
+            value = getattr(item, source_k)
+            if source_k in TIMER_FAKE_BOOLEAN:
+                value = (value == 1)
+            self[target_k] = value
+
+        if self['end_time'] and self['start_time']:
+            self['duration'] = self['end_time'] - self['start_time']
+        else:
+            self['duration'] = 0
+
+        self['state'] = TIMER_STATE_LOOKUP.get(self['state'], self['state'])
+
 
 def getTimers(session):
     rt = session.nav.RecordTimer

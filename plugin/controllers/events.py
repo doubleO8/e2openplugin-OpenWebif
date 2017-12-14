@@ -303,7 +303,10 @@ class EventsController(object):
         if minutes is None:
             minutes = QUERY_MINUTES_ANY
 
-        arglist = (service_reference, querytype, begin, minutes)
+        if querytype != QUERYTYPE_LOOKUP__ID:
+            arglist = (service_reference, querytype, begin)
+        else:
+            arglist = (service_reference, querytype, begin, minutes)
 
         try:
             results = self.epgcache_instance.lookupEvent([flags, arglist])

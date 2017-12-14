@@ -34,7 +34,7 @@ class TimersController(object):
         return sr_obj
 
     def remove(self, service_reference, item_id):
-        sr_obj = self._valid_service_reference_or_bust(service_reference)
+        # sr_obj = self._valid_service_reference_or_bust(service_reference)
         raise NotImplementedError
 
     def list_items(self, service_reference=None, item_id=None):

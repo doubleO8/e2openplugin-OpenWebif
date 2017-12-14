@@ -3,10 +3,11 @@
 import logging
 
 import enigma
-from enigma import eServiceReference, iServiceInformation
+from enigma import eServiceReference
 
 from events import EventsController
 from models.timers import TimerDict
+
 
 class TimersController(object):
     """
@@ -49,10 +50,14 @@ class TimersController(object):
             current_sources += getattr(self.rt, source)
 
         do_all = service_reference is None and item_id is None
+
+        self.log.debug("Listing items ... {!r} / {!r}".format(
+            service_reference, item_id))
+        self.log.debug("do all={!r}".format(do_all))
+
         for timer_item in current_sources:
             timer_sref, timer_id = str(timer_item.service_ref), timer_item.eit
             e_data = None
-            # TODO: use `dict` based model class
             data = TimerDict(timer_item)
 
             if timer_sref and timer_id:
@@ -64,7 +69,9 @@ class TimersController(object):
             if do_all:
                 yield data
             elif timer_sref == service_reference and timer_id == item_id:
+                self.log.debug("service_reference + item_id")
                 yield data
                 break
             elif service_reference and timer_sref == service_reference:
+                self.log.debug("service_reference")
                 yield data

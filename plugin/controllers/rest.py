@@ -5,6 +5,8 @@ import copy
 
 from twisted.web import resource, http
 
+from utilities import get_servicereference_portions
+
 #: CORS - HTTP headers the client may use
 CORS_ALLOWED_CLIENT_HEADERS = [
     'Content-Type',
@@ -145,6 +147,107 @@ class RESTControllerSkeleton(resource.Resource):
 
         request.setResponseCode(response_code)
         return json_response(request, response_data)
+
+
+class TwoFaceApiController(RESTControllerSkeleton):
+    def __init__(self, *args, **kwargs):
+        RESTControllerSkeleton.__init__(self, *args, **kwargs)
+
+    def render_list_all(self, request):
+        data = dict(result=True, items=[])
+
+        # override
+
+        return json_response(request, data)
+
+    def render_list_subset(self, request, service_reference):
+        data = dict(result=True, items=[],
+                    service_reference=service_reference)
+
+        # override
+
+        return json_response(request, data)
+
+    def render_list_item(self, request, service_reference, item_id):
+        data = dict(result=True, items=[],
+                    service_reference=service_reference,
+                    item_id=item_id)
+
+        # override
+
+        if not data['items']:
+            request.setResponseCode(http.NOT_FOUND)
+
+        return json_response(request, data)
+
+    def _mangle_args(self, request, needed=2):
+        item_id = None
+        pp_len = len(request.postpath)
+
+        if pp_len < needed:
+            raise ValueError(
+                "Bad postpath length: Needed {:d}, GOIT {:d}".format(
+                    needed, pp_len))
+
+        for index in range(needed):
+            if not request.postpath[index]:
+                raise ValueError("Empty postpath[{:d}], {!r}".format(
+                    index, request.postpath))
+
+        portions = get_servicereference_portions(request.postpath[0])
+        if len(portions) == 0:
+            raise ValueError("Bad portions length: {:d}".format(
+                len(portions)))
+
+        service_reference = ':'.join(portions)
+
+        if needed > 1:
+            item_id = int(request.postpath[1])
+
+        return service_reference, item_id
+
+    def render_GET(self, request):
+        """
+        HTTP GET implementation.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
+        request.setHeader(
+            'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)
+        pp_len = len(request.postpath)
+
+        if pp_len == 0 or (pp_len == 1 and not request.postpath[0]):
+            return self.render_list_all(request)
+
+        try:
+            service_reference, item_id = self._mangle_args(request)
+        except ValueError as vexc:
+            item_id = None
+            service_reference = None
+            request.setResponseCode(http.BAD_REQUEST, message=vexc.message)
+
+        # is service_reference valid?
+        pass
+
+        if service_reference and item_id:
+            return self.render_list_item(request, service_reference, item_id)
+        elif service_reference:
+            return self.render_list_subset(request, service_reference)
+
+        data = {
+            "result": False,
+            "_controller": self.__class__.__name__,
+            "request": {
+                "postpath": request.postpath,
+                "path": request.path,
+                "args": request.args,
+            }
+        }
+
+        return json_response(request, data)
 
 
 class SimpleRootController(resource.Resource):

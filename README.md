@@ -12,7 +12,7 @@ pursuing a different set of goals.
   * Clean and Valid ECMAScript Code
   * Unit Tests and ~~[Documentation](https://doubleo8.github.io/e2openplugin-OpenWebif/documentation/index.html)~~
   * Separation of Code and Representation
-* Provide RESTful API and access to EPG events, timers, recorded audio/video items
+* Provide RESTful API and access to EPG events, ~~timers~~, ~~recorded audio/video (dubbed *movie*) items~~
 * Support for multitier architecture, reverse proxies and client side rendering
 * A Modern Web UI Implementation
 * Find a Smashing New Project Name

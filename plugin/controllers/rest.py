@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import json
 import copy
+import logging
 
 from twisted.web import resource, http
 
@@ -152,6 +153,7 @@ class RESTControllerSkeleton(resource.Resource):
 class TwoFaceApiController(RESTControllerSkeleton):
     def __init__(self, *args, **kwargs):
         RESTControllerSkeleton.__init__(self, *args, **kwargs)
+        self.log = logging.getLogger(__name__)
 
     def render_list_all(self, request):
         data = dict(result=True, items=[])
@@ -227,7 +229,8 @@ class TwoFaceApiController(RESTControllerSkeleton):
         except ValueError as vexc:
             item_id = None
             service_reference = None
-            request.setResponseCode(http.BAD_REQUEST, message=vexc.message)
+            request.setResponseCode(http.BAD_REQUEST)
+            self.log.error(vexc.message)
 
         if service_reference and item_id:
             return self.render_list_item(request, service_reference, item_id)

@@ -96,12 +96,14 @@ class RESTTimerController(TwoFaceApiController):
         except ValueError as vexc:
             item_id = None
             service_reference = None
-            request.setResponseCode(http.BAD_REQUEST, message=vexc.message)
+            request.setResponseCode(http.BAD_REQUEST)
+            self.log.error(vexc.message)
 
         try:
             self.tc.remove(service_reference, item_id)
         except ValueError as vexc:
-            request.setResponseCode(http.BAD_REQUEST, message=vexc.message)
+            request.setResponseCode(http.BAD_REQUEST)
+            self.log.error(vexc.message)
 
         data = {
             "result": False,

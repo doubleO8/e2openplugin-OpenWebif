@@ -46,7 +46,7 @@ class TimersController(object):
 
         current_sources = []
         for source in self.sources:
-            current_sources += getattr(self.sources, source)
+            current_sources += getattr(self.rt, source)
 
         all = service_reference is None and item_id is None
         for timer_item in current_sources:

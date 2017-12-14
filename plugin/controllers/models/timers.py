@@ -66,7 +66,7 @@ TIMER_ATTRIBUTES = [
     'pvrConvert',
     'receiveRecordEvents',
     'record_ecm',
-    'record_service',
+    # 'record_service',  # not JSON serializable
     'repeated',
     'repeatedbegindate',
     # 'service_ref',

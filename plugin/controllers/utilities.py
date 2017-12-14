@@ -13,6 +13,9 @@ PATTERN_ITEM_OR_KEY_ACCESS = r'^(?P<attr_name>[a-zA-Z][\w\d]*)' \
                              r'[\'\"](?P<key>[\s\w\d]+)[\'\"])\]$'
 REGEX_ITEM_OR_KEY_ACCESS = re.compile(PATTERN_ITEM_OR_KEY_ACCESS)
 
+SERVICEREFERENCE_PORTION_PATTERN = r'([\da-fA-F]+)[^\w]?'
+SERVICEREFERENCE_PORTION_REGEX = re.compile(SERVICEREFERENCE_PORTION_PATTERN)
+
 # stolen from enigma2_http_api ...
 # https://wiki.neutrino-hd.de/wiki/Enigma:Services:Formatbeschreibung
 # Dezimalwert: 1=TV, 2=Radio, 4=NVod, andere=Daten
@@ -283,6 +286,52 @@ def create_servicereference(*args, **kwargs):
         tsid,
         oid,
         ns)
+
+
+def get_servicereference_portions(value, raise_on_empty=False):
+    """
+    Try to match possible portions of a servicereference in *value*.
+
+    Args:
+        value (basestring): a servicereference-like string
+        raise_on_empty (boolean): If a ValueError should be raised
+
+    Returns:
+        list: matched portions
+
+    Raises:
+        ValueError: If result is empty list and *raise_on_empty* is True
+
+    >>> deadbeef = ['de', 'ad', 'be', 'ef']
+    >>> get_servicereference_portions(None)
+    []
+    >>> get_servicereference_portions(True)
+    []
+    >>> get_servicereference_portions(False)
+    []
+    >>> get_servicereference_portions('de:ad:be:ef') == deadbeef
+    True
+    >>> get_servicereference_portions('de,ad$be_ef??') == deadbeef
+    True
+    >>> get_servicereference_portions('-1:ad:be:ef:')
+    ['1', 'ad', 'be', 'ef']
+    >>> get_servicereference_portions('-^ghi', raise_on_empty=True)
+    Traceback (most recent call last):
+        ...
+    ValueError: -^ghi
+    >>> get_servicereference_portions('1:0:19:7C:6:85:FFFF0000:0:0:0:')
+    ['1', '0', '19', '7C', '6', '85', 'FFFF0000', '0', '0', '0']
+    """
+    rv = []
+    try:
+        rv = re.findall(SERVICEREFERENCE_PORTION_REGEX, value)
+    except TypeError:
+        pass
+
+    if not rv and raise_on_empty:
+        raise ValueError(value)
+
+    return rv
 
 
 def require_valid_file_parameter(request, parameter_key):

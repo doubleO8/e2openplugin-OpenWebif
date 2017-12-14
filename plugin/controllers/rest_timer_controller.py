@@ -43,6 +43,14 @@ class RESTTimerController(TwoFaceApiController):
         self.tc = TimersController(rt=self.session.nav.RecordTimer)
 
     def render_list_all(self, request):
+        """
+        List all timers
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
         data = dict(result=True, items=[])
 
         for item in self.tc.list_items():
@@ -51,6 +59,15 @@ class RESTTimerController(TwoFaceApiController):
         return json_response(request, data)
 
     def render_list_subset(self, request, service_reference):
+        """
+        List timers for specific service.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+            service_reference (basestring): Service reference string
+        Returns:
+            HTTP response with headers
+        """
         data = dict(result=True, items=[],
                     service_reference=service_reference)
 
@@ -60,6 +77,16 @@ class RESTTimerController(TwoFaceApiController):
         return json_response(request, data)
 
     def render_list_item(self, request, service_reference, item_id):
+        """
+        List timer data for specific timer of service.
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+            service_reference (basestring): Service reference string
+            item_id (int): Timer ID
+        Returns:
+            HTTP response with headers
+        """
         data = dict(result=True, items=[],
                     service_reference=service_reference,
                     item_id=item_id)
@@ -75,7 +102,7 @@ class RESTTimerController(TwoFaceApiController):
 
     def render_DELETE(self, request):
         """
-        HTTP DELETE implementation.
+        HTTP DELETE implementation for removing a timer.
 
         Args:
             request (twisted.web.server.Request): HTTP request object

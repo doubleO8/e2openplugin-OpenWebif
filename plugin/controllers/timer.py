@@ -48,7 +48,7 @@ class TimersController(object):
         for source in self.sources:
             current_sources += getattr(self.rt, source)
 
-        all = service_reference is None and item_id is None
+        do_all = service_reference is None and item_id is None
         for timer_item in current_sources:
             timer_sref, timer_id = str(timer_item.service_ref), timer_item.eit
             e_data = None
@@ -63,7 +63,7 @@ class TimersController(object):
             if e_data:
                 data['event'] = e_data
 
-            if all:
+            if do_all:
                 yield data
             elif timer_sref == service_reference and timer_id == item_id:
                 yield data

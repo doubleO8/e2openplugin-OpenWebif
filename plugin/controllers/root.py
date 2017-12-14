@@ -26,6 +26,7 @@ from transcoding import TranscodingController
 from file import FileController
 import rest_api_controller
 import rest_movie_controller
+import rest_timer_controller
 from movie import MOVIES_ROOT_PATH, MOVIE_ENDPOINT_PATH
 
 try:
@@ -56,6 +57,11 @@ class RootController(BaseController):
             [GzipEncoderFactory()])
         self.putChild("movies", movie_controller_instance)
         self.putChild(MOVIE_ENDPOINT_PATH, static.File(MOVIES_ROOT_PATH))
+
+        timer_controller_instance = EncodingResourceWrapper(
+            rest_timer_controller.RESTTimerController(session=session),
+            [GzipEncoderFactory()])
+        self.putChild("timers", timer_controller_instance)
 
         self.putChild("file", FileController())
         self.putChild("grab", grabScreenshot(session))

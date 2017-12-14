@@ -229,9 +229,6 @@ class TwoFaceApiController(RESTControllerSkeleton):
             service_reference = None
             request.setResponseCode(http.BAD_REQUEST, message=vexc.message)
 
-        # is service_reference valid?
-        pass
-
         if service_reference and item_id:
             return self.render_list_item(request, service_reference, item_id)
         elif service_reference:

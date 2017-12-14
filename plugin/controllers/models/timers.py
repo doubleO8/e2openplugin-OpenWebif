@@ -23,6 +23,7 @@ from Plugins.Extensions.OpenWebif.__init__ import _
 
 from model_utilities import mangle_epg_text
 
+#: Timer state lookup
 TIMER_STATE_LOOKUP = {
     0: 'waiting',
     1: 'prepared',
@@ -30,6 +31,7 @@ TIMER_STATE_LOOKUP = {
     3: 'ended'
 }
 
+#: Timer attributes with values in (0, 1) actually representing a boolean value
 TIMER_FAKE_BOOLEAN = [
     'disabled',
     'justplay',
@@ -38,6 +40,9 @@ TIMER_FAKE_BOOLEAN = [
     'zapbeforerecord',
 ]
 
+#: Timer attributes list
+#: Some attributes are using different keys in :py:obj:`TimerDict` objects
+#: thus attribute items may be a :py:obj:`tuple`.
 TIMER_ATTRIBUTES = [
     'PVRFilename',
     ('begin', 'start_time'),
@@ -78,6 +83,9 @@ TIMER_ATTRIBUTES = [
 
 
 class TimerDict(dict):
+    """
+    Timer data container object
+    """
     def __init__(self, item):
         dict.__init__(self)
         self["service_reference"] = str(item.service_ref)

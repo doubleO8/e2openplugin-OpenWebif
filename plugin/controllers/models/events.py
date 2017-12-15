@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
+Events
+------
+
 .. seealso::
 
     :ref:`event_format-label`
@@ -26,13 +29,28 @@ def convertDesc(val):
     return val
 
 
+#: constant for *event's service reference* key
 KEY_SERVICE_REFERENCE = "service_reference"
+
+#: constant for *event's service name* key
 KEY_SERVICE_NAME = "service_name"
+
+#: constant for *event start time* key
 KEY_START_TIME = "start_time"
+
+#: constant for *event ID* key
 KEY_ID = "id"
+
+#: constant for *event duration* key
 KEY_DURATION = "duration"
+
+#: constant for *event title* key
 KEY_TITLE = "title"
+
+#: constant for *event shortinfo* key
 KEY_SHORTINFO = "shortinfo"
+
+#: constant for *event longinfo* key
 KEY_LONGINFO = "longinfo"
 
 #: Begin
@@ -149,6 +167,7 @@ class NoneEventDict(dict):
     """
     Dummy event data container object.
     """
+
     def __init__(self, title=""):
         dict.__init__(self)
         self[KEY_SERVICE_REFERENCE] = "-1:0:0:0:0:0:0:0:0:0:"

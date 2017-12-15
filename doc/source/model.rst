@@ -1,16 +1,10 @@
 .. _model-label:
 
-Model Classes
-=============
-
-Events
-------
+Models
+======
 
 .. automodule:: controllers.models.events
     :members:
-
-Timers
-------
 
 .. automodule:: controllers.models.timers
     :members:

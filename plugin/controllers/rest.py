@@ -80,9 +80,10 @@ class RESTControllerSkeleton(resource.Resource):
             headers['Cache-Control'] = 'public'
             headers['Expires'] = format_date_time(
                 time.mktime(expires_time.timetuple()))
+
         for key in headers:
-            self.log.debug(
-                "CACHE: {key}={val}".format(key=key, val=headers[key]))
+            # self.log.debug(
+            #     "CACHE: {key}={val}".format(key=key, val=headers[key]))
             request.setHeader(key, headers[key])
 
     def render_OPTIONS(self, request):

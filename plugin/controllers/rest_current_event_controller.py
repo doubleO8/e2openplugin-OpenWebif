@@ -30,7 +30,7 @@ def get_servicereference_name(some_ref):
     Returns:
         service name or service reference string
     """
-    if isinstance(some_ref, basestring):
+    if not isinstance(some_ref, enigma.eServiceReference):
         some_ref = enigma.eServiceReference(some_ref)
     ech = enigma.eServiceCenter.getInstance()
 
@@ -91,7 +91,7 @@ class RESTCurrentEventController(TwoFaceApiController):
                     data[KEY_SERVICE_REFERENCE] = raw_data['meta'].get(
                         "Serviceref")
                     data[KEY_SERVICE_NAME] = get_servicereference_name(
-                        sr_obj)
+                        data[KEY_SERVICE_REFERENCE])
 
                 item.update(data)
                 return json_response(request, item)

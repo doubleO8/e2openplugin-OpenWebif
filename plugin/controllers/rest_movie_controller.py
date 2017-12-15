@@ -8,10 +8,7 @@ Listing of movie items on current device.
 Removing of movie item files including meta data.
 """
 import os
-import time
-import datetime
 import logging
-from wsgiref.handlers import format_date_time
 
 from twisted.web import http
 
@@ -29,24 +26,6 @@ class RESTMovieController(RESTControllerSkeleton):
         self.log = logging.getLogger(__name__)
         self.movie_controller = MoviesController()
         self.root = kwargs.get("root", MOVIES_ROOT_PATH)
-
-    def _cache(self, request, expires=False):
-        headers = {}
-        if expires is False:
-            headers[
-                'Cache-Control'] = 'no-store, no-cache, must-revalidate, ' \
-                                   'post-check=0, pre-check=0, max-age=0'
-            headers['Expires'] = '-1'
-        else:
-            now = datetime.datetime.now()
-            expires_time = now + datetime.timedelta(seconds=expires)
-            headers['Cache-Control'] = 'public'
-            headers['Expires'] = format_date_time(
-                time.mktime(expires_time.timetuple()))
-        for key in headers:
-            self.log.debug(
-                "CACHE: {key}={val}".format(key=key, val=headers[key]))
-            request.setHeader(key, headers[key])
 
     def render_path_listing(self, request, root_path):
         """

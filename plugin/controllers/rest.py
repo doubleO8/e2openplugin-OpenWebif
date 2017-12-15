@@ -3,6 +3,9 @@
 import json
 import copy
 import logging
+import time
+import datetime
+from wsgiref.handlers import format_date_time
 
 from twisted.web import resource, http
 
@@ -63,6 +66,24 @@ class RESTControllerSkeleton(resource.Resource):
                 http_verbs.append(verb)
         self._cors_header['Access-Control-Allow-Methods'] = ','.join(
             http_verbs)
+
+    def _cache(self, request, expires=False):
+        headers = {}
+        if expires is False:
+            headers[
+                'Cache-Control'] = 'no-store, no-cache, must-revalidate, ' \
+                                   'post-check=0, pre-check=0, max-age=0'
+            headers['Expires'] = '-1'
+        else:
+            now = datetime.datetime.now()
+            expires_time = now + datetime.timedelta(seconds=expires)
+            headers['Cache-Control'] = 'public'
+            headers['Expires'] = format_date_time(
+                time.mktime(expires_time.timetuple()))
+        for key in headers:
+            self.log.debug(
+                "CACHE: {key}={val}".format(key=key, val=headers[key]))
+            request.setHeader(key, headers[key])
 
     def render_OPTIONS(self, request):
         """

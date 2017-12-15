@@ -312,3 +312,9 @@ print ""
 sinfo = ech.info(some110)
 print sinfo.getName(some110)
 print some110.toString()
+
+try:
+    res = eServiceReference(some110)
+except TypeError:
+    res = some110
+print res

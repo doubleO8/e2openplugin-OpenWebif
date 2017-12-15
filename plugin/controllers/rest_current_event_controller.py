@@ -30,8 +30,11 @@ def get_servicereference_name(some_ref):
     Returns:
         service name or service reference string
     """
-    if not isinstance(some_ref, enigma.eServiceReference):
+    try:
         some_ref = enigma.eServiceReference(some_ref)
+    except TypeError:
+        pass
+
     ech = enigma.eServiceCenter.getInstance()
 
     try:

@@ -38,6 +38,16 @@ class TimersController(object):
         raise NotImplementedError
 
     def list_items(self, service_reference=None, item_id=None):
+        """
+        Generate a list of timers, either **all**,
+        **timers for service** or **specific timer of service**.
+
+        Args:
+            service_reference (basestring): Service reference string
+            item_id (int): Timer ID
+        Returns:
+            generator: matching :py:obj:`TimerDict` items
+        """
         self.log.debug('%s',
                        "Trying to list timer in {!r}".format(self.sources))
 

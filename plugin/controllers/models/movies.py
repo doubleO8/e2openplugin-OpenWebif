@@ -15,7 +15,6 @@ from ServiceReference import ServiceReference
 from Tools.FuzzyDate import FuzzyTime
 from Components.config import config
 from Components.MovieList import MovieList
-from Tools.Directories import fileExists
 from Screens import MovieSelection
 from Plugins.Extensions.OpenWebif.__init__ import _
 
@@ -32,7 +31,7 @@ MOVIE_LIST_ROOT_FALLBACK = '/media'
 
 def getPosition(cutfile, movie_len):
     cut_list = []
-    if movie_len is not None and fileExists(cutfile):
+    if movie_len is not None and os.path.isfile(cutfile):
         try:
             import struct
             with open(cutfile) as f:
@@ -460,7 +459,7 @@ def getMovieTags(sRef=None, addtag=None, deltag=None):
             fullpath = service.ref.getPath()
             filename = '/'.join(fullpath.split("/")[1:])
             metafilename = '/' + filename + '.meta'
-            if fileExists(metafilename):
+            if os.path.isfile(metafilename):
                 lines = []
                 with open(metafilename, 'r') as f:
                     lines = f.readlines()
@@ -504,7 +503,7 @@ def getMovieTags(sRef=None, addtag=None, deltag=None):
 
     tags = []
     wr = False
-    if fileExists(MOVIETAGFILE):
+    if os.path.isfile(MOVIETAGFILE):
         for tag in open(MOVIETAGFILE).read().split("\n"):
             if len(tag.strip()) > 0:
                 if deltag != tag:

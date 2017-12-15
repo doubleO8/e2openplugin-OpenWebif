@@ -8,6 +8,7 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
+import os
 import re
 import unicodedata
 from time import time, localtime, strftime, mktime
@@ -15,7 +16,6 @@ from urllib import quote, unquote
 from collections import OrderedDict
 
 from Plugins.Extensions.OpenWebif.__init__ import _
-from Tools.Directories import fileExists
 from Components.Sources.ServiceList import ServiceList
 from Components.ParentalControl import parentalControl
 from Components.config import config
@@ -964,7 +964,7 @@ def getPicon(sname):
             cname = ServiceReference(sname[:pos].rstrip(':')).getServiceName()
             sname = sname[:pos].rstrip(':').replace(':', '_') + ".png"
         filename = pp + sname
-        if fileExists(filename):
+        if os.path.isfile(filename):
             return "/picon/" + sname
         fields = sname.split('_', 8)
         if len(fields) > 7 and not fields[6].endswith("0000"):
@@ -972,26 +972,26 @@ def getPicon(sname):
             fields[6] = fields[6][:-4] + "0000"
             sname = '_'.join(fields)
             filename = pp + sname
-            if fileExists(filename):
+            if os.path.isfile(filename):
                 return "/picon/" + sname
         if len(fields) > 1 and fields[0] != '1':
             # fallback to 1 for other reftypes
             fields[0] = '1'
             sname = '_'.join(fields)
             filename = pp + sname
-            if fileExists(filename):
+            if os.path.isfile(filename):
                 return "/picon/" + sname
         if len(fields) > 3 and fields[2] != '1':
             # fallback to 1 for tv services with nonstandard servicetypes
             fields[2] = '1'
             sname = '_'.join(fields)
             filename = pp + sname
-            if fileExists(filename):
+            if os.path.isfile(filename):
                 return "/picon/" + sname
         if cname is not None:  # picon by channel name
             cname1 = mangle_epg_text(cname).replace(
                 '/', '_').encode('utf-8', 'ignore')
-            if fileExists(pp + cname1 + ".png"):
+            if os.path.isfile(pp + cname1 + ".png"):
                 return "/picon/" + cname1 + ".png"
             cname = unicodedata.normalize(
                 'NFKD', unicode(
@@ -1009,10 +1009,10 @@ def getPicon(sname):
                     'star').lower())
             if len(cname) > 0:
                 filename = pp + cname + ".png"
-            if fileExists(filename):
+            if os.path.isfile(filename):
                 return "/picon/" + cname + ".png"
             if len(cname) > 2 and cname.endswith(
-                    'hd') and fileExists(pp + cname[:-2] + ".png"):
+                    'hd') and os.path.isfile(pp + cname[:-2] + ".png"):
                 return "/picon/" + cname[:-2] + ".png"
     return "/images/default_picon.png"
 

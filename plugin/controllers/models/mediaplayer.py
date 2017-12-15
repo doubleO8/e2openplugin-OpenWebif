@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-
-from Tools.Directories import fileExists, resolveFilename, SCOPE_PLAYLIST
-from Components.FileList import FileList
-from enigma import eServiceReference
-
 import os
 import fnmatch
+
+from Tools.Directories import resolveFilename, SCOPE_PLAYLIST
+from Components.FileList import FileList
+from enigma import eServiceReference
 
 
 def getMpInstance(session):
@@ -43,7 +42,7 @@ def mediaPlayerAdd(session, filename):
             "message": "Mediaplayer not installed"
         }
 
-    if fileExists(filename):
+    if os.path.isfile(filename):
         service = eServiceReference(4097, 0, filename)
     else:
         service = eServiceReference(filename)
@@ -111,7 +110,7 @@ def mediaPlayerPlay(session, filename, root):
             "message": "Mediaplayer not installed"
         }
 
-    if fileExists(filename):
+    if os.path.isfile(filename):
         service = eServiceReference(4097, 0, filename)
     else:
         service = eServiceReference(filename)
@@ -274,7 +273,7 @@ def mediaPlayerLoad(session, filename):
         }
 
     path = resolveFilename(SCOPE_PLAYLIST, filename)
-    if not fileExists(path):
+    if not os.path.isfile(path):
         return {
             "result": False,
             "message": "Playlist '%s' does not exist" % path

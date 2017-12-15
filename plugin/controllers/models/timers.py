@@ -12,6 +12,7 @@ Timers
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
+import os
 from time import time, strftime, localtime, mktime
 from urllib import unquote
 
@@ -920,8 +921,8 @@ def setSleepTimer(session, time, action, enabled):
 
 def getVPSChannels(session):
     vpsfile = "/etc/enigma2/vps.xml"
-    from Tools.Directories import fileExists
-    if fileExists(vpsfile):
+
+    if os.path.isfile(vpsfile):
         try:
             import xml.etree.cElementTree  # nosec
             vpsfile = file(vpsfile, 'r')

@@ -10,12 +10,37 @@ import logging
 
 from twisted.web import http
 
+import enigma
 from rest import json_response
 from rest import TwoFaceApiController
 from events import EventsController
 from movie import MoviesController
 from movie import mangle_servicereference
 from events import QUERYTYPE_LOOKUP__WHILE, QUERY_TIMESTAMP_CURRENT_TIME
+from models.model_utilities import mangle_epg_text
+from models.events import KEY_SERVICE_REFERENCE, KEY_SERVICE_NAME
+
+
+def get_servicereference_name(some_ref):
+    """
+    Try to dertermine service's name for service reference *some_ref*
+
+    Args:
+        some_ref: eServiceReference instance or basestring
+    Returns:
+        service name or service reference string
+    """
+    if isinstance(some_ref, basestring):
+        some_ref = enigma.eServiceReference(some_ref)
+    ech = enigma.eServiceCenter.getInstance()
+
+    try:
+        sinfo = ech.info(some_ref)
+        return mangle_epg_text(sinfo.getName(some_ref))
+    except Exception:
+        pass
+
+    return some_ref.toString()
 
 
 class RESTCurrentEventController(TwoFaceApiController):
@@ -63,8 +88,11 @@ class RESTCurrentEventController(TwoFaceApiController):
 
                 if raw_data.get("event"):
                     data = raw_data.get("event")
-                    data['service_reference'] = raw_data['meta'].get(
+                    data[KEY_SERVICE_REFERENCE] = raw_data['meta'].get(
                         "Serviceref")
+                    data[KEY_SERVICE_NAME] = get_servicereference_name(
+                        data[KEY_SERVICE_REFERENCE])
+
                 item.update(data)
                 return json_response(request, item)
             return self.render_list_subset(request, sr_obj.toString())

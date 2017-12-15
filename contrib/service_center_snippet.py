@@ -304,3 +304,11 @@ if 22 == 22:
     #                   '(type == 17) || (type == 22) || (type == 25) || ' \
     #                   '(type == 31) || (type == 134) || (type == 195)'
     #service_types_radio = '1:7:2:0:0:0:0:0:0:0:(type == 2) || (type == 10)'
+
+
+some110 = eServiceReference("1:0:1:412:4:85:FFFF0000:0:0:0:")
+print "x-" * 80
+print ""
+sinfo = ech.info(some110)
+print sinfo.getName(some110)
+print some110.toString()

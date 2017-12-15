@@ -26,6 +26,7 @@ def convertDesc(val):
     return val
 
 KEY_SERVICE_REFERENCE = "service_reference"
+KEY_SERVICE_NAME = "service_name"
 
 #: Begin
 FLAG_BEGIN = "B"
@@ -84,7 +85,7 @@ EVENT_FIELD_MAP = {
     "S": "shortinfo",
     "E": "longinfo",
     "R": KEY_SERVICE_REFERENCE,
-    "N": "service_name",
+    "N": KEY_SERVICE_NAME,
     "n": "shortservice_name",
 }
 
@@ -131,7 +132,7 @@ class EventDict(dict):
 
     def _mangle(self):
         text_keys = ("shortinfo", "longinfo", "title",
-                     "service_name", "shortservice_name")
+                     KEY_SERVICE_NAME, "shortservice_name")
         for tkey in text_keys:
             if tkey in self:
                 self[tkey] = mangle_epg_text(self[tkey])

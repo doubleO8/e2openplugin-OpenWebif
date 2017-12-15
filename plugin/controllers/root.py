@@ -65,8 +65,8 @@ class RootController(BaseController):
         self.putChild("timers", timer_controller_instance)
 
         event_controller_instance = EncodingResourceWrapper(
-            rest_current_event_controller.RESTCurrentEventController(session=session),
-            [GzipEncoderFactory()])
+            rest_current_event_controller.RESTCurrentEventController(
+                session=session), [GzipEncoderFactory()])
         self.putChild("current_event", event_controller_instance)
 
         self.putChild("file", FileController())

@@ -25,6 +25,7 @@ def convertDesc(val):
             quote=True)
     return val
 
+
 KEY_SERVICE_REFERENCE = "service_reference"
 KEY_SERVICE_NAME = "service_name"
 KEY_START_TIME = "start_time"
@@ -145,10 +146,13 @@ class EventDict(dict):
 
 
 class NoneEventDict(dict):
+    """
+    Dummy event data container object.
+    """
     def __init__(self, title=""):
         dict.__init__(self)
-        self[KEY_SERVICE_REFERENCE] = "1:0:0:0:0:0:0:0:0:0:"
-        self[KEY_SERVICE_NAME] = "NoTV"
+        self[KEY_SERVICE_REFERENCE] = "-1:0:0:0:0:0:0:0:0:0:"
+        self[KEY_SERVICE_NAME] = "NONAME"
         self[KEY_START_TIME] = 0
         self[KEY_ID] = 0
         self[KEY_DURATION] = 0

@@ -23,7 +23,7 @@ class RESTEventController(TwoFaceApiController):
     .. http:get:: /current_event
 
         :statuscode 200: no error
-        :statuscode 404: no currently playing service
+        :statuscode 204: no currently playing service
 
     .. http:get:: /current_event/{basestring:service_reference}/
 
@@ -50,7 +50,7 @@ class RESTEventController(TwoFaceApiController):
             sr_obj = self.session.nav.getCurrentlyPlayingServiceReference()
             return self.render_list_subset(request, sr_obj.toString())
         except Exception:
-            return self.error_response(request, response_code=http.NOT_FOUND)
+            return self.error_response(request, response_code=http.NO_CONTENT)
 
     def render_list_subset(self, request, service_reference):
         """

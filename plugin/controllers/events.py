@@ -234,14 +234,14 @@ class EventsController(object):
         Search EPG events
 
         Args:
-                what (basestring): query value
-                querytype (int): see :ref:`event_search_parameters-label`
-                case_sensitive (bool): True if case sensitive search
-                flags(basestring): query flags
-                max_rows (int): maximum number of results
+            what (basestring): query value
+            querytype (int): see :ref:`event_search_parameters-label`
+            case_sensitive (bool): True if case sensitive search
+            flags(basestring): query flags
+            max_rows (int): maximum number of results
 
         Returns:
-                list of matching items
+            list of matching items
         """
         mangled = []
         case = CASE_INSENSITIVE
@@ -279,15 +279,15 @@ class EventsController(object):
         Lookup EPG events
 
         Args:
-                service_reference (basestring): service reference
-                querytype (int): see :ref:`event_lookup_parameters-label`
-                begin (int): begin timestamp
-                minutes (int): query's time range in minutes
-                flags(basestring): query flags
-                max_rows (int): maximum number of results
+            service_reference (basestring): service reference
+            querytype (int): see :ref:`event_lookup_parameters-label`
+            begin (int): begin timestamp
+            minutes (int): query's time range in minutes
+            flags(basestring): query flags
+            max_rows (int): maximum number of results
 
         Returns:
-                list: matching items
+            list: matching items
         """
         mangled = []
 
@@ -329,12 +329,12 @@ class EventsController(object):
         Lookup EPG event by ID
 
         Args:
-                service_reference (basestring): service reference
-                event_id (int): Event ID
-                flags(basestring): query flags
+            service_reference (basestring): service reference
+            event_id (int): Event ID
+            flags(basestring): query flags
 
         Returns:
-                models.events.EventDict: matching item or None
+            models.events.EventDict: matching item or None
         """
         result = self.lookup(service_reference,
                              querytype=QUERYTYPE_LOOKUP__ID, begin=event_id,

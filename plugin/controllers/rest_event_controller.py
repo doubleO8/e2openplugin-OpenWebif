@@ -59,12 +59,13 @@ class RESTEventController(TwoFaceApiController):
                 raw_data = self.mc.mangle_servicereference_information(sr_obj)
                 if raw_data.get("event"):
                     data = raw_data.get("event")
-                    data['service_reference'] = raw_data['_meta'].get(
+                    data['service_reference_source'] = raw_data['meta'].get(
                         "Serviceref")
                 else:
                     # do something ..
                     data = raw_data
-                return json_response(request, data)
+                item.update(data)
+                return json_response(request, item)
             return self.render_list_subset(request, sr_obj.toString())
         except Exception as exc:
             self.log.error(exc)

@@ -92,10 +92,8 @@ class RESTCurrentEventController(TwoFaceApiController):
 
         try:
             data = items[0]
-            data["result"] = True
         except IndexError:
-            data = dict(result=False,
-                        service_reference=service_reference)
+            data = dict(service_reference=service_reference)
             request.setResponseCode(http.SERVICE_UNAVAILABLE)
 
         return json_response(request, data)

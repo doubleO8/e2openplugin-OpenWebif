@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Event Items
------------
+Current Event Data
+------------------
 
-Listing of event items on current device.
+Retrieve current event data.
 """
 import logging
 
@@ -18,7 +18,7 @@ from movie import mangle_servicereference
 from events import QUERYTYPE_LOOKUP__WHILE, QUERY_TIMESTAMP_CURRENT_TIME
 
 
-class RESTEventController(TwoFaceApiController):
+class RESTCurrentEventController(TwoFaceApiController):
     """
     RESTful Controller for /current_event endpoint.
 
@@ -42,7 +42,7 @@ class RESTEventController(TwoFaceApiController):
 
     def render_list_all(self, request):
         """
-        Not supported
+        Return event data for currently playing service.
 
         Args:
             request (twisted.web.server.Request): HTTP request object
@@ -53,18 +53,17 @@ class RESTEventController(TwoFaceApiController):
             sr_obj = self.session.nav.getCurrentlyPlayingServiceReference()
             servicereference = sr_obj.toString()
             item = mangle_servicereference(servicereference)
-            self.log.info("sr item: {!r}".format(item))
-            self.log.info("sr obj: {!r}".format(sr_obj.toString()))
+            # self.log.debug("sr item: {!r}".format(item))
+            # self.log.debug("sr obj: {!r}".format(sr_obj.toString()))
 
             if item.get("path"):
                 raw_data = self.mc.mangle_servicereference_information(sr_obj)
+                data = raw_data  # do something if no event data is available?
+
                 if raw_data.get("event"):
                     data = raw_data.get("event")
                     data['service_reference'] = raw_data['meta'].get(
                         "Serviceref")
-                else:
-                    # do something ..
-                    data = raw_data
                 item.update(data)
                 return json_response(request, item)
             return self.render_list_subset(request, sr_obj.toString())
@@ -76,7 +75,7 @@ class RESTEventController(TwoFaceApiController):
 
     def render_list_subset(self, request, service_reference):
         """
-        List current event for specific service.
+        Return event data for specific service (if available).
 
         Args:
             request (twisted.web.server.Request): HTTP request object
@@ -103,7 +102,7 @@ class RESTEventController(TwoFaceApiController):
 
     def render_list_item(self, request, service_reference, item_id):
         """
-        Not supported
+        Currently not supported.
 
         Args:
             request (twisted.web.server.Request): HTTP request object

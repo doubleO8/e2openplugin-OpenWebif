@@ -57,6 +57,7 @@ class RESTCurrentEventController(TwoFaceApiController):
             # self.log.debug("sr obj: {!r}".format(sr_obj.toString()))
 
             if item.get("path"):
+                del item['kind']
                 raw_data = self.mc.mangle_servicereference_information(sr_obj)
                 data = raw_data  # do something if no event data is available?
 
@@ -92,6 +93,7 @@ class RESTCurrentEventController(TwoFaceApiController):
 
         try:
             data = items[0]
+            data['path'] = None
         except IndexError:
             data = dict(service_reference=service_reference)
             request.setResponseCode(http.SERVICE_UNAVAILABLE)

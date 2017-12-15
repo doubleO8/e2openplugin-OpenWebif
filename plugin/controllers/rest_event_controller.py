@@ -50,6 +50,7 @@ class RESTEventController(TwoFaceApiController):
             sr_obj = self.session.nav.getCurrentlyPlayingServiceReference()
             return self.render_list_subset(request, sr_obj.toString())
         except Exception:
+            self._cache(request, expires=False)
             return self.error_response(request, response_code=http.NO_CONTENT)
 
     def render_list_subset(self, request, service_reference):
@@ -66,6 +67,8 @@ class RESTEventController(TwoFaceApiController):
                                querytype=QUERYTYPE_LOOKUP__WHILE,
                                begin=QUERY_TIMESTAMP_CURRENT_TIME,
                                minutes=0)
+
+        self._cache(request, expires=False)
 
         try:
             data = items[0]

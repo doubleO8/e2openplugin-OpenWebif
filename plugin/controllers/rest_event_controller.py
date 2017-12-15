@@ -54,11 +54,13 @@ class RESTEventController(TwoFaceApiController):
             servicereference = sr_obj.toString()
             item = mangle_servicereference(servicereference)
             self.log.info("sr item: {!r}".format(item))
+            self.log.info("sr obj: {!r}".format(sr_obj.toString()))
             if item.get("path"):
                 return self.mc.mangle_servicereference_information(
                     sr_obj.toString())
             return self.render_list_subset(request, sr_obj.toString())
-        except Exception:
+        except Exception as exc:
+            self.log.error(exc)
             self._cache(request, expires=False)
             return self.error_response(request,
                                        response_code=http.SERVICE_UNAVAILABLE)

@@ -27,6 +27,7 @@ from file import FileController
 import rest_api_controller
 import rest_movie_controller
 import rest_timer_controller
+import rest_event_controller
 from movie import MOVIES_ROOT_PATH, MOVIE_ENDPOINT_PATH
 
 try:
@@ -62,6 +63,11 @@ class RootController(BaseController):
             rest_timer_controller.RESTTimerController(session=session),
             [GzipEncoderFactory()])
         self.putChild("timers", timer_controller_instance)
+
+        event_controller_instance = EncodingResourceWrapper(
+            rest_event_controller.RESTEventController(),
+            [GzipEncoderFactory()])
+        self.putChild("events", event_controller_instance)
 
         self.putChild("file", FileController())
         self.putChild("grab", grabScreenshot(session))

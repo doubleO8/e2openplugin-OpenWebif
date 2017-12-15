@@ -55,11 +55,12 @@ class RESTEventController(TwoFaceApiController):
             item = mangle_servicereference(servicereference)
             self.log.info("sr item: {!r}".format(item))
             self.log.info("sr obj: {!r}".format(sr_obj.toString()))
+
             if item.get("path"):
                 raw_data = self.mc.mangle_servicereference_information(sr_obj)
                 if raw_data.get("event"):
                     data = raw_data.get("event")
-                    data['service_reference_source'] = raw_data['meta'].get(
+                    data['service_reference'] = raw_data['meta'].get(
                         "Serviceref")
                 else:
                     # do something ..

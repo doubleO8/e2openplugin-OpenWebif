@@ -203,8 +203,12 @@ class TwoFaceApiController(RESTControllerSkeleton):
 
         service_reference = ':'.join(portions)
 
-        if needed > 1:
-            item_id = int(request.postpath[1])
+        if pp_len > 1:
+            try:
+                item_id = int(request.postpath[1])
+            except Exception:
+                if needed > 1:
+                    raise
 
         return service_reference, item_id
 

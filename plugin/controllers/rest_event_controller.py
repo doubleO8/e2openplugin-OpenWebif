@@ -54,7 +54,7 @@ class RESTEventController(TwoFaceApiController):
             servicereference = sr_obj.toString()
             item = mangle_servicereference(servicereference)
             self.log.info("sr item: {!r}".format(item))
-            if item.get("kind") == "File":
+            if item.get("path"):
                 return self.mc.mangle_servicereference_information(
                     sr_obj.toString())
             return self.render_list_subset(request, sr_obj.toString())

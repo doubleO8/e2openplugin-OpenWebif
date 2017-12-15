@@ -50,7 +50,7 @@ TIMER_FAKE_BOOLEAN = [
 #: Some attributes are using different keys in :py:obj:`TimerDict` objects
 #: thus attribute items may be a :py:obj:`tuple`.
 TIMER_ATTRIBUTES = [
-    'PVRFilename',
+    # 'PVRFilename',
     ('begin', 'start_time'),
     'cancelled',
     ('description', 'shortinfo'),

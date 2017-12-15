@@ -18,13 +18,17 @@ from events import QUERYTYPE_LOOKUP__WHILE, QUERY_TIMESTAMP_CURRENT_TIME
 
 class RESTEventController(TwoFaceApiController):
     """
-    RESTful Controller for /events endpoint.
+    RESTful Controller for /current_event endpoint.
 
-    .. http:get:: /events/{basestring:service_reference}/
+    .. http:get:: /current_event
 
         :statuscode 200: no error
-        :statuscode 400: invalid
+        :statuscode 404: no currently playing service
 
+    .. http:get:: /current_event/{basestring:service_reference}/
+
+        :statuscode 200: no error
+        :statuscode 204: no data
     """
 
     def __init__(self, *args, **kwargs):
@@ -43,8 +47,8 @@ class RESTEventController(TwoFaceApiController):
             HTTP response with headers
         """
         try:
-            service_reference = self.session.nav.getCurrentlyPlayingServiceReference().toString()
-            return self.render_list_subset(request, service_reference)
+            sr_obj = self.session.nav.getCurrentlyPlayingServiceReference()
+            return self.render_list_subset(request, sr_obj.toString())
         except Exception:
             return self.error_response(request, response_code=http.NOT_FOUND)
 
@@ -58,12 +62,19 @@ class RESTEventController(TwoFaceApiController):
         Returns:
             HTTP response with headers
         """
-        data = dict(result=True, items=[],
-                    service_reference=service_reference)
-        data['items'] = self.ec.lookup(service_reference,
-                                       querytype=QUERYTYPE_LOOKUP__WHILE,
-                                       begin=QUERY_TIMESTAMP_CURRENT_TIME,
-                                       minutes=0)
+        items = self.ec.lookup(service_reference,
+                               querytype=QUERYTYPE_LOOKUP__WHILE,
+                               begin=QUERY_TIMESTAMP_CURRENT_TIME,
+                               minutes=0)
+
+        try:
+            data = items[0]
+            data["result"] = True
+        except IndexError:
+            data = dict(result=False,
+                        service_reference=service_reference)
+            request.setResponseCode(http.NO_CONTENT)
+
         return json_response(request, data)
 
     def render_list_item(self, request, service_reference, item_id):

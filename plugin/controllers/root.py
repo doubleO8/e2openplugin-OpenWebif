@@ -67,7 +67,7 @@ class RootController(BaseController):
         event_controller_instance = EncodingResourceWrapper(
             rest_event_controller.RESTEventController(session=session),
             [GzipEncoderFactory()])
-        self.putChild("events", event_controller_instance)
+        self.putChild("current_event", event_controller_instance)
 
         self.putChild("file", FileController())
         self.putChild("grab", grabScreenshot(session))

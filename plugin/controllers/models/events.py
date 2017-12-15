@@ -27,6 +27,12 @@ def convertDesc(val):
 
 KEY_SERVICE_REFERENCE = "service_reference"
 KEY_SERVICE_NAME = "service_name"
+KEY_START_TIME = "start_time"
+KEY_ID = "id"
+KEY_DURATION = "duration"
+KEY_TITLE = "title"
+KEY_SHORTINFO = "shortinfo"
+KEY_LONGINFO = "longinfo"
 
 #: Begin
 FLAG_BEGIN = "B"
@@ -136,6 +142,19 @@ class EventDict(dict):
         for tkey in text_keys:
             if tkey in self:
                 self[tkey] = mangle_epg_text(self[tkey])
+
+
+class NoneEventDict(dict):
+    def __init__(self, title=""):
+        dict.__init__(self)
+        self[KEY_SERVICE_REFERENCE] = "1:0:0:0:0:0:0:0:0:0:"
+        self[KEY_SERVICE_NAME] = "NoTV"
+        self[KEY_START_TIME] = 0
+        self[KEY_ID] = 0
+        self[KEY_DURATION] = 0
+        self[KEY_TITLE] = title
+        self[KEY_SHORTINFO] = ""
+        self[KEY_LONGINFO] = ""
 
 
 class ServicesEventDict(dict):

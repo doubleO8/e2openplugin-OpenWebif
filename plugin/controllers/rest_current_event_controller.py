@@ -19,6 +19,7 @@ from movie import mangle_servicereference
 from events import QUERYTYPE_LOOKUP__WHILE, QUERY_TIMESTAMP_CURRENT_TIME
 from models.model_utilities import mangle_epg_text
 from models.events import KEY_SERVICE_REFERENCE, KEY_SERVICE_NAME
+from models.events import NoneEventDict
 
 
 def get_servicereference_name(some_ref):
@@ -91,6 +92,8 @@ class RESTCurrentEventController(TwoFaceApiController):
                         "Serviceref")
                     data[KEY_SERVICE_NAME] = get_servicereference_name(
                         data[KEY_SERVICE_REFERENCE])
+                else:
+                    data = NoneEventDict(item.get("path").split('/')[-1])
 
                 item.update(data)
                 for key in ('kind', 'flags'):

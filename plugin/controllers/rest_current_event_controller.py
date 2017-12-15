@@ -40,7 +40,7 @@ def get_servicereference_name(some_ref):
     except Exception:
         pass
 
-    return some_ref.toString()
+    return str(some_ref)
 
 
 class RESTCurrentEventController(TwoFaceApiController):
@@ -82,7 +82,6 @@ class RESTCurrentEventController(TwoFaceApiController):
             # self.log.debug("sr obj: {!r}".format(sr_obj.toString()))
 
             if item.get("path"):
-                del item['kind']
                 raw_data = self.mc.mangle_servicereference_information(sr_obj)
                 data = raw_data  # do something if no event data is available?
 
@@ -94,6 +93,12 @@ class RESTCurrentEventController(TwoFaceApiController):
                         data[KEY_SERVICE_REFERENCE])
 
                 item.update(data)
+                for key in ('kind', 'flags'):
+                    try:
+                        del item[key]
+                    except KeyError:
+                        pass
+
                 return json_response(request, item)
             return self.render_list_subset(request, sr_obj.toString())
         except Exception as exc:

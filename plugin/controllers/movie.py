@@ -5,7 +5,7 @@ import logging
 import enigma
 from enigma import eServiceReference, iServiceInformation
 
-from models.events import mangle_event
+from models.events import mangle_event, KEY_SERVICE_REFERENCE
 
 MOVIES_ROOT_PATH = '/media/hdd/movie/'
 MOVIE_ENDPOINT_PATH = 'movie'
@@ -145,7 +145,7 @@ def mangle_servicereference(servicereference, encoding=None):
 
     data['kind'] = SERVICE_REFERENCE_ID.get(servicereference.type, "INVALID")
     data['path'] = servicereference.getPath().decode(encoding)
-    data['servicereference'] = servicereference.toString().decode(encoding)
+    data[KEY_SERVICE_REFERENCE] = servicereference.toString()
     data['flags'] = servicereference.flags
     return data
 

@@ -29,6 +29,7 @@ from RecordTimer import parseEvent
 from timer import TimerEntry
 from enigma import eDVBVolumecontrol, eServiceCenter, eServiceReference, eEnv
 from model_utilities import mangle_epg_text
+from events import KEY_SERVICE_REFERENCE
 
 try:
     from boxbranding import getBoxType, getMachineBuild, getMachineBrand, \
@@ -704,7 +705,7 @@ def getInfo(session=None, need_fullinfo=False):
                         tno['live'] = mangle_epg_text(label)
                         tno['live_meta'] = {
                             'service_name': mangle_epg_text(sname),
-                            'service_reference': s_reference.toString()
+                            KEY_SERVICE_REFERENCE: s_reference.toString()
                         }
 
         except Exception as error:

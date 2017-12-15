@@ -15,7 +15,7 @@ from twisted.web import http
 from rest import json_response
 from rest import CORS_DEFAULT_ALLOW_ORIGIN, RESTControllerSkeleton
 from movie import MoviesController, MOVIES_ROOT_PATH, MOVIE_ENDPOINT_URL
-
+from models.events import KEY_SERVICE_REFERENCE
 
 class RESTMovieController(RESTControllerSkeleton):
     """
@@ -38,7 +38,7 @@ class RESTMovieController(RESTControllerSkeleton):
             HTTP response with headers
         """
         data = dict(result=True, items=[])
-        removed_keys = ('servicereference', 'flags', 'kind',)
+        removed_keys = (KEY_SERVICE_REFERENCE, 'flags', 'kind',)
         r_path = request.path
 
         if r_path.endswith('/'):

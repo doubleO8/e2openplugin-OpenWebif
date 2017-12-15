@@ -25,6 +25,7 @@ def convertDesc(val):
             quote=True)
     return val
 
+KEY_SERVICE_REFERENCE = "service_reference"
 
 #: Begin
 FLAG_BEGIN = "B"
@@ -82,7 +83,7 @@ EVENT_FIELD_MAP = {
     "T": "title",
     "S": "shortinfo",
     "E": "longinfo",
-    "R": "service_reference",
+    "R": KEY_SERVICE_REFERENCE,
     "N": "service_name",
     "n": "shortservice_name",
 }

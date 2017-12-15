@@ -22,6 +22,7 @@ from info import GetWithAlternative
 from Plugins.Extensions.OpenWebif.__init__ import _
 
 from model_utilities import mangle_epg_text
+from events import KEY_SERVICE_REFERENCE
 
 #: Timer state lookup
 TIMER_STATE_LOOKUP = {
@@ -88,7 +89,7 @@ class TimerDict(dict):
     """
     def __init__(self, item):
         dict.__init__(self)
-        self["service_reference"] = str(item.service_ref)
+        self[KEY_SERVICE_REFERENCE] = str(item.service_ref)
 
         for attr_data in TIMER_ATTRIBUTES:
             try:

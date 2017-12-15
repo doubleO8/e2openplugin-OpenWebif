@@ -23,12 +23,12 @@ class RESTEventController(TwoFaceApiController):
     .. http:get:: /current_event
 
         :statuscode 200: no error
-        :statuscode 204: no currently playing service
+        :statuscode 503: no currently playing service
 
     .. http:get:: /current_event/{basestring:service_reference}/
 
         :statuscode 200: no error
-        :statuscode 204: no data
+        :statuscode 503: no data
     """
 
     def __init__(self, *args, **kwargs):
@@ -51,7 +51,8 @@ class RESTEventController(TwoFaceApiController):
             return self.render_list_subset(request, sr_obj.toString())
         except Exception:
             self._cache(request, expires=False)
-            return self.error_response(request, response_code=http.NO_CONTENT)
+            return self.error_response(request,
+                                       response_code=http.SERVICE_UNAVAILABLE)
 
     def render_list_subset(self, request, service_reference):
         """
@@ -76,7 +77,7 @@ class RESTEventController(TwoFaceApiController):
         except IndexError:
             data = dict(result=False,
                         service_reference=service_reference)
-            request.setResponseCode(http.NO_CONTENT)
+            request.setResponseCode(http.SERVICE_UNAVAILABLE)
 
         return json_response(request, data)
 

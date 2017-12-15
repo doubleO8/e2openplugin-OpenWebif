@@ -42,7 +42,7 @@ class RESTEventController(TwoFaceApiController):
         Returns:
             HTTP response with headers
         """
-        return self.error_response(response_code=http.NOT_FOUND)
+        return self.error_response(request, response_code=http.NOT_FOUND)
 
     def render_list_subset(self, request, service_reference):
         """
@@ -70,4 +70,4 @@ class RESTEventController(TwoFaceApiController):
         Returns:
             HTTP response with headers
         """
-        return self.error_response(response_code=http.NOT_FOUND)
+        return self.error_response(request, response_code=http.NOT_FOUND)

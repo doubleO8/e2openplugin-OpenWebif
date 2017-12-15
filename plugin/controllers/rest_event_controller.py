@@ -13,7 +13,8 @@ from twisted.web import http
 from rest import json_response
 from rest import TwoFaceApiController
 from events import EventsController
-from movie import MoviesController, SERVICE_REFERENCE_ID
+from movie import MoviesController
+from movie import mangle_servicereference
 from events import QUERYTYPE_LOOKUP__WHILE, QUERY_TIMESTAMP_CURRENT_TIME
 
 
@@ -50,7 +51,10 @@ class RESTEventController(TwoFaceApiController):
         """
         try:
             sr_obj = self.session.nav.getCurrentlyPlayingServiceReference()
-            if SERVICE_REFERENCE_ID.get(sr_obj.type) == "File":
+            servicereference = sr_obj.toString()
+            item = mangle_servicereference(servicereference)
+            self.log.info("sr item: {!r}".format(item))
+            if item.get("kind") == "File":
                 return self.mc.mangle_servicereference_information(
                     sr_obj.toString())
             return self.render_list_subset(request, sr_obj.toString())

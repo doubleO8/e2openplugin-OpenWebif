@@ -91,7 +91,7 @@ class RESTCurrentEventController(TwoFaceApiController):
                     data[KEY_SERVICE_REFERENCE] = raw_data['meta'].get(
                         "Serviceref")
                     data[KEY_SERVICE_NAME] = get_servicereference_name(
-                        data[KEY_SERVICE_REFERENCE])
+                        sr_obj)
 
                 item.update(data)
                 return json_response(request, item)

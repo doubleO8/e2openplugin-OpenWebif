@@ -66,21 +66,6 @@ def getPosition(cutfile, movie_len):
     return play_progress
 
 
-def checkParentalProtection(directory):
-    if hasattr(config.ParentalControl, 'moviepinactive'):
-        if config.ParentalControl.moviepinactive.value:
-            directory = os.path.split(directory)[0]
-            directory = os.path.realpath(directory)
-            directory = os.path.abspath(directory)
-            if directory[-1] != "/":
-                directory += "/"
-            is_protected = config.movielist.moviedirs_config.getConfigValue(
-                directory, "protect")
-            if is_protected is not None and is_protected == 1:
-                return True
-    return False
-
-
 def getMovieList(rargs=None, locations=None):
     movieliste = []
     tag = None

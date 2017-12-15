@@ -95,7 +95,7 @@ def mangle_event(event_obj, encoding="utf-8", with_component_data=True):
         title=event_obj.getEventName().decode(encoding),
         shortinfo=event_obj.getShortDescription().decode(encoding),
         longinfo=event_obj.getExtendedDescription().decode(encoding),
-        item_id=event_obj.getEventId(),
+        id=event_obj.getEventId(),
     )
 
     if with_component_data:

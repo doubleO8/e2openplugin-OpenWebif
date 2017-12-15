@@ -180,3 +180,7 @@ autodoc_mock_imports = [
     "enigma", "Screens", "Plugins", "Components", "RecordTimer",
     "timer", "Tools", "NavigationInstance", "ServiceReference"
 ]
+
+# https://stackoverflow.com/questions/23211695/modifying-content-width-of-the-sphinx-theme-read-the-docs
+def setup(app):
+    app.add_stylesheet('theme_overrides.css')

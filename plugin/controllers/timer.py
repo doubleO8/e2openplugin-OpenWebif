@@ -50,10 +50,11 @@ class TimersController(object):
             current_sources += getattr(self.rt, source)
 
         do_all = service_reference is None and item_id is None
+        do_single = service_reference is not None and item_id is not None
 
         self.log.debug("Listing items ... {!r} / {!r}".format(
             service_reference, item_id))
-        self.log.debug("do all={!r}".format(do_all))
+        self.log.debug("do all={!r} do_single={!r}".format(do_all, do_single))
 
         for timer_item in current_sources:
             timer_sref, timer_id = str(timer_item.service_ref), timer_item.eit
@@ -68,10 +69,11 @@ class TimersController(object):
 
             if do_all:
                 yield data
-            elif timer_sref == service_reference and timer_id == item_id:
-                self.log.debug("service_reference + item_id")
-                yield data
-                break
+            elif do_single:
+                if timer_sref == service_reference and timer_id == item_id:
+                    self.log.debug("service_reference + item_id")
+                    yield data
+                    break
             elif service_reference and timer_sref == service_reference:
                 self.log.debug("service_reference")
                 yield data

@@ -150,7 +150,7 @@ Description of Parameters Related to Querytype
 +-------+--------------------------------------------+              + date of +
 |  0    | request events *crossing* specified time   |              | search  |
 +-------+--------------------------------------------+              + scope   +
-| +1    | reques events *after* specified time       |              |         |
+| +1    | request events *after* specified time      |              |         |
 +-------+--------------------------------------------+--------------+---------+
 
 .. note::

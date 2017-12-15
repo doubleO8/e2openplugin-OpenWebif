@@ -42,7 +42,11 @@ class RESTEventController(TwoFaceApiController):
         Returns:
             HTTP response with headers
         """
-        return self.error_response(request, response_code=http.NOT_FOUND)
+        try:
+            service_reference = self.session.nav.getCurrentlyPlayingServiceReference().toString()
+            return self.render_list_subset(request, service_reference)
+        except Exception:
+            return self.error_response(request, response_code=http.NOT_FOUND)
 
     def render_list_subset(self, request, service_reference):
         """
@@ -58,7 +62,8 @@ class RESTEventController(TwoFaceApiController):
                     service_reference=service_reference)
         data['items'] = self.ec.lookup(service_reference,
                                        querytype=QUERYTYPE_LOOKUP__WHILE,
-                                       begin=QUERY_TIMESTAMP_CURRENT_TIME)
+                                       begin=QUERY_TIMESTAMP_CURRENT_TIME,
+                                       minutes=0)
         return json_response(request, data)
 
     def render_list_item(self, request, service_reference, item_id):

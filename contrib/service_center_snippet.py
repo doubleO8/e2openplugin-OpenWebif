@@ -306,7 +306,7 @@ if 22 == 22:
     #service_types_radio = '1:7:2:0:0:0:0:0:0:0:(type == 2) || (type == 10)'
 
 
-some110 = eServiceReference("1:0:1:412:4:85:FFFF0000:0:0:0:")
+some110 = eServiceReference("1:0:1:412:4:85:FFFF0000:0:0:0:".encode("ascii"))
 print "x-" * 80
 print ""
 sinfo = ech.info(some110)

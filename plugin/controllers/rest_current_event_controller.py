@@ -30,14 +30,11 @@ def get_servicereference_name(some_ref):
     Returns:
         service name or service reference string
     """
-    try:
-        some_ref = enigma.eServiceReference(some_ref)
-    except TypeError:
-        pass
-
     ech = enigma.eServiceCenter.getInstance()
 
     try:
+        if isinstance(some_ref, basestring):
+            some_ref = enigma.eServiceReference(some_ref.encode("ascii"))
         sinfo = ech.info(some_ref)
         return mangle_epg_text(sinfo.getName(some_ref))
     except Exception:

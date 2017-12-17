@@ -69,7 +69,7 @@ class RESTMovieController(RESTControllerSkeleton):
         Returns:
             HTTP response with headers
         """
-        data = dict(result=False)
+        data = dict(files=[])
         e_ext_level1 = ('ts', 'eit',)
         e_ext_level2 = ('ap', 'cuts', 'meta', 'sc',)
         (trunk, _) = os.path.splitext(target_path)
@@ -86,7 +86,13 @@ class RESTMovieController(RESTControllerSkeleton):
             if os.path.isfile(current):
                 files_to_remove.append(current)
 
-        data["files"] = files_to_remove
+        for path in files_to_remove:
+            try:
+                os.unlink(path)
+                data["files"].append(path)
+            except Exception as exc:
+                self.log.error(exc)
+
         return json_response(request, data)
 
     def render_GET(self, request):

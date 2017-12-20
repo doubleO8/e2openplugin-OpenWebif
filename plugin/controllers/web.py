@@ -8,7 +8,7 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
-import re
+from email.utils import formatdate
 
 from Plugins.Extensions.OpenWebif.__init__ import _
 
@@ -786,6 +786,7 @@ class WebController(BaseController):
             request.getHeader('host'),
             fallback_hostname=request.getRequestHostname(),
             want_url=True)
+        movielist['published'] = formatdate()
         return movielist
 
     def P_fullmovielist(self, request):

@@ -19,17 +19,6 @@ from Components.config import config as comp_config
 from utilities import require_valid_file_parameter, build_url
 from utilities import mangle_host_header_port
 
-def new_getRequestHostname(self):
-    host = self.getHeader(b'host')
-    if host:
-        if host[0] == '[':
-            return host.split(']', 1)[0] + "]"
-        return host.split(':', 1)[0].encode('ascii')
-    return self.getHost().host.encode('ascii')
-
-
-http.Request.getRequestHostname = new_getRequestHostname
-
 FLOG = logging.getLogger("filecrap")
 
 

@@ -84,18 +84,6 @@ TEMPLATE_ALIASES = {
 }
 
 
-def new_getRequestHostname(self):
-    host = self.getHeader(b'host')
-    if host:
-        if host[0] == '[':
-            return host.split(']', 1)[0] + "]"
-        return host.split(':', 1)[0].encode('ascii')
-    return self.getHost().host.encode('ascii')
-
-
-http.Request.getRequestHostname = new_getRequestHostname
-
-
 def error404(request):
     """
     HTTP 404 Not Found response.

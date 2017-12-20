@@ -16,7 +16,10 @@ REGEX_ITEM_OR_KEY_ACCESS = re.compile(PATTERN_ITEM_OR_KEY_ACCESS)
 SERVICEREFERENCE_PORTION_PATTERN = r'([\da-fA-F]+)[^\w]?'
 SERVICEREFERENCE_PORTION_REGEX = re.compile(SERVICEREFERENCE_PORTION_PATTERN)
 
-PATTERN_HOST_HEADER = r'(?P<hostname>.+)\:(?P<port>\d+)$'
+#: regular expression pattern for strings containing something resembling
+#: a hostname/port combination (``<hostname>:<port>``)
+PATTERN_HOST_HEADER = r'(\[(?P<ipv6_addr>.+?)\]|(?P<hostname>.+?))' \
+                      r'(\:(?P<port>\d+))?$'
 REGEX_HOST_HEADER = re.compile(PATTERN_HOST_HEADER)
 
 # stolen from enigma2_http_api ...
@@ -450,6 +453,10 @@ def mangle_host_header_port(value=None,
     >>> resi6 = mangle_host_header_port("localhost:12345", want_url=True)
     >>> resi6
     'http://localhost:12345'
+    >>> mangle_host_header_port("[2001:0db8:85a3:08d3::0370:7344]", want_url=True)
+    'http://[2001:0db8:85a3:08d3::0370:7344]'
+    >>> mangle_host_header_port("[2001:0db8:85a3:08d3::0370:7344]:8080/", want_url=True)
+    'http://[2001:0db8:85a3:08d3::0370:7344]:8080/'
     """
     result = dict(
         proto="http", # deprecated, added just for compatibility
@@ -463,7 +470,10 @@ def mangle_host_header_port(value=None,
         if matcher:
             gdict = matcher.groupdict()
             result["port"] = gdict["port"]
-            result["hostname"] = gdict["hostname"]
+            if gdict.get("ipv6_addr"):
+                result["hostname"] = '[{ipv6_addr}]'.format(**gdict)
+            else:
+                result["hostname"] = gdict["hostname"]
 
     try:
         port_i = int(result['port'])
@@ -487,7 +497,6 @@ def mangle_host_header_port(value=None,
                          scheme=result['scheme'],
                          port=port)
     return result
-
 
 if __name__ == '__main__':
     import doctest

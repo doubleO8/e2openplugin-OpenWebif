@@ -16,6 +16,15 @@ from rest import json_response, CORS_DEFAULT_ALLOW_ORIGIN
 from utilities import mangle_host_header_port
 
 
+def new_getRequestHostname(request):
+    host = request.getHeader(b'host')
+    if host:
+        if host[0] == '[':
+            return host.split(']', 1)[0] + "]"
+        return host.split(':', 1)[0].encode('ascii')
+    return request.getHost().host.encode('ascii')
+
+
 def whoami(request, fallback_port=None):
     #: port fallback is ``comp_config.OpenWebif.port.value`` actually
     if fallback_port is None:
@@ -64,6 +73,8 @@ class WhoamiControl(RESTControllerSkeleton):
                 request.getHeader("host"), fallback_port=fallback_port)
         except Exception as exc:
             data['mangle_host_header_port'] = 'FAIL: {!r}'.format(exc)
+
+        data['monkey_host'] = new_getRequestHostname(request)
 
         try:
             a = data['whoami_result']

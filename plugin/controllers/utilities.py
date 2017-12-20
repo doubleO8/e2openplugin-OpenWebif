@@ -16,6 +16,9 @@ REGEX_ITEM_OR_KEY_ACCESS = re.compile(PATTERN_ITEM_OR_KEY_ACCESS)
 SERVICEREFERENCE_PORTION_PATTERN = r'([\da-fA-F]+)[^\w]?'
 SERVICEREFERENCE_PORTION_REGEX = re.compile(SERVICEREFERENCE_PORTION_PATTERN)
 
+PATTERN_HOST_HEADER = r'(?P<hostname>.+)\:(?P<port>\d+)$'
+REGEX_HOST_HEADER = re.compile(PATTERN_HOST_HEADER)
+
 # stolen from enigma2_http_api ...
 # https://wiki.neutrino-hd.de/wiki/Enigma:Services:Formatbeschreibung
 # Dezimalwert: 1=TV, 2=Radio, 4=NVod, andere=Daten
@@ -361,7 +364,7 @@ def require_valid_file_parameter(request, parameter_key):
     return filename
 
 
-def build_url(hostname, path, args, scheme="http", port=None):
+def build_url(hostname, path=None, args=None, scheme="http", port=None):
     """
     Create an URL based on parameters.
 
@@ -374,13 +377,116 @@ def build_url(hostname, path, args, scheme="http", port=None):
 
     Returns:
         basestring: Generated URL
+
+    >>> build_url("some.host", "/", {})
+    'http://some.host/'
+    >>> build_url("some.host", "/")
+    'http://some.host/'
+    >>> build_url("some.host")
+    'http://some.host'
+    >>> build_url("some.host", port=27080)
+    'http://some.host:27080'
+    >>> build_url("", port=27080)
+    Traceback (most recent call last):
+        ...
+    ValueError: empty hostname!
+    >>> build_url("some.host", "x")
+    'http://some.host/x'
+    >>> build_url("some.host", "/x")
+    'http://some.host/x'
+    >>> build_url("some.host", "/x/")
+    'http://some.host/x/'
+    >>> build_url("some.host", "x/")
+    'http://some.host/x/'
+    >>> build_url("some.host", "x/../")
+    'http://some.host/x/../'
     """
+    if not hostname:
+        raise ValueError("empty hostname!")
+
     netloc = hostname
     if port:
         netloc = '{:s}:{!s}'.format(hostname, port)
-    path_q = urllib.quote(path)
-    args_e = urllib.urlencode(args)
+    if path:
+        path_q = urllib.quote(path)
+    else:
+        path_q = ''
+    if args:
+        args_e = urllib.urlencode(args)
+    else:
+        args_e = None
     return urlparse.urlunparse((scheme, netloc, path_q, None, args_e, None))
+
+
+def mangle_host_header_port(value=None,
+                            fallback_port="80", fallback_hostname="localhost",
+                            want_url=False):
+    """
+
+    Args:
+        value: header data
+        fallback_port: fallback value for port (default ``80``)
+        fallback_hostname: fallback value for hostname (default ``localhost``)
+        want_url: return an URL string
+
+    Returns:
+        dict: Mangled *port, proto* values
+
+    >>> resi1 = mangle_host_header_port()
+    >>> resi1['netloc']
+    'localhost'
+    >>> resi2 = mangle_host_header_port("localhost:80")
+    >>> resi2['netloc']
+    'localhost'
+    >>> resi3 = mangle_host_header_port("x:123")
+    >>> resi3['netloc']
+    'x:123'
+    >>> resi4 = mangle_host_header_port("haha:342111")
+    >>> resi4['netloc']
+    'haha'
+    >>> resi5 = mangle_host_header_port("haha:342111", want_url=True)
+    >>> resi5
+    'http://haha'
+    >>> resi6 = mangle_host_header_port("localhost:12345", want_url=True)
+    >>> resi6
+    'http://localhost:12345'
+    """
+    result = dict(
+        proto="http", # deprecated, added just for compatibility
+        scheme="http",
+        port=fallback_port,
+        hostname=fallback_hostname
+    )
+
+    if value:
+        matcher = re.match(REGEX_HOST_HEADER, value)
+        if matcher:
+            gdict = matcher.groupdict()
+            result["port"] = gdict["port"]
+            result["hostname"] = gdict["hostname"]
+
+    try:
+        port_i = int(result['port'])
+        if not 1 <= port_i <= 65535:
+            raise ValueError(result['port'])
+    except Exception:
+        result['port'] = fallback_port
+
+    if result['port'] not in ("80", 80):
+        result['netloc'] = "{hostname}:{port}".format(**result)
+    else:
+        result['netloc'] = result["hostname"]
+
+    if want_url:
+        if result['port'] in ("80", 80):
+            port = None
+        else:
+            port = result['port']
+
+        return build_url(hostname=result['hostname'],
+                         scheme=result['scheme'],
+                         port=port)
+    return result
 
 
 if __name__ == '__main__':

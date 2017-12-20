@@ -1,9 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
+import sys
 import re
 
 from twisted.web.server import Site, resource
 from twisted.internet import reactor
+
+# hack: alter include path in such ways that utilities library is included
+sys.path.append(os.path.join(os.path.dirname(__file__),
+                             '../plugin/controllers'))
 
 from rest import RESTControllerSkeleton
 from rest import json_response, CORS_DEFAULT_ALLOW_ORIGIN

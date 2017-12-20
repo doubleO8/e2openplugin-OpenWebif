@@ -453,10 +453,14 @@ def mangle_host_header_port(value=None,
     >>> resi6 = mangle_host_header_port("localhost:12345", want_url=True)
     >>> resi6
     'http://localhost:12345'
-    >>> mangle_host_header_port("[2001:0db8:85a3:08d3::0370:7344]", want_url=True)
+    >>> mangle_host_header_port("[2001:0db8:85a3:08d3::0370:7344]", want_url=True)  # NOQA
     'http://[2001:0db8:85a3:08d3::0370:7344]'
-    >>> mangle_host_header_port("[2001:0db8:85a3:08d3::0370:7344]:8080/", want_url=True)
+    >>> mangle_host_header_port("[2001:0db8:85a3:08d3::0370:7344]")['netloc']
+    '[2001:0db8:85a3:08d3::0370:7344]'
+    >>> mangle_host_header_port("[2001:0db8:85a3:08d3::0370:7344]:8080/", want_url=True)  # NOQA
     'http://[2001:0db8:85a3:08d3::0370:7344]:8080/'
+    >>> mangle_host_header_port("[2001:0db8:85a3:08d3::0370:7344]:8080")['netloc']  # NOQA
+    '[2001:0db8:85a3:08d3::0370:7344]:8080'
     """
     result = dict(
         proto="http", # deprecated, added just for compatibility

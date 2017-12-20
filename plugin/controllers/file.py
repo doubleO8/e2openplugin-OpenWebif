@@ -58,7 +58,7 @@ class FileController(resource.Resource):
                     "action": "download",
                     "file": filename
                 }
-                source_url = build_url(hostname=request.getRequestHostname(),
+                source_url = build_url(hostname=mangled['hostname'],
                                        path="file", args=args,
                                        port=mangled["port"])
                 m3u_content.append(source_url)

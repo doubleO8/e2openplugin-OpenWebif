@@ -169,8 +169,9 @@ def create_stream_m3u(session, request, m3ufile):
             m3u_content.append("#EXTVLCOPT:program=%d" % (
                 int(sRef.split(':')[3], 16)))
 
+    mangled = mangle_host_header_port(request.getHeader('host'))
     source_url = build_url(
-        hostname=request.getRequestHostname(), port=portNumber,
+        hostname=mangled['hostname'], port=portNumber,
         path=sRef, args=args)
     m3u_content.append(source_url)
     request.setHeader('Content-Type', 'application/x-mpegurl')
@@ -262,18 +263,16 @@ def create_file_m3u(request):
         m3u_content.append("#EXTVLCOPT:program=%d" % (int(
             sRef.split(':')[3], 16)))
 
-    if portNumber is None:
-        portNumber = config.OpenWebif.port.value
-        try:
-            portNumber = mangle_host_header_port(
+    mangled = mangle_host_header_port(
                 request.getHeader('host'),
-                fallback_port=config.OpenWebif.port.value)['port']
-        except ValueError:
-            pass
+                fallback_port=config.OpenWebif.port.value)
+
+    if portNumber is None:
+        portNumber = mangled['port']
 
     args['file'] = filename
     source_url = build_url(
-        hostname=request.getRequestHostname(), port=portNumber,
+        hostname=mangled['hostname'], port=portNumber,
         path="/file", args=args)
     m3u_content.append(source_url)
     request.setHeader('Content-Type', 'application/x-mpegurl')

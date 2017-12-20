@@ -527,7 +527,8 @@ class WebController(BaseController):
 
         request.setHeader('Content-Type', 'application/x-mpegurl')
         services = getServices(bRef, False)
-        services["host"] = "%s:8001" % request.getRequestHostname()
+        mangled = mangle_host_header_port(request.getHeader('host'))
+        services["host"] = '{hostname}:8001'.format(**mangled)
         services["auth"] = ''
         return services
 
@@ -762,9 +763,7 @@ class WebController(BaseController):
         request.setHeader('Content-Type', 'application/x-mpegurl')
         movielist = getMovieList(request.args)
         movielist["host"] = mangle_host_header_port(
-            request.getHeader('host'),
-            fallback_hostname=request.getRequestHostname(),
-            want_url=True)
+            request.getHeader('host'), want_url=True)
         return movielist
 
     def P_movielistrss(self, request):
@@ -783,9 +782,7 @@ class WebController(BaseController):
         """
         movielist = getMovieList(request.args)
         movielist["host"] = mangle_host_header_port(
-            request.getHeader('host'),
-            fallback_hostname=request.getRequestHostname(),
-            want_url=True)
+            request.getHeader('host'), want_url=True)
         movielist['published'] = formatdate()
         return movielist
 
@@ -1729,11 +1726,12 @@ class WebController(BaseController):
         """
         request.setHeader("content-type", "text/html")
         info = getCurrentService(self.session)
+        mangled = mangle_host_header_port(request.getHeader('host'))
         return {
             "ppid": "%x" % info["pmtpid"],
             "vpid": "%x" % info["vpid"],
             "apid": "%x" % info["apid"],
-            "host": request.getRequestHostname()
+            "host": mangled['hostname']
         }
 
     def P_zapstream(self, request):

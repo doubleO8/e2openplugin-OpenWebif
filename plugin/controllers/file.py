@@ -68,9 +68,6 @@ class FileController(resource.Resource):
                     name)
                 request.setHeader("Content-Type", "application/x-mpegurl")
                 return "\n".join(m3u_content)
-            elif action == "delete":
-                request.setResponseCode(http.OK)
-                return "TODO: DELETE FILE: %s" % (filename)
             elif action == "download":
                 request.setHeader(
                     "Content-Disposition",
@@ -79,7 +76,9 @@ class FileController(resource.Resource):
                     filename, defaultType="application/octet-stream")
                 return rfile.render(request)
             else:
-                return "wrong action parameter"
+                FLOG.warning("Unsupported action: {!r}".format(action))
+                request.setResponseCode(http.NOT_IMPLEMENTED)
+                return ""
 
         if "dir" in request.args:
             path = request.args["dir"][0]

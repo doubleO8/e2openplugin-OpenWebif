@@ -19,6 +19,7 @@ from twisted.web import http
 
 from info import getInfo
 from ..utilities import require_valid_file_parameter, build_url
+from ..utilities import mangle_host_header_port
 
 MODEL_TRANSCODING = (
     "Uno4K",
@@ -263,10 +264,12 @@ def create_file_m3u(request):
 
     if portNumber is None:
         portNumber = config.OpenWebif.port.value
-        ourhost = request.getHeader('host')
-        m = re.match('.+\:(\d+)$', ourhost)
-        if m is not None:
-            portNumber = m.group(1)
+        try:
+            portNumber = mangle_host_header_port(
+                request.getHeader('host'),
+                fallback_port=config.OpenWebif.port.value)['port']
+        except ValueError:
+            pass
 
     args['file'] = filename
     source_url = build_url(

@@ -18,7 +18,7 @@ from twisted.web import static, resource, http
 
 from Components.config import config as comp_config
 from utilities import require_valid_file_parameter, build_url
-
+from utilities import mangle_host_header_port
 
 def new_getRequestHostname(self):
     host = self.getHeader(b'host')
@@ -63,18 +63,16 @@ class FileController(resource.Resource):
                     name = request.args["name"][0]
                     m3u_content.append("#EXTINF:-1,%s" % name)
 
-                port = comp_config.OpenWebif.port.value
-                ourhost = request.getHeader('host')
-                m = re.match('.+\:(\d+)$', ourhost)
-                if m is not None:
-                    port = m.group(1)
-
+                mangled = mangle_host_header_port(
+                    request.getHeader('host'),
+                    fallback_port=comp_config.OpenWebif.port.value)
                 args = {
                     "action": "download",
                     "file": filename
                 }
                 source_url = build_url(hostname=request.getRequestHostname(),
-                                       path="file", args=args, port=port)
+                                       path="file", args=args,
+                                       port=mangled["port"])
                 m3u_content.append(source_url)
                 request.setHeader(
                     "Content-Disposition",

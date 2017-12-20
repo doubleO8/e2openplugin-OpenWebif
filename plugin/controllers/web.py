@@ -33,7 +33,7 @@ from models.timers import getTimers, addTimer, addTimerByEventId, editTimer, \
 from models.message import sendMessage, getMessageAnswer
 from models.movies import getMovieList, removeMovie, getMovieTags, moveMovie, \
     renameMovie, getAllMovies
-from models.config import getSettings,  \
+from models.config import getSettings, \
     setZapStream, saveConfig, getZapStream, setShowChPicon
 from models.stream import create_stream_m3u, create_file_m3u, \
     getStreamSubservices
@@ -46,16 +46,7 @@ from Screens.InfoBar import InfoBar
 from base import BaseController
 from stream import StreamController
 from servicelists import ServiceListsManager
-
-
-def whoami(request):
-    port = comp_config.OpenWebif.port.value
-    proto = 'http'
-    ourhost = request.getHeader('host')
-    m = re.match('.+\:(\d+)$', ourhost)
-    if m is not None:
-        port = m.group(1)
-    return {'proto': proto, 'port': port}
+from utilities import mangle_host_header_port
 
 
 class WebController(BaseController):
@@ -770,9 +761,10 @@ class WebController(BaseController):
         """
         request.setHeader('Content-Type', 'application/x-mpegurl')
         movielist = getMovieList(request.args)
-        movielist["host"] = "%s://%s:%s" % (
-            whoami(request)['proto'], request.getRequestHostname(),
-            whoami(request)['port'])
+        movielist["host"] = mangle_host_header_port(
+            request.getHeader('host'),
+            fallback_hostname=request.getRequestHostname(),
+            want_url=True)
         return movielist
 
     def P_movielistrss(self, request):
@@ -790,9 +782,10 @@ class WebController(BaseController):
             HTTP response with headers
         """
         movielist = getMovieList(request.args)
-        movielist["host"] = "%s://%s:%s" % (
-            whoami(request)['proto'], request.getRequestHostname(),
-            whoami(request)['port'])
+        movielist["host"] = mangle_host_header_port(
+            request.getHeader('host'),
+            fallback_hostname=request.getRequestHostname(),
+            want_url=True)
         return movielist
 
     def P_fullmovielist(self, request):

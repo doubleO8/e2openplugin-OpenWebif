@@ -449,7 +449,7 @@ function open_epg_search_dialog() {
 	var w = $(window).width() -100;
 	var h = $(window).height() -100;
 	
-	var buttons = {}
+	var buttons = {};
 	buttons[tstr_close] = function() { $(this).dialog("close");};
 	buttons[tstr_open_in_new_window] = function() { $(this).dialog("close"); open_epg_search_pop(spar,full);};
 	
@@ -2002,13 +2002,13 @@ function FillAllServices(bqs,callback)
 	var boptions = "";
 	var refs = [];
 	$.each( bqs, function( key, val ) {
-		var ref = val['servicereference']
+		var ref = val['servicereference'];
 		var name = val['servicename'];
 		boptions += "<option value='" + encodeURIComponent(ref) + "'>" + val['servicename'] + "</option>";
 		var slist = val['subservices'];
 		var items = [];
 		$.each( slist, function( key, val ) {
-			var ref = val['servicereference']
+			var ref = val['servicereference'];
 			if (!isInArray(refs,ref)) {
 				refs.push(ref);
 				if(ref.substring(0, 4) == "1:0:")
@@ -2047,9 +2047,9 @@ function GetAllServices(callback,radio)
 	date = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
 
 	// load allservices only once a day
-	var cache = GetLSValue(vd,'')
+	var cache = GetLSValue(vd,'');
 	if(cache === date) {
-		cache = GetLSValue(v,null)
+		cache = GetLSValue(v,null);
 		if(cache != null) {
 			var js = json_dammit(cache);
 			var bqs = js['services'];

@@ -1812,10 +1812,6 @@ class WebController(BaseController):
         self.isCustom = True
         return create_file_m3u(request)
 
-    def P_videom3u(self, request):
-        self.isCustom = True
-        return create_stream_m3u(self.session, request, "video.m3u")
-
     def P_streamcurrentm3u(self, request):
         """
         Request handler for the `streamcurrentm3u` endpoint.

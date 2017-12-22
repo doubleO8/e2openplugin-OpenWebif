@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-RESTful Controller for /api/saveconfig endpoint.
-POST requests are proxied through `controllers.web.WebController`.
+RESTful Controller for ``/api/saveconfig`` endpoint.
+POST requests are proxied through
+:py:func:`controllers.web.WebController.P_saveconfig`.
 
 MISSING:
 
@@ -16,7 +17,7 @@ from rest import CORS_DEFAULT_ALLOW_ORIGIN, RESTControllerSkeleton
 
 class SaveConfigApiController(RESTControllerSkeleton):
     """
-    RESTful Controller for `/api/saveconfig` endpoint.
+    RESTful Controller for ``/api/saveconfig`` endpoint.
     """
     def __init__(self, *args, **kwargs):
         RESTControllerSkeleton.__init__(self, *args, **kwargs)
@@ -47,6 +48,11 @@ class SaveConfigApiController(RESTControllerSkeleton):
             request (:obj:`twisted.web.server.Request`): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:post:: /api/saveconfig
+
+            :query string key: configuration key
+            :query string value: configuration value
         """
         request.setHeader(
             'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)

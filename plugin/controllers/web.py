@@ -1915,6 +1915,11 @@ class WebController(BaseController):
             request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:post:: /web/saveconfig
+
+            :query string key: configuration key
+            :query string value: configuration value
         """
         if request.method == b'POST':
             res = self.testMandatoryArguments(request, ["key", "value"])

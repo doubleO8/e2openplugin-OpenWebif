@@ -93,7 +93,7 @@ class FileController(resource.Resource):
             request.setHeader(
                 "content-type",
                 "application/json; charset=utf-8")
-            if os.path.isfile(path):
+            if os.path.isdir(path):
                 if path == '/':
                     path = ''
                 try:

@@ -262,6 +262,10 @@ class WebController(BaseController):
             request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:get:: /web/signal
+
+            :query int id: audio track ID
         """
         try:
             track_id = int(request.args["id"][0])
@@ -283,6 +287,11 @@ class WebController(BaseController):
             request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:get:: /web/services.m3u
+
+            :query string sRef: service reference
+            :query string title: service title
         """
         res = self.testMandatoryArguments(request, ["sRef"])
         if res:

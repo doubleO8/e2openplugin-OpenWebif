@@ -182,10 +182,12 @@ def mangle_servicereference(servicereference):
     if isinstance(servicereference, basestring):
         servicereference = eServiceReference(servicereference)
 
+    sinfo = ech.info(servicereference)
     data['kind'] = SERVICE_REFERENCE_ID.get(servicereference.type, "INVALID")
     data['path'] = servicereference.getPath().decode("utf-8")
     data['servicereference'] = servicereference.toString().decode("utf-8")
     data['flags'] = servicereference.flags
+    data["length"] = sinfo.getLength(servicereference)
     return data
 
 
@@ -215,5 +217,5 @@ def list_movies(root_path):
             yield item
 
 for item in list_movies(root_path):
-    print("{!r}".format(item['path']))
+    print("{!r}".format(item['length']))
     #pprint.pprint(item)

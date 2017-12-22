@@ -8,7 +8,6 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
-import re
 import logging
 
 from enigma import eServiceReference, getBestPlayableServiceReference

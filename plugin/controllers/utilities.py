@@ -465,7 +465,7 @@ def mangle_host_header_port(value=None,
     '[2001:0db8:85a3:08d3::0370:7344]:8080'
     """
     result = dict(
-        proto="http", # deprecated, added just for compatibility
+        proto="http",  # deprecated, added just for compatibility
         scheme="http",
         port=fallback_port,
         hostname=fallback_hostname
@@ -503,6 +503,7 @@ def mangle_host_header_port(value=None,
                          scheme=result['scheme'],
                          port=port)
     return result
+
 
 if __name__ == '__main__':
     import doctest

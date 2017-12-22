@@ -10,7 +10,8 @@
 ##############################################################################
 from email.utils import formatdate
 
-from enigma import eServiceCenter
+from enigma import eServiceCenter, eEPGCache, eServiceReference
+
 from Plugins.Extensions.OpenWebif.__init__ import _
 from Components.config import config as comp_config
 
@@ -1057,7 +1058,6 @@ class WebController(BaseController):
                 request.args["eit"][0], int):
             eventid = request.args["eit"][0]
         else:
-            from enigma import eEPGCache, eServiceReference
             begin_i = int(request.args["begin"][0])
             queryTime = begin_i + (int(request.args["end"][0]) - begin_i) / 2
             event = eEPGCache.getInstance().lookupEventTime(

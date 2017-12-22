@@ -988,7 +988,7 @@ function pressMenuRemote(code) {
 	if (grabTimer > 0) {
 		clearTimeout(grabTimer);
 	}
-	grabTimer = setTimeout("callScreenShot()", (code > 1 && code < 12) ? 1500:1000);
+	grabTimer = setTimeout(callScreenShot, (code > 1 && code < 12) ? 1500:1000);
 }
 
 function toggleFullRemote() {

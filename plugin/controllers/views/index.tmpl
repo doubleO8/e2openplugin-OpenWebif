@@ -20,10 +20,10 @@
 #end def
 #def mainMenu
 <ul>
-    <li><a class="lmc" href="ajax/tv">$tstrings['television']</a></li>
-    <li><a class="lmc" href="ajax/radio">$tstrings['radio']</a></li>
-    <li><a class="lmc spin" href="ajax/movies">$tstrings['movies']</a></li>
-    <li><a class="lmc" href="ajax/timers">$tstrings['timers']</a></li>
+    <li><a class="lmc" href="/ajax/tv">$tstrings['television']</a></li>
+    <li><a class="lmc" href="/ajax/radio">$tstrings['radio']</a></li>
+    <li><a class="lmc spin" href="/ajax/movies">$tstrings['movies']</a></li>
+    <li><a class="lmc" href="/ajax/timers">$tstrings['timers']</a></li>
 </ul>
 #end def
 #def searchMenu
@@ -101,7 +101,7 @@
 #end def
 #def extrasMenu
 <ul>
-    <li><a class="lmc" href="ajax/boxinfo">$tstrings["box_info"]</a></li>
+    <li><a class="lmc" href="/ajax/boxinfo">$tstrings["box_info"]</a></li>
     #for $extra in $extras
         #set $target_url = $extra["key"];
         #if $extra.has_key('nw')
@@ -158,13 +158,13 @@
         </div>
     </div>
 
-    <form name="portForm" action="web/stream.m3u" method="GET" target="_blank">
+    <form name="portForm" action="/web/stream.m3u" method="GET" target="_blank">
         <input type="hidden" name="ref">
         <input type="hidden" name="name">
         <input type="hidden" name="device">
     </form>
 
-    <form name="portFormTs" action="web/ts.m3u" method="GET" target="_blank">
+    <form name="portFormTs" action="/web/ts.m3u" method="GET" target="_blank">
         <input type="hidden" name="file">
         <input type="hidden" name="device">
     </form>

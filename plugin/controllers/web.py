@@ -1781,10 +1781,19 @@ class WebController(BaseController):
 
             https://dream.reichholf.net/e2web/#stream.m3u
 
+        .. note::
+
+            Parameters Not available in *Enigma2 WebInterface API*.
+
         Args:
             request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:get:: /web/stream.m3u
+
+            :query string ref: service reference
+            :query string name: service name
         """
         self.isCustom = True
         if getZapStream()['zapstream']:
@@ -1795,22 +1804,6 @@ class WebController(BaseController):
                     request.args["name"][0],
                     stream=True)
         return create_stream_m3u(self.session, request, "stream.m3u")
-
-    def P_tsm3u(self, request):
-        """
-        Request handler for the `tsm3u` endpoint.
-
-        .. seealso::
-
-            https://dream.reichholf.net/e2web/#ts.m3u
-
-        Args:
-            request (twisted.web.server.Request): HTTP request object
-        Returns:
-            HTTP response with headers
-        """
-        self.isCustom = True
-        return create_file_m3u(request)
 
     def P_streamcurrentm3u(self, request):
         """
@@ -1824,9 +1817,29 @@ class WebController(BaseController):
             request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:get:: /web/streamcurrent.m3u
         """
         self.isCustom = True
         return create_stream_m3u(self.session, request, "streamcurrent.m3u")
+
+    def P_tsm3u(self, request):
+        """
+        Request handler for the `tsm3u` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#ts.m3u
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+
+        .. http:get:: /web/ts.m3u
+        """
+        self.isCustom = True
+        return create_file_m3u(request)
 
     def P_streamsubservices(self, request):
         """

@@ -179,10 +179,7 @@ class BaseController(resource.Resource):
 
         if self.path == "":
             self.path = "index"
-        elif self.path == "signal":
-            self.path = "tunersignal"
-            request.uri = request.uri.replace('signal', 'tunersignal')
-            request.path = request.path.replace('signal', 'tunersignal')
+
         self.path = self.path.replace(".", "")
         owif_callback_name = OWIF_PREFIX + self.path
         func = getattr(self, owif_callback_name, None)

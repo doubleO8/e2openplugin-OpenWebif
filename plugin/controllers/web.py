@@ -177,7 +177,7 @@ class WebController(BaseController):
             "service": getCurrentService(self.session)
         }
 
-    def P_tunersignal(self, request):
+    def P_signal(self, request):
         """
         Request handler for the `tunersignal` endpoint.
         Get tuner signal status(?)
@@ -190,6 +190,8 @@ class WebController(BaseController):
             request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:get:: /web/signal
         """
         return getFrontendStatus(self.session)
 

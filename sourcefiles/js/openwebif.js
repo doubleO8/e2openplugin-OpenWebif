@@ -167,9 +167,9 @@ function initJsTranslation(strings) {
 	tstr_nothing_play = strings.nothing_play;
 	tstr_now = strings.now;
 	tstr_on = strings.on;
-	tstr_reboot_box = strings.reboot_box
+	tstr_reboot_box = strings.reboot_box;
 	tstr_rec_status = strings.rec_status;
-	tstr_restart_gui = strings.restart_gui
+	tstr_restart_gui = strings.restart_gui;
 	tstr_standby = strings.standby;
 	tstr_start_after_end = strings.start_after_end;
 	tstr_time = strings.time;
@@ -311,8 +311,8 @@ function load_dm_spinner(url,title,w,h,buttons){
 			url: url,
 			success: function(data) {
 				$("#modaldialog").html(data);
-			}
-			,error: function(){
+			},
+			error: function(){
 				$("#modaldialog").html(tstr_error_load_page);
 			}
 		});
@@ -322,7 +322,7 @@ function load_dm_spinner(url,title,w,h,buttons){
 }
 
 function load_dm(url,title,w,h){
-	var buttons = {}
+	var buttons = {};
 	buttons[tstr_close] = function() { $(this).dialog("close");};
 	var width = 'auto',height='auto';
 	if (typeof w !== 'undefined')
@@ -356,7 +356,7 @@ function load_dm(url,title,w,h){
 }
 
 function load_message_dm(url,title){
-	var buttons = {}
+	var buttons = {};
 	buttons[tstr_send_message] = function() { sendMessage();};
 	buttons[tstr_cancel] = function() { $(this).dialog("close");};
 
@@ -432,7 +432,7 @@ function open_epg_dialog(sRef,Name) {
 	var w = $(window).width() -100;
 	var h = $(window).height() -100;
 	
-	var buttons = {}
+	var buttons = {};
 	buttons[tstr_close] = function() { $(this).dialog("close");};
 	buttons[tstr_open_in_new_window] = function() { $(this).dialog("close"); open_epg_pop(sRef);};
 	
@@ -441,8 +441,8 @@ function open_epg_dialog(sRef,Name) {
 
 function open_epg_search_dialog() {
 	var spar = $("#epgSearch").val();
-	var full = GetLSValue('epgsearchtype',false) ? '&full=1' : ''
-	var bouquetsonly = GetLSValue('epgsearchbouquetsonly',false) ? '&bouquetsonly=1' : ''
+	var full = GetLSValue('epgsearchtype',false) ? '&full=1' : '';
+	var bouquetsonly = GetLSValue('epgsearchbouquetsonly',false) ? '&bouquetsonly=1' : '';
 	var url = "ajax/epgdialog?sstr=" + encodeURIComponent(spar) + full + bouquetsonly;
 	$("#epgSearch").val("");
 	
@@ -679,8 +679,9 @@ function webapi_execute_movie(url,callback)
 			if(result) {
 				if (!result.result)
 					alert(result.message);
-				if (typeof callback !== 'undefined') 
-					callback(result.result)
+				if (typeof callback !== 'undefined') {
+					callback(result.result);
+				}
 			}
 		}
 	});

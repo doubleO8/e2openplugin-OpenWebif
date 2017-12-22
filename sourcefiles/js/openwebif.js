@@ -2068,6 +2068,7 @@ function GetAllServices(callback,radio)
 		}
 	});
 }
+
 var SSHelperObj = function () {
 	var self;
 	var screenshotInterval = false;
@@ -2079,11 +2080,11 @@ var SSHelperObj = function () {
 			self = this;
 			clearInterval(self.screenshotInterval);
 			self.ssr_i = parseInt(GetLSValue('ssr_i','30'));
-			
+
 			$('#screenshotbutton0').click(function(){grabScreenshot('all');});
 			$('#screenshotbutton1').click(function(){grabScreenshot('video');});
 			$('#screenshotbutton2').click(function(){grabScreenshot('osd');});
-			
+
 			$('#screenshotbutton').buttonset();
 			$('#screenshotrefreshbutton').buttonset();
 			$('#ssr_i').val(self.ssr_i);
@@ -2095,7 +2096,7 @@ var SSHelperObj = function () {
 				SetLSValue('ssr_hd',$('#ssr_hd').is(':checked'));
 				grabScreenshot('auto');
 			});
-		
+
 			$('#ssr_i').change(function() {
 				var t = $('#ssr_i').val();
 				SetLSValue('ssr_i',t);
@@ -2106,7 +2107,7 @@ var SSHelperObj = function () {
 					self.setSInterval();
 				}
 			});
-			
+
 			$('#ssr_s').change(function() {
 				var v = $('#ssr_s').is(':checked');
 				if (v) {
@@ -2116,16 +2117,19 @@ var SSHelperObj = function () {
 				}
 				SetLSValue('ssr_s',v);
 			});
-		
+
 			screenshotMode = 'all'; // reset on page reload
 			grabScreenshot(screenshotMode);
 
 			if(GetLSValue('ssr_s',false))
 				self.setSInterval();
 
-		},setSInterval: function()
+		},
+		setSInterval: function()
 		{
-			self.screenshotInterval = setInterval("grabScreenshot('auto')", (self.ssr_i+1)*1000);
+			self.screenshotInterval = setInterval(function(){
+				grabScreenshot('auto');
+			}, (self.ssr_i+1)*1000);
 		}
 	};
 };

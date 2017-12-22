@@ -34,6 +34,8 @@ class SaveConfigApiController(RESTControllerSkeleton):
             request (:obj:`twisted.web.server.Request`): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:get:: /api/saveconfig
         """
         request.setHeader(
             'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)

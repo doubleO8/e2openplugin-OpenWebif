@@ -1832,8 +1832,8 @@ var MLHelper;
 						}
 					}
 				});
-			}
-			,SortMovies: function(idx)
+			},
+			SortMovies: function(idx)
 			{
 				var sorted = self._movies.slice(0);
 
@@ -1942,9 +1942,9 @@ function setHover(obj)
 	var cls=getHoverCls();
 	
 	$(obj).hover(
-		function(){ $(this).addClass(cls) },
-		function(){ $(this).removeClass(cls) }
-	)
+		function(){ $(this).addClass(cls); },
+		function(){ $(this).removeClass(cls); }
+	);
 }
 
 function setTMHover()
@@ -1956,9 +1956,9 @@ function setTMHover()
 	}
 	
 	$('.tm_row').hover(
-		function(){ $(this).addClass(cls) },
-		function(){ $(this).removeClass(cls) }
-	)
+		function(){ $(this).addClass(cls); },
+		function(){ $(this).removeClass(cls); }
+	);
 }
 
 // Localstorage
@@ -2127,7 +2127,7 @@ var SSHelperObj = function () {
 		{
 			self.screenshotInterval = setInterval("grabScreenshot('auto')", (self.ssr_i+1)*1000);
 		}
-	}
+	};
 };
 
 var SSHelper = new SSHelperObj();

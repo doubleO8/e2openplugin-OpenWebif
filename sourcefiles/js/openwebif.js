@@ -1057,7 +1057,7 @@ function initTimerEdit(radio, callback) {
 	
 	timeredit_initialized = true;
 		callback();
-	}
+	};
 
 	initTimerBQ(radio, bottomhalf);
 }
@@ -1435,7 +1435,7 @@ function ExpandMEPG()
 	$("#refreshmepg2").show();
 	$("#header").hide();
 	$("#leftmenu").hide();
-	$('#content').css('margin-left', '5px')
+	$('#content').css('margin-left', '5px');
 	$('#tvcontentmain > #toolbar-header').hide();
 	$("#tbl1body").height('100%');
 	$("#tvcontent").css('height','100%');
@@ -1452,7 +1452,7 @@ function CompressMEPG()
 	$("#refreshmepg2").hide();
 	$("#header").show();
 	$("#leftmenu").show();
-	$('#content').css('margin-left', '185px')
+	$('#content').css('margin-left', '185px');
 	$('#tvcontentmain > #toolbar-header').show();
 	$("#tvcontent").css('height','730px');
 	$("#tvcontentmain").css('height','800px');
@@ -1827,7 +1827,7 @@ var MLHelper;
 						if (simg) {
 							var img = $( "<span class='sortimg'>").append (
 								$( "<i>", { "class": "fa " + simg })
-								)
+								);
 							$("#moviesort-button .ui-selectmenu-text").prepend(img);
 						}
 					}
@@ -1912,7 +1912,7 @@ var MLHelper;
 				self._movies = mv.slice();
 			}
 		
-		}
+		};
 
 	};
 	

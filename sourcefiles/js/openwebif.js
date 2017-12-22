@@ -73,7 +73,7 @@ try {
 	});
 	
 	getStatusInfo();
-	setInterval("getStatusInfo()", 15000);
+	setInterval(getStatusInfo, 15000);
 
 	$( "#slider" ).slider({
 		

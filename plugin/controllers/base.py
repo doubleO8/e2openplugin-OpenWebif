@@ -175,7 +175,6 @@ class BaseController(resource.Resource):
     def render(self, request):
         # cache data
         path = self.path
-        isCustom = self.isCustom
 
         if self.path == "":
             self.path = "index"
@@ -243,6 +242,5 @@ class BaseController(resource.Resource):
 
         # restore cached data
         self.path = path
-        self.isCustom = isCustom
 
         return server.NOT_DONE_YET

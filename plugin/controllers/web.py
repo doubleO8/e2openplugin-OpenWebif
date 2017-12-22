@@ -10,8 +10,8 @@
 ##############################################################################
 from email.utils import formatdate
 
+from enigma import eServiceCenter
 from Plugins.Extensions.OpenWebif.__init__ import _
-
 from Components.config import config as comp_config
 
 from models.info import getInfo, getCurrentTime, getFrontendStatus
@@ -1694,7 +1694,6 @@ class WebController(BaseController):
                 try:
                     if serviceref.toString().startswith(
                             '4097:0:0:0:0:0:0:0:0:0:/'):
-                        from enigma import eServiceCenter
                         serviceHandler = eServiceCenter.getInstance()
                         sinfo = serviceHandler.info(serviceref)
                         if sinfo:

@@ -309,7 +309,6 @@ def getSatellites(stype):
 
 
 def sortSatellites(satList):
-    import re
     sortDict = {}
     i = 0
     for k in satList:

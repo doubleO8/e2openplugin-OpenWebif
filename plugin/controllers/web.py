@@ -2001,6 +2001,27 @@ class WebController(BaseController):
         return ""
 
     def P_sleeptimer(self, request):
+        """
+        Request handler for the `sleeptimer` endpoint.
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#sleeptimer
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+
+        .. http:get:: /web/sleeptimer
+
+            :query string cmd: command (*get* or *set*)
+            :query int time: time in minutes (*0* -- *999*)
+            :query string action: action (*standby* or *shutdown*)
+            :query string enabled: enabled (*True* or *False*)
+            :query string confirmed: confirmed (supported?)
+
+        """
         cmd = "get"
         if "cmd" in request.args.keys():
             cmd = request.args["cmd"][0]

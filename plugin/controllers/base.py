@@ -88,6 +88,7 @@ CONTENT_TYPE_HTML = 'text/html'
 CONTENT_TYPE_TEXT = 'text/plain'
 CONTENT_TYPE_JSON = 'application/json; charset=utf-8'
 
+
 def error404(request):
     """
     HTTP 404 Not Found response.

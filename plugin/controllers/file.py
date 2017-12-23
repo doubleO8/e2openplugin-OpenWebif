@@ -18,6 +18,7 @@ from twisted.web import static, resource, http
 from Components.config import config as comp_config
 from utilities import require_valid_file_parameter, build_url
 from utilities import mangle_host_header_port
+from base import CONTENT_TYPE_JSON
 
 FLOG = logging.getLogger("filecrap")
 
@@ -91,8 +92,7 @@ class FileController(resource.Resource):
             directories = []
             files = []
             request.setHeader(
-                "content-type",
-                "application/json; charset=utf-8")
+                "content-type", CONTENT_TYPE_JSON)
             if os.path.isdir(path):
                 if path == '/':
                     path = ''

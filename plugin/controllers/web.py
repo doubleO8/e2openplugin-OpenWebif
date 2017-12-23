@@ -44,7 +44,7 @@ from models.mediaplayer import mediaPlayerAdd, mediaPlayerRemove, \
 from models.plugins import reloadPlugins
 from Screens.InfoBar import InfoBar
 
-from base import BaseController, CONTENT_TYPE_X_MPEGURL
+from base import BaseController, CONTENT_TYPE_X_MPEGURL, CONTENT_TYPE_HTML
 from stream import StreamController
 from servicelists import ServiceListsManager
 from utilities import mangle_host_header_port
@@ -745,7 +745,7 @@ class WebController(BaseController):
         Returns:
             HTTP response with headers
         """
-        request.setHeader("content-type", "text/html")
+        self.content_type = CONTENT_TYPE_HTML
         return getMovieList(request.args)
 
     def P_movielistm3u(self, request):
@@ -1399,7 +1399,6 @@ class WebController(BaseController):
         return getInfo(session=self.session, need_fullinfo=True)
 
     def P_getipv6(self, request):
-        request.setHeader("content-type", "text/html")
         firstpublic = ''
         info = getInfo()['ifaces']
         for iface in info:
@@ -1407,7 +1406,7 @@ class WebController(BaseController):
             if public is not None:
                 firstpublic = public
                 break
-
+        self.content_type = CONTENT_TYPE_HTML
         return {
             "firstpublic": firstpublic
         }
@@ -1724,9 +1723,9 @@ class WebController(BaseController):
         Returns:
             HTTP response with headers
         """
-        request.setHeader("content-type", "text/html")
         info = getCurrentService(self.session)
         mangled = mangle_host_header_port(request.getHeader('host'))
+        self.content_type = CONTENT_TYPE_HTML
         return {
             "ppid": "%x" % info["pmtpid"],
             "vpid": "%x" % info["vpid"],

@@ -84,7 +84,9 @@ TEMPLATE_ALIASES = {
 }
 
 CONTENT_TYPE_X_MPEGURL = 'application/x-mpegurl'
-
+CONTENT_TYPE_HTML = 'text/html'
+CONTENT_TYPE_TEXT = 'text/plain'
+CONTENT_TYPE_JSON = 'application/json; charset=utf-8'
 
 def error404(request):
     """
@@ -96,7 +98,7 @@ def error404(request):
     Returns:
         HTTP 404 Not Found response
     """
-    request.setHeader("content-type", "text/html")
+    request.setHeader("content-type", CONTENT_TYPE_HTML)
     request.setResponseCode(http.NOT_FOUND)
     request.write(FOUR_O_FOUR)
     request.finish()
@@ -201,7 +203,7 @@ class BaseController(resource.Resource):
                 request.write(data)
                 request.finish()
             elif isinstance(data, str):
-                request.setHeader("content-type", "text/plain")
+                request.setHeader("content-type", CONTENT_TYPE_TEXT)
                 request.write(data)
                 request.finish()
             else:

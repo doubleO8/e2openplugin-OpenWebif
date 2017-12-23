@@ -83,6 +83,8 @@ TEMPLATE_ALIASES = {
     "web/epgnow": TEMPLATE_E2_EVENT_LIST,
 }
 
+CONTENT_TYPE_X_MPEGURL = 'application/x-mpegurl'
+
 
 def error404(request):
     """
@@ -113,14 +115,12 @@ class BaseController(resource.Resource):
         Args:
             path (basestring): Base path
             session: enigma2 Session instance
-            isCustom (bool): custom output (?)
         """
         resource.Resource.__init__(self)
-
         self.path = path
         self.session = kwargs.get("session")
-        self.isCustom = kwargs.get("isCustom", False)
         self.log = logging.getLogger(__name__)
+        self.content_type = None
         self.verbose = 0
 
     def loadTemplate(self, template_trunk_relpath, module, args):
@@ -187,19 +187,17 @@ class BaseController(resource.Resource):
             self.log.info('{!r} {!r}'.format(owif_callback_name, func))
 
         if callable(func):
-            request.setResponseCode(http.OK)
-
-            # call prePageLoad function if exist
-            plfunc = getattr(self, "prePageLoad", None)
-            if callable(plfunc):
-                plfunc(request)
-
             data = func(request)
             if data is None:
                 self.log.warning('{!r} {!r} returned None'.format(
                     owif_callback_name, func))
                 error404(request)
-            elif self.isCustom:
+                return server.NOT_DONE_YET
+
+            if self.content_type:
+                request.setHeader("content-type", self.content_type)
+
+            if self.content_type == CONTENT_TYPE_X_MPEGURL:
                 request.write(data)
                 request.finish()
             elif isinstance(data, str):
@@ -221,8 +219,9 @@ class BaseController(resource.Resource):
                 if tmpl_trunk in TEMPLATE_ALIASES:
                     the_alias = TEMPLATE_ALIASES[tmpl_trunk]
                     template_module_name = os.path.basename(the_alias)
-                    self.log.warning("Template alias {!r} -> {!r}".format(
-                        tmpl_trunk, the_alias))
+                    if self.verbose > 10:
+                        self.log.warning("Template alias {!r} -> {!r}".format(
+                            tmpl_trunk, the_alias))
                     tmpl_trunk = the_alias
 
                 # out => content

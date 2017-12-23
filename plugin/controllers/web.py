@@ -44,7 +44,7 @@ from models.mediaplayer import mediaPlayerAdd, mediaPlayerRemove, \
 from models.plugins import reloadPlugins
 from Screens.InfoBar import InfoBar
 
-from base import BaseController
+from base import BaseController, CONTENT_TYPE_X_MPEGURL
 from stream import StreamController
 from servicelists import ServiceListsManager
 from utilities import mangle_host_header_port
@@ -59,17 +59,7 @@ class WebController(BaseController):
     def __init__(self, session, path=""):
         BaseController.__init__(self, path=path, session=session)
         self.putChild("stream", StreamController(session))
-
-    def prePageLoad(self, request):
-        """
-        Callback function - right before page loading.
-
-        Args:
-            request (twisted.web.server.Request): HTTP request object
-        Returns:
-            HTTP response with headers
-        """
-        request.setHeader("content-type", "text/xml")
+        self.content_type = "text/xml"
 
     def testMandatoryArguments(self, request, keys):
         for key in keys:
@@ -537,11 +527,11 @@ class WebController(BaseController):
         else:
             bRef = ""
 
-        request.setHeader('Content-Type', 'application/x-mpegurl')
         services = getServices(bRef, False)
         mangled = mangle_host_header_port(request.getHeader('host'))
         services["host"] = '{hostname}:8001'.format(**mangled)
         services["auth"] = ''
+        self.content_type = CONTENT_TYPE_X_MPEGURL
         return services
 
     def P_subservices(self, request):
@@ -772,10 +762,10 @@ class WebController(BaseController):
         Returns:
             HTTP response with headers
         """
-        request.setHeader('Content-Type', 'application/x-mpegurl')
         movielist = getMovieList(request.args)
         movielist["host"] = mangle_host_header_port(
             request.getHeader('host'), want_url=True)
+        self.content_type = CONTENT_TYPE_X_MPEGURL
         return movielist
 
     def P_movielistrss(self, request):
@@ -1806,7 +1796,6 @@ class WebController(BaseController):
             :query string ref: service reference
             :query string name: service name
         """
-        self.isCustom = True
         if getZapStream()['zapstream']:
             if "ref" in request.args:
                 zapService(
@@ -1814,6 +1803,7 @@ class WebController(BaseController):
                     request.args["ref"][0],
                     request.args["name"][0],
                     stream=True)
+        self.content_type = CONTENT_TYPE_X_MPEGURL
         return create_stream_m3u(self.session, request, "stream.m3u")
 
     def P_streamcurrentm3u(self, request):
@@ -1831,7 +1821,7 @@ class WebController(BaseController):
 
         .. http:get:: /web/streamcurrent.m3u
         """
-        self.isCustom = True
+        self.content_type = CONTENT_TYPE_X_MPEGURL
         return create_stream_m3u(self.session, request, "streamcurrent.m3u")
 
     def P_tsm3u(self, request):
@@ -1849,7 +1839,7 @@ class WebController(BaseController):
 
         .. http:get:: /web/ts.m3u
         """
-        self.isCustom = True
+        self.content_type = CONTENT_TYPE_X_MPEGURL
         return create_file_m3u(request)
 
     def P_streamsubservices(self, request):

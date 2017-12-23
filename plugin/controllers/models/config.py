@@ -332,32 +332,32 @@ class ConfigFiles:
         self.getConfigFiles()
 
     def getConfigFiles(self):
-        setupfiles = [eEnv.resolve('${datadir}/enigma2/setup.xml')]
+        self.log.info("Getting")
         locations = ('SystemPlugins', 'Extensions')
         libdir = eEnv.resolve('${libdir}')
+        datadir = eEnv.resolve('${datadir}')
+        self.setupfiles = ['{:s}/enigma2/setup.xml'.format(datadir)]
 
         for location in locations:
-            plugins = os.listdir(
-                ('%s/enigma2/python/Plugins/%s' %
-                 (libdir, location)))
+            plugins = os.listdir('{:s}/enigma2/python/Plugins/{:s}'.format(
+                libdir, location))
+
             for plugin in plugins:
-                setupfiles.append(
-                    ('%s/enigma2/python/Plugins/%s/%s/setup.xml' %
-                     (libdir, location, plugin)))
+                s_path = '{:s}/enigma2/python/Plugins/{:s}/{:s}/{:s}'.format(
+                    libdir, location, plugin, "setup.xml")
+                if os.path.isfile(s_path):
+                    self.setupfiles.append(s_path)
 
         self.log.info(pprint.pformat({
-            "setupfiles": setupfiles,
+            "setupfiles": self.setupfiles,
             "locations": locations,
-            "libdir": libdir
+            "libdir": libdir,
+            "datadir": datadir,
         }))
-
-        for setupfile in setupfiles:
-            if os.path.exists(setupfile):
-                self.setupfiles.append(setupfile)
 
     def parseConfigFiles(self):
         sections = []
-        self.log.info("parsing configuration files ...")
+        self.log.info("Parsing")
 
         for setupfile in self.setupfiles:
             # self.log.debug("Loading {!r}".format(setupfile))

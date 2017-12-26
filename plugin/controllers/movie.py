@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import logging
+import os
 
 import enigma
 from enigma import eServiceReference, iServiceInformation
 
 from models.events import mangle_event, KEY_SERVICE_REFERENCE
+from utilities import parse_cuts
 
 MOVIES_ROOT_PATH = '/media/hdd/movie/'
 MOVIE_ENDPOINT_PATH = 'movie'
@@ -210,4 +212,11 @@ class MoviesController(object):
             else:
                 item.update(
                     self.mangle_servicereference_information(serviceref))
+                cutfile = item['path'] + '.cuts'
+                if os.path.isfile(cutfile):
+                    try:
+                        item['marks'] = parse_cuts(cutfile)
+                    except Exception as exc:
+                        self.log.error(exc)
+
                 yield item

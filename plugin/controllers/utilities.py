@@ -4,6 +4,7 @@ import os
 import re
 import urllib
 import urlparse
+import struct
 
 MANY_SLASHES_PATTERN = r'[\/]+'
 MANY_SLASHES_REGEX = re.compile(MANY_SLASHES_PATTERN)
@@ -74,6 +75,10 @@ NS = {
 #: Namespace:Label lookup map
 NS_LOOKUP = {v: k for k, v in NS.iteritems()}
 
+CUTS_IN = 0
+CUTS_OUT = 1
+CUTS_MARK = 2
+CUTS_WATCHMARK = 3
 
 def lenient_decode(value, encoding=None):
     """
@@ -504,6 +509,31 @@ def mangle_host_header_port(value=None,
                          port=port)
     return result
 
+
+def parse_cuts(cutfile):
+    marks = {
+        "watched": 0,
+        "maximum": 0,
+        "marks": []
+    }
+
+    with open(cutfile, "rb") as source:
+        chunk = source.read(12)
+
+        while chunk:
+            (pts_value, cue_kind) = struct.unpack('>QI', chunk)
+            seconds = pts_value / 90000
+            if cue_kind == CUTS_WATCHMARK:
+                marks['watched'] = seconds
+            else:
+                marks['marks'].append([seconds, cue_kind])
+
+            chunk = source.read(12)
+
+        if marks['marks']:
+            marks['maximum'] = marks['marks'][-1][0]
+
+    return marks
 
 if __name__ == '__main__':
     import doctest

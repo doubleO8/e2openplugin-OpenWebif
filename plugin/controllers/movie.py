@@ -212,10 +212,11 @@ class MoviesController(object):
             else:
                 item.update(
                     self.mangle_servicereference_information(serviceref))
-                cutfile = item['path'] + '.cuts'
+
+                cutfile = (item['path'] + '.cuts').encode('utf-8')
                 if os.path.isfile(cutfile):
                     try:
-                        item['marks'] = parse_cuts(cutfile)
+                        item['meta']['marks'] = parse_cuts(cutfile)
                     except Exception as exc:
                         self.log.error(exc)
 

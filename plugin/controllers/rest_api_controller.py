@@ -26,6 +26,7 @@ from twisted.web.server import GzipEncoderFactory
 
 from rest import json_response, CORS_ALLOWED_METHODS_DEFAULT, CORS_DEFAULT
 from rest import CORS_DEFAULT_ALLOW_ORIGIN
+from utilities import mangle_host_header_port
 
 HAVE_E2_CONTROLLER = True
 
@@ -170,6 +171,9 @@ class ApiController(resource.Resource):
                 data["request"] = {
                     "path": request.path,
                     "postpath": request.postpath,
+                    "mangled_host_header": mangle_host_header_port(
+                        request.getHeader('host')),
+                    "host_header": request.getHeader('host')
                 }
 
             return json_response(request, data)

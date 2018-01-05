@@ -70,7 +70,7 @@ class ApiController(resource.Resource):
             #: ajax controller instance
             self.ajax_instance = AjaxController(session, path)
 
-        self.verbose = kwargs.get("verbose", 0)
+        self.verbose = kwargs.get("verbose", 1)
         self._resource_prefix = kwargs.get("resource_prefix", '/api')
         self._cors_header = copy.copy(CORS_DEFAULT)
         http_verbs = []

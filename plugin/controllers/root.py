@@ -28,7 +28,7 @@ import rest_api_controller
 import rest_recordings_controller
 import rest_timer_controller
 import rest_current_event_controller
-from recording import MOVIES_ROOT_PATH, MOVIE_ENDPOINT_PATH
+from recording import RECORDINGS_ROOT_PATH, RECORDING_ENDPOINT_PATH
 from recording import RECORDINGS_ENDPOINT_PATH
 
 try:
@@ -58,7 +58,7 @@ class RootController(BaseController):
             rest_recordings_controller.RESTRecordingsController(),
             [GzipEncoderFactory()])
         self.putChild(RECORDINGS_ENDPOINT_PATH, movie_controller_instance)
-        self.putChild(MOVIE_ENDPOINT_PATH, static.File(MOVIES_ROOT_PATH))
+        self.putChild(RECORDING_ENDPOINT_PATH, static.File(RECORDINGS_ROOT_PATH))
 
         timer_controller_instance = EncodingResourceWrapper(
             rest_timer_controller.RESTTimerController(session=session),

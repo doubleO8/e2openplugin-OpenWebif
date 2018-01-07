@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Movie Items
------------
+Recordings
+----------
 
-Listing of movie items on current device.
-Removing of movie item files including meta data.
+Listing of recordings on current device.
+Removing of recordings files including meta data.
 """
 import os
 import logging
@@ -14,19 +14,19 @@ from twisted.web import http
 
 from rest import json_response
 from rest import CORS_DEFAULT_ALLOW_ORIGIN, RESTControllerSkeleton
-from recording import MoviesController, MOVIES_ROOT_PATH, MOVIE_ENDPOINT_URL
+from recording import RecordingsController, RECORDINGS_ROOT_PATH, MOVIE_ENDPOINT_URL
 from models.events import KEY_SERVICE_REFERENCE
 
 
 class RESTRecordingsController(RESTControllerSkeleton):
     """
-    RESTful Controller for /movies endpoint.
+    RESTful Controller for `/recordings` endpoint.
     """
     def __init__(self, *args, **kwargs):
         RESTControllerSkeleton.__init__(self, *args, **kwargs)
         self.log = logging.getLogger(__name__)
-        self.movie_controller = MoviesController()
-        self.root = kwargs.get("root", MOVIES_ROOT_PATH)
+        self.movie_controller = RecordingsController()
+        self.root = kwargs.get("root", RECORDINGS_ROOT_PATH)
 
     def render_path_listing(self, request, root_path):
         """
@@ -104,7 +104,7 @@ class RESTRecordingsController(RESTControllerSkeleton):
         Returns:
             HTTP response with headers
 
-        .. http:get:: /movies/{basestring:path}
+        .. http:get:: /recordings/{basestring:path}
 
             :statuscode 200: no error
             :statuscode 404: not found
@@ -137,7 +137,7 @@ class RESTRecordingsController(RESTControllerSkeleton):
         Returns:
             HTTP response with headers
 
-        .. http:delete:: /movies/{basestring:path}
+        .. http:delete:: /recordings/{basestring:path}
 
             :statuscode 200: no error
             :statuscode 404: not found

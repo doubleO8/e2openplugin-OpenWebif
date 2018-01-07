@@ -9,7 +9,7 @@ RESTful API
 .. automodule:: controllers.rest_api_controller
     :members:
 
-.. automodule:: controllers.rest_movie_controller
+.. automodule:: controllers.rest_recordings_controller
     :members:
 
 .. automodule:: controllers.rest_timer_controller

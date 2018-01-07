@@ -9,10 +9,10 @@ from enigma import eServiceReference, iServiceInformation
 from models.events import mangle_event, KEY_SERVICE_REFERENCE
 from utilities import parse_cuts
 
-MOVIES_ROOT_PATH = '/media/hdd/movie/'
-MOVIE_ENDPOINT_PATH = 'movie'
-RECORDINGS_ENDPOINT_PATH = 'movies'
-MOVIE_ENDPOINT_URL = ''.join(('/', MOVIE_ENDPOINT_PATH, '/'))
+RECORDINGS_ROOT_PATH = '/media/hdd/movie/'
+RECORDING_ENDPOINT_PATH = 'recording'
+RECORDINGS_ENDPOINT_PATH = 'recordings'
+MOVIE_ENDPOINT_URL = ''.join(('/', RECORDING_ENDPOINT_PATH, '/'))
 
 SERVICE_INFORMATION_FIELDS = [
     'sAspect',
@@ -153,7 +153,7 @@ def mangle_servicereference(servicereference, encoding=None):
     return data
 
 
-class MoviesController(object):
+class RecordingsController(object):
     def __init__(self, *args, **kwargs):
         self.log = logging.getLogger(__name__)
         self.service_center_instance = enigma.eServiceCenter.getInstance()

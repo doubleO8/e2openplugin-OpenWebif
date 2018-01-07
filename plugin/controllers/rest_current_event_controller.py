@@ -14,7 +14,7 @@ import enigma
 from rest import json_response
 from rest import TwoFaceApiController
 from events import EventsController
-from recording import MoviesController
+from recording import RecordingsController
 from recording import mangle_servicereference
 from events import QUERYTYPE_LOOKUP__WHILE, QUERY_TIMESTAMP_CURRENT_TIME
 from models.model_utilities import mangle_epg_text
@@ -64,7 +64,7 @@ class RESTCurrentEventController(TwoFaceApiController):
         self.log = logging.getLogger(__name__)
         self.session = kwargs.get("session")
         self.ec = EventsController()
-        self.mc = MoviesController()
+        self.mc = RecordingsController()
 
     def render_list_all(self, request):
         """

@@ -20,7 +20,7 @@ from models.events import KEY_SERVICE_REFERENCE
 
 class RESTRecordingsController(RESTControllerSkeleton):
     """
-    RESTful Controller for `/recordings` endpoint.
+    RESTful Controller for ``/recordings`` endpoint.
     """
     def __init__(self, *args, **kwargs):
         RESTControllerSkeleton.__init__(self, *args, **kwargs)
@@ -105,6 +105,12 @@ class RESTRecordingsController(RESTControllerSkeleton):
             HTTP response with headers
 
         .. http:get:: /recordings/{basestring:path}
+
+            :statuscode 200: no error
+            :statuscode 301: redirect
+            :statuscode 404: not found
+
+        .. http:get:: /recording/{basestring:path}
 
             :statuscode 200: no error
             :statuscode 404: not found

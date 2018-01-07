@@ -9,10 +9,17 @@ from enigma import eServiceReference, iServiceInformation
 from models.events import mangle_event, KEY_SERVICE_REFERENCE
 from utilities import parse_cuts
 
+#: root path where recordings are stored
 RECORDINGS_ROOT_PATH = '/media/hdd/movie/'
-RECORDING_ENDPOINT_PATH = 'recording'
+
+#: Endpoint path portion: list of recordings
 RECORDINGS_ENDPOINT_PATH = 'recordings'
-MOVIE_ENDPOINT_URL = ''.join(('/', RECORDING_ENDPOINT_PATH, '/'))
+
+#: Endpoint path portion: recording
+RECORDING_ENDPOINT_PATH = 'recording'
+
+#: Endpoint URL: recording
+RECORDING_ENDPOINT_URL = ''.join(('/', RECORDING_ENDPOINT_PATH, '/'))
 
 SERVICE_INFORMATION_FIELDS = [
     'sAspect',

@@ -14,7 +14,7 @@ from twisted.web import http
 
 from rest import json_response
 from rest import CORS_DEFAULT_ALLOW_ORIGIN, RESTControllerSkeleton
-from recording import RecordingsController, RECORDINGS_ROOT_PATH, MOVIE_ENDPOINT_URL
+from recording import RecordingsController, RECORDINGS_ROOT_PATH, RECORDING_ENDPOINT_URL
 from models.events import KEY_SERVICE_REFERENCE
 
 
@@ -121,7 +121,7 @@ class RESTRecordingsController(RESTControllerSkeleton):
         if os.path.isdir(target_path):
             return self.render_path_listing(request, target_path)
         elif os.path.isfile(target_path):
-            url = MOVIE_ENDPOINT_URL + '/'.join(request.postpath)
+            url = RECORDING_ENDPOINT_URL + '/'.join(request.postpath)
             request.redirect(url)
             return ''
 

@@ -14,7 +14,7 @@ from twisted.web import http
 
 from rest import json_response
 from rest import CORS_DEFAULT_ALLOW_ORIGIN, RESTControllerSkeleton
-from movie import MoviesController, MOVIES_ROOT_PATH, MOVIE_ENDPOINT_URL
+from recording import MoviesController, MOVIES_ROOT_PATH, MOVIE_ENDPOINT_URL
 from models.events import KEY_SERVICE_REFERENCE
 
 

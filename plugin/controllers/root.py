@@ -28,7 +28,7 @@ import rest_api_controller
 import rest_recordings_controller
 import rest_timer_controller
 import rest_current_event_controller
-from movie import MOVIES_ROOT_PATH, MOVIE_ENDPOINT_PATH
+from recording import MOVIES_ROOT_PATH, MOVIE_ENDPOINT_PATH
 
 try:
     from boxbranding import getBoxType

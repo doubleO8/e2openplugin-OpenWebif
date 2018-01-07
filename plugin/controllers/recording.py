@@ -11,6 +11,7 @@ from utilities import parse_cuts
 
 MOVIES_ROOT_PATH = '/media/hdd/movie/'
 MOVIE_ENDPOINT_PATH = 'movie'
+RECORDINGS_ENDPOINT_PATH = 'movies'
 MOVIE_ENDPOINT_URL = ''.join(('/', MOVIE_ENDPOINT_PATH, '/'))
 
 SERVICE_INFORMATION_FIELDS = [

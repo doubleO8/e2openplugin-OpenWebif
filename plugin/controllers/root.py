@@ -25,7 +25,7 @@ from ajax import AjaxController
 from transcoding import TranscodingController
 from file import FileController
 import rest_api_controller
-import rest_movie_controller
+import rest_recordings_controller
 import rest_timer_controller
 import rest_current_event_controller
 from movie import MOVIES_ROOT_PATH, MOVIE_ENDPOINT_PATH
@@ -54,7 +54,7 @@ class RootController(BaseController):
         self.putChild("ajax", AjaxController(session))
 
         movie_controller_instance = EncodingResourceWrapper(
-            rest_movie_controller.RESTRecordingsController(),
+            rest_recordings_controller.RESTRecordingsController(),
             [GzipEncoderFactory()])
         self.putChild("movies", movie_controller_instance)
         self.putChild(MOVIE_ENDPOINT_PATH, static.File(MOVIES_ROOT_PATH))

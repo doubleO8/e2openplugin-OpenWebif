@@ -18,7 +18,7 @@ from movie import MoviesController, MOVIES_ROOT_PATH, MOVIE_ENDPOINT_URL
 from models.events import KEY_SERVICE_REFERENCE
 
 
-class RESTMovieController(RESTControllerSkeleton):
+class RESTRecordingsController(RESTControllerSkeleton):
     """
     RESTful Controller for /movies endpoint.
     """

@@ -54,7 +54,7 @@ class RootController(BaseController):
         self.putChild("ajax", AjaxController(session))
 
         movie_controller_instance = EncodingResourceWrapper(
-            rest_movie_controller.RESTMovieController(),
+            rest_movie_controller.RESTRecordingsController(),
             [GzipEncoderFactory()])
         self.putChild("movies", movie_controller_instance)
         self.putChild(MOVIE_ENDPOINT_PATH, static.File(MOVIES_ROOT_PATH))

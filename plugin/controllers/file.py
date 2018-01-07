@@ -12,6 +12,7 @@ import os
 import glob
 import json
 import logging
+import pprint
 
 from twisted.web import static, resource, http
 
@@ -28,6 +29,9 @@ class FileController(resource.Resource):
         action = "download"
         if "action" in request.args:
             action = request.args["action"][0]
+
+        FLOG.warning("DEPRECATED file.py access:")
+        FLOG.warning(pprint.pformat(request.args))
 
         if "file" in request.args:
             try:

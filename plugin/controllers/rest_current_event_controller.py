@@ -46,7 +46,7 @@ def get_servicereference_name(some_ref):
 
 class RESTCurrentEventController(TwoFaceApiController):
     """
-    RESTful Controller for /current_event endpoint.
+    RESTful Controller for ``/current_event`` endpoint.
 
     .. http:get:: /current_event
 

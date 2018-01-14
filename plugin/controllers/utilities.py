@@ -80,6 +80,7 @@ CUTS_OUT = 1
 CUTS_MARK = 2
 CUTS_WATCHMARK = 3
 
+
 def lenient_decode(value, encoding=None):
     """
     Decode an encoded string and convert it to an unicode string.
@@ -534,6 +535,7 @@ def parse_cuts(cutfile):
             marks['maximum'] = marks['marks'][-1][0]
 
     return marks
+
 
 if __name__ == '__main__':
     import doctest

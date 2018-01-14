@@ -8,9 +8,9 @@
     },
     "title": "Enigma2 RESTful API"
   },
-  "host": "vulcanus.olymp.sin",
+  "host": "192.168.0.10",
   "paths": {
-    "/moviedelete": {
+    "/api/moviedelete": {
       "get": {
         "responses": {
           "200": {
@@ -37,7 +37,7 @@
         "operationId": "movie_delete"
       }
     },
-    "/epgsearch": {
+    "/api/epgsearch": {
       "get": {
         "responses": {
           "200": {
@@ -65,7 +65,7 @@
         "operationId": "epgsearch_get"
       }
     },
-    "/timerlist": {
+    "/api/timerlist": {
       "get": {
         "responses": {
           "200": {
@@ -83,7 +83,7 @@
         "operationId": "timerlist_get"
       }
     },
-    "/epgbouquet": {
+    "/api/epgbouquet": {
       "get": {
         "responses": {
           "200": {
@@ -110,7 +110,7 @@
         "operationId": "epgbouquet_get"
       }
     },
-    "/powerstate": {
+    "/api/powerstate": {
       "get": {
         "responses": {
           "200": {
@@ -137,7 +137,7 @@
         "operationId": "powerstate_get"
       }
     },
-    "/timerdelete": {
+    "/api/timerdelete": {
       "get": {
         "responses": {
           "200": {
@@ -179,7 +179,7 @@
         "operationId": "timerdelete_get"
       }
     },
-    "/getservices": {
+    "/api/getservices": {
       "get": {
         "responses": {
           "200": {
@@ -197,7 +197,7 @@
         "operationId": "services_get"
       }
     },
-    "/getallservices": {
+    "/api/getallservices": {
       "get": {
         "responses": {
           "200": {
@@ -215,7 +215,7 @@
         "operationId": "getallservices_get"
       }
     },
-    "/timeradd": {
+    "/api/timeradd": {
       "get": {
         "responses": {
           "200": {
@@ -257,7 +257,7 @@
         "operationId": "timeradd_get"
       }
     },
-    "/subservices": {
+    "/api/subservices": {
       "get": {
         "responses": {
           "200": {
@@ -275,7 +275,7 @@
         "operationId": "subservices_get"
       }
     },
-    "/about": {
+    "/api/about": {
       "get": {
         "responses": {
           "200": {
@@ -293,7 +293,7 @@
         "operationId": "about_get"
       }
     },
-    "/timeraddbyeventid": {
+    "/api/timeraddbyeventid": {
       "get": {
         "responses": {
           "200": {
@@ -328,7 +328,7 @@
         "operationId": "timeraddbyeventid_get"
       }
     },
-    "/zap": {
+    "/api/zap": {
       "get": {
         "responses": {
           "200": {
@@ -356,7 +356,7 @@
         "operationId": "zap_get"
       }
     },
-    "/messageanswer": {
+    "/api/messageanswer": {
       "get": {
         "responses": {
           "200": {
@@ -406,7 +406,7 @@
         "operationId": "messageanswer_get"
       }
     },
-    "/epgservice": {
+    "/api/epgservice": {
       "get": {
         "responses": {
           "200": {
@@ -434,7 +434,7 @@
         "operationId": "epgservice_get"
       }
     },
-    "/getcurrent": {
+    "/api/getcurrent": {
       "get": {
         "responses": {
           "200": {
@@ -452,7 +452,7 @@
         "operationId": "getcurrent_get"
       }
     },
-    "/message": {
+    "/api/message": {
       "get": {
         "responses": {
           "200": {
@@ -495,7 +495,7 @@
         "operationId": "message_get"
       }
     },
-    "/movielist": {
+    "/api/movielist": {
       "get": {
         "responses": {
           "200": {
@@ -582,7 +582,6 @@
       }
     }
   },
-  "basePath": "/api",
   "swagger": "2.0",
   "schemes": [
     "http"

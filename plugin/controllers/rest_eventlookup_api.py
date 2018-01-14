@@ -7,7 +7,7 @@ from events import EventsController
 
 class EventLookupApiController(RESTControllerSkeleton):
     """
-    RESTful Controller for /api/eventlookup endpoint
+    RESTful Controller for ``/api/eventlookup`` endpoint
     """
     def __init__(self, *args, **kwargs):
         RESTControllerSkeleton.__init__(self, *args, **kwargs)

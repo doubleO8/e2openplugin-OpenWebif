@@ -25,12 +25,11 @@ from Components.ConfigList import ConfigListScreen
 from Components.config import config, getConfigListEntry, ConfigSubsection, \
     ConfigInteger, ConfigYesNo, ConfigText, ConfigSelection
 from enigma import getDesktop
+
 from controllers.models.info import getInfo
 from controllers.defaults import THEMES
-
 from httpserver import HttpdStart, HttpdStop, HttpdRestart
-
-from __init__ import _
+from controllers.i18n import _
 
 PLUGIN_NAME = 'OpenWebif'
 PLUGIN_ICON_HD = 'openwebifhd.png'
@@ -43,7 +42,6 @@ logging.basicConfig(level=logging.DEBUG,
                     filename="/media/hdd/{:s}.log".format(PLUGIN_NAME.lower()))
 
 LOG = logging.getLogger("PLUGIN")
-
 
 config.OpenWebif = ConfigSubsection()
 config.OpenWebif.enabled = ConfigYesNo(default=True)

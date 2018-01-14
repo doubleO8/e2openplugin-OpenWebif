@@ -18,7 +18,7 @@ from timer import TimersController
 
 class RESTTimerController(TwoFaceApiController):
     """
-    RESTful Controller for /timers endpoint.
+    RESTful Controller for ``/timers`` endpoint.
 
     .. http:get:: /timers/
 

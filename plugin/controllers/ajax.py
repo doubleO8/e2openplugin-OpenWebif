@@ -13,11 +13,12 @@ from time import mktime, localtime
 
 from Components.config import config as comp_config
 from Plugins.Extensions.OpenWebif.__init__ import _
+from Plugins.Extensions.OpenWebif.plugin import THEMES
 
 from models.services import getBouquets, getChannels, getSatellites, \
     getProviders, getEventDesc, getChannelEpg, getSearchEpg, \
     getCurrentFullInfo, getMultiEpg, getEvent
-from models.info import getInfo, getPublicPath, getTranscodingSupport, \
+from models.info import getInfo, getTranscodingSupport, \
     getLanguage, getStatusInfo
 from models.movies import getMovieList
 from models.timers import getTimers
@@ -155,17 +156,14 @@ class AjaxController(BaseController):
         if len(events) > 0:
             t = getTimers(self.session)
             timers = t["timers"]
-        if comp_config.OpenWebif.webcache.theme.value:
-            theme = comp_config.OpenWebif.webcache.theme.value
-        else:
-            theme = 'original'
 
         return {
-            "theme": theme,
+            "theme": THEMES[0],
             "events": events,
             "timers": timers,
             "at": False,
-            "kinopoisk": getLanguage()}
+            "kinopoisk": getLanguage()
+        }
 
     def P_epgdialog(self, request):
         return self.P_epgpop(request)
@@ -278,23 +276,14 @@ class AjaxController(BaseController):
         return removeCollapsedMenu(request.args["name"][0])
 
     def P_settings(self, request):
-        ret = {
+        return {
             "result": True,
-            'configsections': getConfigsSections()['sections']
+            'configsections': getConfigsSections()['sections'],
+            'themes': THEMES,
+            'theme': THEMES[0],
+            'zapstream': getZapStream()['zapstream'],
+            'showchannelpicon': getShowChPicon()['showchannelpicon']
         }
-
-        if comp_config.OpenWebif.webcache.theme.value:
-            if os.path.exists(getPublicPath('themes')):
-                ret['themes'] = comp_config.OpenWebif.webcache.theme.choices
-            else:
-                ret['themes'] = ['original', 'clear']
-            ret['theme'] = comp_config.OpenWebif.webcache.theme.value
-        else:
-            ret['themes'] = []
-            ret['theme'] = 'original'
-        ret['zapstream'] = getZapStream()['zapstream']
-        ret['showchannelpicon'] = getShowChPicon()['showchannelpicon']
-        return ret
 
     def P_multiepg(self, request):
         epgmode = "tv"
@@ -391,8 +380,4 @@ class AjaxController(BaseController):
         Returns:
             HTTP response with headers
         """
-        if "theme" in request.args.keys():
-            theme = request.args["theme"][0]
-            comp_config.OpenWebif.webcache.theme.value = theme
-            comp_config.OpenWebif.webcache.theme.save()
         return {}

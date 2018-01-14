@@ -79,10 +79,6 @@ FRIENDLY_DISTRO_NAMES = {
 }
 
 
-def getOpenWebifVer():
-    return TAG_DATA['owif_version']
-
-
 def getFriendlyImageDistro():
     value = getImageDistro()
 
@@ -331,7 +327,7 @@ def getInfo(session=None, need_fullinfo=False):
         uptimetext = "?"
     info['uptime'] = uptimetext
 
-    info["webifver"] = getOpenWebifVer()
+    info["webifver"] = TAG_DATA['owif_version']
     info['imagedistro'] = getImageDistro()
     info['friendlyimagedistro'] = getFriendlyImageDistro()
     info['oever'] = getOEVersion()

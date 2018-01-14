@@ -16,11 +16,13 @@ def _locale_init():
 
 
 def _(txt):
-    t = gettext.dgettext(PluginLanguageDomain, txt)
-    if t == txt:
-        t = gettext.gettext(txt)
-    return t
-
+    try:
+        t = gettext.dgettext(PluginLanguageDomain, txt)
+        if t == txt:
+            t = gettext.gettext(txt)
+        return t
+    except Exception as exc:
+        return txt
 
 _locale_init()
 language.addCallback(_locale_init)

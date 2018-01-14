@@ -9,7 +9,7 @@ pursuing a different set of goals.
 
 * Create a Developer Friendly Web Interface for Enigma2 based set-top boxes.
   * ~~Clean Python Code (hopefully [PEP 8](https://www.python.org/dev/peps/pep-0008/) compliant some day)~~
-  * Clean and Valid ECMAScript Code
+  * ~~Clean and Valid ECMAScript Code~~
   * Unit Tests and ~~[Documentation](https://doubleo8.github.io/e2openplugin-OpenWebif/documentation/index.html)~~
   * Separation of Code and Representation
 * Provide RESTful API and access to ~~EPG event datasets~~, ~~timers~~, ~~recorded audio/video (dubbed *movie* elsewhere) items~~

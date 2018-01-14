@@ -9,7 +9,6 @@
 #                                                                            #
 ##############################################################################
 import os
-import sys
 import time
 import json
 from socket import has_ipv6, AF_INET6, AF_INET, inet_ntop, inet_pton, \
@@ -18,6 +17,12 @@ from socket import has_ipv6, AF_INET6, AF_INET, inet_ntop, inet_pton, \
 from twisted.web import version
 
 from Plugins.Extensions.OpenWebif.__init__ import _
+from ..defaults import PUBLIC_PATH
+
+try:
+    from Tools.StbHardware import getFPVersion
+except ImportError:
+    from Tools.DreamboxHardware import getFPVersion
 
 from Components.About import about
 from Components.config import config
@@ -46,7 +51,7 @@ except BaseException:
 
 import NavigationInstance
 
-TAG_FILE = os.path.join(os.path.dirname(__file__), '../../public/tag.json')
+TAG_FILE = '/'.join((PUBLIC_PATH, 'tag.json'))
 
 try:
     with open(TAG_FILE, "rb") as src:
@@ -60,7 +65,11 @@ except Exception:
 
 STATICBOXINFO = None
 
-PICONPATH = None
+#: fallback picon location
+FALLBACK_PICON_LOCATION = "/images/default_picon.png"
+
+#: picon endpoint
+PICON_ENDPOINT_PATH = "/picon/"
 
 FRIENDLY_DISTRO_NAMES = {
     "openatv": "OpenATV",
@@ -219,75 +228,6 @@ def formatIp(ip):
     return "%d.%d.%d.%d" % (ip[0], ip[1], ip[2], ip[3])
 
 
-def getBasePath():
-    path = os.path.dirname(sys.modules[__name__].__file__)
-    chunks = path.split("/")
-    chunks.pop()
-    chunks.pop()
-    return "/".join(chunks)
-
-
-def getPublicPath(file=""):
-    return getBasePath() + "/public/" + file
-
-
-def getViewsPath(file=""):
-    return getBasePath() + "/controllers/views/" + file
-
-
-def getPiconPath():
-    # FIXME: check path again after a few hours to detect new paths
-
-    global PICONPATH
-
-    if PICONPATH is not None:
-        return PICONPATH
-
-    # Alternative locations need to come first, as the default location always
-    # exists and needs to be the last resort
-    # Sort alternative locations in order of likelyness that they are
-    # non-rotational media:
-    # CF/MMC are always memory cards
-    # USB can be memory stick or magnetic hdd or SSD, but stick is most likely
-    # HDD can be magnetic hdd, SSD or even memory stick (if no hdd present) or
-    # a NAS
-    pathlist = [
-        "/media/cf/",
-        "/media/mmc/",
-        "/media/usb/",
-        "/media/hdd/",
-        "/usr/share/enigma2/",
-        "/"
-    ]
-
-    for p in pathlist:
-        if os.path.isdir(p + "owipicon/"):
-            PICONPATH = p + "owipicon/"
-            return PICONPATH
-        elif os.path.isdir(p + "picon/"):
-            PICONPATH = p + "picon/"
-            return PICONPATH
-
-    return None
-
-
-def _getPiconPath():
-    if os.path.isdir("/media/usb/picon/"):
-        return "/media/usb/picon/"
-    elif os.path.isdir("/media/cf/picon/"):
-        return "/media/cf/picon/"
-    elif os.path.isdir("/media/mmc/picon/"):
-        return "/media/mmc/picon/"
-    elif os.path.isdir("/media/hdd/picon/"):
-        return "/media/hdd/picon/"
-    elif os.path.isdir("/usr/share/enigma2/picon/"):
-        return "/usr/share/enigma2/picon/"
-    elif os.path.isdir("/picon/"):
-        return "/picon/"
-    else:
-        return ""
-
-
 def getInfo(session=None, need_fullinfo=False):
     global STATICBOXINFO
 
@@ -402,11 +342,6 @@ def getInfo(session=None, need_fullinfo=False):
     info['enigmaver'] = getEnigmaVersionString()
     info['driverdate'] = getDriverDate()
     info['kernelver'] = about.getKernelVersionString()
-
-    try:
-        from Tools.StbHardware import getFPVersion
-    except ImportError:
-        from Tools.DreamboxHardware import getFPVersion
 
     try:
         info['fp_version'] = getFPVersion()
@@ -534,16 +469,16 @@ def getInfo(session=None, need_fullinfo=False):
                     if not len(tmp) == 3:
                         continue
                     name = tmp[0].strip()
-                    type = "unknown"
+                    kind = "unknown"
                     if "cifs" in tmp[1]:
                         # Linux still defaults to SMBv1
-                        type = "SMBv1.0"
+                        kind = "SMBv1.0"
                         settings = tmp[1].split(",")
                         for setting in settings:
                             if setting.startswith("vers="):
-                                type = setting.replace("vers=", "SMBv")
+                                kind = setting.replace("vers=", "SMBv")
                     elif "nfs" in tmp[1]:
-                        type = "NFS"
+                        kind = "NFS"
 
                     # Default is r/w
                     mode = _("r/w")
@@ -553,7 +488,6 @@ def getInfo(session=None, need_fullinfo=False):
                             mode = _("r/o")
 
                     uri = tmp[2]
-                    parts = []
                     parts = tmp[2].split(':')
                     if parts[0] is "":
                         server = uri.split('/')[2]
@@ -587,7 +521,7 @@ def getInfo(session=None, need_fullinfo=False):
                     info['shares'].append({
                         "name": name,
                         "method": method,
-                        "type": type,
+                        "type": kind,
                         "mode": mode,
                         "path": uri,
                         "host": server,

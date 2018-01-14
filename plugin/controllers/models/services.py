@@ -16,6 +16,7 @@ from urllib import quote, unquote
 from collections import OrderedDict
 
 from Plugins.Extensions.OpenWebif.__init__ import _
+from ..defaults import PICON_EXT, PICON_PATH
 from Components.Sources.ServiceList import ServiceList
 from Components.ParentalControl import parentalControl
 from Components.config import config
@@ -25,7 +26,8 @@ from Screens.ChannelSelection import service_types_tv, service_types_radio, \
     FLAG_SERVICE_NEW_FOUND
 from enigma import eServiceCenter, eServiceReference, \
     iServiceInformation, eEPGCache
-from info import getPiconPath, GetWithAlternative, getOrbitalText
+from info import GetWithAlternative, getOrbitalText
+from info import FALLBACK_PICON_LOCATION, PICON_ENDPOINT_PATH
 # using the tstrings dic is faster than translating with _ func from __init__
 from Plugins.Extensions.OpenWebif.local import tstrings
 from Plugins.Extensions.OpenWebif.controllers.utilities import \
@@ -945,75 +947,80 @@ def getMultiEpg(self, ref, begintime=-1, endtime=None, Mode=1):
 
 
 def getPicon(sname):
-    pp = getPiconPath()
-    if pp is not None:
-        # remove URL part
-        if ("://" in sname) or ("%3a//" in sname) or ("%3A//" in sname):
-            sname = unquote(sname)
-            sname = ":".join(sname.split(
-                ":")[:10]) + "::" + sname.split(":")[-1]
+    if not PICON_PATH:
+        return FALLBACK_PICON_LOCATION
 
-        sname = GetWithAlternative(sname)
-        if sname is not None:
-            pos = sname.rfind(':')
-        else:
-            return "/images/default_picon.png"
-        cname = None
-        if pos != -1:
-            cname = ServiceReference(sname[:pos].rstrip(':')).getServiceName()
-            sname = sname[:pos].rstrip(':').replace(':', '_') + ".png"
-        filename = pp + sname
+    # remove URL part
+    if ("://" in sname) or ("%3a//" in sname) or ("%3A//" in sname):
+        sname = unquote(sname)
+        sname = ":".join(sname.split(":")[:10]) + "::" + sname.split(":")[-1]
+
+    sname = GetWithAlternative(sname)
+    if sname is not None:
+        pos = sname.rfind(':')
+    else:
+        return FALLBACK_PICON_LOCATION
+
+    cname = None
+    if pos != -1:
+        cname = ServiceReference(sname[:pos].rstrip(':')).getServiceName()
+        sname = sname[:pos].rstrip(':').replace(':', '_') + PICON_EXT
+    filename = PICON_PATH + sname
+
+    if os.path.isfile(filename):
+        return PICON_ENDPOINT_PATH + sname
+
+    fields = sname.split('_', 8)
+    if len(fields) > 7 and not fields[6].endswith("0000"):
+        # remove "sub-network" from namespace
+        fields[6] = fields[6][:-4] + "0000"
+        sname = '_'.join(fields)
+        filename = PICON_PATH + sname
         if os.path.isfile(filename):
-            return "/picon/" + sname
-        fields = sname.split('_', 8)
-        if len(fields) > 7 and not fields[6].endswith("0000"):
-            # remove "sub-network" from namespace
-            fields[6] = fields[6][:-4] + "0000"
-            sname = '_'.join(fields)
-            filename = pp + sname
-            if os.path.isfile(filename):
-                return "/picon/" + sname
-        if len(fields) > 1 and fields[0] != '1':
-            # fallback to 1 for other reftypes
-            fields[0] = '1'
-            sname = '_'.join(fields)
-            filename = pp + sname
-            if os.path.isfile(filename):
-                return "/picon/" + sname
-        if len(fields) > 3 and fields[2] != '1':
-            # fallback to 1 for tv services with nonstandard servicetypes
-            fields[2] = '1'
-            sname = '_'.join(fields)
-            filename = pp + sname
-            if os.path.isfile(filename):
-                return "/picon/" + sname
-        if cname is not None:  # picon by channel name
-            cname1 = mangle_epg_text(cname).replace(
-                '/', '_').encode('utf-8', 'ignore')
-            if os.path.isfile(pp + cname1 + ".png"):
-                return "/picon/" + cname1 + ".png"
-            cname = unicodedata.normalize(
-                'NFKD', unicode(
-                    cname, 'utf_8', errors='ignore')).encode(
+            return PICON_ENDPOINT_PATH + sname
+
+    if len(fields) > 1 and fields[0] != '1':
+        # fallback to 1 for other reftypes
+        fields[0] = '1'
+        sname = '_'.join(fields)
+        filename = PICON_PATH + sname
+        if os.path.isfile(filename):
+            return PICON_ENDPOINT_PATH + sname
+
+    if len(fields) > 3 and fields[2] != '1':
+        # fallback to 1 for tv services with nonstandard servicetypes
+        fields[2] = '1'
+        sname = '_'.join(fields)
+        filename = PICON_PATH + sname
+        if os.path.isfile(filename):
+            return PICON_ENDPOINT_PATH + sname
+
+    if cname is not None:  # picon by channel name
+        cname1 = mangle_epg_text(cname).replace(
+            '/', '_').encode('utf-8', 'ignore')
+
+        if os.path.isfile(PICON_PATH + cname1 + PICON_EXT):
+            return PICON_ENDPOINT_PATH + cname1 + PICON_EXT
+
+        cname = unicodedata.normalize(
+            'NFKD', unicode(cname, 'utf_8', errors='ignore')).encode(
                 'ASCII', 'ignore')
-            cname = re.sub(
-                '[^a-z0-9]',
-                '',
-                cname.replace(
-                    '&',
-                    'and').replace(
-                    '+',
-                    'plus').replace(
-                    '*',
-                    'star').lower())
-            if len(cname) > 0:
-                filename = pp + cname + ".png"
-            if os.path.isfile(filename):
-                return "/picon/" + cname + ".png"
-            if len(cname) > 2 and cname.endswith(
-                    'hd') and os.path.isfile(pp + cname[:-2] + ".png"):
-                return "/picon/" + cname[:-2] + ".png"
-    return "/images/default_picon.png"
+        cname = re.sub(
+            '[^a-z0-9]',
+            '',
+            cname.replace('&','and').replace(
+                '+', 'plus').replace(
+                '*', 'star').lower())
+
+        if len(cname) > 0:
+            filename = PICON_PATH + cname + PICON_EXT
+
+        if os.path.isfile(filename):
+            return PICON_ENDPOINT_PATH + cname + PICON_EXT
+
+        if len(cname) > 2 and cname.endswith(
+                'hd') and os.path.isfile(PICON_PATH + cname[:-2] + PICON_EXT):
+            return PICON_ENDPOINT_PATH + cname[:-2] + PICON_EXT
 
 
 def getParentalControlList():

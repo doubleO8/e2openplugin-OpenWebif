@@ -12,7 +12,7 @@ import os
 from time import mktime, localtime
 
 from Components.config import config as comp_config
-from Plugins.Extensions.OpenWebif.__init__ import _
+from i18n import _
 from defaults import THEMES
 
 from models.services import getBouquets, getChannels, getSatellites, \

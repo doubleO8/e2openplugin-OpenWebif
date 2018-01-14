@@ -13,7 +13,7 @@ from enigma import eEnv
 from Components.SystemInfo import SystemInfo
 from Components.config import config
 
-from Plugins.Extensions.OpenWebif.__init__ import _
+from ..i18n import _
 from ..utilities import get_config_attribute
 
 CONFIGFILES = None

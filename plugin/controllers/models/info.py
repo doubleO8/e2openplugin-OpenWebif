@@ -16,7 +16,7 @@ from socket import has_ipv6, AF_INET6, AF_INET, inet_ntop, inet_pton, \
 
 from twisted.web import version
 
-from Plugins.Extensions.OpenWebif.__init__ import _
+from ..i18n import _
 from ..defaults import PUBLIC_PATH
 
 try:

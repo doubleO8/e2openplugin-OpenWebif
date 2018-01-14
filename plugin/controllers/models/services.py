@@ -15,7 +15,7 @@ from time import time, localtime, strftime, mktime
 from urllib import quote, unquote
 from collections import OrderedDict
 
-from Plugins.Extensions.OpenWebif.__init__ import _
+from ..i18n import _, tstrings
 from ..defaults import PICON_EXT, PICON_PATH
 from Components.Sources.ServiceList import ServiceList
 from Components.ParentalControl import parentalControl
@@ -28,8 +28,6 @@ from enigma import eServiceCenter, eServiceReference, \
     iServiceInformation, eEPGCache
 from info import GetWithAlternative, getOrbitalText
 from info import FALLBACK_PICON_LOCATION, PICON_ENDPOINT_PATH
-# using the tstrings dic is faster than translating with _ func from __init__
-from Plugins.Extensions.OpenWebif.local import tstrings
 from ..utilities import parse_servicereference, SERVICE_TYPE_LOOKUP, NS_LOOKUP
 
 from model_utilities import mangle_epg_text

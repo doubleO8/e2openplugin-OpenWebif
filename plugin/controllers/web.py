@@ -12,7 +12,7 @@ from email.utils import formatdate
 
 from enigma import eServiceCenter, eEPGCache, eServiceReference
 
-from Plugins.Extensions.OpenWebif.__init__ import _
+from i18n import _
 from Components.config import config as comp_config
 
 from models.info import getInfo, getCurrentTime, getFrontendStatus

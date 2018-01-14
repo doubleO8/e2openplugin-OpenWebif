@@ -12,7 +12,7 @@ from twisted.web import static
 from twisted.web.resource import EncodingResourceWrapper
 from twisted.web.server import GzipEncoderFactory
 
-from Plugins.Extensions.OpenWebif.__init__ import _
+from i18n import _
 from defaults import PUBLIC_PATH, PICON_PATH
 
 from enigma import eEPGCache

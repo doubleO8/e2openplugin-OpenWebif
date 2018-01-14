@@ -24,7 +24,7 @@ from Components.TimerSanityCheck import TimerSanityCheck
 from RecordTimer import RecordTimerEntry, parseEvent, AFTEREVENT
 from ServiceReference import ServiceReference
 from info import GetWithAlternative
-from Plugins.Extensions.OpenWebif.__init__ import _
+from ..i18n import _
 
 from model_utilities import mangle_epg_text
 from events import KEY_SERVICE_REFERENCE

@@ -16,7 +16,7 @@ from Tools.FuzzyDate import FuzzyTime
 from Components.config import config
 from Components.MovieList import MovieList
 from Screens import MovieSelection
-from Plugins.Extensions.OpenWebif.__init__ import _
+from ..i18n import _
 
 from model_utilities import mangle_epg_text
 MOVIETAGFILE = "/etc/enigma2/movietags"

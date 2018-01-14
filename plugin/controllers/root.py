@@ -13,13 +13,13 @@ from twisted.web.resource import EncodingResourceWrapper
 from twisted.web.server import GzipEncoderFactory
 
 from Plugins.Extensions.OpenWebif.__init__ import _
-from .. import PUBLIC_PATH
+from defaults import PUBLIC_PATH, PICON_PATH
 
 from enigma import eEPGCache
 from models.config import getCollapsedMenus, getConfigsSections
 from models.config import getShowName, getCustomName, getBoxName
 
-from models.info import getPublicPath, getPiconPath, getInfo
+from models.info import getInfo
 from models.grab import grabScreenshot
 from base import BaseController
 from web import WebController
@@ -46,7 +46,6 @@ class RootController(BaseController):
 
     def __init__(self, session, path=""):
         BaseController.__init__(self, path=path, session=session)
-        piconpath = getPiconPath()
 
         self.putChild("web", WebController(session))
         api_controller_instance = EncodingResourceWrapper(
@@ -81,8 +80,8 @@ class RootController(BaseController):
                           static.File('/'.join((PUBLIC_PATH, shortcut))))
 
         self.putChild("transcoding", TranscodingController())
-        if piconpath:
-            self.putChild("picon", static.File(piconpath))
+        if PICON_PATH:
+            self.putChild("picon", static.File(PICON_PATH))
 
     def P_index(self, request):
         """

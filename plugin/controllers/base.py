@@ -15,7 +15,7 @@ import logging
 from twisted.web import server, http, resource
 from Cheetah.Template import Template
 
-from models.info import getViewsPath
+from defaults import VIEWS_PATH
 
 OWIF_PREFIX = 'P_'
 
@@ -145,7 +145,7 @@ class BaseController(resource.Resource):
                 "template_trunk_relpath={!r} module={!r} args={!r}".format(
                     template_trunk_relpath, module, args))
 
-        trunk = getViewsPath(template_trunk_relpath)
+        trunk = '/'.join((VIEWS_PATH, template_trunk_relpath))
         template_file = None
 
         for ext in ('pyo', 'py', 'tmpl'):

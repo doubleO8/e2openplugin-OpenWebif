@@ -124,7 +124,7 @@ class BaseController(resource.Resource):
         self.session = kwargs.get("session")
         self.log = logging.getLogger(__name__)
         self.content_type = None
-        self.verbose = 10
+        self.verbose = 0
 
     def loadTemplate(self, template_trunk_relpath, module, args):
         """

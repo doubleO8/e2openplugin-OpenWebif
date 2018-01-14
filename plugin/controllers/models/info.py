@@ -571,8 +571,7 @@ def getInfo(session=None, need_fullinfo=False):
             recs = NavigationInstance.instance.getRecordings()
             if recs:
                 # only one stream and only TV
-                from Plugins.Extensions.OpenWebif.controllers.stream import \
-                    streamList
+                from ..stream import streamList
                 s_name = ''
 
                 print "[OpenWebif] -D- streamList count '%d'" % len(streamList)

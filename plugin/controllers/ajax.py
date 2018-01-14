@@ -13,7 +13,7 @@ from time import mktime, localtime
 
 from Components.config import config as comp_config
 from Plugins.Extensions.OpenWebif.__init__ import _
-from Plugins.Extensions.OpenWebif.plugin import THEMES
+from defaults import THEMES
 
 from models.services import getBouquets, getChannels, getSatellites, \
     getProviders, getEventDesc, getChannelEpg, getSearchEpg, \

@@ -26,6 +26,7 @@ from Components.config import config, getConfigListEntry, ConfigSubsection, \
     ConfigInteger, ConfigYesNo, ConfigText, ConfigSelection
 from enigma import getDesktop
 from controllers.models.info import getInfo
+from controllers.defaults import THEMES
 
 from httpserver import HttpdStart, HttpdStop, HttpdRestart
 
@@ -43,11 +44,6 @@ logging.basicConfig(level=logging.DEBUG,
 
 LOG = logging.getLogger("PLUGIN")
 
-THEMES = [
-    'original-small-screen',
-    'original-small-screen',
-    'original-small-screen :)'
-]
 
 config.OpenWebif = ConfigSubsection()
 config.OpenWebif.enabled = ConfigYesNo(default=True)

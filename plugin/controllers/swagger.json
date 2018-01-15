@@ -8,7 +8,6 @@
     },
     "title": "Enigma2 RESTful API"
   },
-  "host": "192.168.0.10",
   "paths": {
     "/api/moviedelete": {
       "get": {
@@ -579,6 +578,63 @@
         ],
         "summary": "Retrieve event dataset(s)",
         "operationId": "api_eventlookup_id"
+      }
+    },
+    "/timers": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "description": "",
+        "tags": [
+          "epg",
+          "timer"
+        ],
+        "summary": "Retrieve list of timers",
+        "operationId": "timers_id"
+      }
+    },
+    "/recordings": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "description": "",
+        "tags": [
+          "movie",
+          "recordings"
+        ],
+        "summary": "Retrieve list of recordings",
+        "operationId": "recordings_id"
+      }
+    },
+    "/current_event": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "description": "",
+        "tags": [
+          "epg",
+          "recordings"
+        ],
+        "summary": "Retrieve information about currently running recording or service",
+        "operationId": "current_event_id"
       }
     }
   },

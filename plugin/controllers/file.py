@@ -20,6 +20,8 @@ from Components.config import config as comp_config
 from utilities import require_valid_file_parameter, build_url
 from utilities import mangle_host_header_port
 from base import CONTENT_TYPE_JSON
+from defaults import FILE_ACCESS_WHITELIST
+from recording import RECORDINGS_ROOT_PATH
 
 FLOG = logging.getLogger("filecrap")
 
@@ -44,6 +46,12 @@ class FileController(resource.Resource):
                 FLOG.error(ioerr)
                 request.setResponseCode(http.NOT_FOUND)
                 return ''
+
+            if not filename.startswith(RECORDINGS_ROOT_PATH):
+                if filename not in FILE_ACCESS_WHITELIST:
+                    FLOG.error("(NOT IN WHITELIST)")
+                    request.setResponseCode(http.FORBIDDEN)
+                    return ''
 
             if action == "stream":
                 name = "stream"
@@ -86,6 +94,10 @@ class FileController(resource.Resource):
                 return ""
 
         if "dir" in request.args:
+            FLOG.warning("No 'dir' support.")
+            request.setResponseCode(http.NOT_IMPLEMENTED)
+            return ""
+
             path = request.args["dir"][0]
             pattern = '*'
             nofiles = False

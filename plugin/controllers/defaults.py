@@ -46,3 +46,8 @@ THEMES = [
     'original-small-screen',
     'original-small-screen :)'
 ]
+
+FILE_ACCESS_WHITELIST = [
+    '/etc/enigma2/lamedb',
+    '/var/etc/satellites.xml'
+]

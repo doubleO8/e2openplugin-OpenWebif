@@ -411,6 +411,8 @@ def build_url(hostname, path=None, args=None, scheme="http", port=None):
     'http://some.host/x/../'
     >>> build_url("some.host", "/:x/äöü-blabla/")
     'http://some.host/%3Ax/%C3%A4%C3%B6%C3%BC-blabla/'
+    >>> build_url("some.host", u'/:x/\xe4\xf6\xfc-blabla/'.encode('utf-8'))
+    'http://some.host/%3Ax/%C3%A4%C3%B6%C3%BC-blabla/'
     """
     if not hostname:
         raise ValueError("empty hostname!")

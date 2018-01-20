@@ -13,7 +13,7 @@ from twisted.web.resource import EncodingResourceWrapper
 from twisted.web.server import GzipEncoderFactory
 
 from i18n import _
-from defaults import PUBLIC_PATH, PICON_PATH
+from defaults import PUBLIC_PATH, PICON_PATH, FAVICON_PATH
 
 from enigma import eEPGCache
 from models.config import getCollapsedMenus, getConfigsSections
@@ -46,6 +46,9 @@ class RootController(BaseController):
 
     def __init__(self, session, path=""):
         BaseController.__init__(self, path=path, session=session)
+
+        self.putChild('favicon.ico', static.File(FAVICON_PATH))
+        self.putChild('favicon.png', static.File(FAVICON_PATH))
 
         self.putChild("web", WebController(session))
         api_controller_instance = EncodingResourceWrapper(

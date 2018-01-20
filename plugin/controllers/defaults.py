@@ -5,6 +5,7 @@ import os
 PLUGIN_ROOT_PATH = os.path.dirname(os.path.dirname(__file__))
 PUBLIC_PATH = PLUGIN_ROOT_PATH + '/public'
 VIEWS_PATH = PLUGIN_ROOT_PATH + '/controllers/views'
+FAVICON_PATH = PUBLIC_PATH + '/images/favicon.png'
 
 #: paths where folders containing picons could be located
 PICON_PREFIXES = (

@@ -36,7 +36,7 @@ class HarvestKeitel(object):
         self.copy_package()
         self.update_documentation()
         self.create_ghpages_index()
-        self.create_ghpages_latest_package_link()
+        self.create_ghpages_latest_package_link(use_link=False)
 
     def copy_package(self):
         tgt_filename = os.path.join(
@@ -71,18 +71,21 @@ class HarvestKeitel(object):
         with open(index_filename, "wb") as target:
             target.write(index_template.render(**index_content))
 
-    def create_ghpages_latest_package_link(self):
-        current_opk_link = os.path.join(
+    def create_ghpages_latest_package_link(self, use_link=True):
+        current_opk_target = os.path.join(
             self.ghpages_output_path, LATEST_OPK_PATH_REL)
 
-        if os.path.islink(current_opk_link):
-            os.unlink(current_opk_link)
+        if os.path.islink(current_opk_target):
+            os.unlink(current_opk_target)
 
-        old_cwd = os.getcwd()
-        os.chdir(self.ghpages_output_path)
-        os.symlink(os.path.basename(self.package_source),
-                   os.path.basename(current_opk_link))
-        os.chdir(old_cwd)
+        if use_link:
+            old_cwd = os.getcwd()
+            os.chdir(self.ghpages_output_path)
+            os.symlink(os.path.basename(self.package_source),
+                       os.path.basename(current_opk_target))
+            os.chdir(old_cwd)
+        else:
+            shutil.copy(self.package_source, current_opk_target)
 
     def update_documentation(self):
         subprocess.check_call("make html", cwd='./doc', shell=True)

@@ -15,6 +15,7 @@
 #
 # Authors: meo <lupomeo@hotmail.com>, skaman <sandro@skanetwork.com>
 # Graphics: .....
+import os
 import logging
 
 from Screens.Screen import Screen
@@ -34,12 +35,20 @@ from controllers.i18n import _
 PLUGIN_NAME = 'OpenWebif'
 PLUGIN_ICON_HD = 'openwebifhd.png'
 PLUGIN_ICON = 'openwebif.png'
+LOG_FILES_ROOT = '/media/hdd/'
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(name)-60s %(levelname)-8s '
-                           '%(funcName)-32s (#%(lineno)04d): %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S',
-                    filename="/media/hdd/{:s}.log".format(PLUGIN_NAME.lower()))
+log_args = dict(
+    level=logging.DEBUG,
+    format='%(asctime)s %(name)-60s %(levelname)-8s '
+           '%(funcName)-32s (#%(lineno)04d): %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+)
+
+if os.path.isdir(LOG_FILES_ROOT):
+    log_args['filename'] = "{:s}/{:s}.log".format(LOG_FILES_ROOT,
+                                                  PLUGIN_NAME.lower())
+
+logging.basicConfig(**log_args)
 
 LOG = logging.getLogger("PLUGIN")
 

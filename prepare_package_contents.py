@@ -112,6 +112,7 @@ if __name__ == '__main__':
     except KeyError as keks:
         print("Please set PYTHONOPTIMIZE environment variable!")
         raise
+    verbose = 0
 
     sources = './plugin'
     target_root = PACKAGE_OUTPUT_PATH
@@ -129,7 +130,8 @@ if __name__ == '__main__':
         source = os.path.join(sources, rel_path)
         target = os.path.join(target_path, rel_path)
         target_dir = os.path.dirname(target)
-        print("{!r} -> {!r}".format(source, target))
+        if verbose > 0:
+            print("{!r} -> {!r}".format(source, target))
         mkdir_intermediate(target_dir)
         shutil.copy(source, target_dir)
 

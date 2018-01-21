@@ -105,6 +105,16 @@ def create_repo_conf(target_root, repo_config_filename='github_io.conf'):
     with open(repo_config_target_filename, "wb") as target:
         target.write(content)
 
+    return repo_config_target_filename
+
+
+def create_package_repo_conf(target_root, repo_config_source,
+                             repo_config_filename='package_name_here.conf'):
+    package_etc_opkg = os.path.join(target_root, 'etc/opkg')
+    package_repo_config = os.path.join(package_etc_opkg, repo_config_filename)
+    mkdir_intermediate(package_etc_opkg)
+    shutil.copy(repo_config_source, package_repo_config)
+
 
 if __name__ == '__main__':
     try:
@@ -141,4 +151,6 @@ if __name__ == '__main__':
     compileall.compile_dir(target_path, maxlevels=100, force=True)
     create_control()
     create_tag(tag_file)
-    create_repo_conf(target_root=OUTPUT_PATH)
+    repo_config_target_filename = create_repo_conf(target_root=OUTPUT_PATH)
+    create_package_repo_conf(target_root=PACKAGE_OUTPUT_PATH,
+                             repo_config_source=repo_config_target_filename)

@@ -61,8 +61,11 @@ class HarvestKeitel(object):
                     filename='github_io.conf',
                     description="opkg feed configuration file"),
                 dict(
-                    filename='documentation/index.html',
-                    description="documentation"),
+                    filename='cover/index.html',
+                    description="coverage"),
+                dict(
+                    filename='nosetests.xml',
+                    description="nosetest results"),
             ],
             "meta": PACKAGE_META,
             "tag_data": self.tag_data,

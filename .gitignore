@@ -15,3 +15,6 @@
 /cosh.json
 
 /doc/build/
+
+.coverage
+nosetests.xml

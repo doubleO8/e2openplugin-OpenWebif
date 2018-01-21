@@ -16,6 +16,7 @@ script:
 - python ./prepare_package_contents.py
 - ./opkg-utils/opkg-build -O -o 0 -g 0 -Z gzip pack/
 - python testsuite/evil_eval.py
+- nosetests --with-doctest --with-coverage --cover-html --cover-html-dir=pages_out/cover --cover-erase --cover-package=plugin --with-xunit --xunit-file=pages_out/nosetests.xml plugin/
 
 after_success:
 - python -m flake8 plugin/ --output-file ./pages_out/flake8_report.txt

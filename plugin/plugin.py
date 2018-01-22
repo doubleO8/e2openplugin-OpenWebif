@@ -18,20 +18,6 @@
 import os
 import logging
 
-from Screens.Screen import Screen
-from Plugins.Plugin import PluginDescriptor
-from Components.ActionMap import ActionMap
-from Components.Label import Label
-from Components.ConfigList import ConfigListScreen
-from Components.config import config, getConfigListEntry, ConfigSubsection, \
-    ConfigInteger, ConfigYesNo, ConfigText, ConfigSelection
-from enigma import getDesktop
-
-from controllers.models.info import getInfo
-from controllers.defaults import THEMES
-from httpserver import HttpdStart, HttpdStop, HttpdRestart
-from controllers.i18n import _
-
 PLUGIN_NAME = 'OpenWebif'
 PLUGIN_ICON_HD = 'openwebifhd.png'
 PLUGIN_ICON = 'openwebif.png'
@@ -49,6 +35,21 @@ if os.path.isdir(LOG_FILES_ROOT):
                                                   PLUGIN_NAME.lower())
 
 logging.basicConfig(**log_args)
+
+from Screens.Screen import Screen
+from Plugins.Plugin import PluginDescriptor
+from Components.ActionMap import ActionMap
+from Components.Label import Label
+from Components.ConfigList import ConfigListScreen
+from Components.config import config, getConfigListEntry, ConfigSubsection, \
+    ConfigInteger, ConfigYesNo, ConfigText, ConfigSelection
+from enigma import getDesktop
+
+from controllers.models.info import getInfo
+from controllers.defaults import THEMES
+from httpserver import HttpdStart, HttpdStop, HttpdRestart
+from controllers.i18n import _
+
 
 LOG = logging.getLogger("PLUGIN")
 

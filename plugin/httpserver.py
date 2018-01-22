@@ -9,6 +9,7 @@
 #                                                                            #
 ##############################################################################
 import os
+import logging
 from socket import has_ipv6
 
 from Components.config import config as comp_config
@@ -17,6 +18,8 @@ from controllers.root import RootController
 from twisted.internet import reactor
 from twisted.web import server, version
 from twisted.internet.error import CannotListenError
+
+HLOG = logging.getLogger('httpserver')
 
 global listener, server_to_stop, site
 listener = []
@@ -45,9 +48,9 @@ def HttpdStart(session):
             else:
                 # ipv4 only
                 listener.append(reactor.listenTCP(port, site))
-            print "[OpenWebif] started on %i" % (port)
-        except CannotListenError:
-            print "[OpenWebif] failed to listen on Port %i" % (port)
+            HLOG.debug("started listening on {:d}".format(port))
+        except CannotListenError as cle:
+            HLOG.warning("failed to listen on Port {:d}: {!r}".format(port, cle))
 
         # Streaming requires listening on 127.0.0.1:80
         if port != 80:
@@ -67,9 +70,9 @@ def HttpdStart(session):
                     listener.append(
                         reactor.listenTCP(
                             80, site, interface='127.0.0.1'))
-                print "[OpenWebif] started stream listening on port 80"
-            except CannotListenError:
-                print "[OpenWebif] port 80 busy"
+                HLOG.debug("started stream listening on port 80")
+            except CannotListenError as cle2:
+                HLOG.warning("port 80 busy: {!r}".format(cle2))
 
 
 def HttpdStop(session):
@@ -95,7 +98,7 @@ class StopServer:
         global listener
         self.server_to_stop = 0
         for interface in listener:
-            print "[OpenWebif] Stopping server on port", interface.port
+            HLOG.debug("Stopping server on port {!r}".format(interface.port))
             deferred = interface.stopListening()
             try:
                 self.server_to_stop += 1

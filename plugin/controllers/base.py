@@ -16,6 +16,7 @@ from twisted.web import server, http, resource
 from Cheetah.Template import Template
 
 from defaults import VIEWS_PATH
+from utilities import mangle_host_header_port
 
 OWIF_PREFIX = 'P_'
 
@@ -124,7 +125,7 @@ class BaseController(resource.Resource):
         self.session = kwargs.get("session")
         self.log = logging.getLogger(__name__)
         self.content_type = None
-        self.verbose = 0
+        self.verbose = 10
 
     def loadTemplate(self, template_trunk_relpath, module, args):
         """
@@ -176,6 +177,14 @@ class BaseController(resource.Resource):
         return self.__class__(self.session, path)
 
     def render(self, request):
+        if self.verbose >= 10:
+            fmt = "{!s}{!s} accessed by {!r}"
+            self.log.info(fmt.format(
+                mangle_host_header_port(request.getHeader('host'),
+                                        request.path),
+                request.getClientIP()
+            ))
+
         # cache data
         path = self.path
 

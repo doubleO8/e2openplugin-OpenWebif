@@ -11,6 +11,7 @@
 import os
 import re
 import unicodedata
+import logging
 from time import time, localtime, strftime, mktime
 from urllib import quote, unquote
 from collections import OrderedDict
@@ -32,6 +33,8 @@ from ..utilities import parse_servicereference, SERVICE_TYPE_LOOKUP, NS_LOOKUP
 
 from model_utilities import mangle_epg_text
 from events import FLAGS_WEB, ServicesEventDict, convertDesc, filterName
+
+SLOG = logging.getLogger("services")
 
 
 def getServiceInfoString(info, what):
@@ -531,7 +534,9 @@ def getSubServices(session):
             "servicename": service.info().getName()})
         subservices = service.subServices()
         if subservices and subservices.getNumberOfSubservices() > 0:
-            print subservices.getNumberOfSubservices()
+            SLOG.debug(
+                "subservices.getNumberOfSubservices() yielded {!r}".format(
+                    subservices.getNumberOfSubservices()))
             for i in range(subservices.getNumberOfSubservices()):
                 sub = subservices.getSubservice(i)
                 services.append({
@@ -1001,11 +1006,11 @@ def getPicon(sname):
 
         cname = unicodedata.normalize(
             'NFKD', unicode(cname, 'utf_8', errors='ignore')).encode(
-                'ASCII', 'ignore')
+            'ASCII', 'ignore')
         cname = re.sub(
             '[^a-z0-9]',
             '',
-            cname.replace('&','and').replace(
+            cname.replace('&', 'and').replace(
                 '+', 'plus').replace(
                 '*', 'star').lower())
 

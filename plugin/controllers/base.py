@@ -180,8 +180,8 @@ class BaseController(resource.Resource):
         if self.verbose >= 10:
             fmt = "{!s}{!s} accessed by {!r}"
             self.log.info(fmt.format(
-                mangle_host_header_port(request.getHeader('host'),
-                                        request.path),
+                mangle_host_header_port(request.getHeader('host')),
+                request.path,
                 request.getClientIP()
             ))
 

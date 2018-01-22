@@ -9,6 +9,7 @@
 #                                                                            #
 ##############################################################################
 import os
+import logging
 import time
 import json
 from socket import has_ipv6, AF_INET6, AF_INET, inet_ntop, inet_pton, \
@@ -46,12 +47,14 @@ except BaseException:
         getMachineName, getImageDistro, getImageVersion, getImageBuild, \
         getOEVersion, getDriverDate
 
+
     def getEnigmaVersionString():
         return about.getEnigmaVersionString()
 
 import NavigationInstance
 
 TAG_FILE = '/'.join((PUBLIC_PATH, 'tag.json'))
+ILOG = logging.getLogger("info")
 
 try:
     with open(TAG_FILE, "rb") as src:
@@ -365,8 +368,8 @@ def getInfo(session=None, need_fullinfo=False):
 
     info['tuners'] = []
     for i in range(0, nimmanager.getSlotCount()):
-        print "[OpenWebif] -D- tuner '%d' '%s' '%s'" % (
-            i, nimmanager.getNimName(i), nimmanager.getNim(i).getSlotName())
+        ILOG.debug("tuner {!r} {!r} {!r}".format(
+            i, nimmanager.getNimName(i), nimmanager.getNim(i).getSlotName()))
         info['tuners'].append({
             "name": nimmanager.getNim(i).getSlotName(),
             "type": nimmanager.getNimName(i) + " (" + nimmanager.getNim(
@@ -570,7 +573,7 @@ def getInfo(session=None, need_fullinfo=False):
                 from ..stream import streamList
                 s_name = ''
 
-                print "[OpenWebif] -D- streamList count '%d'" % len(streamList)
+                ILOG.debug("streamList count {!r}".format(len(streamList)))
                 if len(streamList) == 1:
                     from Screens.ChannelSelection import service_types_tv
                     service_handler = eServiceCenter.getInstance()
@@ -584,11 +587,11 @@ def getInfo(session=None, need_fullinfo=False):
                         if srefs == channel[0]:
                             s_name = channel[1] + ' (' + s.clientIP + ')'
                             break
-                print "[OpenWebif] -D- s_name '%s'" % s_name
+                ILOG.debug("s_name {!r}".format(s_name))
 
                 for stream in streamList:
                     srefs = stream.ref.toString()
-                    print "[OpenWebif] -D- srefs '%s'" % srefs
+                    ILOG.debug("srefs {!r}".format(srefs))
 
                 sname = ''
                 timers = []
@@ -598,7 +601,7 @@ def getInfo(session=None, need_fullinfo=False):
                         sname = timer.service_ref.getServiceName()
                         timers.append(mangle_epg_text(
                             timer.service_ref.getServiceName()))
-                        print "[OpenWebif] -D- timer '%s'" % s_name
+                        ILOG.debug("timer {!r}".format(s_name))
                 # only one recording
                 if len(timers) == 1:
                     sname = timers[0]
@@ -606,7 +609,7 @@ def getInfo(session=None, need_fullinfo=False):
                 if sname == '' and s_name != '':
                     sname = s_name
 
-                print "[OpenWebif] -D- recs count '%d'" % len(recs)
+                ILOG.debug("recs count {!r}".format(len(recs)))
 
                 for rec in recs:
                     feinfo = rec.frontendInfo()

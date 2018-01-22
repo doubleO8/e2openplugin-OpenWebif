@@ -8,9 +8,11 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
+import logging
 from enigma import eConsoleAppContainer
 from twisted.web import resource, server
 
+GLOG = logging.getLogger("grab")
 GRAB_PATH = '/usr/bin/grab'
 
 
@@ -81,7 +83,7 @@ class GrabRequest(object):
         try:
             self.request.finish()
         except RuntimeError as error:
-            print "[OpenWebif] grabFinished error: %s" % error
+            GLOG.warning("grabFinished error: {!r}".format(error))
         # Break the chain of ownership
         del self.request
 

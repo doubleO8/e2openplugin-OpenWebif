@@ -8,11 +8,14 @@
 #               published by the Free Software Foundation.                   #
 #                                                                            #
 ##############################################################################
+import os
+import logging
 from Components.config import config
 from enigma import eServiceReference, eActionMap, eServiceCenter
 from Screens.InfoBar import InfoBar, MoviePlayer
 import NavigationInstance
-import os
+
+CLOG = logging.getLogger("control")
 
 ENABLE_QPIP_PROCPATH = "/proc/stb/video/decodermode"
 
@@ -179,8 +182,8 @@ def remoteControl(key, pressed_type="", rcu=""):
                 "hd1100",
                     "hd1200"):
                 remotetype = "dreambox advanced remote control (native)"
-        except BaseException:
-            print "[OpenWebIf] wrong hw detection"
+        except BaseException as bex:
+            CLOG.warning("wrong hw detection: {!r}".format(bex))
 
     amap = eActionMap.getInstance()
     if pressed_type == "long":
@@ -221,7 +224,7 @@ def setPowerState(session, state):
             session.open(Standby)
 
     elif state == 6:
-        print "HAHA"
+        CLOG.warning("HAHA")
 
     return {
         "result": True,

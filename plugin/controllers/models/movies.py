@@ -9,6 +9,7 @@
 #                                                                            #
 ##############################################################################
 import os
+import logging
 
 from enigma import eServiceReference, iServiceInformation, eServiceCenter
 from ServiceReference import ServiceReference
@@ -24,6 +25,7 @@ TRASHDIRNAME = "movie_trash"
 
 MOVIE_LIST_SREF_ROOT = '2:0:1:0:0:0:0:0:0:0:'
 MOVIE_LIST_ROOT_FALLBACK = '/media'
+MLOG = logging.getLogger("movies")
 
 # TODO : optimize move using FileTransferJob if available
 # TODO : add copy api
@@ -279,7 +281,8 @@ def removeMovie(session, sRef, Force=False):
                     message = "trashcan exception"
                     pass
                 except Exception as e:
-                    print "Failed to move to .Trash folder:", e
+                    MLOG.warning(
+                        "Failed to move to .Trash folder: {!r}".format(e))
                     message = "Failed to move to .Trash folder: %s" + str(e)
                 deleted = True
         elif hasattr(config.usage, 'movielist_use_trash_dir'):
@@ -314,7 +317,8 @@ def removeMovie(session, sRef, Force=False):
                     message = "trashdir exception"
                     pass
                 except Exception as e:
-                    print "Failed to move to trashdir:", e
+                    MLOG.warning(
+                        "Failed to move to trashdir: {!r}".format(e))
                     message = "Failed to move to trashdir: %s" + str(e)
                 deleted = True
         if not deleted:

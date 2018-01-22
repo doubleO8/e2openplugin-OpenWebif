@@ -125,7 +125,7 @@ class BaseController(resource.Resource):
         self.session = kwargs.get("session")
         self.log = logging.getLogger(__name__)
         self.content_type = None
-        self.verbose = 10
+        self.verbose = 0
 
     def loadTemplate(self, template_trunk_relpath, module, args):
         """
@@ -181,11 +181,10 @@ class BaseController(resource.Resource):
             fmt = "{scheme}://{netloc}{path} accessed by {client}"
             args = mangle_host_header_port(request.getHeader('host'))
             args['path'] = request.path
-            if request.getClientIP():
-                args['client'] = request.getClientIP()
-            else:
-                args['client'] = os.environ.get("REMOTE_ADDR")
+            args['client'] = request.getClient()
             self.log.info(fmt.format(**args))
+            if self.verbose > 10:
+                self.log.debug(request.getAllHeaders())
 
         # cache data
         path = self.path

@@ -24,7 +24,7 @@ PLUGIN_ICON = 'openwebif.png'
 LOG_FILES_ROOT = '/media/hdd/'
 
 log_args = dict(
-    level=logging.DEBUG,
+    level=logging.INFO,
     format='%(asctime)s %(name)-60s %(levelname)-8s '
            '%(funcName)-32s (#%(lineno)04d): %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',

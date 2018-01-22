@@ -178,12 +178,14 @@ class BaseController(resource.Resource):
 
     def render(self, request):
         if self.verbose >= 10:
-            fmt = "{!s}{!s} accessed by {!r}"
-            self.log.info(fmt.format(
-                mangle_host_header_port(request.getHeader('host')),
-                request.path,
-                request.getClientIP()
-            ))
+            fmt = "{scheme}://{netloc}{path} accessed by {client}"
+            args = mangle_host_header_port(request.getHeader('host'))
+            args['path'] = request.path
+            if request.getClientIP():
+                args['client'] = request.getClientIP()
+            else:
+                args['client'] = os.environ.get("REMOTE_ADDR")
+            self.log.info(fmt.format(**args))
 
         # cache data
         path = self.path

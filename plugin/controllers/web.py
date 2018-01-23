@@ -48,6 +48,7 @@ from base import BaseController, CONTENT_TYPE_X_MPEGURL, CONTENT_TYPE_HTML
 from stream import StreamController
 from servicelists import ServiceListsManager
 from utilities import mangle_host_header_port
+from recording import RecordingsController, RECORDINGS_ROOT_PATH
 
 
 class WebController(BaseController):
@@ -715,10 +716,10 @@ class WebController(BaseController):
         """
         return getMessageAnswer()
 
-    def P_movielist(self, request):
+    def P_movielistorig(self, request):
         """
         Request handler for the `movielist` endpoint.
-        Retrieve list of movie items.
+        Retrieve list of movie items. (original implementation)
 
         .. seealso::
 
@@ -730,6 +731,53 @@ class WebController(BaseController):
             HTTP response with headers
         """
         return getMovieList(request.args)
+
+    def P_movielist(self, request):
+        """
+        Request handler for the `movielist` endpoint.
+        Retrieve list of movie items. (alternative implementation)
+
+        .. seealso::
+
+            https://dream.reichholf.net/e2web/#movielist
+
+        Args:
+            request (twisted.web.server.Request): HTTP request object
+        Returns:
+            HTTP response with headers
+        """
+        rcc = RecordingsController()
+        movie_items = []
+        for src in rcc.list_movies(RECORDINGS_ROOT_PATH):
+            eve = src.get("event", {})
+            duration = 0
+            try:
+                duration = src['meta']['marks']['maximum']
+            except KeyError:
+                try:
+                    duration = eve['duration']
+                except KeyError:
+                    pass
+
+            duration_minutes = duration // 60
+            duration_seconds = duration - duration_minutes * 60
+
+            current = {
+                'servicereference': src['path'],
+                'title': eve.get("title"),
+                'shortinfo': eve.get("shortinfo"),
+                'longinfo': eve.get("longinfo"),
+                'servicename': 'Local Service',
+                'start_time': eve.get("start_time"),
+                'length': '{:d}:{:02d}'.format(duration_minutes,
+                                               duration_seconds),
+                'tags': None,
+                'filename': src['path'],
+                'filesize': src['meta']['FileSize']
+
+            }
+            movie_items.append(current)
+        return {'movies': movie_items}
 
     def P_movielisthtml(self, request):
         """

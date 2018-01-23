@@ -3,12 +3,12 @@
 <e2movielist>
 	#for $movie in $movies
 		<e2movie>
-			<e2servicereference>1:0:0:0:0:0:0:0:0:0:$movie.servicereference</e2servicereference>
-			<e2title>$movie.title</e2title>
-			<e2description>$movie.shortinfo</e2description>
-			<e2descriptionextended>$movie.longinfo</e2descriptionextended>
+			<e2servicereference>$movie.fullname</e2servicereference>
+			<e2title>$movie.eventname</e2title>
+			<e2description>$movie.description</e2description>
+			<e2descriptionextended>$movie.descriptionExtended</e2descriptionextended>
 			<e2servicename>$movie.servicename</e2servicename>
-			<e2time>$movie.start_time</e2time>
+			<e2time>$movie.recordingtime</e2time>
 			<e2length>$movie.length</e2length>
 			<e2tags>$movie.tags</e2tags>
 			<e2filename>$movie.filename</e2filename>

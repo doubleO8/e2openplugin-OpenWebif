@@ -177,13 +177,24 @@ class BaseController(resource.Resource):
         return self.__class__(self.session, path)
 
     def render(self, request):
-        if self.verbose >= 10:
-            fmt = "{scheme}://{netloc}{path} accessed by {client}"
+        if self.verbose:
+            fmt = "{scheme}://{netloc}{path} accessed by {client}{via} {r_args}"
             args = mangle_host_header_port(request.getHeader('host'))
             args['path'] = request.path
-            args['client'] = request.getClient()
+            try:
+                args['client'] = request.transport.getPeer()
+            except Exception as exc:
+                self.log.error(exc)
+                args['client'] = request.getClient()
+            args['via'] = ''
+
+            header = request.getHeader("X-Forwarded-For")
+            if header:
+                args['via'] = " ({!r})".format(header.split(",")[-1].strip())
+
+            args['r_args'] = request.args
             self.log.info(fmt.format(**args))
-            if self.verbose > 10:
+            if self.verbose > 4:
                 self.log.debug(request.getAllHeaders())
 
         # cache data

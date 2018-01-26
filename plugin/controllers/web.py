@@ -762,13 +762,18 @@ class WebController(BaseController):
             duration_minutes = duration // 60
             duration_seconds = duration - duration_minutes * 60
 
+            try:
+                eventname_fallback = src['path'].split("/")[-1]
+            except Exception as exc:
+                eventname_fallback = ''
+
             current = {
-                'servicereference': src['path'],
-                'title': eve.get("title"),
-                'shortinfo': eve.get("shortinfo"),
-                'longinfo': eve.get("longinfo"),
+                'serviceref': '1:0:0:0:0:0:0:0:0:0:' + src['path'],
+                'eventname': eve.get("title", eventname_fallback),
+                'description': eve.get("shortinfo", ""),
+                'descriptionExtended': eve.get("longinfo", ""),
                 'servicename': 'Local Service',
-                'start_time': eve.get("start_time"),
+                'recordingtime': eve.get("start_time", 0),
                 'length': '{:d}:{:02d}'.format(duration_minutes,
                                                duration_seconds),
                 'tags': None,

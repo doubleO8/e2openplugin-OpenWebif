@@ -760,7 +760,7 @@ class WebController(BaseController):
                     pass
 
             duration_minutes = duration // 60
-            duration_seconds = duration - duration_minutes * 60
+            duration_seconds = duration % 60
 
             try:
                 eventname_fallback = src['path'].split("/")[-1]
@@ -768,7 +768,7 @@ class WebController(BaseController):
                 eventname_fallback = ''
 
             current = {
-                'serviceref': '1:0:0:0:0:0:0:0:0:0:' + src['path'],
+                'fullname': '1:0:0:0:0:0:0:0:0:0:' + src['path'],
                 'eventname': eve.get("title", eventname_fallback),
                 'description': eve.get("shortinfo", ""),
                 'descriptionExtended': eve.get("longinfo", ""),
@@ -776,7 +776,7 @@ class WebController(BaseController):
                 'recordingtime': eve.get("start_time", 0),
                 'length': '{:d}:{:02d}'.format(duration_minutes,
                                                duration_seconds),
-                'tags': None,
+                'tags': '',
                 'filename': src['path'],
                 'filesize': src['meta']['FileSize']
 

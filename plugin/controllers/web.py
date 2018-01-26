@@ -47,7 +47,7 @@ from Screens.InfoBar import InfoBar
 from base import BaseController, CONTENT_TYPE_X_MPEGURL, CONTENT_TYPE_HTML
 from stream import StreamController
 from servicelists import ServiceListsManager
-from utilities import mangle_host_header_port
+from utilities import mangle_host_header_port, add_expires_header
 from recording import RecordingsController, RECORDINGS_ROOT_PATH
 
 
@@ -782,6 +782,7 @@ class WebController(BaseController):
 
             }
             movie_items.append(current)
+        add_expires_header(request, expires=60 * 30)
         return {'movies': movie_items}
 
     def P_movielisthtml(self, request):

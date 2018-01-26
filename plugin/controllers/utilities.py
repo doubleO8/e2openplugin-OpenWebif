@@ -5,6 +5,9 @@ import re
 import urllib
 import urlparse
 import struct
+import time
+import datetime
+from wsgiref.handlers import format_date_time
 
 MANY_SLASHES_PATTERN = r'[\/]+'
 MANY_SLASHES_REGEX = re.compile(MANY_SLASHES_PATTERN)
@@ -537,6 +540,32 @@ def parse_cuts(cutfile):
             marks['maximum'] = marks['marks'][-1][0]
 
     return marks
+
+
+def add_expires_header(request, expires=False):
+    """
+
+    Args:
+        request (twisted.web.server.Request): HTTP request object
+        expires: expiration in seconds or False for *imediately / no caching*
+    """
+    headers = {}
+    if expires is False:
+        headers[
+            'Cache-Control'] = 'no-store, no-cache, must-revalidate, ' \
+                               'post-check=0, pre-check=0, max-age=0'
+        headers['Expires'] = '-1'
+    else:
+        now = datetime.datetime.now()
+        expires_time = now + datetime.timedelta(seconds=expires)
+        headers['Cache-Control'] = 'public'
+        headers['Expires'] = format_date_time(
+            time.mktime(expires_time.timetuple()))
+
+    for key in headers:
+        # self.log.debug(
+        #     "CACHE: {key}={val}".format(key=key, val=headers[key]))
+        request.setHeader(key, headers[key])
 
 
 if __name__ == '__main__':

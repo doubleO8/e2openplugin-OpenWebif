@@ -12,6 +12,9 @@ Utilities
 .. automodule:: controllers.models.stream
     :members:
 
+.. automodule:: controllers.models.movies
+    :members:
+
 Packaging
 =========
 

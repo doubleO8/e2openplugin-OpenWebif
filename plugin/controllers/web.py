@@ -52,6 +52,14 @@ from recording import RecordingsController, RECORDINGS_ROOT_PATH
 
 
 def get_recordings(encoding=None):
+    """
+    Retrieve a list of `dict` items containing recording's information.
+
+    Args:
+        encoding (basestring): output encoding or *None* (default = `utf-8`)
+    Returns:
+        list: movie items
+    """
     if encoding is None:
         encoding = 'utf-8'
     rcc = RecordingsController()
@@ -93,6 +101,7 @@ def get_recordings(encoding=None):
         movie_items.append(current)
 
     return movie_items
+
 
 class WebController(BaseController):
     """

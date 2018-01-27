@@ -20,18 +20,31 @@ from Screens import MovieSelection
 from ..i18n import _
 
 from model_utilities import mangle_epg_text
+
 MOVIETAGFILE = "/etc/enigma2/movietags"
 TRASHDIRNAME = "movie_trash"
 
+#: servicereference prefix for movie itmes
 MOVIE_LIST_SREF_ROOT = '2:0:1:0:0:0:0:0:0:0:'
-MOVIE_LIST_ROOT_FALLBACK = '/media'
-MLOG = logging.getLogger("movies")
 
-# TODO : optimize move using FileTransferJob if available
-# TODO : add copy api
+#: fallback value for 'movie list root'
+MOVIE_LIST_ROOT_FALLBACK = '/media'
+
+MLOG = logging.getLogger("movies")
 
 
 def getPosition(cutfile, movie_len):
+    """
+    Retrieve 'last watched' position.
+
+    .. deprecated:: 0.86
+
+    Args:
+        cutfile (basestring): movie's cutfile path
+        movie_len(int): movie length in minutes
+    Returns:
+        dict: movie items
+    """
     cut_list = []
     if movie_len is not None and os.path.isfile(cutfile):
         try:
@@ -68,6 +81,17 @@ def getPosition(cutfile, movie_len):
 
 
 def getMovieList(rargs=None, locations=None):
+    """
+    Generate a `dict` containing movie items information.
+
+    .. deprecated:: 0.86
+
+    Args:
+        rargs (dict): request object's args
+        locations(list): paths where recordings might be stored
+    Returns:
+        dict: movie items
+    """
     movieliste = []
     tag = None
     directory = None

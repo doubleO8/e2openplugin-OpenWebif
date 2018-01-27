@@ -18,7 +18,8 @@
 import os
 import logging
 
-from controllers.defaults import THEMES, PLUGIN_NAME, LOG_FILES_ROOT
+from controllers.defaults import THEMES, LOG_FILES_ROOT, PLUGIN_WINDOW_TITLE
+from controllers.defaults import PLUGIN_NAME, PLUGIN_DESCRIPTION
 from controllers.defaults import PLUGIN_ICON, PLUGIN_ICON_HD
 
 log_args = dict(
@@ -49,7 +50,7 @@ from httpserver import HttpdStart, HttpdStop, HttpdRestart  # noqa: E402
 from controllers.i18n import _  # noqa: E402
 
 
-LOG = logging.getLogger("PLUGIN")
+LOG = logging.getLogger(__name__)
 
 config.OpenWebif = ConfigSubsection()
 config.OpenWebif.enabled = ConfigYesNo(default=True)
@@ -203,7 +204,7 @@ class OpenWebifConfig(Screen, ConfigListScreen):
         self["config"].l.setList(self.list)
 
     def setWindowTitle(self):
-        self.setTitle(_("OpenWebif Configuration"))
+        self.setTitle(_(PLUGIN_WINDOW_TITLE))
 
     def keyLeft(self):
         ConfigListScreen.keyLeft(self)
@@ -311,7 +312,7 @@ def Plugins(**kwargs):
         result.append(
             PluginDescriptor(
                 name=PLUGIN_NAME,
-                description=_("OpenWebif Configuration"),
+                description=_(PLUGIN_DESCRIPTION),
                 where=PluginDescriptor.WHERE_MENU,
                 fnc=on_main_menu))
 
@@ -319,7 +320,7 @@ def Plugins(**kwargs):
         result.append(
             PluginDescriptor(
                 name=PLUGIN_NAME,
-                description=_("OpenWebif Configuration"),
+                description=_(PLUGIN_DESCRIPTION),
                 icon=PLUGIN_ICON_HD,
                 where=[PluginDescriptor.WHERE_PLUGINMENU],
                 fnc=on_configure_plugin))
@@ -327,7 +328,7 @@ def Plugins(**kwargs):
         result.append(
             PluginDescriptor(
                 name=PLUGIN_NAME,
-                description=_("OpenWebif Configuration"),
+                description=_(PLUGIN_DESCRIPTION),
                 icon=PLUGIN_ICON,
                 where=[PluginDescriptor.WHERE_PLUGINMENU],
                 fnc=on_configure_plugin))

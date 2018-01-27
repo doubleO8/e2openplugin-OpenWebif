@@ -4,6 +4,8 @@ import os
 import sys
 
 PLUGIN_NAME = 'OpenWebif'
+PLUGIN_DESCRIPTION = "OpenWebif Configuration"
+PLUGIN_WINDOW_TITLE = PLUGIN_DESCRIPTION
 LOG_FILES_ROOT = '/media/hdd/'
 
 PLUGIN_ROOT_PATH = os.path.dirname(os.path.dirname(__file__))

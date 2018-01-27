@@ -36,19 +36,20 @@ if os.path.isdir(LOG_FILES_ROOT):
 
 logging.basicConfig(**log_args)
 
-from Screens.Screen import Screen
-from Plugins.Plugin import PluginDescriptor
-from Components.ActionMap import ActionMap
-from Components.Label import Label
-from Components.ConfigList import ConfigListScreen
-from Components.config import config, getConfigListEntry, ConfigSubsection, \
-    ConfigInteger, ConfigYesNo, ConfigText, ConfigSelection
-from enigma import getDesktop
+from Screens.Screen import Screen  # noqa: E402
+from Plugins.Plugin import PluginDescriptor  # noqa: E402
+from Components.ActionMap import ActionMap  # noqa: E402
+from Components.Label import Label  # noqa: E402
+from Components.ConfigList import ConfigListScreen  # noqa: E402
+from Components.config import config, getConfigListEntry  # noqa: E402
+from Components.config import ConfigSubsection, ConfigSelection  # noqa: E402
+from Components.config import ConfigInteger, ConfigYesNo, ConfigText  # noqa: E402,E501
+from enigma import getDesktop  # noqa: E402
 
-from controllers.models.info import getInfo
-from controllers.defaults import THEMES
-from httpserver import HttpdStart, HttpdStop, HttpdRestart
-from controllers.i18n import _
+from controllers.models.info import getInfo  # noqa: E402
+from controllers.defaults import THEMES  # noqa: E402
+from httpserver import HttpdStart, HttpdStop, HttpdRestart  # noqa: E402
+from controllers.i18n import _  # noqa: E402
 
 
 LOG = logging.getLogger("PLUGIN")

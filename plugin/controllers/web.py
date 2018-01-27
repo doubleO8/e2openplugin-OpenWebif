@@ -51,6 +51,49 @@ from utilities import mangle_host_header_port, add_expires_header
 from recording import RecordingsController, RECORDINGS_ROOT_PATH
 
 
+def get_recordings(encoding=None):
+    if encoding is None:
+        encoding = 'utf-8'
+    rcc = RecordingsController()
+    movie_items = []
+
+    for src in rcc.list_movies(RECORDINGS_ROOT_PATH):
+        eve = src.get("event", {})
+        duration = 0
+        try:
+            duration = src['meta']['marks']['maximum']
+        except KeyError:
+            try:
+                duration = eve['duration']
+            except KeyError:
+                pass
+
+        duration_minutes = duration // 60
+        duration_seconds = duration % 60
+
+        try:
+            eventname_fallback = src['path'].split("/")[-1]
+        except Exception:
+            eventname_fallback = ''
+
+        current = {
+            'fullname': '1:0:0:0:0:0:0:0:0:0:' + src['path'].encode(encoding),
+            'eventname': eve.get("title", eventname_fallback).encode(encoding),
+            'description': eve.get("shortinfo", "").encode(encoding),
+            'descriptionExtended': eve.get("longinfo", "").encode(encoding),
+            'servicename': src['recording_servicename'].encode(encoding),
+            'recordingtime': eve.get("start_time", 0),
+            'length': '{:d}:{:02d}'.format(duration_minutes,
+                                           duration_seconds),
+            'tags': '',
+            'filename': src['path'].encode(encoding),
+            'filesize': src['meta']['FileSize']
+
+        }
+        movie_items.append(current)
+
+    return movie_items
+
 class WebController(BaseController):
     """
     Controller implementing *Enigma2 WebInterface API* as described in e.g.
@@ -746,44 +789,8 @@ class WebController(BaseController):
         Returns:
             HTTP response with headers
         """
-        rcc = RecordingsController()
-        movie_items = []
-        for src in rcc.list_movies(RECORDINGS_ROOT_PATH):
-            eve = src.get("event", {})
-            duration = 0
-            try:
-                duration = src['meta']['marks']['maximum']
-            except KeyError:
-                try:
-                    duration = eve['duration']
-                except KeyError:
-                    pass
-
-            duration_minutes = duration // 60
-            duration_seconds = duration % 60
-
-            try:
-                eventname_fallback = src['path'].split("/")[-1]
-            except Exception:
-                eventname_fallback = ''
-
-            current = {
-                'fullname': '1:0:0:0:0:0:0:0:0:0:' + src['path'],
-                'eventname': eve.get("title", eventname_fallback),
-                'description': eve.get("shortinfo", ""),
-                'descriptionExtended': eve.get("longinfo", ""),
-                'servicename': src['recording_servicename'],
-                'recordingtime': eve.get("start_time", 0),
-                'length': '{:d}:{:02d}'.format(duration_minutes,
-                                               duration_seconds),
-                'tags': '',
-                'filename': src['path'],
-                'filesize': src['meta']['FileSize']
-
-            }
-            movie_items.append(current)
         add_expires_header(request, expires=60 * 30)
-        return {'movies': movie_items}
+        return {'movies': get_recordings()}
 
     def P_movielisthtml(self, request):
         """
@@ -799,8 +806,12 @@ class WebController(BaseController):
         Returns:
             HTTP response with headers
         """
+        value_dict = {
+            'movies': get_recordings(),
+        }
         self.content_type = CONTENT_TYPE_HTML
-        return getMovieList(request.args)
+        add_expires_header(request, expires=60 * 30)
+        return value_dict
 
     def P_movielistm3u(self, request):
         """
@@ -816,11 +827,18 @@ class WebController(BaseController):
         Returns:
             HTTP response with headers
         """
-        movielist = getMovieList(request.args)
-        movielist["host"] = mangle_host_header_port(
+        # value_dict = {
+        #     'movies': get_recordings(),
+        #     'host': mangle_host_header_port(
+        #         request.getHeader('host'), want_url=True)
+        # }
+        value_dict = getMovieList(request.args)
+        value_dict["host"] = mangle_host_header_port(
             request.getHeader('host'), want_url=True)
+
         self.content_type = CONTENT_TYPE_X_MPEGURL
-        return movielist
+        # add_expires_header(request, expires=60 * 30)
+        return value_dict
 
     def P_movielistrss(self, request):
         """
@@ -836,11 +854,14 @@ class WebController(BaseController):
         Returns:
             HTTP response with headers
         """
-        movielist = getMovieList(request.args)
-        movielist["host"] = mangle_host_header_port(
-            request.getHeader('host'), want_url=True)
-        movielist['published'] = formatdate()
-        return movielist
+        value_dict = {
+            'movies': get_recordings(),
+            'host': mangle_host_header_port(
+                request.getHeader('host'), want_url=True),
+            'published': formatdate()
+        }
+        add_expires_header(request, expires=60 * 30)
+        return value_dict
 
     def P_fullmovielist(self, request):
         """

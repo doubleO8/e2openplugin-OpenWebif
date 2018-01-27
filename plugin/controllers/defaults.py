@@ -3,10 +3,16 @@
 import os
 import sys
 
+PLUGIN_NAME = 'OpenWebif'
+LOG_FILES_ROOT = '/media/hdd/'
+
 PLUGIN_ROOT_PATH = os.path.dirname(os.path.dirname(__file__))
 PUBLIC_PATH = PLUGIN_ROOT_PATH + '/public'
 VIEWS_PATH = PLUGIN_ROOT_PATH + '/controllers/views'
 FAVICON_PATH = PUBLIC_PATH + '/images/favicon.png'
+
+PLUGIN_ICON_HD = './public/plugin_icon_hd.png'
+PLUGIN_ICON = './public/plugin_icon.png'
 
 sys.path.insert(0, PLUGIN_ROOT_PATH)
 

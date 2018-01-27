@@ -18,10 +18,8 @@
 import os
 import logging
 
-PLUGIN_NAME = 'OpenWebif'
-PLUGIN_ICON_HD = 'openwebifhd.png'
-PLUGIN_ICON = 'openwebif.png'
-LOG_FILES_ROOT = '/media/hdd/'
+from controllers.defaults import THEMES, PLUGIN_NAME, LOG_FILES_ROOT
+from controllers.defaults import PLUGIN_ICON, PLUGIN_ICON_HD
 
 log_args = dict(
     level=logging.INFO,
@@ -47,7 +45,6 @@ from Components.config import ConfigInteger, ConfigYesNo, ConfigText  # noqa: E4
 from enigma import getDesktop  # noqa: E402
 
 from controllers.models.info import getInfo  # noqa: E402
-from controllers.defaults import THEMES  # noqa: E402
 from httpserver import HttpdStart, HttpdStop, HttpdRestart  # noqa: E402
 from controllers.i18n import _  # noqa: E402
 

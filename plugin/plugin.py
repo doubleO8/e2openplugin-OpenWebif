@@ -59,8 +59,6 @@ config.OpenWebif.identifier_custom = ConfigYesNo(default=False)
 config.OpenWebif.identifier_text = ConfigText(default="", fixed_size=False)
 config.OpenWebif.port = ConfigInteger(default=80, limits=(1, 65535))
 config.OpenWebif.streamport = ConfigInteger(default=8001, limits=(1, 65535))
-config.OpenWebif.auth = ConfigYesNo(default=False)
-config.OpenWebif.xbmcservices = ConfigYesNo(default=False)
 config.OpenWebif.webcache = ConfigSubsection()
 # FIXME: anything better than a ConfigText?
 config.OpenWebif.webcache.collapsedmenus = ConfigText(
@@ -75,12 +73,7 @@ config.OpenWebif.webcache.mepgmode = ConfigInteger(default=1, limits=(1, 2))
 
 # Use service name for stream
 config.OpenWebif.service_name_for_stream = ConfigYesNo(default=True)
-# authentication for streaming
-config.OpenWebif.auth_for_streaming = ConfigYesNo(default=False)
-config.OpenWebif.no_root_access = ConfigYesNo(default=False)
-config.OpenWebif.local_access_only = ConfigSelection(
-    default=' ', choices=[' '])
-config.OpenWebif.vpn_access = ConfigYesNo(default=False)
+
 # encoding of EPG data
 config.OpenWebif.epg_encoding = ConfigSelection(
     default='utf-8',
@@ -157,11 +150,13 @@ class OpenWebifConfig(Screen, ConfigListScreen):
             getConfigListEntry(
                 _("OpenWebInterface Enabled"),
                 config.OpenWebif.enabled))
+
         if config.OpenWebif.enabled.value:
             self.list.append(
                 getConfigListEntry(
                     _("Show box name in header"),
                     config.OpenWebif.identifier))
+
             if config.OpenWebif.identifier.value:
                 self.list.append(
                     getConfigListEntry(
@@ -176,19 +171,6 @@ class OpenWebifConfig(Screen, ConfigListScreen):
                 getConfigListEntry(
                     _("HTTP port"),
                     config.OpenWebif.port))
-            self.list.append(
-                getConfigListEntry(
-                    _("Enable HTTP Authentication"),
-                    config.OpenWebif.auth))
-            if config.OpenWebif.auth.value:
-                self.list.append(
-                    getConfigListEntry(
-                        _("Enable Authentication for streaming"),
-                        config.OpenWebif.auth_for_streaming))
-                self.list.append(
-                    getConfigListEntry(
-                        _("Disable remote access for user root"),
-                        config.OpenWebif.no_root_access))
             self.list.append(
                 getConfigListEntry(
                     _("Add service name to stream information"),
@@ -217,10 +199,6 @@ class OpenWebifConfig(Screen, ConfigListScreen):
     def keySave(self):
         for x in self["config"].list:
             x[1].save()
-
-        if not config.OpenWebif.auth.value:
-            config.OpenWebif.auth_for_streaming.value = False
-            config.OpenWebif.auth_for_streaming.save()
 
         if config.OpenWebif.enabled.value:
             HttpdRestart(global_session)

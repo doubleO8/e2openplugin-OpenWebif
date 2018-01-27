@@ -50,18 +50,16 @@ def HttpdStart(session):
                 listener.append(reactor.listenTCP(port, site))
             HLOG.debug("started listening on {:d}".format(port))
         except CannotListenError as cle:
-            HLOG.warning("failed to listen on Port {:d}: {!r}".format(port, cle))
+            HLOG.warning("failed to listen on Port {:d}: {!r}".format(
+                port, cle))
 
         # Streaming requires listening on 127.0.0.1:80
         if port != 80:
             try:
                 if has_ipv6 and ipv6_interface and version.major >= 12:
                     # use ipv6
-                    # Dear Twisted devs: Learning English, lesson 1 - interface
-                    # != address
                     listener.append(
-                        reactor.listenTCP(
-                            80, site, interface='::1'))
+                        reactor.listenTCP(80, site, interface='::1'))
                     listener.append(
                         reactor.listenTCP(
                             80, site, interface='::ffff:127.0.0.1'))

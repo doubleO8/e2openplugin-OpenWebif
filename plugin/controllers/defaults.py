@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import sys
 
 PLUGIN_ROOT_PATH = os.path.dirname(os.path.dirname(__file__))
 PUBLIC_PATH = PLUGIN_ROOT_PATH + '/public'
 VIEWS_PATH = PLUGIN_ROOT_PATH + '/controllers/views'
 FAVICON_PATH = PUBLIC_PATH + '/images/favicon.png'
+
+sys.path.insert(0, PLUGIN_ROOT_PATH)
 
 #: paths where folders containing picons could be located
 PICON_PREFIXES = (

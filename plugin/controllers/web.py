@@ -772,7 +772,7 @@ class WebController(BaseController):
                 'eventname': eve.get("title", eventname_fallback),
                 'description': eve.get("shortinfo", ""),
                 'descriptionExtended': eve.get("longinfo", ""),
-                'servicename': 'Local Service',
+                'servicename': src['recording_servicename'],
                 'recordingtime': eve.get("start_time", 0),
                 'length': '{:d}:{:02d}'.format(duration_minutes,
                                                duration_seconds),

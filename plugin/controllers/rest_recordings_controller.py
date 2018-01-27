@@ -16,6 +16,7 @@ from rest import json_response
 from rest import CORS_DEFAULT_ALLOW_ORIGIN, RESTControllerSkeleton
 from recording import RecordingsController, RECORDINGS_ROOT_PATH, RECORDING_ENDPOINT_URL
 from models.events import KEY_SERVICE_REFERENCE
+from utilities import add_expires_header
 
 
 class RESTRecordingsController(RESTControllerSkeleton):
@@ -57,6 +58,7 @@ class RESTRecordingsController(RESTControllerSkeleton):
                 item["path"] = '/'.join(
                     (r_path, item["path"][len(self.root):]))
 
+        add_expires_header(request, expires=60*30)
         return json_response(request, data)
 
     def remove(self, request, target_path):

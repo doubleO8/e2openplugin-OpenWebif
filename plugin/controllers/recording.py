@@ -7,6 +7,7 @@ import enigma
 from enigma import eServiceReference, iServiceInformation
 
 from models.events import mangle_event, KEY_SERVICE_REFERENCE
+from models.model_utilities import mangle_epg_text
 from utilities import parse_cuts
 
 #: root path where recordings are stored
@@ -166,6 +167,7 @@ class RecordingsController(object):
         self.service_center_instance = enigma.eServiceCenter.getInstance()
         self.events_with_component_data = kwargs.get("component_data", False)
         self.encoding = kwargs.get("encoding", "utf-8")
+        self.service_lookup = dict()
 
     def mangle_servicereference_information(self, servicereference):
         data = dict()
@@ -202,7 +204,32 @@ class RecordingsController(object):
             data['event'] = mangle_event(
                 event, with_component_data=self.events_with_component_data)
 
+        try:
+            recording_s = meta['Serviceref']
+            data['recording_servicename'] = self.service_lookup[recording_s]
+        except KeyError:
+            data['recording_servicename'] = self.get_servicename(
+                servicereference)
+
         return data
+
+    def get_servicename(self, servicereference, encoding=None):
+        if encoding is None:
+            encoding = "utf-8"
+
+        if isinstance(servicereference, basestring):
+            servicereference = eServiceReference(servicereference)
+
+        actual_servicereference = self.service_center_instance.info(
+            servicereference).getInfoString(
+            servicereference, iServiceInformation.sServiceref)
+        es = eServiceReference(actual_servicereference)
+        value = self.service_center_instance.info(es).getName(es).decode(
+            encoding)
+        value = mangle_epg_text(value)
+        # self.log.info("{!r} -> {!r}".format(actual_servicereference, value))
+        self.service_lookup[actual_servicereference] = value
+        return value
 
     def list_movies(self, root_path):
         self.log.debug('%s', "Trying to list files in {!r}".format(root_path))

@@ -47,7 +47,6 @@ except BaseException:
         getMachineName, getImageDistro, getImageVersion, getImageBuild, \
         getOEVersion, getDriverDate
 
-
     def getEnigmaVersionString():
         return about.getEnigmaVersionString()
 

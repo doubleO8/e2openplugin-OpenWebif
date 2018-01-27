@@ -40,6 +40,7 @@ def detect_picon_path():
 
     return None
 
+
 PICON_PATH = detect_picon_path()
 
 THEMES = [

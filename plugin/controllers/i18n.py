@@ -21,8 +21,9 @@ def _(txt):
         if t == txt:
             t = gettext.gettext(txt)
         return t
-    except Exception as exc:
+    except Exception:
         return txt
+
 
 _locale_init()
 language.addCallback(_locale_init)

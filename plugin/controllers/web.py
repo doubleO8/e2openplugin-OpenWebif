@@ -764,7 +764,7 @@ class WebController(BaseController):
 
             try:
                 eventname_fallback = src['path'].split("/")[-1]
-            except Exception as exc:
+            except Exception:
                 eventname_fallback = ''
 
             current = {

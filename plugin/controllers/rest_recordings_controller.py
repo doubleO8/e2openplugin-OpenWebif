@@ -14,7 +14,8 @@ from twisted.web import http
 
 from rest import json_response
 from rest import CORS_DEFAULT_ALLOW_ORIGIN, RESTControllerSkeleton
-from recording import RecordingsController, RECORDINGS_ROOT_PATH, RECORDING_ENDPOINT_URL
+from recording import RecordingsController
+from recording import RECORDINGS_ROOT_PATH, RECORDING_ENDPOINT_URL
 from models.events import KEY_SERVICE_REFERENCE
 from utilities import add_expires_header
 

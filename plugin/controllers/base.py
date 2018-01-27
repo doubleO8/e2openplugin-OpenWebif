@@ -178,7 +178,8 @@ class BaseController(resource.Resource):
 
     def render(self, request):
         if self.verbose:
-            fmt = "{scheme}://{netloc}{path} accessed by {client}{via} {r_args}"
+            fmt = "{scheme}://{netloc}{path} " \
+                  "accessed by {client}{via} {r_args}"
             args = mangle_host_header_port(request.getHeader('host'))
             args['path'] = request.path
             try:

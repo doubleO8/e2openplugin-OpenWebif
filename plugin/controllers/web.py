@@ -95,8 +95,8 @@ def get_recordings(encoding=None):
                                            duration_seconds),
             'tags': '',
             'filename': src['path'].encode(encoding),
-            'filesize': src['meta']['FileSize']
-
+            'filesize': src['meta']['FileSize'],
+            'serviceref': src['meta']['Serviceref'],
         }
         movie_items.append(current)
 

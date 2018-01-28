@@ -32,8 +32,7 @@ from models.timers import getTimers, addTimer, addTimerByEventId, editTimer, \
     removeTimer, toggleTimerStatus, cleanupTimer, writeTimerList, recordNow, \
     tvbrowser, getSleepTimer, setSleepTimer, getVPSChannels
 from models.message import sendMessage, getMessageAnswer
-from models.movies import getMovieList, removeMovie, getMovieTags, moveMovie, \
-    renameMovie, getAllMovies
+from models.movies import removeMovie, getMovieTags, moveMovie, renameMovie
 from models.config import getSettings, \
     setZapStream, saveConfig, getZapStream, setShowChPicon
 from models.stream import create_stream_m3u, create_file_m3u, \
@@ -47,7 +46,7 @@ from Screens.InfoBar import InfoBar
 from base import BaseController, CONTENT_TYPE_X_MPEGURL, CONTENT_TYPE_HTML
 from stream import StreamController
 from servicelists import ServiceListsManager
-from utilities import mangle_host_header_port, add_expires_header
+from utilities import mangle_host_header_port, add_expires_header, build_url
 from recording import RecordingsController, RECORDINGS_ROOT_PATH
 
 
@@ -101,6 +100,46 @@ def get_recordings(encoding=None):
         movie_items.append(current)
 
     return movie_items
+
+
+def get_recordings_m3u(request, encoding=None):
+    """
+    Create M3U contents for serving recordings.
+
+    Returns:
+        M3U contents
+    """
+    m3u_content = [
+        '#EXTM3U',
+        '#EXTVLCOPT--http-reconnect=true',
+    ]
+
+    if encoding is None:
+        encoding = 'utf-8'
+
+    mangled = mangle_host_header_port(request.getHeader('host'))
+    rcc = RecordingsController()
+    root = RECORDINGS_ROOT_PATH
+
+    for src in rcc.list_movies(root):
+        eve = src.get("event", {})
+        path = '/'.join(('/recording', src['path'][len(root):]))
+
+        try:
+            eventname_fallback = src['path'].split("/")[-1]
+        except Exception:
+            eventname_fallback = ''
+
+        extinf = [eve.get("title", eventname_fallback)]
+        if eve.get("shortinfo"):
+            extinf.append(eve.get("shortinfo"))
+        m3u_content.append(
+            u"#EXTINF:-1,{:s}".format(' - '.join(extinf)).encode(encoding))
+
+        source_url = build_url(
+            hostname=mangled['hostname'], path=path.encode(encoding))
+        m3u_content.append(source_url)
+    return "\n".join(m3u_content)
 
 
 class WebController(BaseController):
@@ -768,22 +807,6 @@ class WebController(BaseController):
         """
         return getMessageAnswer()
 
-    def P_movielistorig(self, request):
-        """
-        Request handler for the `movielist` endpoint.
-        Retrieve list of movie items. (original implementation)
-
-        .. seealso::
-
-            https://dream.reichholf.net/e2web/#movielist
-
-        Args:
-            request (twisted.web.server.Request): HTTP request object
-        Returns:
-            HTTP response with headers
-        """
-        return getMovieList(request.args)
-
     def P_movielist(self, request):
         """
         Request handler for the `movielist` endpoint.
@@ -836,18 +859,9 @@ class WebController(BaseController):
         Returns:
             HTTP response with headers
         """
-        # value_dict = {
-        #     'movies': get_recordings(),
-        #     'host': mangle_host_header_port(
-        #         request.getHeader('host'), want_url=True)
-        # }
-        value_dict = getMovieList(request.args)
-        value_dict["host"] = mangle_host_header_port(
-            request.getHeader('host'), want_url=True)
-
         self.content_type = CONTENT_TYPE_X_MPEGURL
-        # add_expires_header(request, expires=60 * 30)
-        return value_dict
+        add_expires_header(request, expires=60 * 30)
+        return get_recordings_m3u(request)
 
     def P_movielistrss(self, request):
         """
@@ -871,21 +885,6 @@ class WebController(BaseController):
         }
         add_expires_header(request, expires=60 * 30)
         return value_dict
-
-    def P_fullmovielist(self, request):
-        """
-        Request handler for the `movielist` endpoint.
-
-        .. note::
-
-            Not available in *Enigma2 WebInterface API*.
-
-        Args:
-            request (twisted.web.server.Request): HTTP request object
-        Returns:
-            HTTP response with headers
-        """
-        return getAllMovies()
 
     def P_moviedelete(self, request):
         """

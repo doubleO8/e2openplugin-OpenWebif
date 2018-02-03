@@ -49,7 +49,7 @@ class FileController(resource.Resource):
 
             if not filename.startswith(RECORDINGS_ROOT_PATH):
                 if filename not in FILE_ACCESS_WHITELIST:
-                    FLOG.error("(NOT IN WHITELIST)")
+                    FLOG.error("{!r} NOT IN WHITELIST {!r}".format(filename, FILE_ACCESS_WHITELIST))
                     request.setResponseCode(http.FORBIDDEN)
                     return ''
 

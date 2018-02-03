@@ -62,5 +62,6 @@ THEMES = [
 
 FILE_ACCESS_WHITELIST = [
     '/etc/enigma2/lamedb',
-    '/var/etc/satellites.xml'
+    '/var/etc/satellites.xml',
+    '/etc/tuxbox/satellites.xml',
 ]

@@ -1239,7 +1239,7 @@ class WebController(BaseController):
         Returns:
             HTTP response with headers
 
-        .. http:get:: /web/timeraddbyeventid
+        .. http:get:: /web/timerchange
 
             :query string sRef: service reference
             :query int begin: begin timestamp

@@ -15,21 +15,7 @@ pursuing a different set of goals.
 * Provide RESTful API and access to ~~EPG event datasets~~, ~~timers~~, ~~recorded audio/video (dubbed *movie* elsewhere) items~~
 * Support for multitier architecture, reverse proxies and client side rendering
 * A Modern Web UI Implementation
-* Find a Smashing New Project Name
-
-## Dropped *OpenWebif* Features
-
-Some features of the original plugin have been removed:
-
-* TLS/SSL support
-* package management
-* "mobile" version
-* bouquet editor
-* support for shellinaboxd
-* support for lcd4linux web portions
-* image files of enigma devices
-* themes
-* image files and HTML maps of remotes
+* ~~Find a Smashing New Project Name~~: `pert belly hack`
 
 # Latest Package
 
@@ -66,3 +52,24 @@ init 4                                                              # graceful e
 sleep 1                                                             # wait a bit
 init 3                                                              # start enigma2 again
 ```
+## Online Documentation
+
+Online Documentation is available at [doubleo8.github.io/e2openplugin-OpenWebif/documentation/](https://doubleo8.github.io/e2openplugin-OpenWebif/documentation/index.html).
+
+* [HTTP Routing Table](https://doubleo8.github.io/e2openplugin-OpenWebif/documentation/http-routingtable.html) *work in progress*
+* [Enigma2 WebInterface API](https://doubleo8.github.io/e2openplugin-OpenWebif/documentation/e2webinterface_api.html) *work in progress*
+* [RESTful API](https://doubleo8.github.io/e2openplugin-OpenWebif/documentation/restful_api.html) *work in progress*
+
+## Dropped *OpenWebif* Features
+
+Some features of the original plugin have been removed:
+
+* TLS/SSL support
+* package management
+* "mobile" version
+* bouquet editor
+* support for shellinaboxd
+* support for lcd4linux web portions
+* image files of enigma devices
+* themes
+* image files and HTML maps of remotes

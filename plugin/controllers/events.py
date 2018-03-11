@@ -168,6 +168,7 @@ Description of Parameters Related to Querytype
 
     * for *querytype=2, (PE2) minutes=0* PE1 is event ID
     * PE2 appers to be search scope timedelta in *minutes*
+    * if timedelta in *minutes* is -1 all matching events are returned(?)
     * for *querytype=3*: last known item(?)
 
 Examples (https://mslowik.blogspot.de)::

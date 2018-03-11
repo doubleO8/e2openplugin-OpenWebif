@@ -17,10 +17,27 @@ class EventLookupApiController(RESTControllerSkeleton):
         """
         HTTP GET implementation.
 
+        .. seealso::
+
+            * *querytype* Parameter – :ref:`event_lookup_parameters-label`
+            * *flags* Parameter – :ref:`event_format-label`
+
         Args:
             request (twisted.web.server.Request): HTTP request object
         Returns:
             HTTP response with headers
+
+        .. http:get:: /api/eventlookup
+
+            :query basestring service_reference: service_reference
+            :query int begin: (optional) timestamp
+            :query int minutes: (optional) time range in minutes or event ID
+            :query int querytype: (optional) query type
+            :query basestring flags: (optional) fields to be returned
+            :query int max_rows: (optional) maximum number of result rows
+
+            :statuscode 200: no error
+
         """
         request.setHeader(
             'Access-Control-Allow-Origin', CORS_DEFAULT_ALLOW_ORIGIN)

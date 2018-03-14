@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+Helper functions for preparing OPKG package contents.
+"""
 import os
 import shutil
 import glob

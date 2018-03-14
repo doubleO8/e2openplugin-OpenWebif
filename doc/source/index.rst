@@ -17,6 +17,7 @@ INSERT_NAME_HERE
    controller
    utilities
    model
+   packaging
 
 `HTTP Routing Table <http-routingtable.html>`_
 

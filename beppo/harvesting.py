@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+Helper functions and classes for preparing publication as
+`github pages <https://pages.github.com/>`_.
+"""
 import os
 import shutil
 import json

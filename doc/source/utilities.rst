@@ -14,9 +14,3 @@ Utilities
 
 .. automodule:: controllers.models.movies
     :members:
-
-Packaging
-=========
-
-.. automodule:: beppo.defaults
-    :members:

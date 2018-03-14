@@ -10,14 +10,19 @@
 ##############################################################################
 import os
 from time import mktime, localtime
+from collections import OrderedDict
 
 from Components.config import config as comp_config
+from enigma import eServiceCenter, eServiceReference, \
+    iServiceInformation, eEPGCache
+
 from i18n import _
 from defaults import THEMES
-
+from events import convertDesc, filterName
+from models.services import getPicon
 from models.services import getBouquets, getChannels, getSatellites, \
     getProviders, getEventDesc, getChannelEpg, getSearchEpg, \
-    getCurrentFullInfo, getMultiEpg, getEvent
+    getCurrentFullInfo, getEvent
 from models.info import getInfo, getTranscodingSupport, \
     getLanguage, getStatusInfo
 from models.movies import getMovieList
@@ -30,6 +35,103 @@ try:
     from boxbranding import getMachineBrand
 except BaseException:
     from models.owibranding import getMachineBrand
+
+
+def getMultiEpg(self, ref, begintime=-1, endtime=None, Mode=1):
+    # Check if an event has an associated timer. Unfortunately
+    # we cannot simply check against timer.eit, because a timer
+    # does not necessarily have one belonging to an epg event id.
+    def getTimerEventStatus(event):
+        startTime = event[1]
+        endTime = event[1] + event[6] - 120
+        serviceref = event[4]
+        if serviceref not in timerlist:
+            return ''
+        for timer in timerlist[serviceref]:
+            if timer.begin <= startTime and timer.end >= endTime:
+                if timer.disabled:
+                    return 'timer disabled'
+                else:
+                    return 'timer'
+        return ''
+
+    ret = OrderedDict()
+    services = eServiceCenter.getInstance().list(eServiceReference(ref))
+    if not services:
+        return {"events": ret, "result": False, "slot": None}
+
+    search = ['IBTSRND']
+    for service in services.getContent('S'):
+        if endtime:
+            search.append((service, 0, begintime, endtime))
+        else:
+            search.append((service, 0, begintime))
+
+    epgcache = eEPGCache.getInstance()
+    events = epgcache.lookupEvent(search)
+    offset = None
+    picons = {}
+
+    if events is not None:
+        # We want to display if an event is covered by a timer.
+        # To keep the costs low for a nested loop against the timer list, we
+        # partition the timers by service reference. For an event we then only
+        # have to check the part of the timers that belong to that specific
+        # service reference. Partition is generated here.
+        timerlist = {}
+        for timer in self.session.nav.RecordTimer.timer_list + \
+                self.session.nav.RecordTimer.processed_timers:
+            if str(timer.service_ref) not in timerlist:
+                timerlist[str(timer.service_ref)] = []
+            timerlist[str(timer.service_ref)].append(timer)
+
+        if begintime == -1:
+            # If no start time is requested, use current time as start time
+            # and extend show all events until 6:00 next day
+            bt = localtime()
+            offset = mktime(
+                (bt.tm_year, bt.tm_mon, bt.tm_mday, bt.tm_hour - bt.tm_hour %
+                 2, 0, 0, -1, -1, -1))
+            lastevent = mktime(
+                (bt.tm_year, bt.tm_mon, bt.tm_mday, 23, 59, 0, -1, -1,
+                 -1)) + 6 * 3600
+        else:
+            # If a start time is requested, show all events in a 24 hour frame
+            bt = localtime(begintime)
+            offset = mktime(
+                (bt.tm_year, bt.tm_mon, bt.tm_mday, bt.tm_hour - bt.tm_hour %
+                 2, 0, 0, -1, -1, -1))
+            lastevent = offset + 86399
+
+        for event in events:
+            ev = {}
+            ev['id'] = event[0]
+            ev['begin_timestamp'] = event[1]
+            ev['title'] = event[2]
+            ev['shortdesc'] = convertDesc(event[3])
+            ev['ref'] = event[4]
+            ev['timerStatus'] = getTimerEventStatus(event)
+            if Mode == 2:
+                ev['duration'] = event[6]
+
+            channel = filterName(event[5])
+            if channel not in ret:
+                if Mode == 1:
+                    ret[channel] = [[], [], [], [],
+                                    [], [], [], [], [], [], [], []]
+                else:
+                    ret[channel] = [[]]
+                picons[channel] = getPicon(event[4])
+
+            if Mode == 1:
+                slot = int((event[1] - offset) / 7200)
+                if slot < 0:
+                    slot = 0
+                if slot < 12 and event[1] < lastevent:
+                    ret[channel][slot].append(ev)
+            else:
+                ret[channel][0].append(ev)
+    return {"events": ret, "result": True, "picons": picons}
 
 
 class AjaxController(BaseController):

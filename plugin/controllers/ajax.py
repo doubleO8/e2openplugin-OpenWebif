@@ -9,9 +9,10 @@
 #                                                                            #
 ##############################################################################
 import os
+import time
 from time import mktime, localtime, strftime
 from collections import OrderedDict
-from urllib import unquote
+from urllib import quote, unquote
 
 from Components.config import config as comp_config
 from Components.NimManager import nimmanager
@@ -21,10 +22,12 @@ from enigma import eServiceCenter, eServiceReference, \
 
 from i18n import _
 from defaults import THEMES
+from utilities import parse_servicereference, SERVICE_TYPE_LOOKUP, NS_LOOKUP
+
 from models.events import convertDesc, filterName
 from models.model_utilities import mangle_epg_text
 from models.services import getPicon
-from models.services import getBouquets, getChannels, getSatellites, \
+from models.services import getBouquets, getSatellites, \
     getChannelEpg, getSearchEpg, getEvent, \
     getCurrentService, getServiceInfoString
 from models.info import getOrbitalText
@@ -290,6 +293,76 @@ def getEventDesc(ref, idev):
 
     return {"description": description}
 
+
+def getChannels(idbouquet, stype):
+    ret = []
+    idp = 0
+    s_type = service_types_tv
+    if stype == "radio":
+        s_type = service_types_radio
+    if idbouquet == "ALL":
+        idbouquet = '%s ORDER BY name' % (s_type)
+
+    epgcache = eEPGCache.getInstance()
+    serviceHandler = eServiceCenter.getInstance()
+    services = serviceHandler.list(eServiceReference(idbouquet))
+    channels = services and services.getContent("SN", True)
+    for channel in channels:
+        chan = {}
+        chan['ref'] = quote(channel[0], safe=' ~@%#$&()*!+=:;,.?/\'')
+        if chan['ref'].split(":")[1] == '320':  # Hide hidden number markers
+            continue
+        chan['name'] = filterName(channel[1])
+        if not int(channel[0].split(":")[1]) & 64:
+            psref = parse_servicereference(channel[0])
+            chan['service_type'] = SERVICE_TYPE_LOOKUP.get(
+                psref.get('service_type'), "UNKNOWN")
+            chan['ns'] = NS_LOOKUP.get(psref.get('ns'), "DVB-S")
+            chan['picon'] = getPicon(chan['ref'])
+            chan['protection'] = "0"
+            nowevent = epgcache.lookupEvent(['TBDCIX', (channel[0], 0, -1)])
+            if len(nowevent) > 0 and nowevent[0][0] is not None:
+                chan['now_title'] = filterName(nowevent[0][0])
+                chan['now_begin'] = strftime(
+                    "%H:%M", (localtime(nowevent[0][1])))
+                chan['now_end'] = strftime(
+                    "%H:%M", (localtime(nowevent[0][1] + nowevent[0][2])))
+                chan['now_left'] = int(
+                    ((nowevent[0][1] + nowevent[0][2]) - nowevent[0][3]) / 60)
+                chan['progress'] = int(
+                    ((nowevent[0][3] - nowevent[0][1]) * 100 / nowevent[0][2]))
+                chan['now_ev_id'] = nowevent[0][4]
+                chan['now_idp'] = "nowd" + str(idp)
+                nextevent = epgcache.lookupEvent(
+                    ['TBDIX', (channel[0], +1, -1)])
+                if len(nextevent) > 0 and nextevent[0][0] is not None:
+                    # Some fields have been seen to be missing from the next
+                    # event...
+                    if nextevent[0][1] is None:
+                        nextevent[0][1] == time.time()
+                    if nextevent[0][2] is None:
+                        nextevent[0][2] == 0
+                    chan['next_title'] = filterName(nextevent[0][0])
+                    chan['next_begin'] = strftime(
+                        "%H:%M", (localtime(nextevent[0][1])))
+                    chan['next_end'] = strftime(
+                        "%H:%M", (
+                            localtime(nextevent[0][1] + nextevent[0][2])))
+                    chan['next_duration'] = int(nextevent[0][2] / 60)
+                    chan['next_ev_id'] = nextevent[0][3]
+                    chan['next_idp'] = "nextd" + str(idp)
+                else:
+                    # Have to fudge one in, as rest of OWI code expects it...
+                    chan['next_title'] = filterName("<<absent>>")
+                    chan['next_begin'] = chan['now_end']
+                    chan['next_end'] = chan['now_end']
+                    chan['next_duration'] = 0
+                    chan['next_ev_id'] = chan['now_ev_id']
+                    chan['next_idp'] = chan['now_idp']
+                idp += 1
+        if int(channel[0].split(":")[1]) != 832:
+            ret.append(chan)
+    return {"channels": ret}
 
 
 class AjaxController(BaseController):

@@ -33,17 +33,30 @@ class HarvestKeitel(object):
         return tag_data
 
     def harvest(self):
+        """
+        Prepare publication via github pages:
+
+            * Copy OPKG package
+            * Update documentation
+            * Generate github pages content
+        """
         self.copy_package()
         self.update_documentation()
         self.create_ghpages_index()
         self.create_ghpages_latest_package_link(use_link=False)
 
     def copy_package(self):
+        """
+        Copy OPKG package file.
+        """
         tgt_filename = os.path.join(
             self.ghpages_output_path, os.path.basename(self.package_source))
         shutil.copy(self.package_source, tgt_filename)
 
     def create_ghpages_index(self):
+        """
+        Create `index.html` for github pages.
+        """
         index_template = self.env.get_template('index.html')
         index_filename = os.path.join(self.ghpages_output_path, "index.html")
         index_content = {
@@ -75,6 +88,13 @@ class HarvestKeitel(object):
             target.write(index_template.render(**index_content))
 
     def create_ghpages_latest_package_link(self, use_link=True):
+        """
+        Create link or file (e.g. `latest.opk`) in order to allow access to
+        the latest package version using a version agnostic URL.
+
+        Args:
+            use_link (bool): actually use a symlink
+        """
         current_opk_target = os.path.join(
             self.ghpages_output_path, LATEST_OPK_PATH_REL)
 
@@ -91,6 +111,10 @@ class HarvestKeitel(object):
             shutil.copy(self.package_source, current_opk_target)
 
     def update_documentation(self):
+        """
+        Update documentation by calling make/sphinx. Copy generated content
+        afterwards.
+        """
         subprocess.check_call("make html", cwd='./doc', shell=True)
         doc_target = os.path.join(self.ghpages_output_path, 'documentation')
 

@@ -20,7 +20,7 @@ from models.services import getCurrentService, getBouquets, getServices, \
     getSubServices, getSatellites, getBouquetEpg, getBouquetNowNextEpg, \
     getServicesNowNextEpg, getSearchEpg, getChannelEpg, getNowNextEpg, \
     getSearchSimilarEpg, getAllServices, getPlayableServices, \
-    getPlayableService, getParentalControlList, getEvent, loadEpg, saveEpg
+    getPlayableService, getParentalControlList, getEvent
 from models.volume import getVolumeStatus, setVolumeUp, setVolumeDown, \
     setVolumeMute, setVolume
 from models.audiotrack import getAudioTracks, setAudioTrack
@@ -2246,7 +2246,12 @@ class WebController(BaseController):
         Returns:
             HTTP response with headers
         """
-        return saveEpg()
+        epgcache = eEPGCache.getInstance()
+        epgcache.save()
+        return {
+            "result": True,
+            "message": ""
+        }
 
     def P_loadepg(self, request):
         """
@@ -2261,7 +2266,12 @@ class WebController(BaseController):
         Returns:
             HTTP response with headers
         """
-        return loadEpg()
+        epgcache = eEPGCache.getInstance()
+        epgcache.load()
+        return {
+            "result": True,
+            "message": ""
+        }
 
     def P_getsubtitles(self, request):
         """

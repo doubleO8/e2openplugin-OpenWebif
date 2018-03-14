@@ -78,6 +78,9 @@ class HarvestKeitel(object):
                     filename='github_io.conf',
                     description="opkg feed configuration file"),
                 dict(
+                    filename='documentation/index.html',
+                    description="documentation"),
+                dict(
                     filename='cover/index.html',
                     description="coverage"),
                 dict(

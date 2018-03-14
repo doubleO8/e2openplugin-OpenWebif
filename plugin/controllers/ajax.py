@@ -21,7 +21,7 @@ from enigma import eServiceCenter, eServiceReference, \
 
 from i18n import _
 from defaults import THEMES
-from events import convertDesc, filterName
+from models.events import convertDesc, filterName
 from models.model_utilities import mangle_epg_text
 from models.services import getPicon
 from models.services import getBouquets, getChannels, getSatellites, \

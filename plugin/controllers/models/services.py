@@ -197,33 +197,6 @@ def sortSatellites(satList):
     return outList
 
 
-def getProtection(sref):
-    is_protected = "0"
-    configured = config.ParentalControl.configured.value
-    servicepinactive = config.ParentalControl.servicepinactive.value
-
-    if configured and servicepinactive:
-        protection = parentalControl.getProtectionLevel(sref)
-        if protection != -1:
-            if config.ParentalControl.type.value == "blacklist":
-                if sref in parentalControl.blacklist:
-                    if "SERVICE" in parentalControl.blacklist[sref]:
-                        is_protected = '1'
-                    elif "BOUQUET" in parentalControl.blacklist[sref]:
-                        is_protected = '2'
-                    else:
-                        is_protected = '3'
-            elif config.ParentalControl.type.value == "whitelist":
-                if sref not in parentalControl.whitelist:
-                    service = eServiceReference(sref)
-                    if service.flags & eServiceReference.isGroup:
-                        is_protected = '5'
-                    else:
-                        is_protected = '4'
-
-    return is_protected
-
-
 def getChannels(idbouquet, stype):
     ret = []
     idp = 0

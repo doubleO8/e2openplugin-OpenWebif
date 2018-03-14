@@ -11,6 +11,7 @@
 import os
 from time import mktime, localtime, strftime
 from collections import OrderedDict
+from urllib import unquote
 
 from Components.config import config as comp_config
 from Components.NimManager import nimmanager
@@ -21,9 +22,10 @@ from enigma import eServiceCenter, eServiceReference, \
 from i18n import _
 from defaults import THEMES
 from events import convertDesc, filterName
+from models.model_utilities import mangle_epg_text
 from models.services import getPicon
 from models.services import getBouquets, getChannels, getSatellites, \
-    getProviders, getEventDesc, getChannelEpg, getSearchEpg, getEvent, \
+    getChannelEpg, getSearchEpg, getEvent, \
     getCurrentService, getServiceInfoString
 from models.info import getOrbitalText
 from models.info import getInfo, getTranscodingSupport, \
@@ -273,6 +275,21 @@ def getProviders(stype):
             (s_type)))
     providers = services and services.getContent("SN", True)
     return {"providers": providers}
+
+
+def getEventDesc(ref, idev):
+    ref = unquote(ref)
+    epgcache = eEPGCache.getInstance()
+    event = epgcache.lookupEvent(['ESX', (ref, 2, int(idev))])
+    if len(event[0][0]) > 1:
+        description = mangle_epg_text(event[0][0])
+    elif len(event[0][1]) > 1:
+        description = mangle_epg_text(event[0][1])
+    else:
+        description = "No description available"
+
+    return {"description": description}
+
 
 
 class AjaxController(BaseController):

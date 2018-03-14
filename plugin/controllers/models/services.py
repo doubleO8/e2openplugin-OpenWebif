@@ -413,20 +413,6 @@ def getSubServices(session):
     return {"services": services}
 
 
-def getEventDesc(ref, idev):
-    ref = unquote(ref)
-    epgcache = eEPGCache.getInstance()
-    event = epgcache.lookupEvent(['ESX', (ref, 2, int(idev))])
-    if len(event[0][0]) > 1:
-        description = mangle_epg_text(event[0][0])
-    elif len(event[0][1]) > 1:
-        description = mangle_epg_text(event[0][1])
-    else:
-        description = "No description available"
-
-    return {"description": description}
-
-
 def getEvent(ref, idev):
     epgcache = eEPGCache.getInstance()
     events = epgcache.lookupEvent(['IBDTSENRX', (ref, 2, int(idev))])

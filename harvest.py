@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+CLI tool: generate github pages contents.
+"""
 from beppo.harvesting import HarvestKeitel
 
 if __name__ == '__main__':

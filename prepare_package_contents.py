@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+CLI tool: generate OPKG package and meta data.
+"""
 import os
 import shutil
 import compileall

@@ -17,6 +17,12 @@ JINJA_ENV = Environment(loader=PackageLoader('beppo', 'templates'))
 
 
 def source_files(top):
+    """
+    Generator for paths of files to be included.
+
+    Args:
+        top (basestring): root path
+    """
     for root, _, files in os.walk(top):
         for filename in files:
             _, ext = os.path.splitext(filename)
@@ -28,6 +34,12 @@ def source_files(top):
 
 
 def mkdir_intermediate(path):
+    """
+    Create intermediate folders of *path*.
+
+    Args:
+        path (basestring): full path
+    """
     abs_path = os.path.abspath(path)
     parts = abs_path.split(os.path.sep)
     current = ['']
@@ -41,6 +53,13 @@ def mkdir_intermediate(path):
 
 
 def compile_locales(top='locale', target_path=None):
+    """
+    Run locale generator for `.po` files in *top*.
+
+    Args:
+        top: location of `.po` files
+        target_path (basestring): (optional) path where generated `.mo` files will be stored  #NOQA
+    """
     if target_path is None:
         target_path = top
 
@@ -60,6 +79,12 @@ def compile_locales(top='locale', target_path=None):
 
 
 def compile_cheetah(target_path):
+    """
+    Run cheetah template generator for *target_path*.
+
+    Args:
+        target_path (basestring): cheetah template path
+    """
     command = COMPILE_CHEETAH_CALL_FMT.format(binary="cheetah",
                                               target=target_path)
     rc = subprocess.call(command, shell=True)
@@ -68,6 +93,9 @@ def compile_cheetah(target_path):
 
 
 def create_control():
+    """
+    Create OPKG's control meta file based on *PACKAGE_META* key/value pairs.
+    """
     control_template = JINJA_ENV.get_template('control')
     control_content = control_template.render(**PACKAGE_META)
     control_path = os.path.join(PACKAGE_OUTPUT_PATH, "CONTROL")
@@ -84,6 +112,13 @@ def create_control():
 
 
 def create_tag(tag_file):
+    """
+    Create tag meta file containing version and build information based on
+    *PACKAGE_META* key/value pairs.
+
+    Args:
+        tag_file (basestring): tag file path
+    """
     data = {
         "upstream_version": PACKAGE_META['upstream_version'],
         "build_date": datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
@@ -95,6 +130,17 @@ def create_tag(tag_file):
 
 
 def create_repo_conf(target_root, repo_config_filename='github_io.conf'):
+    """
+    Cerate OPKG repo configuration file based on *PACKAGE_META*
+    key/value pairs.
+
+    Args:
+        target_root (basestring): output file path
+        repo_config_filename (basestring): repo configuration basename
+
+    Returns:
+        basestring: repo configuration path
+    """
     repo_config_template = JINJA_ENV.get_template(repo_config_filename)
     content = repo_config_template.render(**PACKAGE_META)
     repo_config_target_filename = os.path.join(
@@ -108,6 +154,13 @@ def create_repo_conf(target_root, repo_config_filename='github_io.conf'):
 
 def create_package_repo_conf(target_root, repo_config_source,
                              repo_config_filename='package_name_here.conf'):
+    """
+
+    Args:
+        target_root (basestring): path where configuration file will be copied to  #NOQA
+        repo_config_source (basestring): repo configuration source
+        repo_config_filename (basestring): repo configuration basename
+    """
     package_etc_opkg = os.path.join(target_root, 'etc/opkg')
     package_repo_config = os.path.join(package_etc_opkg, repo_config_filename)
     mkdir_intermediate(package_etc_opkg)

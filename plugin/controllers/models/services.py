@@ -122,19 +122,6 @@ def removeHiddenBouquets(bouquetList):
     return bouquets
 
 
-def getProviders(stype):
-    s_type = service_types_tv
-    if stype == "radio":
-        s_type = service_types_radio
-    serviceHandler = eServiceCenter.getInstance()
-    services = serviceHandler.list(
-        eServiceReference(
-            '%s FROM PROVIDERS ORDER BY name' %
-            (s_type)))
-    providers = services and services.getContent("SN", True)
-    return {"providers": providers}
-
-
 def getSatellites(stype):
     ret = []
     s_type = service_types_tv

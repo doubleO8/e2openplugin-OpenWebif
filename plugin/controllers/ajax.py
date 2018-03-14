@@ -14,6 +14,7 @@ from collections import OrderedDict
 
 from Components.config import config as comp_config
 from Components.NimManager import nimmanager
+from Screens.ChannelSelection import service_types_tv, service_types_radio
 from enigma import eServiceCenter, eServiceReference, \
     iServiceInformation, eEPGCache
 
@@ -259,6 +260,19 @@ def getCurrentFullInfo(session):
             next['title'] = next['title'][0:48] + "..."
 
     return {"info": inf, "now": now, "next": next}
+
+
+def getProviders(stype):
+    s_type = service_types_tv
+    if stype == "radio":
+        s_type = service_types_radio
+    serviceHandler = eServiceCenter.getInstance()
+    services = serviceHandler.list(
+        eServiceReference(
+            '%s FROM PROVIDERS ORDER BY name' %
+            (s_type)))
+    providers = services and services.getContent("SN", True)
+    return {"providers": providers}
 
 
 class AjaxController(BaseController):

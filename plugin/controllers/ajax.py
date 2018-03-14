@@ -9,10 +9,11 @@
 #                                                                            #
 ##############################################################################
 import os
-from time import mktime, localtime
+from time import mktime, localtime, strftime
 from collections import OrderedDict
 
 from Components.config import config as comp_config
+from Components.NimManager import nimmanager
 from enigma import eServiceCenter, eServiceReference, \
     iServiceInformation, eEPGCache
 
@@ -21,8 +22,9 @@ from defaults import THEMES
 from events import convertDesc, filterName
 from models.services import getPicon
 from models.services import getBouquets, getChannels, getSatellites, \
-    getProviders, getEventDesc, getChannelEpg, getSearchEpg, \
-    getCurrentFullInfo, getEvent
+    getProviders, getEventDesc, getChannelEpg, getSearchEpg, getEvent, \
+    getCurrentService, getServiceInfoString
+from models.info import getOrbitalText
 from models.info import getInfo, getTranscodingSupport, \
     getLanguage, getStatusInfo
 from models.movies import getMovieList
@@ -132,6 +134,131 @@ def getMultiEpg(self, ref, begintime=-1, endtime=None, Mode=1):
             else:
                 ret[channel][0].append(ev)
     return {"events": ret, "result": True, "picons": picons}
+
+
+def getCurrentFullInfo(session):
+    now = next = {}
+    inf = getCurrentService(session)
+    inf['tuners'] = list(map(chr, range(65, 65 + nimmanager.getSlotCount())))
+
+    try:
+        info = session.nav.getCurrentService().info()
+    except BaseException:
+        info = None
+
+    try:
+        subservices = session.nav.getCurrentService().subServices()
+    except BaseException:
+        subservices = None
+
+    try:
+        audio = session.nav.getCurrentService().audioTracks()
+    except BaseException:
+        audio = None
+
+    try:
+        ref = session.nav.getCurrentlyPlayingServiceReference().toString()
+    except BaseException:
+        ref = None
+
+    if ref is not None:
+        inf['sref'] = '_'.join(ref.split(':', 10)[:10])
+        inf['srefv2'] = ref
+        inf['picon'] = getPicon(ref)
+        inf['wide'] = inf['aspect'] in (3, 4, 7, 8, 0xB, 0xC, 0xF, 0x10)
+        inf['ttext'] = getServiceInfoString(info, iServiceInformation.sTXTPID)
+        inf['crypt'] = getServiceInfoString(
+            info, iServiceInformation.sIsCrypted)
+        inf['subs'] = str(
+            subservices and subservices.getNumberOfSubservices() > 0)
+    else:
+        inf['sref'] = None
+        inf['picon'] = None
+        inf['wide'] = None
+        inf['ttext'] = None
+        inf['crypt'] = None
+        inf['subs'] = None
+
+    inf['date'] = strftime("%d.%m.%Y", (localtime()))
+    inf['dolby'] = False
+
+    if audio:
+        n = audio.getNumberOfTracks()
+        idx = 0
+        while idx < n:
+            i = audio.getTrackInfo(idx)
+            description = i.getDescription()
+            if "AC3" in description \
+                    or "DTS" in description \
+                    or "Dolby Digital" in description:
+                inf['dolby'] = True
+            idx += 1
+    try:
+        feinfo = session.nav.getCurrentService().frontendInfo()
+    except BaseException:
+        feinfo = None
+
+    frontendData = feinfo and feinfo.getAll(True)
+
+    if frontendData is not None:
+        cur_info = feinfo.getTransponderData(True)
+        inf['tunertype'] = frontendData.get("tuner_type", "UNKNOWN")
+        if frontendData.get("system", -1) == 1:
+            inf['tunertype'] = "DVB-S2"
+        inf['tunernumber'] = frontendData.get("tuner_number")
+        orb = getOrbitalText(cur_info)
+        inf['orbital_position'] = orb
+        if cur_info:
+            if cur_info.get('tuner_type') == "DVB-S":
+                inf['orbital_position'] = _("Orbital Position") + ': ' + orb
+    else:
+        inf['tunernumber'] = "N/A"
+        inf['tunertype'] = "N/A"
+
+    try:
+        frontendStatus = feinfo and feinfo.getFrontendStatus()
+    except BaseException:
+        frontendStatus = None
+
+    if frontendStatus is not None:
+        percent = frontendStatus.get("tuner_signal_quality")
+        if percent is not None:
+            inf['snr'] = int(percent * 100 / 65535)
+            inf['snr_db'] = inf['snr']
+        percent = frontendStatus.get("tuner_signal_quality_db")
+        if percent is not None:
+            inf['snr_db'] = "%3.02f dB" % (percent / 100.0)
+        percent = frontendStatus.get("tuner_signal_power")
+        if percent is not None:
+            inf['agc'] = int(percent * 100 / 65535)
+        percent = frontendStatus.get("tuner_bit_error_rate")
+        if percent is not None:
+            inf['ber'] = int(percent * 100 / 65535)
+    else:
+        inf['snr'] = 0
+        inf['snr_db'] = inf['snr']
+        inf['agc'] = 0
+        inf['ber'] = 0
+
+    try:
+        recordings = session.nav.getRecordings()
+    except BaseException:
+        recordings = None
+
+    inf['rec_state'] = False
+    if recordings:
+        inf['rec_state'] = True
+
+    ev = getChannelEpg(ref)
+    if len(ev['events']) > 1:
+        now = ev['events'][0]
+        next = ev['events'][1]
+        if len(now['title']) > 50:
+            now['title'] = now['title'][0:48] + "..."
+        if len(next['title']) > 50:
+            next['title'] = next['title'][0:48] + "..."
+
+    return {"info": inf, "now": now, "next": next}
 
 
 class AjaxController(BaseController):

@@ -8,6 +8,7 @@ import struct
 import time
 import datetime
 from wsgiref.handlers import format_date_time
+import unicodedata
 
 MANY_SLASHES_PATTERN = r'[\/]+'
 MANY_SLASHES_REGEX = re.compile(MANY_SLASHES_PATTERN)
@@ -203,7 +204,7 @@ def get_config_attribute(path, root_obj, head=None):
     return current_obj
 
 
-def parse_servicereference(serviceref, separators=None):
+def parse_servicereference(serviceref, separators=None, extended=False):
     """
     Parse a Enigma2 style service reference string representation.
 
@@ -237,6 +238,9 @@ def parse_servicereference(serviceref, separators=None):
     >>> result2 = parse_servicereference(sref2)
     >>> result2
     {'service_type': 10, 'oid': 0, 'tsid': 0, 'ns': 0, 'sid': 0}
+    >>> result2e = parse_servicereference(sref2, extended=True)
+    >>> result2e['kind']
+    100
     >>> sref3 = '1:0:0:0:0:0:0:0:0:0:/media/hdd/movie/20170921 2055 - DASDING - DASDING Sprechstunde - .ts'  # NOQA
     >>> result3 = parse_servicereference(sref3)
     >>> result3
@@ -257,6 +261,8 @@ def parse_servicereference(serviceref, separators=None):
                 'oid': int(parts[5], 16),
                 'ns': int(parts[6], 16)
             }
+            if extended:
+                sref_data['kind'] = int(parts[1], 16)
             return sref_data
         except IndexError:
             continue
@@ -347,6 +353,29 @@ def get_servicereference_portions(value, raise_on_empty=False):
         raise ValueError(value)
 
     return rv
+
+
+def mangle_snp(value):
+    """
+    Mangle service_name as suggested by SNP (Service Name Picons)
+
+    .. seealso::
+
+        * https://github.com/picons/picons-source
+        * https://github.com/OpenViX/enigma2/blob/master/lib/python/Components/Renderer/Picon.py#L88-L89
+
+    Args:
+        value (basestring): service name
+
+    Returns:
+        str: normalised service name
+    """
+    unicode_value = unicode(value, 'utf_8', errors='ignore')
+    name = unicodedata.normalize('NFKD', unicode_value).encode(
+        'ASCII', 'ignore')
+    normalised = name.replace(
+        '&', 'and').replace('+', 'plus').replace('*', 'star').lower()
+    return re.sub('[^a-z0-9]', '', normalised)
 
 
 def require_valid_file_parameter(request, parameter_key):

@@ -30,6 +30,7 @@ import rest_api_controller
 import rest_recordings_controller
 import rest_timer_controller
 import rest_current_event_controller
+import rest_services_controller
 from recording import RECORDINGS_ROOT_PATH
 from recording import RECORDINGS_ENDPOINT_PATH, RECORDING_ENDPOINT_PATH
 
@@ -69,6 +70,11 @@ class RootController(BaseController):
             rest_timer_controller.RESTTimerController(session=session),
             [GzipEncoderFactory()])
         self.putChild("timers", timer_controller_instance)
+
+        services_controller_instance = EncodingResourceWrapper(
+            rest_services_controller.RESTServicesController(),
+            [GzipEncoderFactory()])
+        self.putChild("services", services_controller_instance)
 
         event_controller_instance = EncodingResourceWrapper(
             rest_current_event_controller.RESTCurrentEventController(

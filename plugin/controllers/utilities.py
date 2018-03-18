@@ -38,6 +38,8 @@ SERVICE_TYPE_HDTV = 0x19
 SERVICE_TYPE_UHD = 0x1f
 SERVICE_TYPE_OPT = 0xd3
 
+SERVICE_KIND_COMMENT = 0x64
+
 # type 1 = digital television service
 # type 2 = digital radio sound service
 # type 4 = nvod reference service (NYI)
@@ -369,8 +371,13 @@ def mangle_snp(value):
 
     Returns:
         str: normalised service name
+
+    >>> mangle_snp('?ANTENNE? BAYERN')
+    'antennebayern'
+    >>> mangle_snp('?Sky? ?Cine?ma +?24?')
+    'skycinemaplus24'
     """
-    unicode_value = unicode(value, 'utf_8', errors='ignore')
+    unicode_value = lenient_decode(value, 'utf_8')
     name = unicodedata.normalize('NFKD', unicode_value).encode(
         'ASCII', 'ignore')
     normalised = name.replace(
@@ -597,8 +604,35 @@ def add_expires_header(request, expires=False):
         request.setHeader(key, headers[key])
 
 
+def parse_simple_index(source):
+    """
+
+    >>> snp_index = os.path.join(CONTRIB, 'picon-source/snp.index')
+    >>> snp = parse_simple_index(snp_index)
+    >>> len(snp.keys()) > 1
+    True
+    >>> snp['wdrduesseldorf']
+    'wdr'
+    >>> snp['wdrdusseldorf']
+    'wdr'
+    """
+    lookup = dict()
+
+    with open(source, "rb") as src:
+        for line in src:
+            (key, sep, value) = line.strip().partition('=')
+            if key == value:
+                continue
+            lookup[key] = value
+
+    return lookup
+
+
 if __name__ == '__main__':
     import doctest
+    import os
+
+    CONTRIB = os.path.join(os.path.dirname(__file__), '../../contrib')
 
     (FAILED, SUCCEEDED) = doctest.testmod()
     print("[doctest] SUCCEEDED/FAILED: {:d}/{:d}".format(SUCCEEDED, FAILED))

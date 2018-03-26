@@ -16,7 +16,7 @@ install:
 script:
 - python ./prepare_package_contents.py
 - ./opkg-utils/opkg-build -O -o 0 -g 0 -Z gzip pack/
-- python testsuite/evil_eval.py
+- python testsuite/test_evil_eval.py
 
 after_success:
 - python -m flake8 plugin/ --output-file ./pages_out/flake8_report.txt

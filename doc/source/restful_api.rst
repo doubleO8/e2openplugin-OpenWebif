@@ -27,3 +27,6 @@ RESTful API
 .. automodule:: controllers.rest_eventsearch_api
     :members:
 
+.. automodule:: controllers.rest_services_controller
+    :members:
+

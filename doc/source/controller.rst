@@ -6,6 +6,9 @@ Controller
 Services
 --------
 
+.. automodule:: controllers.service
+    :members:
+
 .. automodule:: controllers.servicelists
     :members:
 

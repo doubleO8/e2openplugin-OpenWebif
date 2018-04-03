@@ -10,6 +10,8 @@ import datetime
 from wsgiref.handlers import format_date_time
 import unicodedata
 
+CONTRIB = os.path.join(os.path.dirname(__file__), '../../contrib')
+
 MANY_SLASHES_PATTERN = r'[\/]+'
 MANY_SLASHES_REGEX = re.compile(MANY_SLASHES_PATTERN)
 
@@ -630,9 +632,6 @@ def parse_simple_index(source):
 
 if __name__ == '__main__':
     import doctest
-    import os
-
-    CONTRIB = os.path.join(os.path.dirname(__file__), '../../contrib')
 
     (FAILED, SUCCEEDED) = doctest.testmod()
     print("[doctest] SUCCEEDED/FAILED: {:d}/{:d}".format(SUCCEEDED, FAILED))

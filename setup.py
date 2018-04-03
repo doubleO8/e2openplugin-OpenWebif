@@ -9,8 +9,8 @@ import versioneer
 
 setup(
     name='pert_belly_hack',
-    author="nobody",
-    author_email="nobody@localhost",
+    author="doubleO8",
+    author_email="wb008@hdm-stuttgart.de",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     description='Packaging helper for preparing the contents of an OPKG file '

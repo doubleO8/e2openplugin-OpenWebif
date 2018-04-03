@@ -18,3 +18,8 @@
 
 .coverage
 nosetests.xml
+
+MANIFEST
+dist/
+build/
+*.egg-info/

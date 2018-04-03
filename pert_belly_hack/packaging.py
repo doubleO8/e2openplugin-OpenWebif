@@ -16,7 +16,7 @@ from defaults import PACKAGE_OUTPUT_PATH, PACKAGE_META
 
 COMPILE_PO_CALL_FMT = '{binary} -o "{target}" "{source}"'
 COMPILE_CHEETAH_CALL_FMT = '{binary} compile -R "{target}"'
-JINJA_ENV = Environment(loader=PackageLoader('beppo', 'templates'))
+JINJA_ENV = Environment(loader=PackageLoader('pert_belly_hack', 'templates'))
 
 
 def source_files(top):

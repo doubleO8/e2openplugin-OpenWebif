@@ -7,12 +7,12 @@ import os
 import shutil
 import compileall
 
-from beppo.defaults import PACKAGE_OUTPUT_PATH, OUTPUT_PATH
-from beppo.defaults import TARGET_PATH_REL, TAG_PATH_REL
-from beppo.packaging import source_files, mkdir_intermediate
-from beppo.packaging import compile_cheetah, compile_locales
-from beppo.packaging import create_control, create_tag, create_repo_conf
-from beppo.packaging import create_package_repo_conf
+from pert_belly_hack.defaults import PACKAGE_OUTPUT_PATH, OUTPUT_PATH
+from pert_belly_hack.defaults import TARGET_PATH_REL, TAG_PATH_REL
+from pert_belly_hack.packaging import source_files, mkdir_intermediate
+from pert_belly_hack.packaging import compile_cheetah, compile_locales
+from pert_belly_hack.packaging import create_control, create_tag, create_repo_conf
+from pert_belly_hack.packaging import create_package_repo_conf
 
 if __name__ == '__main__':
     try:

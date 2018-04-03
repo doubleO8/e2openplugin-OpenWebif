@@ -5,7 +5,7 @@ from distutils.core import setup
 import versioneer
 
 setup(
-    name='beppo',
+    name='pert_belly_hack',
     author="nobody",
     author_email="nobody@localhost",
     version=versioneer.get_version(),
@@ -13,5 +13,5 @@ setup(
     description='no description',
     long_description="no long description either",
     url="http://example.com",
-    packages=['beppo'],
+    packages=['pert_belly_hack'],
 )

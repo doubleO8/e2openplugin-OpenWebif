@@ -11,13 +11,13 @@ import subprocess
 
 from jinja2 import Environment, PackageLoader
 
-from beppo.defaults import PACKAGE_META, OUTPUT_PATH, LATEST_OPK_PATH_REL
-from beppo.defaults import PACKAGE_OUTPUT_PATH, TARGET_PATH_REL, TAG_PATH_REL
+from pert_belly_hack.defaults import PACKAGE_META, OUTPUT_PATH, LATEST_OPK_PATH_REL
+from pert_belly_hack.defaults import PACKAGE_OUTPUT_PATH, TARGET_PATH_REL, TAG_PATH_REL
 
 
 class HarvestKeitel(object):
     def __init__(self, *args, **kwargs):
-        self.env = Environment(loader=PackageLoader('beppo', 'templates'))
+        self.env = Environment(loader=PackageLoader('pert_belly_hack', 'templates'))
         self.ghpages_output_path = kwargs.get(
             "ghpages_output_path", OUTPUT_PATH)
         self.package_output_path = kwargs.get(

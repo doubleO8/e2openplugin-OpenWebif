@@ -3,7 +3,7 @@
 """
 CLI tool: generate github pages contents.
 """
-from beppo.harvesting import HarvestKeitel
+from pert_belly_hack.harvesting import HarvestKeitel
 
 if __name__ == '__main__':
     HARVEY = HarvestKeitel()

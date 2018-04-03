@@ -1,2 +1,2 @@
 include versioneer.py
-include beppo/_version.py
+include pert_belly_hack/_version.py

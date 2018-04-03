@@ -3,17 +3,17 @@
 Packaging and Publication
 =========================
 
-.. automodule:: beppo.defaults
+.. automodule:: pert_belly_hack.defaults
     :members:
 
 Packaging utilily functions
 ---------------------------
 
-.. automodule:: beppo.packaging
+.. automodule:: pert_belly_hack.packaging
     :members:
 
 Publishing utilily functions
 ----------------------------
 
-.. automodule:: beppo.harvesting
+.. automodule:: pert_belly_hack.harvesting
     :members:

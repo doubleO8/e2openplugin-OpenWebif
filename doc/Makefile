@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = INSERT_NAME_HERE
+SPHINXPROJ    = pert_belly_hack
 SOURCEDIR     = source
 BUILDDIR      = build
 

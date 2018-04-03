@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-INSERT_NAME_HERE
-================
+pert belly hack
+===============
 
 .. toctree::
    :maxdepth: 2

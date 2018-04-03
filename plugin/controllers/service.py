@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import logging
+import pprint
 
 from enigma import eServiceCenter, eServiceReference
 from Screens.ChannelSelection import service_types_tv, service_types_radio
@@ -12,7 +13,7 @@ from utilities import parse_servicereference, mangle_snp, SERVICE_KIND_COMMENT
 from utilities import parse_simple_index
 from defaults import PUBLIC_PATH
 
-ROOT_FMT = '{:s} FROM BOUQUET "bouquets.tv" ORDER BY bouquet'
+ROOT_FMT = '{:s} FROM BOUQUET "{:s}" ORDER BY bouquet'
 LIST_FMT = "SN"
 BLACKLISTED_SERVICE_KIND = (SERVICE_KIND_COMMENT,)
 
@@ -21,13 +22,16 @@ SNP_INDEX = "/etc/enigma2/snp.index"
 
 def service_type_subselect(item):
     if item.lower() == 'tv':
-        return service_types_tv
+        return (service_types_tv, 'bouquets.tv')
     elif item.lower() == 'radio':
-        return service_types_radio
-    return item
+        return (service_types_radio, 'bouquets.radio')
+    raise ValueError(item)
 
 
 class ServiceController(object):
+    """
+    Available services listing and conversions.
+    """
     def __init__(self, *args, **kwargs):
         self.log = logging.getLogger(__name__)
         self.esc_instance = eServiceCenter.getInstance()
@@ -52,20 +56,28 @@ class ServiceController(object):
         return snp_name
 
     def get_services_set(self, service_types=None, **kwargs):
+        """
+        Retrieve a set of service names and references available on device.
+
+        Args:
+            service_types: Service types to list all(None), tv or radio
+
+        """
         services_set = set()
         service_type_selectors = set()
 
         if service_types is None:
-            service_type_selectors.add(service_types_tv)
-            service_type_selectors.add(service_types_radio)
+            service_type_selectors.add((service_types_tv, 'bouquets.tv'))
+            service_type_selectors.add((service_types_radio, 'bouquets.radio'))
         elif isinstance(service_types, (list, set, tuple)):
             for item in service_types:
                 service_type_selectors.add(service_type_subselect(item))
         else:
             service_type_selectors.add(service_type_subselect(service_types))
 
-        for service_type_selector in service_type_selectors:
-            root = eServiceReference(ROOT_FMT.format(service_type_selector))
+        for service_type_selector, bouquet in service_type_selectors:
+            root = eServiceReference(
+                ROOT_FMT.format(service_type_selector, bouquet))
             slist = self.esc_instance.list(root)
 
             # list

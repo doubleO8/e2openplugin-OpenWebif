@@ -23,5 +23,9 @@ setup(
     packages=['pert_belly_hack'],
     package_data={
         'pert_belly_hack': ['templates/*']
-    }
+    },
+    scripts=[
+        "pbh-harvest",
+        "pbh-prepare",
+    ]
 )

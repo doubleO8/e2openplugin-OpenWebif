@@ -7,4 +7,5 @@ PACKAGE_META = {
     "package": "enigma2-plugin-extensions-openwebif",
     "upstream_version": __version__,
     "epoch": 1,
+    "target_root_path": "OpenWebif"
 }

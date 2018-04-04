@@ -8,25 +8,7 @@ Events
 
     :ref:`event_format-label`
 """
-# The fields fetched by filterName() and convertDesc() all need to be
-# html-escaped, so do it there.
-#
 from model_utilities import mangle_epg_text
-from cgi import escape as html_escape
-
-
-def filterName(name):
-    if name is not None:
-        name = html_escape(mangle_epg_text(name), quote=True)
-    return name
-
-
-def convertDesc(val):
-    if val is not None:
-        return html_escape(
-            unicode(val, 'utf_8', errors='ignore').encode('utf_8', 'ignore'),
-            quote=True)
-    return val
 
 
 #: constant for *event's service reference* key
@@ -203,11 +185,7 @@ class ServicesEventDict(dict):
             self[key] = raw_data[idx]
 
         if mangle_html:
-            for key in ('shortdesc', 'longdesc', 'sname'):
-                if key in ('shortdesc', 'longdesc'):
-                    self[key] = convertDesc(self[key])
-                elif key == 'sname':
-                    self[key] = filterName(self[key])
+            self['sname'] = mangle_epg_text(self['sname'])
 
         if now_next_mode:
             if self['begin_timestamp'] == 0:

@@ -30,7 +30,7 @@ from info import GetWithAlternative
 from info import FALLBACK_PICON_LOCATION, PICON_ENDPOINT_PATH
 
 from model_utilities import mangle_epg_text
-from events import FLAGS_WEB, ServicesEventDict, convertDesc, filterName
+from events import FLAGS_WEB, ServicesEventDict
 
 SLOG = logging.getLogger("services")
 
@@ -49,7 +49,7 @@ def getCurrentService(session):
         info = session.nav.getCurrentService().info()
         return {
             "result": True,
-            "name": filterName(info.getName()),
+            "name": mangle_epg_text(info.getName()),
             "namespace": getServiceInfoString(info,
                                               iServiceInformation.sNamespace),
             "aspect": getServiceInfoString(info, iServiceInformation.sAspect),
@@ -324,10 +324,10 @@ def getEvent(ref, idev):
         info['begin'] = event[1]
         info['end'] = strftime("%H:%M", (localtime(event[1] + event[2])))
         info['duration'] = event[2]
-        info['title'] = filterName(event[3])
-        info['shortdesc'] = convertDesc(event[4])
-        info['longdesc'] = convertDesc(event[5])
-        info['channel'] = filterName(event[6])
+        info['title'] = mangle_epg_text(event[3])
+        info['shortdesc'] = event[4]
+        info['longdesc'] = event[5]
+        info['channel'] = mangle_epg_text(event[6])
         info['sref'] = event[7]
         break
     return {'event': info}
@@ -364,11 +364,11 @@ def getChannelEpg(ref, begintime=-1, endtime=-1):
                     ev['duration_sec'] = event[2]
                     ev['end'] = strftime(
                         "%H:%M", (localtime(event[1] + event[2])))
-                    ev['title'] = filterName(event[3])
-                    ev['shortdesc'] = convertDesc(event[4])
-                    ev['longdesc'] = convertDesc(event[5])
+                    ev['title'] = mangle_epg_text(event[3])
+                    ev['shortdesc'] = event[4]
+                    ev['longdesc'] = event[5]
                     ev['sref'] = ref
-                    ev['sname'] = filterName(event[6])
+                    ev['sname'] = mangle_epg_text(event[6])
                     ev['tleft'] = int(((event[1] + event[2]) - event[7]) / 60)
                     if ev['duration_sec'] == 0:
                         ev['progress'] = 0
@@ -550,11 +550,11 @@ def getSearchEpg(sstr, endtime=None, fulldesc=False, bouquetsonly=False):
             ev['duration_sec'] = event[2]
             ev['duration'] = int(event[2] / 60)
             ev['end'] = strftime("%H:%M", (localtime(event[1] + event[2])))
-            ev['title'] = filterName(event[3])
-            ev['shortdesc'] = convertDesc(event[4])
-            ev['longdesc'] = convertDesc(event[5])
+            ev['title'] = mangle_epg_text(event[3])
+            ev['shortdesc'] = event[4]
+            ev['longdesc'] = event[5]
             ev['sref'] = event[7]
-            ev['sname'] = filterName(event[6])
+            ev['sname'] = mangle_epg_text(event[6])
             ev['picon'] = getPicon(event[7])
             ev['now_timestamp'] = None
             if endtime:
@@ -588,10 +588,10 @@ def getSearchSimilarEpg(ref, eventid):
             ev['duration'] = int(event[2] / 60)
             ev['end'] = strftime("%H:%M", (localtime(event[1] + event[2])))
             ev['title'] = event[3]
-            ev['shortdesc'] = convertDesc(event[4])
-            ev['longdesc'] = convertDesc(event[5])
+            ev['shortdesc'] = event[4]
+            ev['longdesc'] = event[5]
             ev['sref'] = event[7]
-            ev['sname'] = filterName(event[6])
+            ev['sname'] = mangle_epg_text(event[6])
             ev['picon'] = getPicon(event[7])
             ev['now_timestamp'] = None
             ret.append(ev)

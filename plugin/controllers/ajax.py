@@ -24,7 +24,6 @@ from i18n import _
 from defaults import THEMES
 from utilities import parse_servicereference, SERVICE_TYPE_LOOKUP, NS_LOOKUP
 
-from models.events import convertDesc, filterName
 from models.model_utilities import mangle_epg_text
 from models.services import getPicon
 from models.services import getBouquets, getSatellites, \
@@ -116,13 +115,13 @@ def getMultiEpg(self, ref, begintime=-1, endtime=None, Mode=1):
             ev['id'] = event[0]
             ev['begin_timestamp'] = event[1]
             ev['title'] = event[2]
-            ev['shortdesc'] = convertDesc(event[3])
+            ev['shortdesc'] = event[3]
             ev['ref'] = event[4]
             ev['timerStatus'] = getTimerEventStatus(event)
             if Mode == 2:
                 ev['duration'] = event[6]
 
-            channel = filterName(event[5])
+            channel = mangle_epg_text(event[5])
             if channel not in ret:
                 if Mode == 1:
                     ret[channel] = [[], [], [], [],
@@ -312,7 +311,7 @@ def getChannels(idbouquet, stype):
         chan['ref'] = quote(channel[0], safe=' ~@%#$&()*!+=:;,.?/\'')
         if chan['ref'].split(":")[1] == '320':  # Hide hidden number markers
             continue
-        chan['name'] = filterName(channel[1])
+        chan['name'] = mangle_epg_text(channel[1])
         if not int(channel[0].split(":")[1]) & 64:
             psref = parse_servicereference(channel[0])
             chan['service_type'] = SERVICE_TYPE_LOOKUP.get(
@@ -322,7 +321,7 @@ def getChannels(idbouquet, stype):
             chan['protection'] = "0"
             nowevent = epgcache.lookupEvent(['TBDCIX', (channel[0], 0, -1)])
             if len(nowevent) > 0 and nowevent[0][0] is not None:
-                chan['now_title'] = filterName(nowevent[0][0])
+                chan['now_title'] = mangle_epg_text(nowevent[0][0])
                 chan['now_begin'] = strftime(
                     "%H:%M", (localtime(nowevent[0][1])))
                 chan['now_end'] = strftime(
@@ -342,7 +341,7 @@ def getChannels(idbouquet, stype):
                         nextevent[0][1] == time.time()
                     if nextevent[0][2] is None:
                         nextevent[0][2] == 0
-                    chan['next_title'] = filterName(nextevent[0][0])
+                    chan['next_title'] = mangle_epg_text(nextevent[0][0])
                     chan['next_begin'] = strftime(
                         "%H:%M", (localtime(nextevent[0][1])))
                     chan['next_end'] = strftime(
@@ -353,7 +352,7 @@ def getChannels(idbouquet, stype):
                     chan['next_idp'] = "nextd" + str(idp)
                 else:
                     # Have to fudge one in, as rest of OWI code expects it...
-                    chan['next_title'] = filterName("<<absent>>")
+                    chan['next_title'] = mangle_epg_text("<<absent>>")
                     chan['next_begin'] = chan['now_end']
                     chan['next_end'] = chan['now_end']
                     chan['next_duration'] = 0

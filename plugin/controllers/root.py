@@ -18,12 +18,10 @@ from defaults import PUBLIC_PATH, PICON_PATH, FAVICON_PATH
 from enigma import eEPGCache
 from models.config import getCollapsedMenus, getConfigsSections
 from models.config import getShowName, getCustomName, getBoxName
-
 from models.info import getInfo
 from models.grab import grabScreenshot
 from base import BaseController
 from web import WebController
-from ajax import AjaxController
 from transcoding import TranscodingController
 from file import FileController
 import rest_api_controller
@@ -33,6 +31,14 @@ import rest_current_event_controller
 import rest_services_controller
 from recording import RECORDINGS_ROOT_PATH
 from recording import RECORDINGS_ENDPOINT_PATH, RECORDING_ENDPOINT_PATH
+
+TOW_FRONTEND = False
+
+try:
+    from ajax import AjaxController
+    TOW_FRONTEND = True
+except ImportError:
+    pass
 
 try:
     from boxbranding import getBoxType
@@ -48,15 +54,11 @@ class RootController(BaseController):
     def __init__(self, session, path=""):
         BaseController.__init__(self, path=path, session=session)
 
-        self.putChild('favicon.ico', static.File(FAVICON_PATH))
-        self.putChild('favicon.png', static.File(FAVICON_PATH))
-
         self.putChild("web", WebController(session))
         api_controller_instance = EncodingResourceWrapper(
             rest_api_controller.ApiController(session, resource_prefix='/api'),
             [GzipEncoderFactory()])
         self.putChild("api", api_controller_instance)
-        self.putChild("ajax", AjaxController(session))
 
         recordings_controller_instance = EncodingResourceWrapper(
             rest_recordings_controller.RESTRecordingsController(),
@@ -83,6 +85,11 @@ class RootController(BaseController):
 
         self.putChild("file", FileController())
         self.putChild("grab", grabScreenshot(session))
+
+        if TOW_FRONTEND:
+            self.putChild("ajax", AjaxController(session))
+            self.putChild('favicon.ico', static.File(FAVICON_PATH))
+            self.putChild('favicon.png', static.File(FAVICON_PATH))
 
         for shortcut in ('js', 'css', 'static', 'images', 'fonts'):
             self.putChild(shortcut,

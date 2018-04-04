@@ -29,6 +29,7 @@ from rest import CORS_DEFAULT_ALLOW_ORIGIN
 from utilities import mangle_host_header_port, gen_reverse_proxy_configuration
 
 HAVE_E2_CONTROLLER = True
+TOW_FRONTEND = False
 
 try:
     from web import WebController
@@ -36,7 +37,12 @@ except ImportError:
     HAVE_E2_CONTROLLER = False
 
 if HAVE_E2_CONTROLLER:
-    from ajax import AjaxController
+    try:
+        from ajax import AjaxController
+        TOW_FRONTEND = True
+    except ImportError:
+        pass
+
     from rest_saveconfig_api import SaveConfigApiController
     from rest_eventlookup_api import EventLookupApiController
     from rest_eventsearch_api import EventSearchApiController
@@ -67,8 +73,9 @@ class ApiController(resource.Resource):
 
             #: web controller instance
             self.web_instance = WebController(session, path)
-            #: ajax controller instance
-            self.ajax_instance = AjaxController(session, path)
+            if TOW_FRONTEND:
+                #: ajax controller instance
+                self.ajax_instance = AjaxController(session, path)
 
         self.verbose = kwargs.get("verbose", 1)
         self._resource_prefix = kwargs.get("resource_prefix", '/api')
@@ -172,8 +179,11 @@ class ApiController(resource.Resource):
         funcs = [
             # TODO: add method of *self*
             ('web', getattr(self.web_instance, owif_func, None)),
-            ('ajax', getattr(self.ajax_instance, owif_func, None)),
         ]
+
+        if self.ajax_instance is not None:
+            funcs.append(
+                ('ajax', getattr(self.ajax_instance, owif_func, None)))
 
         #: method to be called
         func = None

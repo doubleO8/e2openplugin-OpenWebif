@@ -26,11 +26,11 @@ Usage
 .. code-block:: sh
 
     # create OPKG contents in subfolder ``./pack/``
-    python ./prepare_package_contents.py
+    pbh-prepare
     # example call for generating ``.opk`` file:
     ./opkg-utils/opkg-build -O -o 0 -g 0 -Z gzip pack/
 
 .. code-block:: sh
 
     # create github pages content in ``./pages_out/``
-    python ./harvest.py
+    pbh-harvest

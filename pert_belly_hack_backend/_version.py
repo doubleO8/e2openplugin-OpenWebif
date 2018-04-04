@@ -42,8 +42,8 @@ def get_config():
     cfg.VCS = "git"
     cfg.style = "pep440"
     cfg.tag_prefix = ""
-    cfg.parentdir_prefix = "pert_belly_hack-"
-    cfg.versionfile_source = "pert_belly_hack/_version.py"
+    cfg.parentdir_prefix = "pert_belly_hack_backend-"
+    cfg.versionfile_source = "pert_belly_hack_backend/_version.py"
     cfg.verbose = False
     return cfg
 

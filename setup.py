@@ -12,7 +12,7 @@ DESCRIPTION = 'Packaging helper for preparing the contents of an OPKG file ' \
               'Also generates contents for github pages.'
 
 setup(
-    name='pert_belly_hack',
+    name='pert_belly_hack_backend',
     author="doubleO8",
     author_email="wb008@hdm-stuttgart.de",
     version=versioneer.get_version(),
@@ -20,12 +20,5 @@ setup(
     description=DESCRIPTION,
     long_description=DESCRIPTION,
     url="https://doubleo8.github.io/e2openplugin-OpenWebif/",
-    packages=['pert_belly_hack'],
-    package_data={
-        'pert_belly_hack': ['templates/*']
-    },
-    scripts=[
-        "pbh-harvest",
-        "pbh-prepare",
-    ]
+    packages=['pert_belly_hack_backend'],
 )

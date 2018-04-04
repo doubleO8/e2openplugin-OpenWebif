@@ -630,6 +630,35 @@ def parse_simple_index(source):
     return lookup
 
 
+def gen_reverse_proxy_configuration(configuration=None, template=None):
+    if template is None:
+        template = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                'reverse_proxy.conf.template'))
+    if configuration is None:
+        configuration = dict()
+
+    with open(template, "rb") as src:
+        template_content = src.read()
+
+    fallback_values = {
+        "REVERSE_PROXY_PORT": 8000,
+        "ENIGMA2_HOST": "localhost",
+        "ENIGMA2_PORT": 80,
+        "OSCAM_PORT": 83,
+        "STREAM_PORT": 8001,
+        "STREAM_TRANSCODED_PORT": 8002,
+        "PUBLIC_ROOT": '/tmp/public',
+        "PICON_ROOT": '/tmp/picon',
+    }
+
+    for key in fallback_values:
+        value = configuration.get(key, fallback_values[key])
+        if key in ('PUBLIC_ROOT', 'PICON_ROOT'):
+            value = re.sub(r'\/+$', '', value)
+        search_key = '{{{:s}}}'.format(key)
+        template_content = template_content.replace(search_key, str(value))
+    return template_content
+
 if __name__ == '__main__':
     import doctest
 

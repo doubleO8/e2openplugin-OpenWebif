@@ -23,3 +23,6 @@ MANIFEST
 dist/
 build/
 *.egg-info/
+
+revproxy_local_conf.json
+e2revproxy.conf

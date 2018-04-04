@@ -26,7 +26,7 @@ from twisted.web.server import GzipEncoderFactory
 
 from rest import json_response, CORS_ALLOWED_METHODS_DEFAULT, CORS_DEFAULT
 from rest import CORS_DEFAULT_ALLOW_ORIGIN
-from utilities import mangle_host_header_port
+from utilities import mangle_host_header_port, gen_reverse_proxy_configuration
 
 HAVE_E2_CONTROLLER = True
 
@@ -115,6 +115,30 @@ class ApiController(resource.Resource):
 
         return json_response(request, data)
 
+    def _reverse_proxy_configuration(self, request):
+        """
+        Return an example configuration for nginx acting as a reverse proxy
+        for the current device.
+
+        Args:
+                request (twisted.web.server.Request): HTTP request object
+        Returns:
+                HTTP response with headers
+        """
+        mangled = mangle_host_header_port(request.getHeader('host'))
+        configuration = {
+            "ENIGMA2_HOST": mangled['hostname'],
+            "ENIGMA2_PORT": 80,
+            "OSCAM_PORT": 83,
+            "STREAM_PORT": 8001,
+            "STREAM_TRANSCODED_PORT": 8002,
+            "PUBLIC_ROOT": '/tmp/public',
+            "PICON_ROOT": '/tmp/picon',
+        }
+
+        request.setHeader("content-type", "text/plain")
+        return gen_reverse_proxy_configuration(configuration)
+
     def render_GET(self, request):
         """
         HTTP GET implementation.
@@ -137,6 +161,9 @@ class ApiController(resource.Resource):
 
         if func_path in ("", "index"):
             return self._index(request)
+
+        if func_path == 'reverse_proxy_conf':
+            return self._reverse_proxy_configuration()
 
         #: name of OpenWebif method to be called
         owif_func = "{:s}{:s}".format(OWIF_PREFIX, func_path)

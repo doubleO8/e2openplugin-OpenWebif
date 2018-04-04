@@ -1,0 +1,126 @@
+#
+# This is an example configuration file for nginx acting as a reverse proxy
+# for an enigma2 device.
+#
+# used variables:
+#
+# REVERSE_PROXY_PORT    : reverse proxy listening port, defaults to 8000
+# ENIGMA2_HOST          : hostname or ip address of enigma2 device
+# ENIGMA2_PORT          : web interface port, usually 80
+# OSCAM_PORT            : oscam web interface port, usually 83
+# STREAM_PORT           : streaming port, usually 8001
+# STREAM_TRANSCODED_PORT: transcoding streaming port, usually 8002
+# PUBLIC_ROOT           : local copy of 'public/' folder
+# PICON_ROOT            : local copy of 'picon/' folder
+#
+
+upstream _e2dev {
+    # ENIGMA2_HOST, ENIGMA2_PORT
+    server {ENIGMA2_HOST}:{ENIGMA2_PORT};
+}
+
+upstream _e2dev_oscam {
+    # ENIGMA2_HOST, OSCAM_PORT
+    server {ENIGMA2_HOST}:{OSCAM_PORT};
+}
+
+upstream _e2dev_stream {
+    # ENIGMA2_HOST, STREAM_PORT
+    server {ENIGMA2_HOST}:{STREAM_PORT};
+}
+
+upstream _e2dev_stream_transcoded {
+    # ENIGMA2_HOST, STREAM_TRANSCODED_PORT
+    server {ENIGMA2_HOST}:{STREAM_TRANSCODED_PORT};
+}
+
+server {
+    access_log /var/log/nginx/enigma2-access.log combined;
+    error_log  /var/log/nginx/enigma2-error.log info;
+    root       {PUBLIC_ROOT};  # PUBLIC_ROOT
+
+    listen {REVERSE_PROXY_PORT};  # REVERSE_PROXY_PORT
+
+    charset     utf-8;
+    client_max_body_size 1M;
+
+    location @enigma2_location {
+        include proxy_params;
+        proxy_pass http://_e2dev;
+    }
+
+    location /oscam/ {
+        rewrite /oscam/(.*) /$1 break;
+
+        include proxy_params;
+        proxy_pass http://_e2dev_oscam;
+    }
+
+    location /picon {
+        alias {PICON_ROOT};  # PICON_ROOT
+        autoindex on;
+        access_log off;
+        expires 300d;
+    }
+
+    location /css {
+        alias {PUBLIC_ROOT}/css;  # PUBLIC_ROOT
+        access_log off;
+        expires 30d;
+    }
+
+    location /fonts {
+        alias {PUBLIC_ROOT}/fonts;  # PUBLIC_ROOT
+        access_log off;
+        expires 300d;
+    }
+
+    location /images {
+        alias {PUBLIC_ROOT}/images;  # PUBLIC_ROOT
+        access_log off;
+        expires 300d;
+    }
+
+    location /js {
+        alias {PUBLIC_ROOT}/js;  # PUBLIC_ROOT
+        access_log off;
+        expires 30d;
+    }
+
+    location / {
+        error_page 404 = @enigma2_location;
+        error_page 403 = @enigma2_location;
+    }
+}
+
+server {
+    access_log off;
+    error_log /var/log/nginx/enigma2_stream-error.log info;
+    root      {PUBLIC_ROOT};  # PUBLIC_ROOT
+
+    listen {STREAM_PORT};  # STREAM_PORT
+
+    charset     utf-8;
+    client_max_body_size 1M;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://_e2dev_stream;
+    }
+}
+
+server {
+    access_log off;
+    error_log /var/log/nginx/enigma2_stream_transcoded-error.log info;
+    root      {PUBLIC_ROOT};  # PUBLIC_ROOT
+
+    listen {STREAM_TRANSCODED_PORT};  # STREAM_TRANSCODED_PORT
+
+    charset     utf-8;
+    client_max_body_size 1M;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://_e2dev_stream_transcoded;
+    }
+}

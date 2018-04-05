@@ -1,2 +1,0 @@
-include versioneer.py
-include pert_belly_hack_backend/_version.py

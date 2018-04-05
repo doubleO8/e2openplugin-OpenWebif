@@ -11,8 +11,8 @@ pursuing a different set of goals.
   * ~~Clean Python Code (hopefully [PEP 8](https://www.python.org/dev/peps/pep-0008/) compliant some day)~~
   * ~~Clean and Valid ECMAScript Code~~
   * ~~[Unit Tests](https://doubleo8.github.io/e2openplugin-OpenWebif/nosetests.xml)~~ and ~~[Documentation](https://doubleo8.github.io/e2openplugin-OpenWebif/documentation/index.html)~~
-  * Separation of Code and Representation
-* Provide RESTful API and access to ~~EPG event datasets~~, ~~timers~~, ~~recorded audio/video (dubbed *movie* elsewhere) items~~
+  * ~~Separation of Code and Representation~~
+* Provide ~~RESTful API~~ and access to ~~EPG event datasets~~, ~~timers~~, ~~recorded audio/video (dubbed *movie* elsewhere) items~~
 * Support for multitier architecture, ~~reverse proxies~~ and client side rendering
 * A Modern Web UI Implementation
 * ~~Find a Smashing New Project Name~~: [pert belly hack](https://pypi.org/project/pert-belly-hack/)

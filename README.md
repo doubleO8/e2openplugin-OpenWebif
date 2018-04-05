@@ -15,7 +15,6 @@ pursuing a different set of goals.
 * Provide ~~RESTful API~~ and access to ~~EPG event datasets~~, ~~timers~~, ~~recorded audio/video (dubbed *movie* elsewhere) items~~
 * Support for multitier architecture, ~~reverse proxies~~ and client side rendering
 * A Modern Web UI Implementation
-* ~~Find a Smashing New Project Name~~: [pert belly hack](https://pypi.org/project/pert-belly-hack/)
 
 ## Installation
 

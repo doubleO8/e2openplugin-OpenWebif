@@ -3,11 +3,11 @@ language: python
 python:
 - "2.7"
 
-before_install:
-- sudo apt-get install -y closure-compiler nodejs npm
-- sudo npm config set ca ""
-- sudo npm config set strict-ssl false
-- sudo npm install -g jshint
+#before_install:
+#- sudo apt-get install -y closure-compiler nodejs npm
+#- sudo npm config set ca ""
+#- sudo npm config set strict-ssl false
+#- sudo npm install -g jshint
 
 install:
 - mkdir -p ./pages_out
@@ -16,27 +16,28 @@ install:
 - pip install -r requirements.txt
 
 script:
-- python ./prepare_package_contents.py
-- ./opkg-utils/opkg-build -O -o 0 -g 0 -Z gzip pack/
-- python testsuite/test_evil_eval.py
+- ./build.sh
+#- python ./prepare_package_contents.py
+#- ./opkg-utils/opkg-build -O -o 0 -g 0 -Z gzip pack/
+#- python testsuite/test_evil_eval.py
 
-after_success:
-- python -m flake8 plugin/ --output-file ./pages_out/flake8_report.txt
-- jshint ./sourcefiles/js/ | tee ./pages_out/jshint_report.txt
-- nosetests --with-doctest --with-coverage --cover-html --cover-html-dir=pages_out/cover --cover-erase --cover-package=plugin --with-xunit --xunit-file=pages_out/nosetests.xml plugin/
-- python ./harvest.py
+#after_success:
+#- python -m flake8 plugin/ --output-file ./pages_out/flake8_report.txt
+#- jshint ./sourcefiles/js/ | tee ./pages_out/jshint_report.txt
+#- nosetests --with-doctest --with-coverage --cover-html --cover-html-dir=pages_out/cover --cover-erase --cover-package=plugin --with-xunit --xunit-file=pages_out/nosetests.xml plugin/
+#- python ./harvest.py
 
-after_failure:
-- python -m flake8 plugin/ --output-file ./pages_out/flake8_report.txt
-- jshint ./sourcefiles/js/ | tee ./pages_out/jshint_report.txt
-- nosetests --with-doctest --with-coverage --cover-html --cover-html-dir=pages_out/cover --cover-erase --cover-package=plugin --with-xunit --xunit-file=pages_out/nosetests.xml plugin/
-- python ./harvest.py
+#after_failure:
+#- python -m flake8 plugin/ --output-file ./pages_out/flake8_report.txt
+#- jshint ./sourcefiles/js/ | tee ./pages_out/jshint_report.txt
+#- nosetests --with-doctest --with-coverage --cover-html --cover-html-dir=pages_out/cover --cover-erase --cover-package=plugin --with-xunit --xunit-file=pages_out/nosetests.xml plugin/
+#- python ./harvest.py
 
 before_deploy:
 - find ./pages_out
 - git status
-- ./opkg-utils/opkg-make-index ./pages_out/ | tee ./pages_out/Packages
-- gzip ./pages_out/Packages
+#- ./opkg-utils/opkg-make-index ./pages_out/ | tee ./pages_out/Packages
+#- gzip ./pages_out/Packages
 
 deploy:
   provider: pages

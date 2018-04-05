@@ -17,48 +17,40 @@ pursuing a different set of goals.
 * A Modern Web UI Implementation
 * ~~Find a Smashing New Project Name~~: [pert belly hack](https://pypi.org/project/pert-belly-hack/)
 
-# Latest Package
-
-The most recent package may be downloaded [here](https://doubleo8.github.io/e2openplugin-OpenWebif/latest.opk).
-
 ## Installation
 
-```bash
-# Remotely logged in via SSH to enigma2 device
+It is recommended that one installs `pert belly hack` packages using the github hosted OPKG repository.
 
-cd /tmp
-init 4                                                              # graceful enigma2 shutdown
-wget 'https://doubleo8.github.io/e2openplugin-OpenWebif/latest.opk' # fetching latest package
-opkg install ./latest.opk                                           # installing latest package
-init 3                                                              # start enigma2 again
-```
+### Import OPKG repository / IPKG feed
 
-### opkg feed
-
-Create or [download](https://doubleo8.github.io/e2openplugin-OpenWebif/github_io.conf) `/etc/opkg/github_io.conf`:
-
-```
-src/gz githubio https://doubleo8.github.io/e2openplugin-OpenWebif
-```
+Create or [download](https://doubleo8.github.io/e2openplugin-OpenWebif/pert_belly_hack.conf) `pert_belly_hack.conf`:
 
 ```bash
 # Remotely logged in via SSH to enigma2 device
 
-wget -q https://doubleo8.github.io/e2openplugin-OpenWebif/github_io.conf \
--O /etc/opkg/github_io.conf                                         # import repository
+wget -q https://doubleo8.github.io/e2openplugin-OpenWebif/pert_belly_hack.conf \
+-O /etc/opkg/pert_belly_hack.conf                                   # import repository
+```
+
+### Manual Installation after importing OPKG feed
+
+```bash
 opkg update                                                         # update list of available packages
-opkg install enigma2-plugin-extensions-openwebif                    # upgrade or install package
+opkg remove enigma2-plugin-extensions-openwebif                     # remove OpenWebif
+opkg install pert-belly-hack-backend                                # upgrade or install package (backend)
+opkg install pert-belly-hack-frontend-crap                          # upgrade or install package (frontend)
 init 4                                                              # graceful enigma2 shutdown
 sleep 1                                                             # wait a bit
 init 3                                                              # start enigma2 again
 ```
+
 ## Online Documentation
 
-Online Documentation is available at [doubleo8.github.io/e2openplugin-OpenWebif/documentation/](https://doubleo8.github.io/e2openplugin-OpenWebif/documentation/index.html).
+The Online Documentation for the backend is available at [doubleo8.github.io/e2openplugin-OpenWebif/backend/documentation/](https://doubleo8.github.io/e2openplugin-OpenWebif/backend/documentation/index.html).
 
-* [HTTP Routing Table](https://doubleo8.github.io/e2openplugin-OpenWebif/documentation/http-routingtable.html) *work in progress*
-* [Enigma2 WebInterface API](https://doubleo8.github.io/e2openplugin-OpenWebif/documentation/e2webinterface_api.html) *work in progress*
-* [RESTful API](https://doubleo8.github.io/e2openplugin-OpenWebif/documentation/restful_api.html) *work in progress*
+* [HTTP Routing Table](https://doubleo8.github.io/e2openplugin-OpenWebif/backend/documentation/http-routingtable.html) *work in progress*
+* [Enigma2 WebInterface API](https://doubleo8.github.io/e2openplugin-OpenWebif/backend/documentation/e2webinterface_api.html) *work in progress*
+* [RESTful API](https://doubleo8.github.io/e2openplugin-OpenWebif/backend/documentation/restful_api.html) *work in progress*
 
 ## Dropped *OpenWebif* Features
 

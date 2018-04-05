@@ -20,6 +20,8 @@ cp -r pert_belly_hack-frontend-crap/pages_out/ pages_out/frontend-crap
 ./opkg-utils/opkg-make-index ./pages_out/ | tee ./pages_out/Packages
 gzip ./pages_out/Packages
 
+pbh-umbrella
+
 if [ -f cosh.json ]; then
     coshed-watcher.py -f cosh.json -u
 fi

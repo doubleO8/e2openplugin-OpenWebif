@@ -1,4 +1,4 @@
 Cheetah==2.4.4
 pyOpenSSL>=16.2.0
 Twisted==16.2.0
-pert-belly-hack>=1.0.0
+pert-belly-hack>=1.2.0

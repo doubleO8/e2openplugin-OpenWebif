@@ -1,3 +1,9 @@
 [submodule "opkg-utils"]
 	path = opkg-utils
 	url = https://github.com/doubleO8/opkg-utils.git
+[submodule "pert_belly_hack-backend"]
+	path = pert_belly_hack-backend
+	url = https://github.com/doubleO8/pert_belly_hack-backend
+[submodule "pert_belly_hack-frontend-crap"]
+	path = pert_belly_hack-frontend-crap
+	url = https://github.com/doubleO8/pert_belly_hack-frontend-crap

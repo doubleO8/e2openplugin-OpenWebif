@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/doubleO8/e2openplugin-OpenWebif.svg?branch=master)](https://travis-ci.org/doubleO8/e2openplugin-OpenWebif)
 
+[![Build Status – Backend](https://travis-ci.org/doubleO8/pert_belly_hack-backend.svg?branch=master)](https://travis-ci.org/doubleO8/pert_belly_hack-backend)
+
 # pert_belly_hack
 *pert_belly_hack* is yet another web interface for Enigma2 based set-top boxes.
 It is a developer friendly fork of [OpenWebif](https://github.com/E2OpenPlugins/e2openplugin-OpenWebif)

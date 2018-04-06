@@ -12,11 +12,11 @@ pursuing a different set of goals.
 
 ### Backend
 
-[![Build Status](https://travis-ci.org/doubleO8/pert_belly_hack-frontend-crap.svg?branch=master)](https://travis-ci.org/doubleO8/pert_belly_hack-frontend-crap)
+[![Build Status](https://travis-ci.org/doubleO8/pert_belly_hack-backend.svg?branch=master)](https://travis-ci.org/doubleO8/pert_belly_hack-backend)
 
 ### Outdated Browser UI
 
-[![Build Status](https://travis-ci.org/doubleO8/pert_belly_hack-backend.svg?branch=master)](https://travis-ci.org/doubleO8/pert_belly_hack-backend)
+[![Build Status](https://travis-ci.org/doubleO8/pert_belly_hack-frontend-crap.svg?branch=master)](https://travis-ci.org/doubleO8/pert_belly_hack-frontend-crap)
 
 ## Goals
 

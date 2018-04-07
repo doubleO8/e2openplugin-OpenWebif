@@ -29,6 +29,12 @@ pursuing a different set of goals.
 * Support for multitier architecture, ~~reverse proxies~~ and client side rendering
 * A Modern Web UI Implementation
 
+## Cloning
+
+```bash
+git clone --recursive -j4 --depth 1 https://github.com/doubleO8/e2openplugin-OpenWebif
+```
+
 ## Installation
 
 It is recommended that one installs `pert belly hack` packages using the github hosted OPKG repository.

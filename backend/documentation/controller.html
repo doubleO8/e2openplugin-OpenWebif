@@ -1,0 +1,720 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Controller &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Utilities" href="utilities.html" />
+    <link rel="prev" title="RESTful API" href="restful_api.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="restful_api.html">RESTful API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Controller</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-controllers.service">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-controllers.events">Events</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#possible-values-of-the-format-field">Possible Values of the Format Field</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#event-search">Event Search</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#description-of-search-parameters">Description of Search Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#description-of-parameters-related-to-search-querytype">Description of Parameters Related to Search Querytype</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#event-lookup">Event Lookup</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#description-of-lookup-parameters">Description of Lookup Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#description-of-parameters-related-to-querytype">Description of Parameters Related to Querytype</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-controllers.recording">Recordings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Controller</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/controller.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-controllers.defaults">
+<span id="controller"></span><span id="controller-label"></span><h1>Controller<a class="headerlink" href="#module-controllers.defaults" title="Permalink to this headline">¶</a></h1>
+<dl class="data">
+<dt id="controllers.defaults.PICON_EXT">
+<code class="descclassname">controllers.defaults.</code><code class="descname">PICON_EXT</code><em class="property"> = '.png'</em><a class="headerlink" href="#controllers.defaults.PICON_EXT" title="Permalink to this definition">¶</a></dt>
+<dd><p>extension of picon files</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.defaults.PICON_FOLDERS">
+<code class="descclassname">controllers.defaults.</code><code class="descname">PICON_FOLDERS</code><em class="property"> = ('picon', 'owipicon')</em><a class="headerlink" href="#controllers.defaults.PICON_FOLDERS" title="Permalink to this definition">¶</a></dt>
+<dd><p>subfolders containing picons</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.defaults.PICON_PREFIXES">
+<code class="descclassname">controllers.defaults.</code><code class="descname">PICON_PREFIXES</code><em class="property"> = ('/usr/share/enigma2/', '/media/hdd/', '/', '/media/cf/', '/media/mmc/', '/media/usb/')</em><a class="headerlink" href="#controllers.defaults.PICON_PREFIXES" title="Permalink to this definition">¶</a></dt>
+<dd><p>paths where folders containing picons could be located</p>
+</dd></dl>
+
+<div class="section" id="module-controllers.service">
+<span id="services"></span><h2>Services<a class="headerlink" href="#module-controllers.service" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="controllers.service.ServiceController">
+<em class="property">class </em><code class="descclassname">controllers.service.</code><code class="descname">ServiceController</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/service.html#ServiceController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.service.ServiceController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Available services listing and conversions.</p>
+<dl class="method">
+<dt id="controllers.service.ServiceController.get_services_set">
+<code class="descname">get_services_set</code><span class="sig-paren">(</span><em>service_types=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/service.html#ServiceController.get_services_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.service.ServiceController.get_services_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a set of service names and references available on device.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>service_types</strong> – Service types to list all(None), tv or radio</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-controllers.servicelists"></span><dl class="class">
+<dt id="controllers.servicelists.ServiceListsManager">
+<em class="property">class </em><code class="descclassname">controllers.servicelists.</code><code class="descname">ServiceListsManager</code><a class="reference internal" href="_modules/controllers/servicelists.html#ServiceListsManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.servicelists.ServiceListsManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Controller for reloading service lists, transponders,
+parental control black-/white lists and lamedb.</p>
+<dl class="method">
+<dt id="controllers.servicelists.ServiceListsManager.reload">
+<code class="descname">reload</code><span class="sig-paren">(</span><em>mode=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/servicelists.html#ServiceListsManager.reload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.servicelists.ServiceListsManager.reload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reload items based on <em>mode</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mode</strong> (<em>basestring</em>) – Reload mode indicator</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">resultset</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)">dict</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-controllers.events">
+<span id="events"></span><h2>Events<a class="headerlink" href="#module-controllers.events" title="Permalink to this headline">¶</a></h2>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://mslowik.blogspot.de/">http://mslowik.blogspot.de/</a></p>
+</div>
+<div class="section" id="possible-values-of-the-format-field">
+<span id="event-format-label"></span><h3>Possible Values of the Format Field<a class="headerlink" href="#possible-values-of-the-format-field" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="92%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">VALUE</th>
+<th class="head">DESCRIPTION</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>I</td>
+<td>Event Id</td>
+</tr>
+<tr class="row-odd"><td>B</td>
+<td>Event Begin Time</td>
+</tr>
+<tr class="row-even"><td>D</td>
+<td>Event Duration</td>
+</tr>
+<tr class="row-odd"><td>T</td>
+<td>Event Title</td>
+</tr>
+<tr class="row-even"><td>S</td>
+<td>Event Short Description</td>
+</tr>
+<tr class="row-odd"><td>E</td>
+<td>Event Extended Description (extended event description)</td>
+</tr>
+<tr class="row-even"><td>C</td>
+<td>Current Time</td>
+</tr>
+<tr class="row-odd"><td>R</td>
+<td>Service Reference</td>
+</tr>
+<tr class="row-even"><td>N</td>
+<td>Service Name</td>
+</tr>
+<tr class="row-odd"><td>n</td>
+<td>Short Service Name</td>
+</tr>
+<tr class="row-even"><td>X</td>
+<td>A flag not associated with the returned result indicating that the
+minimum of one item in the result table is to be returned
+corresponding to each service, even if no service events are found.
+In cases where no event is found in the resulting rows of the table,
+undefined values are returned as None</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="event-search">
+<h4>Event Search<a class="headerlink" href="#event-search" title="Permalink to this headline">¶</a></h4>
+<p>Method signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">search</span><span class="p">((</span><span class="n">fmt</span><span class="p">,</span> <span class="nb">int</span> <span class="n">size</span><span class="p">,</span> <span class="nb">int</span> <span class="n">querytype</span><span class="p">,</span> <span class="nb">int</span> <span class="n">PE1</span><span class="p">,</span> <span class="nb">int</span> <span class="n">PE2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="description-of-search-parameters">
+<h3>Description of Search Parameters<a class="headerlink" href="#description-of-search-parameters" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="13%" />
+<col width="72%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PARAMETER</th>
+<th class="head">REQUIRED</th>
+<th class="head">DESCRIPTION</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>fmt</td>
+<td>required</td>
+<td>Returned data format - see <a class="reference internal" href="#event-format-label"><span class="std std-ref">Possible Values of the Format Field</span></a></td>
+</tr>
+<tr class="row-odd"><td>size</td>
+<td>required</td>
+<td>maximum number of returned rows</td>
+</tr>
+<tr class="row-even"><td>querytype</td>
+<td>required</td>
+<td>query type</td>
+</tr>
+<tr class="row-odd"><td>PE1</td>
+<td>required</td>
+<td rowspan="2">Parameters dependent on the context set by
+querytype
+see <a class="reference internal" href="#event-search-parameters-label"><span class="std std-ref">Description of Parameters Related to Search Querytype</span></a></td>
+</tr>
+<tr class="row-even"><td>PE2</td>
+<td>optional</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="description-of-parameters-related-to-search-querytype">
+<span id="event-search-parameters-label"></span><h3>Description of Parameters Related to Search Querytype<a class="headerlink" href="#description-of-parameters-related-to-search-querytype" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="43%" />
+<col width="26%" />
+<col width="23%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">TYPE</th>
+<th class="head">DESCRIPTION</th>
+<th class="head">PE1</th>
+<th class="head">PE2</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>Find similar events
+(SIMILAR_BROADCASTINGS_SEARCH)</td>
+<td>service reference</td>
+<td>Event ID</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>Find events with the exact
+title (EXAKT_TITLE_SEARCH)</td>
+<td>text to search</td>
+<td>0 = CASE_CHECK
+1 = NO_CASECHECK</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>Find events with text in the
+title (PARTIAL_TITLE_SEARCH)</td>
+<td>text to search</td>
+<td>0 = CASE_CHECK
+1 = NO_CASECHECK</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>This function searches for event information for the specified     parameters.</li>
+<li>The information is returned in the form of a two-dimensional array,     where the first dimension defines the individual elements of the cursor     (the searched events), and the second dimension is the value     corresponding to the event that is specified by the Format field     (single event data).</li>
+</ul>
+</div>
+<p>Example (<a class="reference external" href="https://mslowik.blogspot.de">https://mslowik.blogspot.de</a>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">l</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+   <span class="p">(</span><span class="s1">&#39;RIBND&#39;</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">SIMILAR_BROADCASTINGS_SEARCH</span><span class="p">,</span> <span class="n">refstr</span><span class="p">,</span> <span class="n">event_id</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="section" id="event-lookup">
+<h4>Event Lookup<a class="headerlink" href="#event-lookup" title="Permalink to this headline">¶</a></h4>
+<p>Method signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lookupEvent</span><span class="p">([</span><span class="n">fmt</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">eServiceReference</span> <span class="n">ref</span><span class="p">,</span> <span class="nb">int</span> <span class="n">querytype</span><span class="p">,</span> <span class="nb">int</span> <span class="n">PE1</span><span class="p">,</span> <span class="nb">int</span> <span class="n">PE2</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="description-of-lookup-parameters">
+<h3>Description of Lookup Parameters<a class="headerlink" href="#description-of-lookup-parameters" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="13%" />
+<col width="72%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PARAMETER</th>
+<th class="head">REQUIRED</th>
+<th class="head">DESCRIPTION</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>fmt</td>
+<td>required</td>
+<td>Returned data format - see <a class="reference internal" href="#event-format-label"><span class="std std-ref">Possible Values of the Format Field</span></a></td>
+</tr>
+<tr class="row-odd"><td>ref</td>
+<td>required</td>
+<td>reference to service</td>
+</tr>
+<tr class="row-even"><td>querytype</td>
+<td>required</td>
+<td>query type</td>
+</tr>
+<tr class="row-odd"><td>PE1</td>
+<td>required</td>
+<td rowspan="2">Parameters dependent on the context set by
+querytype.
+see <a class="reference internal" href="#event-lookup-parameters-label"><span class="std std-ref">Description of Parameters Related to Querytype</span></a></td>
+</tr>
+<tr class="row-even"><td>PE2</td>
+<td>optional</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="description-of-parameters-related-to-querytype">
+<span id="event-lookup-parameters-label"></span><h3>Description of Parameters Related to Querytype<a class="headerlink" href="#description-of-parameters-related-to-querytype" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="59%" />
+<col width="19%" />
+<col width="12%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">TYPE</th>
+<th class="head">DESCRIPTION</th>
+<th class="head">PE1</th>
+<th class="head">PE2</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>2</td>
+<td>Request an event ID</td>
+<td>Event ID</td>
+<td>n/a</td>
+</tr>
+<tr class="row-odd"><td>-1</td>
+<td>request events <em>before</em> the specified time</td>
+<td rowspan="3">time horizon</td>
+<td rowspan="3">end
+date of
+search
+scope</td>
+</tr>
+<tr class="row-even"><td>0</td>
+<td>request events <em>crossing</em> specified time</td>
+</tr>
+<tr class="row-odd"><td>+1</td>
+<td>request events <em>after</em> specified time</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li><strong>-1</strong> for <em>time horizon</em> is current date.</li>
+<li>This function searches for event information for the specified     parameters.</li>
+<li>The information is returned in the form of a two-dimensional array,     where the first dimension defines the individual elements of the cursor     (the searched events), and the second dimension is the value     corresponding to the event that is specified by the Format field     (single event data).</li>
+<li>Time zones of type NUMBER are defined as the number of seconds since     the EPOCH date (in the unix systems beginning in 1970).</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>for <em>querytype=2, (PE2) minutes=0</em> PE1 is event ID</li>
+<li>PE2 appers to be search scope timedelta in <em>minutes</em></li>
+<li>if timedelta in <em>minutes</em> is -1 all matching events are returned(?)</li>
+<li>for <em>querytype=3</em>: last known item(?)</li>
+</ul>
+</div>
+<p>Examples (<a class="reference external" href="https://mslowik.blogspot.de">https://mslowik.blogspot.de</a>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">events</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span> <span class="p">()</span><span class="o">.</span><span class="n">lookupEvent</span><span class="p">(</span>
+    <span class="p">[</span><span class="s1">&#39;IBDTSENC&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">begintime</span><span class="p">,</span> <span class="n">endtime</span><span class="p">)])</span>
+
+<span class="n">search</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;IBDCTSERNX&#39;</span><span class="p">]</span>
+<span class="k">if</span> <span class="n">services</span><span class="p">:</span> <span class="c1"># It&#39;s a Bouquet</span>
+    <span class="n">search</span><span class="o">.</span><span class="n">extend</span> <span class="p">([(</span><span class="n">service</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">cho</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">services</span><span class="p">])</span>
+<span class="n">events</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span> <span class="p">()</span><span class="o">.</span><span class="n">lookupEvent</span> <span class="p">(</span><span class="n">search</span><span class="p">)</span>
+
+<span class="n">search</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;IBDCTSERNX&#39;</span><span class="p">]</span>
+<span class="k">if</span> <span class="n">services</span><span class="p">:</span> <span class="c1"># It&#39;s a Bouquet</span>
+    <span class="n">search</span><span class="o">.</span><span class="n">extend</span> <span class="p">([(</span><span class="n">service</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">cho</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">services</span><span class="p">])</span>
+<span class="n">events</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span><span class="o">.</span><span class="n">lookupEvent</span><span class="p">(</span><span class="n">search</span><span class="p">)</span>
+
+<span class="n">event</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span><span class="o">.</span><span class="n">lookupEvent</span><span class="p">([</span><span class="s1">&#39;ESX&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">int</span> <span class="p">(</span><span class="n">idev</span><span class="p">))]</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="controllers.events.EventsController">
+<em class="property">class </em><code class="descclassname">controllers.events.</code><code class="descname">EventsController</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/events.html#EventsController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.events.EventsController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Events controller.</p>
+<dl class="method">
+<dt id="controllers.events.EventsController.lookup">
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>service_reference</em>, <em>querytype=None</em>, <em>begin=None</em>, <em>minutes=None</em>, <em>flags=None</em>, <em>max_rows=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/events.html#EventsController.lookup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.events.EventsController.lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup EPG events</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>service_reference</strong> (<em>basestring</em>) – service reference</li>
+<li><strong>querytype</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – see <a class="reference internal" href="#event-lookup-parameters-label"><span class="std std-ref">Description of Parameters Related to Querytype</span></a></li>
+<li><strong>begin</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – begin timestamp</li>
+<li><strong>minutes</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – query’s time range in minutes</li>
+<li><strong>flags</strong> (<em>basestring</em>) – query flags</li>
+<li><strong>max_rows</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – maximum number of results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">matching items</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.events.EventsController.lookup_event">
+<code class="descname">lookup_event</code><span class="sig-paren">(</span><em>service_reference</em>, <em>event_id</em>, <em>flags=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/events.html#EventsController.lookup_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.events.EventsController.lookup_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup EPG event by ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>service_reference</strong> (<em>basestring</em>) – service reference</li>
+<li><strong>event_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Event ID</li>
+<li><strong>flags</strong> (<em>basestring</em>) – query flags</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">matching item or None</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="model.html#controllers.models.events.EventDict" title="controllers.models.events.EventDict">models.events.EventDict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.events.EventsController.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>what</em>, <em>querytype=None</em>, <em>case_sensitive=False</em>, <em>flags=None</em>, <em>max_rows=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/events.html#EventsController.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.events.EventsController.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search EPG events</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>what</strong> (<em>basestring</em>) – query value</li>
+<li><strong>querytype</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – see <a class="reference internal" href="#event-search-parameters-label"><span class="std std-ref">Description of Parameters Related to Search Querytype</span></a></li>
+<li><strong>case_sensitive</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – True if case sensitive search</li>
+<li><strong>flags</strong> (<em>basestring</em>) – query flags</li>
+<li><strong>max_rows</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – maximum number of results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list of matching items</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-controllers.recording">
+<span id="recordings"></span><h2>Recordings<a class="headerlink" href="#module-controllers.recording" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="controllers.recording.RECORDINGS_ENDPOINT_PATH">
+<code class="descclassname">controllers.recording.</code><code class="descname">RECORDINGS_ENDPOINT_PATH</code><em class="property"> = 'recordings'</em><a class="headerlink" href="#controllers.recording.RECORDINGS_ENDPOINT_PATH" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of recordings</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Endpoint path portion</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.recording.RECORDINGS_ROOT_PATH">
+<code class="descclassname">controllers.recording.</code><code class="descname">RECORDINGS_ROOT_PATH</code><em class="property"> = '/media/hdd/movie/'</em><a class="headerlink" href="#controllers.recording.RECORDINGS_ROOT_PATH" title="Permalink to this definition">¶</a></dt>
+<dd><p>root path where recordings are stored</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.recording.RECORDING_ENDPOINT_PATH">
+<code class="descclassname">controllers.recording.</code><code class="descname">RECORDING_ENDPOINT_PATH</code><em class="property"> = 'recording'</em><a class="headerlink" href="#controllers.recording.RECORDING_ENDPOINT_PATH" title="Permalink to this definition">¶</a></dt>
+<dd><p>recording</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Endpoint path portion</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.recording.RECORDING_ENDPOINT_URL">
+<code class="descclassname">controllers.recording.</code><code class="descname">RECORDING_ENDPOINT_URL</code><em class="property"> = '/recording/'</em><a class="headerlink" href="#controllers.recording.RECORDING_ENDPOINT_URL" title="Permalink to this definition">¶</a></dt>
+<dd><p>recording</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Endpoint URL</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="utilities.html" class="btn btn-neutral float-right" title="Utilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="restful_api.html" class="btn btn-neutral" title="RESTful API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

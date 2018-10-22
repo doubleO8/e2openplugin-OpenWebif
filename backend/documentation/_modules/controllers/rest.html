@@ -1,0 +1,489 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>controllers.rest &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>controllers.rest</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for controllers.rest</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">twisted.web</span> <span class="k">import</span> <span class="n">resource</span><span class="p">,</span> <span class="n">http</span>
+
+<span class="kn">from</span> <span class="nn">utilities</span> <span class="k">import</span> <span class="n">get_servicereference_portions</span><span class="p">,</span> <span class="n">add_expires_header</span>
+
+<span class="c1">#: CORS - HTTP headers the client may use</span>
+<span class="n">CORS_ALLOWED_CLIENT_HEADERS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;Content-Type&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1">#: CORS - HTTP methods the client may use</span>
+<span class="n">CORS_ALLOWED_METHODS_DEFAULT</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;PUT&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;DELETE&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONS&#39;</span><span class="p">]</span>
+
+<span class="c1">#: CORS - default origin header value</span>
+<span class="n">CORS_DEFAULT_ALLOW_ORIGIN</span> <span class="o">=</span> <span class="s1">&#39;*&#39;</span>
+
+<span class="c1">#: CORS - HTTP headers the server will send as part of OPTIONS response</span>
+<span class="n">CORS_DEFAULT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">:</span> <span class="n">CORS_DEFAULT_ALLOW_ORIGIN</span><span class="p">,</span>
+    <span class="s1">&#39;Access-Control-Allow-Credentials&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Access-Control-Max-Age&#39;</span><span class="p">:</span> <span class="s1">&#39;86400&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Access-Control-Allow-Methods&#39;</span><span class="p">:</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CORS_ALLOWED_METHODS_DEFAULT</span><span class="p">),</span>
+    <span class="s1">&#39;Access-Control-Allow-Headers&#39;</span><span class="p">:</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CORS_ALLOWED_CLIENT_HEADERS</span><span class="p">)</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="json_response"><a class="viewcode-back" href="../../restful_api.html#controllers.rest.json_response">[docs]</a><span class="k">def</span> <span class="nf">json_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a JSON representation for *data* and set HTTP headers indicating</span>
+<span class="sd">    that JSON encoded data is returned.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (twisted.web.server.Request): HTTP request object</span>
+<span class="sd">        data: response content</span>
+<span class="sd">        indent: indentation level or None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        JSON representation of *data* with appropriate HTTP headers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">request</span><span class="o">.</span><span class="n">setHeader</span><span class="p">(</span><span class="s2">&quot;content-type&quot;</span><span class="p">,</span> <span class="s2">&quot;application/json; charset=utf-8&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RESTControllerSkeleton"><a class="viewcode-back" href="../../restful_api.html#controllers.rest.RESTControllerSkeleton">[docs]</a><span class="k">class</span> <span class="nc">RESTControllerSkeleton</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Skeleton implementation of a RESTful contoller class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">isLeaf</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">resource</span><span class="o">.</span><span class="n">Resource</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cors_header</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">CORS_DEFAULT</span><span class="p">)</span>
+        <span class="n">http_verbs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">verb</span> <span class="ow">in</span> <span class="n">CORS_ALLOWED_METHODS_DEFAULT</span><span class="p">:</span>
+            <span class="n">method_name</span> <span class="o">=</span> <span class="s1">&#39;render_</span><span class="si">{:s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">verb</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">):</span>
+                <span class="n">http_verbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">verb</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cors_header</span><span class="p">[</span><span class="s1">&#39;Access-Control-Allow-Methods&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">http_verbs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">expires</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">add_expires_header</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">expires</span><span class="o">=</span><span class="n">expires</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RESTControllerSkeleton.render_OPTIONS"><a class="viewcode-back" href="../../restful_api.html#controllers.rest.RESTControllerSkeleton.render_OPTIONS">[docs]</a>    <span class="k">def</span> <span class="nf">render_OPTIONS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Render response for an HTTP OPTIONS request.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (twisted.web.server.Request): HTTP request object</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            HTTP response with headers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cors_header</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">setHeader</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cors_header</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
+
+<div class="viewcode-block" id="RESTControllerSkeleton.render_GET"><a class="viewcode-back" href="../../restful_api.html#controllers.rest.RESTControllerSkeleton.render_GET">[docs]</a>    <span class="k">def</span> <span class="nf">render_GET</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        HTTP GET implementation.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (twisted.web.server.Request): HTTP request object</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            HTTP response with headers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">setHeader</span><span class="p">(</span>
+            <span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">,</span> <span class="n">CORS_DEFAULT_ALLOW_ORIGIN</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;_controller&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">&quot;request_postpath&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">,</span>
+            <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+            <span class="s2">&quot;request_path&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">json_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RESTControllerSkeleton.render_POST"><a class="viewcode-back" href="../../restful_api.html#controllers.rest.RESTControllerSkeleton.render_POST">[docs]</a>    <span class="k">def</span> <span class="nf">render_POST</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        HTTP POST implementation.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (twisted.web.server.Request): HTTP request object</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            HTTP response with headers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">setHeader</span><span class="p">(</span>
+            <span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">,</span> <span class="n">CORS_DEFAULT_ALLOW_ORIGIN</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;_controller&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">&quot;request_postpath&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">,</span>
+            <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+            <span class="s2">&quot;request_path&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">json_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RESTControllerSkeleton.error_response"><a class="viewcode-back" href="../../restful_api.html#controllers.rest.RESTControllerSkeleton.error_response">[docs]</a>    <span class="k">def</span> <span class="nf">error_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create and return an HTTP error response with data as JSON.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">                request (twisted.web.server.Request): HTTP request object</span>
+<span class="sd">                response_code: HTTP Status Code (default is 500)</span>
+<span class="sd">                **kwargs: additional key/value pairs</span>
+<span class="sd">        Returns:</span>
+<span class="sd">                JSON encoded data with appropriate HTTP headers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">response_code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">response_code</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">INTERNAL_SERVER_ERROR</span>
+
+        <span class="n">response_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;_request&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+                <span class="s2">&quot;postpath&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">,</span>
+                <span class="s2">&quot;uri&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span>
+                <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">response_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">request</span><span class="o">.</span><span class="n">setResponseCode</span><span class="p">(</span><span class="n">response_code</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">json_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response_data</span><span class="p">)</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">TwoFaceApiController</span><span class="p">(</span><span class="n">RESTControllerSkeleton</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">RESTControllerSkeleton</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render_list_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="c1"># override</span>
+
+        <span class="k">return</span> <span class="n">json_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render_list_subset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">service_reference</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[],</span>
+                    <span class="n">service_reference</span><span class="o">=</span><span class="n">service_reference</span><span class="p">)</span>
+
+        <span class="c1"># override</span>
+
+        <span class="k">return</span> <span class="n">json_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render_list_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">service_reference</span><span class="p">,</span> <span class="n">item_id</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[],</span>
+                    <span class="n">service_reference</span><span class="o">=</span><span class="n">service_reference</span><span class="p">,</span>
+                    <span class="n">item_id</span><span class="o">=</span><span class="n">item_id</span><span class="p">)</span>
+
+        <span class="c1"># override</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;items&#39;</span><span class="p">]:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">setResponseCode</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">NOT_FOUND</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">json_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_mangle_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">needed</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">item_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">pp_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">pp_len</span> <span class="o">&lt;</span> <span class="n">needed</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Bad postpath length: Needed </span><span class="si">{:d}</span><span class="s2">, GOIT </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">needed</span><span class="p">,</span> <span class="n">pp_len</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">needed</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">[</span><span class="n">index</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Empty postpath[</span><span class="si">{:d}</span><span class="s2">], </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">index</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">))</span>
+
+        <span class="n">portions</span> <span class="o">=</span> <span class="n">get_servicereference_portions</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">portions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Bad portions length: </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">portions</span><span class="p">)))</span>
+
+        <span class="n">service_reference</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">portions</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">pp_len</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">item_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">needed</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">raise</span>
+
+        <span class="k">return</span> <span class="n">service_reference</span><span class="p">,</span> <span class="n">item_id</span>
+
+    <span class="k">def</span> <span class="nf">render_GET</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        HTTP GET implementation.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (twisted.web.server.Request): HTTP request object</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            HTTP response with headers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">setHeader</span><span class="p">(</span>
+            <span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">,</span> <span class="n">CORS_DEFAULT_ALLOW_ORIGIN</span><span class="p">)</span>
+        <span class="n">pp_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">pp_len</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="n">pp_len</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_list_all</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">service_reference</span><span class="p">,</span> <span class="n">item_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mangle_args</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">needed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">vexc</span><span class="p">:</span>
+            <span class="n">item_id</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">service_reference</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">setResponseCode</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">BAD_REQUEST</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">vexc</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">service_reference</span> <span class="ow">and</span> <span class="n">item_id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_list_item</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">service_reference</span><span class="p">,</span> <span class="n">item_id</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">service_reference</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_list_subset</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">service_reference</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;_controller&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;postpath&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">,</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+                <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">json_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SimpleRootController"><a class="viewcode-back" href="../../restful_api.html#controllers.rest.SimpleRootController">[docs]</a><span class="k">class</span> <span class="nc">SimpleRootController</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simple (Web) Root Controller.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">isLeaf</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">resource</span><span class="o">.</span><span class="n">Resource</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">putChild</span><span class="p">(</span><span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="n">RESTControllerSkeleton</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">putChild</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">RESTControllerSkeleton</span><span class="p">())</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">twisted.web.server</span> <span class="k">import</span> <span class="n">Site</span>
+    <span class="kn">from</span> <span class="nn">twisted.internet</span> <span class="k">import</span> <span class="n">reactor</span>
+
+    <span class="n">root</span> <span class="o">=</span> <span class="n">SimpleRootController</span><span class="p">()</span>
+    <span class="c1"># root.putChild(&quot;configuration&quot;, RESTControllerSkeleton())</span>
+    <span class="n">factory_r</span> <span class="o">=</span> <span class="n">Site</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+
+    <span class="n">reactor</span><span class="o">.</span><span class="n">listenTCP</span><span class="p">(</span><span class="mi">19999</span><span class="p">,</span> <span class="n">factory_r</span><span class="p">)</span>
+    <span class="n">reactor</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

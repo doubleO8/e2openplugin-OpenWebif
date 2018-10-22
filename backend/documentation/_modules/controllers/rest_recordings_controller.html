@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>controllers.rest_recordings_controller &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>controllers.rest_recordings_controller</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for controllers.rest_recordings_controller</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Recordings</span>
+<span class="sd">----------</span>
+
+<span class="sd">Listing of recordings on current device.</span>
+<span class="sd">Removing of recordings files including meta data.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">twisted.web</span> <span class="k">import</span> <span class="n">http</span>
+
+<span class="kn">from</span> <span class="nn">rest</span> <span class="k">import</span> <span class="n">json_response</span>
+<span class="kn">from</span> <span class="nn">rest</span> <span class="k">import</span> <span class="n">CORS_DEFAULT_ALLOW_ORIGIN</span><span class="p">,</span> <span class="n">RESTControllerSkeleton</span>
+<span class="kn">from</span> <span class="nn">recording</span> <span class="k">import</span> <span class="n">RecordingsController</span>
+<span class="kn">from</span> <span class="nn">recording</span> <span class="k">import</span> <span class="n">RECORDINGS_ROOT_PATH</span><span class="p">,</span> <span class="n">RECORDING_ENDPOINT_URL</span>
+<span class="kn">from</span> <span class="nn">models.events</span> <span class="k">import</span> <span class="n">KEY_SERVICE_REFERENCE</span>
+<span class="kn">from</span> <span class="nn">utilities</span> <span class="k">import</span> <span class="n">add_expires_header</span>
+
+
+<div class="viewcode-block" id="RESTRecordingsController"><a class="viewcode-back" href="../../restful_api.html#controllers.rest_recordings_controller.RESTRecordingsController">[docs]</a><span class="k">class</span> <span class="nc">RESTRecordingsController</span><span class="p">(</span><span class="n">RESTControllerSkeleton</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    RESTful Controller for ``/recordings`` endpoint.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">RESTControllerSkeleton</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">movie_controller</span> <span class="o">=</span> <span class="n">RecordingsController</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="n">RECORDINGS_ROOT_PATH</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RESTRecordingsController.render_path_listing"><a class="viewcode-back" href="../../restful_api.html#controllers.rest_recordings_controller.RESTRecordingsController.render_path_listing">[docs]</a>    <span class="k">def</span> <span class="nf">render_path_listing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">root_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a list of movie items available on current device.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (twisted.web.server.Request): HTTP request object</span>
+<span class="sd">            root_path (basestring): Movie item to remove</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            HTTP response with headers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[])</span>
+        <span class="n">removed_keys</span> <span class="o">=</span> <span class="p">(</span><span class="n">KEY_SERVICE_REFERENCE</span><span class="p">,</span> <span class="s1">&#39;flags&#39;</span><span class="p">,</span> <span class="s1">&#39;kind&#39;</span><span class="p">,)</span>
+        <span class="n">r_path</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span>
+
+        <span class="k">if</span> <span class="n">r_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">):</span>
+            <span class="n">r_path</span> <span class="o">=</span> <span class="n">r_path</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">movie_controller</span><span class="o">.</span><span class="n">list_movies</span><span class="p">(</span><span class="n">root_path</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">rkey</span> <span class="ow">in</span> <span class="n">removed_keys</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="n">item</span><span class="p">[</span><span class="n">rkey</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">):</span>
+                <span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">r_path</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">][</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">):]))</span>
+
+        <span class="n">add_expires_header</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">expires</span><span class="o">=</span><span class="mi">60</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">json_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RESTRecordingsController.remove"><a class="viewcode-back" href="../../restful_api.html#controllers.rest_recordings_controller.RESTRecordingsController.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">target_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove movie file including meta data files.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (twisted.web.server.Request): HTTP request object</span>
+<span class="sd">            target_path (basestring): Movie item to remove</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            HTTP response with headers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[])</span>
+        <span class="n">e_ext_level1</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ts&#39;</span><span class="p">,</span> <span class="s1">&#39;eit&#39;</span><span class="p">,)</span>
+        <span class="n">e_ext_level2</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ap&#39;</span><span class="p">,</span> <span class="s1">&#39;cuts&#39;</span><span class="p">,</span> <span class="s1">&#39;meta&#39;</span><span class="p">,</span> <span class="s1">&#39;sc&#39;</span><span class="p">,)</span>
+        <span class="p">(</span><span class="n">trunk</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">target_path</span><span class="p">)</span>
+        <span class="n">files_to_remove</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">ext1</span> <span class="ow">in</span> <span class="n">e_ext_level1</span><span class="p">:</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">trunk</span><span class="p">,</span> <span class="n">ext1</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">current</span><span class="p">):</span>
+                <span class="n">files_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+
+        <span class="n">ext1</span> <span class="o">=</span> <span class="n">e_ext_level1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">ext2</span> <span class="ow">in</span> <span class="n">e_ext_level2</span><span class="p">:</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">trunk</span><span class="p">,</span> <span class="n">ext1</span><span class="p">,</span> <span class="n">ext2</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">current</span><span class="p">):</span>
+                <span class="n">files_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">files_to_remove</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;files&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">json_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RESTRecordingsController.render_GET"><a class="viewcode-back" href="../../restful_api.html#controllers.rest_recordings_controller.RESTRecordingsController.render_GET">[docs]</a>    <span class="k">def</span> <span class="nf">render_GET</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        HTTP GET request handler returning list of movies</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (twisted.web.server.Request): HTTP request object</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            HTTP response with headers</span>
+
+<span class="sd">        .. http:get:: /recordings/{basestring:path}</span>
+
+<span class="sd">            :statuscode 200: no error</span>
+<span class="sd">            :statuscode 301: redirect</span>
+<span class="sd">            :statuscode 404: not found</span>
+
+<span class="sd">        .. http:get:: /recording/{basestring:path}</span>
+
+<span class="sd">            :statuscode 200: no error</span>
+<span class="sd">            :statuscode 404: not found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">setHeader</span><span class="p">(</span>
+            <span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">,</span> <span class="n">CORS_DEFAULT_ALLOW_ORIGIN</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">target_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">target_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span>
+                                       <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">target_path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_path_listing</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target_path</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">target_path</span><span class="p">):</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">RECORDING_ENDPOINT_URL</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">)</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">redirect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_response</span><span class="p">(</span>
+            <span class="n">request</span><span class="p">,</span> <span class="n">response_code</span><span class="o">=</span><span class="n">http</span><span class="o">.</span><span class="n">NOT_FOUND</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;not found&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RESTRecordingsController.render_DELETE"><a class="viewcode-back" href="../../restful_api.html#controllers.rest_recordings_controller.RESTRecordingsController.render_DELETE">[docs]</a>    <span class="k">def</span> <span class="nf">render_DELETE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        HTTP DELETE request handler deleting a movie item</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (twisted.web.server.Request): HTTP request object</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            HTTP response with headers</span>
+
+<span class="sd">        .. http:delete:: /recordings/{basestring:path}</span>
+
+<span class="sd">            :statuscode 200: no error</span>
+<span class="sd">            :statuscode 404: not found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">setHeader</span><span class="p">(</span>
+            <span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">,</span> <span class="n">CORS_DEFAULT_ALLOW_ORIGIN</span><span class="p">)</span>
+
+        <span class="n">target_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span>
+                                   <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">postpath</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">target_path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target_path</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;not supported&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

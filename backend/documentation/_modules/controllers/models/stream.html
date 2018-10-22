@@ -1,0 +1,524 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>controllers.models.stream &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>controllers.models.stream</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for controllers.models.stream</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1">##############################################################################</span>
+<span class="c1">#                        2011 E2OpenPlugins                                  #</span>
+<span class="c1">#                                                                            #</span>
+<span class="c1">#  This file is open source software; you can redistribute it and/or modify  #</span>
+<span class="c1">#     it under the terms of the GNU General Public License version 2 as      #</span>
+<span class="c1">#               published by the Free Software Foundation.                   #</span>
+<span class="c1">#                                                                            #</span>
+<span class="c1">##############################################################################</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">enigma</span> <span class="k">import</span> <span class="n">eServiceReference</span><span class="p">,</span> <span class="n">getBestPlayableServiceReference</span>
+<span class="kn">from</span> <span class="nn">ServiceReference</span> <span class="k">import</span> <span class="n">ServiceReference</span>
+<span class="kn">from</span> <span class="nn">Components.config</span> <span class="k">import</span> <span class="n">config</span>
+
+<span class="kn">from</span> <span class="nn">twisted.web</span> <span class="k">import</span> <span class="n">http</span>
+
+<span class="kn">from</span> <span class="nn">info</span> <span class="k">import</span> <span class="n">getInfo</span>
+<span class="kn">from</span> <span class="nn">..utilities</span> <span class="k">import</span> <span class="n">require_valid_file_parameter</span><span class="p">,</span> <span class="n">build_url</span>
+<span class="kn">from</span> <span class="nn">..utilities</span> <span class="k">import</span> <span class="n">mangle_host_header_port</span>
+
+<span class="n">MODEL_TRANSCODING</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;Uno4K&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Ultimo4K&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Solo4K&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Solo²&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Duo²&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Solo SE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Quad&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Quad Plus&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">MACHINEBUILD_TRANSCODING</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;dags7356&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;dags7252&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;gb7252&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;gb7356&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">MACHINEBUILD_TRANSCODING_DYNAMIC</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;inihdp&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;hd2400&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;et10000&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;et13000&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sf5008&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;8100s&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">MACHINEBUILD_TRANSCODING_NORMAL</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;ew7356&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;formuler1tc&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;tiviaraplus&#39;</span>
+<span class="p">)</span>
+
+<span class="n">MACHINEBUILD_TRANSCODING_ANY</span> <span class="o">=</span> <span class="n">MACHINEBUILD_TRANSCODING_DYNAMIC</span> <span class="o">+</span> \
+                               <span class="n">MACHINEBUILD_TRANSCODING_NORMAL</span>
+
+<span class="n">SLOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;stream&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="create_transcoding_args"><a class="viewcode-back" href="../../../utilities.html#controllers.models.stream.create_transcoding_args">[docs]</a><span class="k">def</span> <span class="nf">create_transcoding_args</span><span class="p">(</span><span class="n">machinebuild</span><span class="p">,</span> <span class="n">for_phone</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create transcoding query parameters `dict` based on *machine build* and</span>
+<span class="sd">    *is mobile device* option.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        machinebuild: machine build indicator</span>
+<span class="sd">        for_phone: for mobile device indicator</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: query parameters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">for_phone</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">args</span>
+
+    <span class="k">if</span> <span class="n">machinebuild</span> <span class="ow">in</span> <span class="n">MACHINEBUILD_TRANSCODING_DYNAMIC</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">bitrate</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">transcodingsetup</span><span class="o">.</span><span class="n">bitrate</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">resolution</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">transcodingsetup</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">aspectratio</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">transcodingsetup</span><span class="o">.</span><span class="n">aspectratio</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">interlaced</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">transcodingsetup</span><span class="o">.</span><span class="n">interlaced</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">])</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">machinebuild</span> <span class="ow">in</span> <span class="n">MACHINEBUILD_TRANSCODING_NORMAL</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">bitrate</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">transcodingsetup</span><span class="o">.</span><span class="n">bitrate</span><span class="o">.</span><span class="n">value</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">args</span></div>
+
+
+<div class="viewcode-block" id="create_stream_m3u"><a class="viewcode-back" href="../../../utilities.html#controllers.models.stream.create_stream_m3u">[docs]</a><span class="k">def</span> <span class="nf">create_stream_m3u</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">m3ufile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create M3U contents for service streaming.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        session: enigma session object</span>
+<span class="sd">        request (twisted.web.server.Request): HTTP request object</span>
+<span class="sd">        m3ufile: M3U filename</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        M3U contents</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">m3u_content</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;#EXTM3U&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;#EXTVLCOPT--http-reconnect=true&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">sRef</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">currentServiceRef</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="s2">&quot;ref&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+        <span class="n">sRef</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;ref&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+    <span class="n">for_phone</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="s2">&quot;device&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+        <span class="n">for_phone</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;device&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;phone&quot;</span>
+
+    <span class="k">if</span> <span class="n">m3ufile</span> <span class="o">==</span> <span class="s2">&quot;streamcurrent.m3u&quot;</span><span class="p">:</span>
+        <span class="n">currentServiceRef</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">getCurrentlyPlayingServiceReference</span><span class="p">()</span>
+        <span class="n">sRef</span> <span class="o">=</span> <span class="n">currentServiceRef</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">sRef</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;1:134:&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">currentServiceRef</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">currentServiceRef</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">getCurrentlyPlayingServiceReference</span><span class="p">()</span>  <span class="c1"># NOQA</span>
+        <span class="k">if</span> <span class="n">currentServiceRef</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">currentServiceRef</span> <span class="o">=</span> <span class="n">eServiceReference</span><span class="p">()</span>
+        <span class="n">ref</span> <span class="o">=</span> <span class="n">getBestPlayableServiceReference</span><span class="p">(</span>
+            <span class="n">eServiceReference</span><span class="p">(</span><span class="n">sRef</span><span class="p">),</span> <span class="n">currentServiceRef</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sRef</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sRef</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span>
+
+    <span class="n">portNumber</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">streamport</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">getInfo</span><span class="p">()</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span>
+    <span class="n">machinebuild</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;machinebuild&quot;</span><span class="p">]</span>
+    <span class="n">transcoder_port</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">create_transcoding_args</span><span class="p">(</span><span class="n">machinebuild</span><span class="p">,</span> <span class="n">for_phone</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">MODEL_TRANSCODING</span> <span class="ow">or</span> <span class="n">machinebuild</span> <span class="ow">in</span> <span class="n">MACHINEBUILD_TRANSCODING</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">transcoder_port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">transcodingsetup</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="c1"># Transcoding Plugin is not installed or your STB does not support</span>
+            <span class="c1"># transcoding</span>
+            <span class="k">pass</span>
+        <span class="k">if</span> <span class="n">for_phone</span><span class="p">:</span>
+            <span class="n">portNumber</span> <span class="o">=</span> <span class="n">transcoder_port</span>
+        <span class="k">if</span> <span class="s2">&quot;port&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+            <span class="n">portNumber</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># INI use dynamic encoder allocation, and each stream can have diffrent</span>
+    <span class="c1"># parameters</span>
+    <span class="k">if</span> <span class="n">machinebuild</span> <span class="ow">in</span> <span class="n">MACHINEBUILD_TRANSCODING_ANY</span><span class="p">:</span>
+        <span class="n">transcoder_port</span> <span class="o">=</span> <span class="mi">8001</span>
+
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">service_name_for_stream</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">m3u_content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;#EXTINF:-1,</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># When you use EXTVLCOPT:program in a transcoded stream, VLC does</span>
+        <span class="c1"># not play stream</span>
+        <span class="k">if</span> <span class="n">sRef</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="n">portNumber</span> <span class="o">!=</span> <span class="n">transcoder_port</span><span class="p">:</span>
+            <span class="n">m3u_content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;#EXTVLCOPT:program=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">sRef</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">16</span><span class="p">)))</span>
+
+    <span class="n">mangled</span> <span class="o">=</span> <span class="n">mangle_host_header_port</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">getHeader</span><span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">))</span>
+    <span class="n">source_url</span> <span class="o">=</span> <span class="n">build_url</span><span class="p">(</span>
+        <span class="n">hostname</span><span class="o">=</span><span class="n">mangled</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">],</span> <span class="n">port</span><span class="o">=</span><span class="n">portNumber</span><span class="p">,</span>
+        <span class="n">path</span><span class="o">=</span><span class="n">sRef</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">m3u_content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">source_url</span><span class="p">)</span>
+    <span class="n">request</span><span class="o">.</span><span class="n">setHeader</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s1">&#39;application/x-mpegurl&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">m3u_content</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="create_file_m3u"><a class="viewcode-back" href="../../../utilities.html#controllers.models.stream.create_file_m3u">[docs]</a><span class="k">def</span> <span class="nf">create_file_m3u</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create M3U contents for file streaming.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (twisted.web.server.Request): HTTP request object</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        M3U contents</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">require_valid_file_parameter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;file&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">verr</span><span class="p">:</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">setResponseCode</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">BAD_REQUEST</span><span class="p">)</span>
+        <span class="n">SLOG</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">verr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">ioerr</span><span class="p">:</span>
+        <span class="n">SLOG</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">ioerr</span><span class="p">)</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">setResponseCode</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">NOT_FOUND</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="n">for_phone</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="s2">&quot;device&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+        <span class="n">for_phone</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;device&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;phone&quot;</span>
+
+    <span class="c1"># ServiceReference is not part of filename so look in</span>
+    <span class="c1"># the &#39;.ts.meta&#39; file</span>
+    <span class="n">sRef</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">m3u_content</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;#EXTM3U&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;#EXTVLCOPT--http-reconnect=true&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">service_name_for_stream</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+        <span class="n">metafilename</span> <span class="o">=</span> <span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;.meta&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metafilename</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">src</span><span class="p">:</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">src</span><span class="o">.</span><span class="n">readlines</span><span class="p">()]</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">seconds</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># unknown duration default</span>
+                <span class="k">if</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>  <span class="c1"># service ref</span>
+                    <span class="n">sRef</span> <span class="o">=</span> <span class="n">eServiceReference</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>  <span class="c1"># name</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">lines</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span>  <span class="c1"># length</span>
+                    <span class="n">seconds</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span> <span class="o">/</span> <span class="mi">90000</span>  <span class="c1"># In seconds</span>
+                <span class="n">m3u_content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;#EXTINF:</span><span class="si">%d</span><span class="s2">,</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">IOError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+    <span class="n">portNumber</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">getInfo</span><span class="p">()</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span>
+    <span class="n">machinebuild</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;machinebuild&quot;</span><span class="p">]</span>
+    <span class="n">transcoder_port</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># INI use dynamic encoder allocation, and each stream can have</span>
+    <span class="c1"># different parameters</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">create_transcoding_args</span><span class="p">(</span><span class="n">machinebuild</span><span class="p">,</span> <span class="n">for_phone</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">MODEL_TRANSCODING</span> <span class="ow">or</span> <span class="n">machinebuild</span> <span class="ow">in</span> <span class="n">MACHINEBUILD_TRANSCODING</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">transcoder_port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">transcodingsetup</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="c1"># Transcoding Plugin is not installed or your STB does not</span>
+            <span class="c1"># support transcoding</span>
+            <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="n">for_phone</span><span class="p">:</span>
+            <span class="n">portNumber</span> <span class="o">=</span> <span class="n">transcoder_port</span>
+
+    <span class="k">if</span> <span class="s2">&quot;port&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+        <span class="n">portNumber</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">for_phone</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">machinebuild</span> <span class="ow">in</span> <span class="n">MACHINEBUILD_TRANSCODING_ANY</span><span class="p">:</span>
+            <span class="n">portNumber</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">streamport</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="c1"># When you use EXTVLCOPT:program in a transcoded stream, VLC does not</span>
+    <span class="c1"># play stream</span>
+    <span class="n">use_s_name</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">service_name_for_stream</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">if</span> <span class="n">use_s_name</span> <span class="ow">and</span> <span class="n">sRef</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="n">portNumber</span> <span class="o">!=</span> <span class="n">transcoder_port</span><span class="p">:</span>
+        <span class="n">m3u_content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;#EXTVLCOPT:program=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span>
+            <span class="n">sRef</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">16</span><span class="p">)))</span>
+
+    <span class="n">mangled</span> <span class="o">=</span> <span class="n">mangle_host_header_port</span><span class="p">(</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">getHeader</span><span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">),</span>
+                <span class="n">fallback_port</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">portNumber</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">portNumber</span> <span class="o">=</span> <span class="n">mangled</span><span class="p">[</span><span class="s1">&#39;port&#39;</span><span class="p">]</span>
+
+    <span class="n">args</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filename</span>
+    <span class="n">source_url</span> <span class="o">=</span> <span class="n">build_url</span><span class="p">(</span>
+        <span class="n">hostname</span><span class="o">=</span><span class="n">mangled</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">],</span> <span class="n">port</span><span class="o">=</span><span class="n">portNumber</span><span class="p">,</span>
+        <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/file&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">m3u_content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">source_url</span><span class="p">)</span>
+    <span class="n">request</span><span class="o">.</span><span class="n">setHeader</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s1">&#39;application/x-mpegurl&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">m3u_content</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">getStreamSubservices</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">currentServiceRef</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">getCurrentlyPlayingServiceReference</span><span class="p">()</span>
+
+    <span class="c1"># TODO : this will only work if sref = current channel</span>
+    <span class="c1"># the DMM webif can also show subservices for other channels</span>
+    <span class="c1"># like the current ideas are welcome</span>
+
+    <span class="k">if</span> <span class="s2">&quot;sRef&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+        <span class="n">currentServiceRef</span> <span class="o">=</span> <span class="n">eServiceReference</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;sRef&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">currentServiceRef</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">currentService</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">getCurrentService</span><span class="p">()</span>
+        <span class="n">subservices</span> <span class="o">=</span> <span class="n">currentService</span><span class="o">.</span><span class="n">subServices</span><span class="p">()</span>
+
+        <span class="n">services</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;servicereference&quot;</span><span class="p">:</span> <span class="n">currentServiceRef</span><span class="o">.</span><span class="n">toString</span><span class="p">(),</span>
+            <span class="s2">&quot;servicename&quot;</span><span class="p">:</span> <span class="n">ServiceReference</span><span class="p">(</span><span class="n">currentServiceRef</span><span class="p">)</span><span class="o">.</span><span class="n">getServiceName</span><span class="p">()</span>
+        <span class="p">})</span>
+        <span class="k">if</span> <span class="n">subservices</span> <span class="ow">and</span> <span class="n">subservices</span><span class="o">.</span><span class="n">getNumberOfSubservices</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">subservices</span> <span class="ow">and</span> <span class="n">subservices</span><span class="o">.</span><span class="n">getNumberOfSubservices</span><span class="p">()</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">z</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+                <span class="n">sub</span> <span class="o">=</span> <span class="n">subservices</span><span class="o">.</span><span class="n">getSubservice</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+                <span class="n">services</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s2">&quot;servicereference&quot;</span><span class="p">:</span> <span class="n">sub</span><span class="o">.</span><span class="n">toString</span><span class="p">(),</span>
+                    <span class="s2">&quot;servicename&quot;</span><span class="p">:</span> <span class="n">sub</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span>
+                <span class="p">})</span>
+                <span class="n">z</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">services</span><span class="o">.</span><span class="n">append</span> <span class="o">=</span> <span class="p">({</span>
+            <span class="s2">&quot;servicereference&quot;</span><span class="p">:</span> <span class="s2">&quot;N/A&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;servicename&quot;</span><span class="p">:</span> <span class="s2">&quot;N/A&quot;</span>
+        <span class="p">})</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="n">services</span><span class="p">}</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

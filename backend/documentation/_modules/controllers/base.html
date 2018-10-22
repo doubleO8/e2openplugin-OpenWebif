@@ -1,0 +1,478 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>controllers.base &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>controllers.base</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for controllers.base</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1">##############################################################################</span>
+<span class="c1">#                        2011 E2OpenPlugins                                  #</span>
+<span class="c1">#                                                                            #</span>
+<span class="c1">#  This file is open source software; you can redistribute it and/or modify  #</span>
+<span class="c1">#     it under the terms of the GNU General Public License version 2 as      #</span>
+<span class="c1">#               published by the Free Software Foundation.                   #</span>
+<span class="c1">#                                                                            #</span>
+<span class="c1">##############################################################################</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">imp</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">twisted.web</span> <span class="k">import</span> <span class="n">server</span><span class="p">,</span> <span class="n">http</span><span class="p">,</span> <span class="n">resource</span>
+<span class="kn">from</span> <span class="nn">Cheetah.Template</span> <span class="k">import</span> <span class="n">Template</span>
+
+<span class="kn">from</span> <span class="nn">defaults</span> <span class="k">import</span> <span class="n">VIEWS_PATH</span>
+<span class="kn">from</span> <span class="nn">utilities</span> <span class="k">import</span> <span class="n">mangle_host_header_port</span>
+
+<span class="n">OWIF_PREFIX</span> <span class="o">=</span> <span class="s1">&#39;P_&#39;</span>
+
+<span class="c1">#: HTTP 404 Not Found response content</span>
+<span class="n">FOUR_O_FOUR</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">&lt;html&gt;&lt;head&gt;&lt;title&gt;Open Webif&lt;/title&gt;&lt;/head&gt;</span>
+<span class="s2">&lt;body&gt;&lt;h1&gt;Error 404: Page not found&lt;/h1&gt;&lt;br/&gt;</span>
+<span class="s2">The requested URL was not found on this server.&lt;/body&gt;&lt;/html&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">#: template for simple XML result</span>
+<span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span> <span class="o">=</span> <span class="s2">&quot;web/e2simplexmlresult&quot;</span>
+
+<span class="c1">#: template for enigma2 event list</span>
+<span class="n">TEMPLATE_E2_EVENT_LIST</span> <span class="o">=</span> <span class="s2">&quot;web/e2eventlist&quot;</span>
+
+<span class="c1">#: template for enigma2 service list</span>
+<span class="n">TEMPLATE_E2_SERVICE_LIST</span> <span class="o">=</span> <span class="s2">&quot;web/e2servicelist&quot;</span>
+
+<span class="c1">#: template for enigma2 tags</span>
+<span class="n">TEMPLATE_E2_TAGS</span> <span class="o">=</span> <span class="s2">&quot;web/e2tags&quot;</span>
+
+<span class="c1">#: template aliases</span>
+<span class="n">TEMPLATE_ALIASES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;web/loadepg&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/epgbouquet&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_EVENT_LIST</span><span class="p">,</span>
+    <span class="s2">&quot;web/getservices&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SERVICE_LIST</span><span class="p">,</span>
+    <span class="s2">&quot;web/gettags&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_TAGS</span><span class="p">,</span>
+    <span class="s2">&quot;web/epgservicenow&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_EVENT_LIST</span><span class="p">,</span>
+    <span class="s2">&quot;web/timeraddbyeventid&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/mediaplayerplay&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/streamsubservices&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SERVICE_LIST</span><span class="p">,</span>
+    <span class="s2">&quot;web/timertogglestatus&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/subservices&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SERVICE_LIST</span><span class="p">,</span>
+    <span class="s2">&quot;web/timerlistwrite&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/recordnow&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/epgmulti&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_EVENT_LIST</span><span class="p">,</span>
+    <span class="s2">&quot;web/epgservicenext&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_EVENT_LIST</span><span class="p">,</span>
+    <span class="s2">&quot;web/message&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/pluginlistread&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/moviedelete&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/timeradd&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/removelocation&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/timerdelete&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/moviemove&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/mediaplayercmd&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/zap&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/movierename&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/parentcontrollist&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SERVICE_LIST</span><span class="p">,</span>
+    <span class="s2">&quot;web/saveepg&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/epgsearch&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_EVENT_LIST</span><span class="p">,</span>
+    <span class="s2">&quot;web/mediaplayeradd&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/mediaplayerwrite&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/movietags&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_TAGS</span><span class="p">,</span>
+    <span class="s2">&quot;web/messageanswer&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/servicelistreload&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/mediaplayerload&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/epgservice&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_EVENT_LIST</span><span class="p">,</span>
+    <span class="s2">&quot;web/timerchange&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/timercleanup&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/mediaplayerremove&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_SIMPLE_XML_RESULT</span><span class="p">,</span>
+    <span class="s2">&quot;web/epgsimilar&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_EVENT_LIST</span><span class="p">,</span>
+    <span class="s2">&quot;web/epgnext&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_EVENT_LIST</span><span class="p">,</span>
+    <span class="s2">&quot;web/epgnownext&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_EVENT_LIST</span><span class="p">,</span>
+    <span class="s2">&quot;web/epgnow&quot;</span><span class="p">:</span> <span class="n">TEMPLATE_E2_EVENT_LIST</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">CONTENT_TYPE_X_MPEGURL</span> <span class="o">=</span> <span class="s1">&#39;application/x-mpegurl&#39;</span>
+<span class="n">CONTENT_TYPE_HTML</span> <span class="o">=</span> <span class="s1">&#39;text/html&#39;</span>
+<span class="n">CONTENT_TYPE_TEXT</span> <span class="o">=</span> <span class="s1">&#39;text/plain&#39;</span>
+<span class="n">CONTENT_TYPE_JSON</span> <span class="o">=</span> <span class="s1">&#39;application/json; charset=utf-8&#39;</span>
+
+
+<div class="viewcode-block" id="error404"><a class="viewcode-back" href="../../web_controller.html#controllers.base.error404">[docs]</a><span class="k">def</span> <span class="nf">error404</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 404 Not Found response.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (twisted.web.server.Request): HTTP request object</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HTTP 404 Not Found response</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">request</span><span class="o">.</span><span class="n">setHeader</span><span class="p">(</span><span class="s2">&quot;content-type&quot;</span><span class="p">,</span> <span class="n">CONTENT_TYPE_HTML</span><span class="p">)</span>
+    <span class="n">request</span><span class="o">.</span><span class="n">setResponseCode</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">NOT_FOUND</span><span class="p">)</span>
+    <span class="n">request</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">FOUR_O_FOUR</span><span class="p">)</span>
+    <span class="n">request</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="BaseController"><a class="viewcode-back" href="../../web_controller.html#controllers.base.BaseController">[docs]</a><span class="k">class</span> <span class="nc">BaseController</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Basic HTTP requests controller.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">isLeaf</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="BaseController.__init__"><a class="viewcode-back" href="../../web_controller.html#controllers.base.BaseController.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (basestring): Base path</span>
+<span class="sd">            session: enigma2 Session instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resource</span><span class="o">.</span><span class="n">Resource</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content_type</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="BaseController.loadTemplate"><a class="viewcode-back" href="../../web_controller.html#controllers.base.BaseController.loadTemplate">[docs]</a>    <span class="k">def</span> <span class="nf">loadTemplate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_trunk_relpath</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Try to generate template contents by trying to load optimised bytecode,</span>
+<span class="sd">        python sourcefile and `.tmpl` file (in that order).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            template_trunk_relpath (basestring): template filename trunk</span>
+<span class="sd">            module (basestring): module name</span>
+<span class="sd">            args (dict): template parameters</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: template content</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;template_trunk_relpath=</span><span class="si">{!r}</span><span class="s2"> module=</span><span class="si">{!r}</span><span class="s2"> args=</span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">template_trunk_relpath</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+
+        <span class="n">trunk</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">VIEWS_PATH</span><span class="p">,</span> <span class="n">template_trunk_relpath</span><span class="p">))</span>
+        <span class="n">template_file</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;pyo&#39;</span><span class="p">,</span> <span class="s1">&#39;py&#39;</span><span class="p">,</span> <span class="s1">&#39;tmpl&#39;</span><span class="p">):</span>
+            <span class="n">candy</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">trunk</span><span class="p">,</span> <span class="n">ext</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">candy</span><span class="p">):</span>
+                <span class="n">template_file</span> <span class="o">=</span> <span class="n">candy</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">template_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># self.log.debug(&quot;&gt;&gt; {!r}&quot;.format(template_file))</span>
+        <span class="k">if</span> <span class="n">template_file</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">template_file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;o&quot;</span><span class="p">):</span>
+                <span class="n">template</span> <span class="o">=</span> <span class="n">imp</span><span class="o">.</span><span class="n">load_compiled</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">template_file</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">template</span> <span class="o">=</span> <span class="n">imp</span><span class="o">.</span><span class="n">load_source</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">template_file</span><span class="p">)</span>
+
+            <span class="n">mod</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">mod</span><span class="p">):</span>
+                <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">mod</span><span class="p">(</span><span class="n">searchList</span><span class="o">=</span><span class="n">args</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">Template</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">template_file</span><span class="p">,</span> <span class="n">searchList</span><span class="o">=</span><span class="p">[</span><span class="n">args</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="nf">getChild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{scheme}</span><span class="s2">://</span><span class="si">{netloc}{path}</span><span class="s2"> &quot;</span> \
+                  <span class="s2">&quot;accessed by </span><span class="si">{client}{via}</span><span class="s2"> </span><span class="si">{r_args}</span><span class="s2">&quot;</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">mangle_host_header_port</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">getHeader</span><span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">))</span>
+            <span class="n">args</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">args</span><span class="p">[</span><span class="s1">&#39;client&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">getPeer</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+                <span class="n">args</span><span class="p">[</span><span class="s1">&#39;client&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">getClient</span><span class="p">()</span>
+            <span class="n">args</span><span class="p">[</span><span class="s1">&#39;via&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+            <span class="n">header</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">getHeader</span><span class="p">(</span><span class="s2">&quot;X-Forwarded-For&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+                <span class="n">args</span><span class="p">[</span><span class="s1">&#39;via&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot; (</span><span class="si">{!r}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+            <span class="n">args</span><span class="p">[</span><span class="s1">&#39;r_args&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">getAllHeaders</span><span class="p">())</span>
+
+        <span class="c1"># cache data</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;index&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">owif_callback_name</span> <span class="o">=</span> <span class="n">OWIF_PREFIX</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owif_callback_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{!r}</span><span class="s1"> </span><span class="si">{!r}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">owif_callback_name</span><span class="p">,</span> <span class="n">func</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{!r}</span><span class="s1"> </span><span class="si">{!r}</span><span class="s1"> returned None&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">owif_callback_name</span><span class="p">,</span> <span class="n">func</span><span class="p">))</span>
+                <span class="n">error404</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">server</span><span class="o">.</span><span class="n">NOT_DONE_YET</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">content_type</span><span class="p">:</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">setHeader</span><span class="p">(</span><span class="s2">&quot;content-type&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">content_type</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">content_type</span> <span class="o">==</span> <span class="n">CONTENT_TYPE_X_MPEGURL</span><span class="p">:</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">setHeader</span><span class="p">(</span><span class="s2">&quot;content-type&quot;</span><span class="p">,</span> <span class="n">CONTENT_TYPE_TEXT</span><span class="p">)</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tmpl_trunk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span>
+                <span class="n">template_module_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span>
+
+                <span class="k">if</span> <span class="n">tmpl_trunk</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+                    <span class="n">tmpl_trunk</span> <span class="o">+=</span> <span class="s2">&quot;index&quot;</span>
+                <span class="k">elif</span> <span class="n">tmpl_trunk</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:]</span> <span class="o">!=</span> <span class="s2">&quot;index&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span>
+                    <span class="n">tmpl_trunk</span> <span class="o">+=</span> <span class="s2">&quot;/index&quot;</span>
+
+                <span class="n">tmpl_trunk</span> <span class="o">=</span> <span class="n">tmpl_trunk</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+                <span class="n">tmpl_trunk</span> <span class="o">=</span> <span class="n">tmpl_trunk</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">tmpl_trunk</span> <span class="ow">in</span> <span class="n">TEMPLATE_ALIASES</span><span class="p">:</span>
+                    <span class="n">the_alias</span> <span class="o">=</span> <span class="n">TEMPLATE_ALIASES</span><span class="p">[</span><span class="n">tmpl_trunk</span><span class="p">]</span>
+                    <span class="n">template_module_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">the_alias</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Template alias </span><span class="si">{!r}</span><span class="s2"> -&gt; </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">tmpl_trunk</span><span class="p">,</span> <span class="n">the_alias</span><span class="p">))</span>
+                    <span class="n">tmpl_trunk</span> <span class="o">=</span> <span class="n">the_alias</span>
+
+                <span class="c1"># out =&gt; content</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loadTemplate</span><span class="p">(</span><span class="n">tmpl_trunk</span><span class="p">,</span> <span class="n">template_module_name</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                        <span class="s2">&quot;Template not loadable for </span><span class="si">{!r}</span><span class="s2"> (page </span><span class="si">{!r}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">owif_callback_name</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">uri</span><span class="p">))</span>
+                    <span class="n">error404</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">request</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+                    <span class="n">request</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Callback </span><span class="si">{!r}</span><span class="s2"> for page </span><span class="si">{!r}</span><span class="s2"> not found&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">owif_callback_name</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">uri</span><span class="p">))</span>
+            <span class="n">error404</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+        <span class="c1"># restore cached data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+
+        <span class="k">return</span> <span class="n">server</span><span class="o">.</span><span class="n">NOT_DONE_YET</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

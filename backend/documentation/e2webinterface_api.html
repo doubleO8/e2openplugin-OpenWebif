@@ -1,0 +1,1946 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Enigma2 WebInterface API &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="RESTful API" href="restful_api.html" />
+    <link rel="prev" title="Web Controller" href="web_controller.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_controller.html">Web Controller</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Enigma2 WebInterface API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/e2webinterface_api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-controllers.web">
+<span id="enigma2-webinterface-api"></span><span id="e2webinterface-api-label"></span><h1>Enigma2 WebInterface API<a class="headerlink" href="#module-controllers.web" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="controllers.web.WebController">
+<em class="property">class </em><code class="descclassname">controllers.web.</code><code class="descname">WebController</code><span class="sig-paren">(</span><em>session</em>, <em>path=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Controller implementing <em>Enigma2 WebInterface API</em> as described in e.g.
+<a class="reference external" href="https://dream.reichholf.net/e2web/">https://dream.reichholf.net/e2web/</a>.</p>
+<dl class="method">
+<dt id="controllers.web.WebController.P_about">
+<code class="descname">P_about</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_about"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_about" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>about</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#about">https://dream.reichholf.net/e2web/#about</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_addlocation">
+<code class="descname">P_addlocation</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_addlocation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_addlocation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>addlocation</cite> endpoint.
+Add a path to the list of paths where video files are stored.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#addlocation">https://dream.reichholf.net/e2web/#addlocation</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_bouquets">
+<code class="descname">P_bouquets</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_bouquets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_bouquets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>boquets</cite> endpoint.
+Get list of tuples (bouquet reference, bouquet name) for available
+bouquets.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_currenttime">
+<code class="descname">P_currenttime</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_currenttime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_currenttime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>currenttime</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#currenttime">https://dream.reichholf.net/e2web/#currenttime</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_deviceinfo">
+<code class="descname">P_deviceinfo</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_deviceinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_deviceinfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>deviceinfo</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#deviceinfo">https://dream.reichholf.net/e2web/#deviceinfo</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_epgmulti">
+<code class="descname">P_epgmulti</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_epgmulti"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_epgmulti" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>epgmulti</cite> endpoint.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_epgmultigz">
+<code class="descname">P_epgmultigz</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_epgmultigz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_epgmultigz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>epgmultigz</cite> endpoint.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_epgsearch">
+<code class="descname">P_epgsearch</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_epgsearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_epgsearch" title="Permalink to this definition">¶</a></dt>
+<dd><p>EPG event search and lookup handler.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">One may use
+<a class="reference internal" href="controller.html#controllers.events.EventsController.lookup_event" title="controllers.events.EventsController.lookup_event"><code class="xref py py-func docutils literal notranslate"><span class="pre">controllers.events.EventsController.lookup_event()</span></code></a>
+for looking up events.
+One may use
+<a class="reference internal" href="controller.html#controllers.events.EventsController.search" title="controllers.events.EventsController.search"><code class="xref py py-func docutils literal notranslate"><span class="pre">controllers.events.EventsController.search()</span></code></a> for
+searching events.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#epgsearch">https://dream.reichholf.net/e2web/#epgsearch</a></p>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 0.34: </span>This implementation cowardly mixes <em>search</em> and <em>lookup</em>.
+Lookup feature is not available in <em>Enigma2 WebInterface API</em> thus
+this crap will be removed some day :)</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_external">
+<code class="descname">P_external</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_external"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_external" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>external</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#external">https://dream.reichholf.net/e2web/#external</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_getallservices">
+<code class="descname">P_getallservices</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_getallservices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_getallservices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>getallservices</cite> endpoint.
+Retrieve list of services in bouquets.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#getallservices">https://dream.reichholf.net/e2web/#getallservices</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_getaudiotracks">
+<code class="descname">P_getaudiotracks</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_getaudiotracks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_getaudiotracks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>/getaudiotracks</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#getaudiotracks">https://dream.reichholf.net/e2web/#getaudiotracks</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_getcurrent">
+<code class="descname">P_getcurrent</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_getcurrent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_getcurrent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>getcurrent</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#getcurrent">https://dream.reichholf.net/e2web/#getcurrent</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--web-getcurrent">
+<code class="descname">GET </code><code class="descname">/web/getcurrent</code><a class="headerlink" href="#get--web-getcurrent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_getcurrlocation">
+<code class="descname">P_getcurrlocation</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_getcurrlocation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_getcurrlocation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>getcurrlocation</cite> endpoint.
+Get currently selected path where video files are to be stored.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#getcurrlocation">https://dream.reichholf.net/e2web/#getcurrlocation</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_getlocations">
+<code class="descname">P_getlocations</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_getlocations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_getlocations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>getlocations</cite> endpoint.
+Retrieve paths where video files are stored.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#getlocations">https://dream.reichholf.net/e2web/#getlocations</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_getpid">
+<code class="descname">P_getpid</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_getpid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_getpid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>getpid</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#getpid">https://dream.reichholf.net/e2web/#getpid</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_getservices">
+<code class="descname">P_getservices</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_getservices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_getservices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>getservices</cite> endpoint.
+Retrieve list of bouquets.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#getservices">https://dream.reichholf.net/e2web/#getservices</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_getsubtitles">
+<code class="descname">P_getsubtitles</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_getsubtitles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_getsubtitles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>getsubtitles</cite> endpoint.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_gettags">
+<code class="descname">P_gettags</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_gettags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_gettags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>gettags</cite> endpoint.
+Get tags of movie file (?).</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#gettags">https://dream.reichholf.net/e2web/#gettags</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_loadepg">
+<code class="descname">P_loadepg</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_loadepg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_loadepg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>loadepg</cite> endpoint.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_message">
+<code class="descname">P_message</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>message</cite> endpoint.
+Display a message on the screen attached to enigma2 device.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#message">https://dream.reichholf.net/e2web/#message</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_messageanswer">
+<code class="descname">P_messageanswer</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_messageanswer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_messageanswer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>messageanswer</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#messageanswer">https://dream.reichholf.net/e2web/#messageanswer</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_moviedelete">
+<code class="descname">P_moviedelete</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_moviedelete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_moviedelete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>moviedelete</cite> endpoint.
+Delete movie file.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#moviedelete">https://dream.reichholf.net/e2web/#moviedelete</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_movielist">
+<code class="descname">P_movielist</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_movielist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_movielist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>movielist</cite> endpoint.
+Retrieve list of movie items. (alternative implementation)</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#movielist">https://dream.reichholf.net/e2web/#movielist</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_movielisthtml">
+<code class="descname">P_movielisthtml</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_movielisthtml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_movielisthtml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>movielisthtml</cite> endpoint.
+Retrieve list of movie items in HTML format.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#movielist.html">https://dream.reichholf.net/e2web/#movielist.html</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_movielistm3u">
+<code class="descname">P_movielistm3u</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_movielistm3u"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_movielistm3u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>movielistm3u</cite> endpoint.
+Retrieve list of movie items in M3U format.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#movielist.m3u">https://dream.reichholf.net/e2web/#movielist.m3u</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_movielistrss">
+<code class="descname">P_movielistrss</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_movielistrss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_movielistrss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>movielistrss</cite> endpoint.
+Retrieve list of movie items in RSS format.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#movielist.rss">https://dream.reichholf.net/e2web/#movielist.rss</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_moviemove">
+<code class="descname">P_moviemove</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_moviemove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_moviemove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>moviemove</cite> endpoint.
+Move movie file.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#moviemove">https://dream.reichholf.net/e2web/#moviemove</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_movierename">
+<code class="descname">P_movierename</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_movierename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_movierename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>movierename</cite> endpoint.
+Rename movie file.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#movierename">https://dream.reichholf.net/e2web/#movierename</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_movietags">
+<code class="descname">P_movietags</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_movietags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_movietags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>movietags</cite> endpoint.
+Add/Remove tags to movie file.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#movietags">https://dream.reichholf.net/e2web/#movietags</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_parentcontrollist">
+<code class="descname">P_parentcontrollist</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_parentcontrollist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_parentcontrollist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>parentcontrollist</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#parentcontrollist">https://dream.reichholf.net/e2web/#parentcontrollist</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_pluginlistread">
+<code class="descname">P_pluginlistread</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_pluginlistread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_pluginlistread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>pluginlistread</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#pluginlistread">https://dream.reichholf.net/e2web/#pluginlistread</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_powerstate">
+<code class="descname">P_powerstate</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_powerstate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_powerstate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>powerstate</cite> endpoint.
+Get/set power state of enigma2 device.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#powerstate">https://dream.reichholf.net/e2web/#powerstate</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_recordnow">
+<code class="descname">P_recordnow</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_recordnow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_recordnow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>recordnow</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#recordnow">https://dream.reichholf.net/e2web/#recordnow</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_remotecontrol">
+<code class="descname">P_remotecontrol</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_remotecontrol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_remotecontrol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>remotecontrol</cite> endpoint.
+Send remote control codes.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#remotecontrol">https://dream.reichholf.net/e2web/#remotecontrol</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_removelocation">
+<code class="descname">P_removelocation</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_removelocation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_removelocation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>removelocation</cite> endpoint.
+Remove a path from the list of paths where video files are stored.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#removelocation">https://dream.reichholf.net/e2web/#removelocation</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_restarttwisted">
+<code class="descname">P_restarttwisted</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_restarttwisted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_restarttwisted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>restarttwisted</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#restarttwisted">https://dream.reichholf.net/e2web/#restarttwisted</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_saveconfig">
+<code class="descname">P_saveconfig</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_saveconfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_saveconfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>saveconfig</cite> endpoint.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="post">
+<dt id="post--web-saveconfig">
+<code class="descname">POST </code><code class="descname">/web/saveconfig</code><a class="headerlink" href="#post--web-saveconfig" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> (<em>string</em>) – configuration key</li>
+<li><strong>value</strong> (<em>string</em>) – configuration value</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_saveepg">
+<code class="descname">P_saveepg</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_saveepg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_saveepg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>saveepg</cite> endpoint.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_selectaudiotrack">
+<code class="descname">P_selectaudiotrack</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_selectaudiotrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_selectaudiotrack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>/selectaudiotrack</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#selectaudiotrack">https://dream.reichholf.net/e2web/#selectaudiotrack</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--web-signal">
+<code class="descname">GET </code><code class="descname">/web/signal</code><a class="headerlink" href="#get--web-signal" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> (<em>int</em>) – audio track ID</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_servicelistplayable">
+<code class="descname">P_servicelistplayable</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_servicelistplayable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_servicelistplayable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>servicelistplayable</cite> endpoint.
+Retrieve list of ‘playable’ bouquets.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#servicelistplayable">https://dream.reichholf.net/e2web/#servicelistplayable</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_servicelistreload">
+<code class="descname">P_servicelistreload</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_servicelistreload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_servicelistreload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reload service lists, transponders, parental control black-/white lists
+or/and lamedb.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#servicelistreload">https://dream.reichholf.net/e2web/#servicelistreload</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_serviceplayable">
+<code class="descname">P_serviceplayable</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_serviceplayable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_serviceplayable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>serviceplayable</cite> endpoint.
+Check if referenced service is ‘playable’.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#serviceplayable">https://dream.reichholf.net/e2web/#serviceplayable</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_servicesm3u">
+<code class="descname">P_servicesm3u</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_servicesm3u"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_servicesm3u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>servicesm3u</cite> endpoint.
+Retrieve list of bouquets(?) in M3U format.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#services.m3u">https://dream.reichholf.net/e2web/#services.m3u</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--web-services.m3u">
+<code class="descname">GET </code><code class="descname">/web/services.m3u</code><a class="headerlink" href="#get--web-services.m3u" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>bRef</strong> (<em>string</em>) – bouquet reference</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_set_powerup_without_waking_tv">
+<code class="descname">P_set_powerup_without_waking_tv</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_set_powerup_without_waking_tv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_set_powerup_without_waking_tv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>set_powerup_without_waking_tv</cite> endpoint.
+Mark ‘powerup without waking TV’ being available.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 0.46: </span>To be dropped.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_settings">
+<code class="descname">P_settings</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>settings</cite> endpoint.
+Retrieve list of key/kalue pairs of device configuration.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#settings">https://dream.reichholf.net/e2web/#settings</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_showchannelpicon">
+<code class="descname">P_showchannelpicon</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_showchannelpicon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_showchannelpicon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>showchannelpicon</cite> endpoint.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 0.46: </span>To be dropped.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_signal">
+<code class="descname">P_signal</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_signal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_signal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>tunersignal</cite> endpoint.
+Get tuner signal status(?)</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Probably <a class="reference external" href="https://dream.reichholf.net/e2web/#signal">https://dream.reichholf.net/e2web/#signal</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--web-signal">
+<code class="descname">GET </code><code class="descname">/web/signal</code><a class="headerlink" href="#get--web-signal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_sleeptimer">
+<code class="descname">P_sleeptimer</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_sleeptimer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_sleeptimer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>sleeptimer</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#sleeptimer">https://dream.reichholf.net/e2web/#sleeptimer</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--web-sleeptimer">
+<code class="descname">GET </code><code class="descname">/web/sleeptimer</code><a class="headerlink" href="#get--web-sleeptimer" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>cmd</strong> (<em>string</em>) – command (<em>get</em> or <em>set</em>)</li>
+<li><strong>time</strong> (<em>int</em>) – time in minutes (<em>0</em> – <em>999</em>)</li>
+<li><strong>action</strong> (<em>string</em>) – action (<em>standby</em> or <em>shutdown</em>)</li>
+<li><strong>enabled</strong> (<em>string</em>) – enabled (<em>True</em> or <em>False</em>)</li>
+<li><strong>confirmed</strong> (<em>string</em>) – confirmed (supported?)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_streamcurrentm3u">
+<code class="descname">P_streamcurrentm3u</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_streamcurrentm3u"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_streamcurrentm3u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>streamcurrentm3u</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#streamcurrent.m3u">https://dream.reichholf.net/e2web/#streamcurrent.m3u</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--web-streamcurrent.m3u">
+<code class="descname">GET </code><code class="descname">/web/streamcurrent.m3u</code><a class="headerlink" href="#get--web-streamcurrent.m3u" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_streamm3u">
+<code class="descname">P_streamm3u</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_streamm3u"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_streamm3u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>streamm3u</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#stream.m3u">https://dream.reichholf.net/e2web/#stream.m3u</a></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Parameters Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--web-stream.m3u">
+<code class="descname">GET </code><code class="descname">/web/stream.m3u</code><a class="headerlink" href="#get--web-stream.m3u" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>ref</strong> (<em>string</em>) – service reference</li>
+<li><strong>name</strong> (<em>string</em>) – service name</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_streamsubservices">
+<code class="descname">P_streamsubservices</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_streamsubservices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_streamsubservices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>streamsubservices</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#streamsubservices">https://dream.reichholf.net/e2web/#streamsubservices</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--web-streamsubservices">
+<code class="descname">GET </code><code class="descname">/web/streamsubservices</code><a class="headerlink" href="#get--web-streamsubservices" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>sRef</strong> (<em>string</em>) – service reference</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_subservices">
+<code class="descname">P_subservices</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_subservices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_subservices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>subservices</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#subservices">https://dream.reichholf.net/e2web/#subservices</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_supports_powerup_without_waking_tv">
+<code class="descname">P_supports_powerup_without_waking_tv</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_supports_powerup_without_waking_tv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_supports_powerup_without_waking_tv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>supports_powerup_without_waking_tv</cite> endpoint.
+Check if ‘powerup without waking TV’ is available.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 0.46: </span>To be dropped.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_timeradd">
+<code class="descname">P_timeradd</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_timeradd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_timeradd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>timeradd</cite> endpoint.
+Add timer</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#timeradd">https://dream.reichholf.net/e2web/#timeradd</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_timeraddbyeventid">
+<code class="descname">P_timeraddbyeventid</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_timeraddbyeventid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_timeraddbyeventid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>timeraddbyeventid</cite> endpoint.
+Add timer by event ID</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#timeraddbyeventid">https://dream.reichholf.net/e2web/#timeraddbyeventid</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--web-timeraddbyeventid">
+<code class="descname">GET </code><code class="descname">/web/timeraddbyeventid</code><a class="headerlink" href="#get--web-timeraddbyeventid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>sRef</strong> (<em>string</em>) – service reference</li>
+<li><strong>eventid</strong> (<em>int</em>) – Event ID</li>
+<li><strong>justplay</strong> (<em>int</em>) – <em>Just Play</em> indicator</li>
+<li><strong>dirname</strong> (<em>string</em>) – target path(?)</li>
+<li><strong>tags</strong> (<em>string</em>) – tags to add(?)</li>
+<li><strong>always_zap</strong> (<em>int</em>) – always zap first(?)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_timerchange">
+<code class="descname">P_timerchange</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_timerchange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_timerchange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>timerchange</cite> endpoint.
+Change timer</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#timerchange">https://dream.reichholf.net/e2web/#timerchange</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--web-timerchange">
+<code class="descname">GET </code><code class="descname">/web/timerchange</code><a class="headerlink" href="#get--web-timerchange" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>sRef</strong> (<em>string</em>) – service reference</li>
+<li><strong>begin</strong> (<em>int</em>) – begin timestamp</li>
+<li><strong>end</strong> (<em>int</em>) – end timestamp</li>
+<li><strong>name</strong> (<em>string</em>) – name</li>
+<li><strong>description</strong> (<em>string</em>) – description</li>
+<li><strong>channelOld</strong> (<em>string</em>) – old channel(?)</li>
+<li><strong>beginOld</strong> (<em>int</em>) – old begin timestamp(?)</li>
+<li><strong>endOld</strong> (<em>int</em>) – old end timestamp(?)</li>
+<li><strong>justplay</strong> (<em>int</em>) – <em>Just Play</em> indicator</li>
+<li><strong>dirname</strong> (<em>string</em>) – target path(?)</li>
+<li><strong>tags</strong> (<em>string</em>) – tags to add(?)</li>
+<li><strong>always_zap</strong> (<em>int</em>) – always zap first(?)</li>
+<li><strong>disabled</strong> (<em>int</em>) – disabled state</li>
+<li><strong>afterevent</strong> (<em>int</em>) – afterevent state</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_timercleanup">
+<code class="descname">P_timercleanup</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_timercleanup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_timercleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>timercleanup</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#timercleanup">https://dream.reichholf.net/e2web/#timercleanup</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_timerdelete">
+<code class="descname">P_timerdelete</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_timerdelete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_timerdelete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>timerdelete</cite> endpoint.
+Delete timer</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#timerdelete">https://dream.reichholf.net/e2web/#timerdelete</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_timerlist">
+<code class="descname">P_timerlist</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_timerlist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_timerlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>timerlist</cite> endpoint.
+Retrieve list of timers.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#timerlist">https://dream.reichholf.net/e2web/#timerlist</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_timerlistwrite">
+<code class="descname">P_timerlistwrite</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_timerlistwrite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_timerlistwrite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>timerlistwrite</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#timerlistwrite">https://dream.reichholf.net/e2web/#timerlistwrite</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_timertogglestatus">
+<code class="descname">P_timertogglestatus</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_timertogglestatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_timertogglestatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>timertogglestatus</cite> endpoint.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_tsm3u">
+<code class="descname">P_tsm3u</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_tsm3u"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_tsm3u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>tsm3u</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#ts.m3u">https://dream.reichholf.net/e2web/#ts.m3u</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--web-ts.m3u">
+<code class="descname">GET </code><code class="descname">/web/ts.m3u</code><a class="headerlink" href="#get--web-ts.m3u" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_tsstart">
+<code class="descname">P_tsstart</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_tsstart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_tsstart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>tsstart</cite> endpoint.
+Start timeshift (?).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_tsstate">
+<code class="descname">P_tsstate</code><span class="sig-paren">(</span><em>request</em>, <em>success=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_tsstate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_tsstate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>tsstate</cite> endpoint.
+Retrieve timeshift status(?).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_tsstop">
+<code class="descname">P_tsstop</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_tsstop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_tsstop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>tsstop</cite> endpoint.
+Stop timeshift (?).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<p><em>TODO: improve after action / save , save+record , nothing
+config.timeshift.favoriteSaveAction ….</em></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_tvbrowser">
+<code class="descname">P_tvbrowser</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_tvbrowser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_tvbrowser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>tvbrowser</cite> endpoint.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#tvbrowser">https://dream.reichholf.net/e2web/#tvbrowser</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_vol">
+<code class="descname">P_vol</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_vol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_vol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>vol</cite> endpoint.
+Get/Set current volume setting.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#vol">https://dream.reichholf.net/e2web/#vol</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_vpschannels">
+<code class="descname">P_vpschannels</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_vpschannels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_vpschannels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>vpschannels</cite> endpoint.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 0.46: </span>To be dropped.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_zap">
+<code class="descname">P_zap</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_zap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_zap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>/zap</cite> endpoint.
+Zap to requested service_reference.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://dream.reichholf.net/e2web/#zap">https://dream.reichholf.net/e2web/#zap</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--web-services.m3u">
+<code class="descname">GET </code><code class="descname">/web/services.m3u</code><a class="headerlink" href="#get--web-services.m3u" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>sRef</strong> (<em>string</em>) – service reference</li>
+<li><strong>title</strong> (<em>string</em>) – service title</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.P_zapstream">
+<code class="descname">P_zapstream</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.P_zapstream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.P_zapstream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request handler for the <cite>zapstream</cite> endpoint.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not available in <em>Enigma2 WebInterface API</em>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.web.WebController.vpsparams">
+<code class="descname">vpsparams</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#WebController.vpsparams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.WebController.vpsparams" title="Permalink to this definition">¶</a></dt>
+<dd><p>VPS related helper function(?)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.web.get_recordings">
+<code class="descclassname">controllers.web.</code><code class="descname">get_recordings</code><span class="sig-paren">(</span><em>encoding=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#get_recordings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.get_recordings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a list of <cite>dict</cite> items containing recording’s information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoding</strong> (<em>basestring</em>) – output encoding or <em>None</em> (default = <cite>utf-8</cite>)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">movie items</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.web.get_recordings_m3u">
+<code class="descclassname">controllers.web.</code><code class="descname">get_recordings_m3u</code><span class="sig-paren">(</span><em>request</em>, <em>encoding=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/web.html#get_recordings_m3u"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.web.get_recordings_m3u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create M3U contents for serving recordings.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">M3U contents</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="restful_api.html" class="btn btn-neutral float-right" title="RESTful API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="web_controller.html" class="btn btn-neutral" title="Web Controller" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

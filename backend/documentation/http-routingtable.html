@@ -1,0 +1,402 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>HTTP Routing Table &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+ 
+
+    <script type="text/javascript">
+      DOCUMENTATION_OPTIONS.COLLAPSE_INDEX = true;
+    </script>
+
+
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>HTTP Routing Table</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+
+   <h1>HTTP Routing Table</h1>
+
+   <div class="modindex-jumpbox">
+   <a href="#cap-/api"><strong>/api</strong></a> | 
+   <a href="#cap-/current_event"><strong>/current_event</strong></a> | 
+   <a href="#cap-/file"><strong>/file</strong></a> | 
+   <a href="#cap-/recording"><strong>/recording</strong></a> | 
+   <a href="#cap-/recordings"><strong>/recordings</strong></a> | 
+   <a href="#cap-/services"><strong>/services</strong></a> | 
+   <a href="#cap-/timers"><strong>/timers</strong></a> | 
+   <a href="#cap-/web"><strong>/web</strong></a>
+   </div>
+
+   <table class="indextable modindextable">
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/api"><td></td><td>
+       <strong>/api</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#get--api-eventlookup"><code class="xref">GET /api/eventlookup</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#get--api-eventsearch"><code class="xref">GET /api/eventsearch</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#get--api-saveconfig"><code class="xref">GET /api/saveconfig</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="web_controller.html#post--api-evil"><code class="xref">POST /api/evil</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#post--api-saveconfig"><code class="xref">POST /api/saveconfig</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/current_event"><td></td><td>
+       <strong>/current_event</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#get--current_event"><code class="xref">GET /current_event</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#get--current_event-basestring-service_reference-"><code class="xref">GET /current_event/{basestring:service_reference}/</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/file"><td></td><td>
+       <strong>/file</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="web_controller.html#get--file"><code class="xref">GET /file</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/recording"><td></td><td>
+       <strong>/recording</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#get--recording-basestring-path"><code class="xref">GET /recording/{basestring:path}</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/recordings"><td></td><td>
+       <strong>/recordings</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#get--recordings-basestring-path"><code class="xref">GET /recordings/{basestring:path}</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#delete--recordings-basestring-path"><code class="xref">DELETE /recordings/{basestring:path}</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/services"><td></td><td>
+       <strong>/services</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#get--services-"><code class="xref">GET /services/</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#get--services-(int-service_type)"><code class="xref">GET /services/(int:service_type)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#get--services-radio"><code class="xref">GET /services/radio</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#get--services-tv"><code class="xref">GET /services/tv</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/timers"><td></td><td>
+       <strong>/timers</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#get--timers-"><code class="xref">GET /timers/</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#get--timers-basestring-service_reference-"><code class="xref">GET /timers/{basestring:service_reference}/</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#get--timers-basestring-service_reference-int-timer_id-"><code class="xref">GET /timers/{basestring:service_reference}/{int:timer_id}/</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="restful_api.html#delete--timers-basestring-service_reference-int-timer_id-"><code class="xref">DELETE /timers/{basestring:service_reference}/{int:timer_id}/</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/web"><td></td><td>
+       <strong>/web</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="e2webinterface_api.html#get--web-getcurrent"><code class="xref">GET /web/getcurrent</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="e2webinterface_api.html#get--web-services.m3u"><code class="xref">GET /web/services.m3u</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="e2webinterface_api.html#get--web-signal"><code class="xref">GET /web/signal</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="e2webinterface_api.html#get--web-sleeptimer"><code class="xref">GET /web/sleeptimer</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="e2webinterface_api.html#get--web-stream.m3u"><code class="xref">GET /web/stream.m3u</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="e2webinterface_api.html#get--web-streamcurrent.m3u"><code class="xref">GET /web/streamcurrent.m3u</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="e2webinterface_api.html#get--web-streamsubservices"><code class="xref">GET /web/streamsubservices</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="e2webinterface_api.html#get--web-timeraddbyeventid"><code class="xref">GET /web/timeraddbyeventid</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="e2webinterface_api.html#get--web-timerchange"><code class="xref">GET /web/timerchange</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="e2webinterface_api.html#get--web-ts.m3u"><code class="xref">GET /web/ts.m3u</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="e2webinterface_api.html#post--web-saveconfig"><code class="xref">POST /web/saveconfig</code></a></td><td>
+       <em></em></td></tr>
+   </table>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

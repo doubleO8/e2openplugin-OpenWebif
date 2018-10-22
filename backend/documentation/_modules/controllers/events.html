@@ -1,0 +1,551 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>controllers.events &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>controllers.events</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for controllers.events</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. seealso::</span>
+
+<span class="sd">    http://mslowik.blogspot.de/</span>
+
+
+<span class="sd">.. _event_format-label:</span>
+
+<span class="sd">Possible Values of the Format Field</span>
+<span class="sd">+++++++++++++++++++++++++++++++++++</span>
+
+<span class="sd">+------+----------------------------------------------------------------------+</span>
+<span class="sd">|VALUE | DESCRIPTION                                                          |</span>
+<span class="sd">+======+======================================================================+</span>
+<span class="sd">| I    | Event Id                                                             |</span>
+<span class="sd">+------+----------------------------------------------------------------------+</span>
+<span class="sd">| B    | Event Begin Time                                                     |</span>
+<span class="sd">+------+----------------------------------------------------------------------+</span>
+<span class="sd">| D    | Event Duration                                                       |</span>
+<span class="sd">+------+----------------------------------------------------------------------+</span>
+<span class="sd">| T    | Event Title                                                          |</span>
+<span class="sd">+------+----------------------------------------------------------------------+</span>
+<span class="sd">| S    | Event Short Description                                              |</span>
+<span class="sd">+------+----------------------------------------------------------------------+</span>
+<span class="sd">| E    | Event Extended Description (extended event description)              |</span>
+<span class="sd">+------+----------------------------------------------------------------------+</span>
+<span class="sd">| C    | Current Time                                                         |</span>
+<span class="sd">+------+----------------------------------------------------------------------+</span>
+<span class="sd">| R    | Service Reference                                                    |</span>
+<span class="sd">+------+----------------------------------------------------------------------+</span>
+<span class="sd">| N    | Service Name                                                         |</span>
+<span class="sd">+------+----------------------------------------------------------------------+</span>
+<span class="sd">| n    | Short Service Name                                                   |</span>
+<span class="sd">+------+----------------------------------------------------------------------+</span>
+<span class="sd">| X    | A flag not associated with the returned result indicating that the   |</span>
+<span class="sd">|      | minimum of one item in the result table is to be returned            |</span>
+<span class="sd">|      | corresponding to each service, even if no service events are found.  |</span>
+<span class="sd">|      | In cases where no event is found in the resulting rows of the table, |</span>
+<span class="sd">|      | undefined values are returned as None                                |</span>
+<span class="sd">+------+----------------------------------------------------------------------+</span>
+
+<span class="sd">Event Search</span>
+<span class="sd">============</span>
+
+
+<span class="sd">Method signature::</span>
+
+<span class="sd">    search((fmt, int size, int querytype, int PE1, int PE2))</span>
+
+<span class="sd">Description of Search Parameters</span>
+<span class="sd">++++++++++++++++++++++++++++++++</span>
+
+<span class="sd">+-----------+----------+------------------------------------------------------+</span>
+<span class="sd">| PARAMETER | REQUIRED | DESCRIPTION                                          |</span>
+<span class="sd">+===========+==========+======================================================+</span>
+<span class="sd">| fmt       | required | Returned data format - see :ref:`event_format-label` |</span>
+<span class="sd">+-----------+----------+------------------------------------------------------+</span>
+<span class="sd">| size      | required | maximum number of returned rows                      |</span>
+<span class="sd">+-----------+----------+------------------------------------------------------+</span>
+<span class="sd">| querytype | required | query type                                           |</span>
+<span class="sd">+-----------+----------+------------------------------------------------------+</span>
+<span class="sd">| PE1       | required | Parameters dependent on the context set by           |</span>
+<span class="sd">|           |          | querytype                                            |</span>
+<span class="sd">+-----------+----------+ see :ref:`event_search_parameters-label`             +</span>
+<span class="sd">| PE2       | optional |                                                      |</span>
+<span class="sd">|           |          |                                                      |</span>
+<span class="sd">+-----------+----------+------------------------------------------------------+</span>
+
+
+<span class="sd">.. _event_search_parameters-label:</span>
+
+<span class="sd">Description of Parameters Related to Search Querytype</span>
+<span class="sd">+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+
+<span class="sd">+------+--------------------------------+-------------------+-----------------+</span>
+<span class="sd">| TYPE | DESCRIPTION                    | PE1               | PE2             |</span>
+<span class="sd">+======+================================+===================+=================+</span>
+<span class="sd">| 0    | Find similar events            | service reference | Event ID        |</span>
+<span class="sd">|      | (SIMILAR_BROADCASTINGS_SEARCH) |                   |                 |</span>
+<span class="sd">+------+--------------------------------+-------------------+-----------------+</span>
+<span class="sd">| 1    | Find events with the exact     | text to search    | 0 = CASE_CHECK  |</span>
+<span class="sd">|      | title (EXAKT_TITLE_SEARCH)     |                   | 1 = NO_CASECHECK|</span>
+<span class="sd">+------+--------------------------------+-------------------+-----------------+</span>
+<span class="sd">| 2    | Find events with text in the   | text to search    | 0 = CASE_CHECK  |</span>
+<span class="sd">|      | title (PARTIAL_TITLE_SEARCH)   |                   | 1 = NO_CASECHECK|</span>
+<span class="sd">+------+--------------------------------+-------------------+-----------------+</span>
+
+<span class="sd">.. note::</span>
+
+<span class="sd">    * This function searches for event information for the specified \</span>
+<span class="sd">    parameters.</span>
+<span class="sd">    * The information is returned in the form of a two-dimensional array, \</span>
+<span class="sd">    where the first dimension defines the individual elements of the cursor \</span>
+<span class="sd">    (the searched events), and the second dimension is the value \</span>
+<span class="sd">    corresponding to the event that is specified by the Format field \</span>
+<span class="sd">    (single event data).</span>
+
+<span class="sd">Example (https://mslowik.blogspot.de)::</span>
+
+<span class="sd">  l = eEPGCache.getInstance().search(</span>
+<span class="sd">     (&#39;RIBND&#39;, 1024, eEPGCache.SIMILAR_BROADCASTINGS_SEARCH, refstr, event_id))</span>
+
+
+
+<span class="sd">Event Lookup</span>
+<span class="sd">============</span>
+
+
+<span class="sd">Method signature::</span>
+
+<span class="sd">    lookupEvent([fmt,</span>
+<span class="sd">                (eServiceReference ref, int querytype, int PE1, int PE2)])</span>
+
+
+<span class="sd">Description of Lookup Parameters</span>
+<span class="sd">++++++++++++++++++++++++++++++++</span>
+
+<span class="sd">+-----------+----------+------------------------------------------------------+</span>
+<span class="sd">| PARAMETER | REQUIRED | DESCRIPTION                                          |</span>
+<span class="sd">+===========+==========+======================================================+</span>
+<span class="sd">| fmt       | required | Returned data format - see :ref:`event_format-label` |</span>
+<span class="sd">+-----------+----------+------------------------------------------------------+</span>
+<span class="sd">| ref       | required | reference to service                                 |</span>
+<span class="sd">+-----------+----------+------------------------------------------------------+</span>
+<span class="sd">| querytype | required | query type                                           |</span>
+<span class="sd">+-----------+----------+------------------------------------------------------+</span>
+<span class="sd">| PE1       | required | Parameters dependent on the context set by           |</span>
+<span class="sd">|           |          | querytype.                                           |</span>
+<span class="sd">+-----------+----------+ see :ref:`event_lookup_parameters-label`             |</span>
+<span class="sd">| PE2       | optional |                                                      |</span>
+<span class="sd">|           |          |                                                      |</span>
+<span class="sd">+-----------+----------+------------------------------------------------------+</span>
+
+
+<span class="sd">.. _event_lookup_parameters-label:</span>
+
+<span class="sd">Description of Parameters Related to Querytype</span>
+<span class="sd">++++++++++++++++++++++++++++++++++++++++++++++</span>
+
+<span class="sd">+-------+--------------------------------------------+--------------+---------+</span>
+<span class="sd">| TYPE  | DESCRIPTION                                | PE1          | PE2     |</span>
+<span class="sd">+=======+============================================+==============+=========+</span>
+<span class="sd">|  2    | Request an event ID                        | Event ID     | n/a     |</span>
+<span class="sd">+-------+--------------------------------------------+--------------+---------+</span>
+<span class="sd">| -1    | request events *before* the specified time | time horizon | end     |</span>
+<span class="sd">+-------+--------------------------------------------+              + date of +</span>
+<span class="sd">|  0    | request events *crossing* specified time   |              | search  |</span>
+<span class="sd">+-------+--------------------------------------------+              + scope   +</span>
+<span class="sd">| +1    | request events *after* specified time      |              |         |</span>
+<span class="sd">+-------+--------------------------------------------+--------------+---------+</span>
+
+<span class="sd">.. note::</span>
+
+<span class="sd">    * **-1** for *time horizon* is current date.</span>
+<span class="sd">    * This function searches for event information for the specified \</span>
+<span class="sd">    parameters.</span>
+<span class="sd">    * The information is returned in the form of a two-dimensional array, \</span>
+<span class="sd">    where the first dimension defines the individual elements of the cursor \</span>
+<span class="sd">    (the searched events), and the second dimension is the value \</span>
+<span class="sd">    corresponding to the event that is specified by the Format field \</span>
+<span class="sd">    (single event data).</span>
+<span class="sd">    * Time zones of type NUMBER are defined as the number of seconds since \</span>
+<span class="sd">    the EPOCH date (in the unix systems beginning in 1970).</span>
+
+<span class="sd">.. note::</span>
+
+<span class="sd">    * for *querytype=2, (PE2) minutes=0* PE1 is event ID</span>
+<span class="sd">    * PE2 appers to be search scope timedelta in *minutes*</span>
+<span class="sd">    * if timedelta in *minutes* is -1 all matching events are returned(?)</span>
+<span class="sd">    * for *querytype=3*: last known item(?)</span>
+
+<span class="sd">Examples (https://mslowik.blogspot.de)::</span>
+
+<span class="sd">    events = eEPGCache.getInstance ().lookupEvent(</span>
+<span class="sd">        [&#39;IBDTSENC&#39;, (ref, 0, begintime, endtime)])</span>
+
+<span class="sd">    search = [&#39;IBDCTSERNX&#39;]</span>
+<span class="sd">    if services: # It&#39;s a Bouquet</span>
+<span class="sd">        search.extend ([(service, 0, -1) cho service in services])</span>
+<span class="sd">    events = eEPGCache.getInstance ().lookupEvent (search)</span>
+
+<span class="sd">    search = [&#39;IBDCTSERNX&#39;]</span>
+<span class="sd">    if services: # It&#39;s a Bouquet</span>
+<span class="sd">        search.extend ([(service, 0, -1) cho service in services])</span>
+<span class="sd">    events = eEPGCache.getInstance().lookupEvent(search)</span>
+
+<span class="sd">    event = eEPGCache.getInstance().lookupEvent([&#39;ESX&#39;, (ref, 2, int (idev))]</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">enigma</span> <span class="k">import</span> <span class="n">eEPGCache</span>
+
+<span class="kn">from</span> <span class="nn">models.events</span> <span class="k">import</span> <span class="n">EventDict</span><span class="p">,</span> <span class="n">FLAGS_ALL</span>
+
+<span class="n">CASE_SENSITIVE</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">CASE_INSENSITIVE</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">QUERYTYPE_SEARCH__SIMILAR_BROADCASTINGS</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">QUERYTYPE_SEARCH__EXACT_TITLE</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">QUERYTYPE_SEARCH__PARTIAL_TITLE</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">QUERYTYPE_SEARCH__SHORT_DESCRIPTION</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">QUERYTYPE_SEARCH__TITLE_SHORT_DESCRIPTION</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">QUERYTYPE_SEARCH__EXTENDED_DESCRIPTION</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">QUERYTYPE_SEARCH__FULL_DESCRIPTION</span> <span class="o">=</span> <span class="mi">6</span>
+
+<span class="n">QUERYTYPE_LOOKUP__BEFORE</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">QUERYTYPE_LOOKUP__WHILE</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">QUERYTYPE_LOOKUP__AFTER</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">QUERYTYPE_LOOKUP__ID</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">QUERY_TIMESTAMP_CURRENT_TIME</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">QUERY_MINUTES_ANY</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+
+<div class="viewcode-block" id="EventsController"><a class="viewcode-back" href="../../controller.html#controllers.events.EventsController">[docs]</a><span class="k">class</span> <span class="nc">EventsController</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Events controller.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epgcache_instance</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raise_exceptions</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;may_raise&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fallback_flags</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fallback_flags&quot;</span><span class="p">,</span> <span class="n">FLAGS_ALL</span><span class="p">)</span>
+
+<div class="viewcode-block" id="EventsController.search"><a class="viewcode-back" href="../../controller.html#controllers.events.EventsController.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">querytype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">max_rows</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search EPG events</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            what (basestring): query value</span>
+<span class="sd">            querytype (int): see :ref:`event_search_parameters-label`</span>
+<span class="sd">            case_sensitive (bool): True if case sensitive search</span>
+<span class="sd">            flags(basestring): query flags</span>
+<span class="sd">            max_rows (int): maximum number of results</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list of matching items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mangled</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">case</span> <span class="o">=</span> <span class="n">CASE_INSENSITIVE</span>
+
+        <span class="k">if</span> <span class="n">flags</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">flags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_flags</span>
+
+        <span class="k">if</span> <span class="n">case_sensitive</span><span class="p">:</span>
+            <span class="n">case</span> <span class="o">=</span> <span class="n">CASE_SENSITIVE</span>
+
+        <span class="k">if</span> <span class="n">querytype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">querytype</span> <span class="o">=</span> <span class="n">QUERYTYPE_SEARCH__PARTIAL_TITLE</span>
+
+        <span class="k">if</span> <span class="n">max_rows</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">max_rows</span> <span class="o">=</span> <span class="mi">64</span>
+
+        <span class="n">arglist</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span><span class="p">,</span> <span class="n">max_rows</span><span class="p">,</span> <span class="n">querytype</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">case</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epgcache_instance</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">arglist</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">results</span><span class="p">:</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+                <span class="n">mangled</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EventDict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">flag_string</span><span class="o">=</span><span class="n">flags</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">raise_exceptions</span><span class="p">:</span>
+                <span class="k">raise</span>
+
+        <span class="k">return</span> <span class="n">mangled</span></div>
+
+<div class="viewcode-block" id="EventsController.lookup"><a class="viewcode-back" href="../../controller.html#controllers.events.EventsController.lookup">[docs]</a>    <span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_reference</span><span class="p">,</span> <span class="n">querytype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">minutes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_rows</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lookup EPG events</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            service_reference (basestring): service reference</span>
+<span class="sd">            querytype (int): see :ref:`event_lookup_parameters-label`</span>
+<span class="sd">            begin (int): begin timestamp</span>
+<span class="sd">            minutes (int): query&#39;s time range in minutes</span>
+<span class="sd">            flags(basestring): query flags</span>
+<span class="sd">            max_rows (int): maximum number of results</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: matching items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mangled</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">flags</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">flags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_flags</span>
+
+        <span class="k">if</span> <span class="n">querytype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">querytype</span> <span class="o">=</span> <span class="n">QUERYTYPE_SEARCH__PARTIAL_TITLE</span>
+
+        <span class="k">if</span> <span class="n">begin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">begin</span> <span class="o">=</span> <span class="n">QUERY_TIMESTAMP_CURRENT_TIME</span>
+
+        <span class="k">if</span> <span class="n">minutes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">minutes</span> <span class="o">=</span> <span class="n">QUERY_MINUTES_ANY</span>
+
+        <span class="k">if</span> <span class="n">querytype</span> <span class="o">==</span> <span class="n">QUERYTYPE_LOOKUP__ID</span><span class="p">:</span>
+            <span class="n">arglist</span> <span class="o">=</span> <span class="p">(</span><span class="n">service_reference</span><span class="p">,</span> <span class="n">querytype</span><span class="p">,</span> <span class="n">begin</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">arglist</span> <span class="o">=</span> <span class="p">(</span><span class="n">service_reference</span><span class="p">,</span> <span class="n">querytype</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">minutes</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epgcache_instance</span><span class="o">.</span><span class="n">lookupEvent</span><span class="p">([</span><span class="n">flags</span><span class="p">,</span> <span class="n">arglist</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">results</span><span class="p">:</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">max_rows</span><span class="p">:</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="p">[:</span><span class="n">max_rows</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+                <span class="n">mangled</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EventDict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">flag_string</span><span class="o">=</span><span class="n">flags</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">raise_exceptions</span><span class="p">:</span>
+                <span class="k">raise</span>
+
+        <span class="k">return</span> <span class="n">mangled</span></div>
+
+<div class="viewcode-block" id="EventsController.lookup_event"><a class="viewcode-back" href="../../controller.html#controllers.events.EventsController.lookup_event">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_reference</span><span class="p">,</span> <span class="n">event_id</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lookup EPG event by ID</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            service_reference (basestring): service reference</span>
+<span class="sd">            event_id (int): Event ID</span>
+<span class="sd">            flags(basestring): query flags</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            models.events.EventDict: matching item or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">service_reference</span><span class="p">,</span>
+                             <span class="n">querytype</span><span class="o">=</span><span class="n">QUERYTYPE_LOOKUP__ID</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="n">event_id</span><span class="p">,</span>
+                             <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

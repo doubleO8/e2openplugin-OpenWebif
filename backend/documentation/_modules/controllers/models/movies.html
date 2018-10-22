@@ -1,0 +1,760 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>controllers.models.movies &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>controllers.models.movies</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for controllers.models.movies</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1">##############################################################################</span>
+<span class="c1">#                        2011 E2OpenPlugins                                  #</span>
+<span class="c1">#                                                                            #</span>
+<span class="c1">#  This file is open source software; you can redistribute it and/or modify  #</span>
+<span class="c1">#     it under the terms of the GNU General Public License version 2 as      #</span>
+<span class="c1">#               published by the Free Software Foundation.                   #</span>
+<span class="c1">#                                                                            #</span>
+<span class="c1">##############################################################################</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">enigma</span> <span class="k">import</span> <span class="n">eServiceReference</span><span class="p">,</span> <span class="n">iServiceInformation</span><span class="p">,</span> <span class="n">eServiceCenter</span>
+<span class="kn">from</span> <span class="nn">ServiceReference</span> <span class="k">import</span> <span class="n">ServiceReference</span>
+<span class="kn">from</span> <span class="nn">Tools.FuzzyDate</span> <span class="k">import</span> <span class="n">FuzzyTime</span>
+<span class="kn">from</span> <span class="nn">Components.config</span> <span class="k">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">Components.MovieList</span> <span class="k">import</span> <span class="n">MovieList</span>
+<span class="kn">from</span> <span class="nn">Screens</span> <span class="k">import</span> <span class="n">MovieSelection</span>
+<span class="kn">from</span> <span class="nn">..i18n</span> <span class="k">import</span> <span class="n">_</span>
+
+<span class="kn">from</span> <span class="nn">model_utilities</span> <span class="k">import</span> <span class="n">mangle_epg_text</span>
+
+<span class="n">MOVIETAGFILE</span> <span class="o">=</span> <span class="s2">&quot;/etc/enigma2/movietags&quot;</span>
+<span class="n">TRASHDIRNAME</span> <span class="o">=</span> <span class="s2">&quot;movie_trash&quot;</span>
+
+<span class="c1">#: servicereference prefix for movie itmes</span>
+<span class="n">MOVIE_LIST_SREF_ROOT</span> <span class="o">=</span> <span class="s1">&#39;2:0:1:0:0:0:0:0:0:0:&#39;</span>
+
+<span class="c1">#: fallback value for &#39;movie list root&#39;</span>
+<span class="n">MOVIE_LIST_ROOT_FALLBACK</span> <span class="o">=</span> <span class="s1">&#39;/media&#39;</span>
+
+<span class="n">MLOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;movies&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="getPosition"><a class="viewcode-back" href="../../../utilities.html#controllers.models.movies.getPosition">[docs]</a><span class="k">def</span> <span class="nf">getPosition</span><span class="p">(</span><span class="n">cutfile</span><span class="p">,</span> <span class="n">movie_len</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve &#39;last watched&#39; position.</span>
+
+<span class="sd">    .. deprecated:: 0.86</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cutfile (basestring): movie&#39;s cutfile path</span>
+<span class="sd">        movie_len(int): movie length in minutes</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: movie items</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cut_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">movie_len</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">cutfile</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">struct</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cutfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">packedCue</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:</span><span class="mi">12</span><span class="p">]</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">12</span><span class="p">:]</span>
+                <span class="n">cue</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;QI&#39;</span><span class="p">,</span> <span class="n">packedCue</span><span class="p">)</span>
+                <span class="n">cut_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cue</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="n">last_end_point</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cut_list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">what</span><span class="p">)</span> <span class="ow">in</span> <span class="n">cut_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">what</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">last_end_point</span> <span class="o">=</span> <span class="n">pts</span> <span class="o">/</span> <span class="mi">90000</span>  <span class="c1"># in seconds</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">movie_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">movie_len</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">movie_len</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">last_end_point</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">play_progress</span> <span class="o">=</span> <span class="p">(</span><span class="n">last_end_point</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="n">movie_len</span>
+        <span class="k">if</span> <span class="n">play_progress</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">play_progress</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">play_progress</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">play_progress</span></div>
+
+
+<div class="viewcode-block" id="getMovieList"><a class="viewcode-back" href="../../../utilities.html#controllers.models.movies.getMovieList">[docs]</a><span class="k">def</span> <span class="nf">getMovieList</span><span class="p">(</span><span class="n">rargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">locations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a `dict` containing movie items information.</span>
+
+<span class="sd">    .. deprecated:: 0.86</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rargs (dict): request object&#39;s args</span>
+<span class="sd">        locations(list): paths where recordings might be stored</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: movie items</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">movieliste</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">bookmarklist</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">rargs</span> <span class="ow">and</span> <span class="s2">&quot;tag&quot;</span> <span class="ow">in</span> <span class="n">rargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">tag</span> <span class="o">=</span> <span class="n">rargs</span><span class="p">[</span><span class="s2">&quot;tag&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">rargs</span> <span class="ow">and</span> <span class="s2">&quot;dirname&quot;</span> <span class="ow">in</span> <span class="n">rargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">rargs</span><span class="p">[</span><span class="s2">&quot;dirname&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">rargs</span> <span class="ow">and</span> <span class="s2">&quot;fields&quot;</span> <span class="ow">in</span> <span class="n">rargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">rargs</span><span class="p">[</span><span class="s2">&quot;fields&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">directory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">MovieSelection</span><span class="o">.</span><span class="n">defaultMoviePath</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">directory</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">UnicodeDecodeError</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">directory</span> <span class="o">=</span> <span class="n">directory</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;cp1252&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">UnicodeDecodeError</span><span class="p">:</span>
+                <span class="n">directory</span> <span class="o">=</span> <span class="n">directory</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;iso-8859-1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">directory</span><span class="p">:</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">MOVIE_LIST_ROOT_FALLBACK</span>
+
+    <span class="k">if</span> <span class="n">directory</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+        <span class="n">directory</span> <span class="o">+=</span> <span class="s2">&quot;/&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;movies&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;locations&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;bookmarks&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;directory&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="p">}</span>
+
+    <span class="n">root</span> <span class="o">=</span> <span class="n">eServiceReference</span><span class="p">(</span><span class="n">MOVIE_LIST_SREF_ROOT</span> <span class="o">+</span> <span class="n">directory</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)):</span>
+        <span class="n">abs_p</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">abs_p</span><span class="p">):</span>
+            <span class="n">bookmarklist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="n">folders</span> <span class="o">=</span> <span class="p">[</span><span class="n">root</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">rargs</span> <span class="ow">and</span> <span class="s2">&quot;recursive&quot;</span> <span class="ow">in</span> <span class="n">rargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">bookmarklist</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+                <span class="n">f</span> <span class="o">+=</span> <span class="s2">&quot;/&quot;</span>
+            <span class="n">ff</span> <span class="o">=</span> <span class="n">eServiceReference</span><span class="p">(</span><span class="n">MOVIE_LIST_SREF_ROOT</span> <span class="o">+</span> <span class="n">directory</span> <span class="o">+</span> <span class="n">f</span><span class="p">)</span>
+            <span class="n">folders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ff</span><span class="p">)</span>
+
+    <span class="c1"># get all locations</span>
+    <span class="k">if</span> <span class="n">locations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">folders</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">locations</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+                <span class="n">f</span> <span class="o">+=</span> <span class="s2">&quot;/&quot;</span>
+            <span class="n">ff</span> <span class="o">=</span> <span class="n">eServiceReference</span><span class="p">(</span><span class="n">MOVIE_LIST_SREF_ROOT</span> <span class="o">+</span> <span class="n">f</span><span class="p">)</span>
+            <span class="n">folders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ff</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">root</span> <span class="ow">in</span> <span class="n">folders</span><span class="p">:</span>
+        <span class="n">movielist</span> <span class="o">=</span> <span class="n">MovieList</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">movielist</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">tag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">movielist</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">,</span> <span class="n">filter_tags</span><span class="o">=</span><span class="p">[</span><span class="n">tag</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">serviceref</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">unknown</span><span class="p">)</span> <span class="ow">in</span> <span class="n">movielist</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">serviceref</span><span class="o">.</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="n">eServiceReference</span><span class="o">.</span><span class="n">mustDescent</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">length_minutes</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">txtdesc</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">serviceref</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">filename</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+            <span class="n">sourceRef</span> <span class="o">=</span> <span class="n">ServiceReference</span><span class="p">(</span>
+                <span class="n">info</span><span class="o">.</span><span class="n">getInfoString</span><span class="p">(</span>
+                    <span class="n">serviceref</span><span class="p">,</span> <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sServiceref</span><span class="p">))</span>
+            <span class="n">rtime</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">getInfo</span><span class="p">(</span>
+                <span class="n">serviceref</span><span class="p">,</span> <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sTimeCreate</span><span class="p">)</span>
+
+            <span class="n">movie</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span>
+                <span class="s1">&#39;filename_stripped&#39;</span><span class="p">:</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                <span class="s1">&#39;serviceref&#39;</span><span class="p">:</span> <span class="n">serviceref</span><span class="o">.</span><span class="n">toString</span><span class="p">(),</span>
+                <span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="s2">&quot;?:??&quot;</span><span class="p">,</span>
+                <span class="s1">&#39;lastseen&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s1">&#39;filesize_readable&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;recordingtime&#39;</span><span class="p">:</span> <span class="n">rtime</span><span class="p">,</span>
+                <span class="s1">&#39;begintime&#39;</span><span class="p">:</span> <span class="s1">&#39;undefined&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;eventname&#39;</span><span class="p">:</span> <span class="n">mangle_epg_text</span><span class="p">(</span>
+                    <span class="n">ServiceReference</span><span class="p">(</span><span class="n">serviceref</span><span class="p">)</span><span class="o">.</span><span class="n">getServiceName</span><span class="p">()),</span>
+                <span class="s1">&#39;servicename&#39;</span><span class="p">:</span> <span class="n">mangle_epg_text</span><span class="p">(</span><span class="n">sourceRef</span><span class="o">.</span><span class="n">getServiceName</span><span class="p">()),</span>
+                <span class="s1">&#39;tags&#39;</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">getInfoString</span><span class="p">(</span><span class="n">serviceref</span><span class="p">,</span>
+                                           <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sTags</span><span class="p">),</span>
+                <span class="s1">&#39;fullname&#39;</span><span class="p">:</span> <span class="n">serviceref</span><span class="o">.</span><span class="n">toString</span><span class="p">(),</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="n">rtime</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">fuzzy_rtime</span> <span class="o">=</span> <span class="n">FuzzyTime</span><span class="p">(</span><span class="n">rtime</span><span class="p">)</span>
+                <span class="n">movie</span><span class="p">[</span><span class="s1">&#39;begintime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fuzzy_rtime</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="n">fuzzy_rtime</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">length_minutes</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">getLength</span><span class="p">(</span><span class="n">serviceref</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">if</span> <span class="n">length_minutes</span><span class="p">:</span>
+                <span class="n">movie</span><span class="p">[</span><span class="s1">&#39;length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">:</span><span class="si">%02d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="n">length_minutes</span> <span class="o">/</span> <span class="mi">60</span><span class="p">,</span> <span class="n">length_minutes</span> <span class="o">%</span> <span class="mi">60</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">fields</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="s1">&#39;pos&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                    <span class="n">movie</span><span class="p">[</span><span class="s1">&#39;lastseen&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">getPosition</span><span class="p">(</span>
+                        <span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;.cuts&#39;</span><span class="p">,</span> <span class="n">length_minutes</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">fields</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="s1">&#39;desc&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                <span class="n">txtfile</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span>
+                <span class="k">if</span> <span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;.ts&#39;</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">txtfile</span><span class="p">):</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">txtfile</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+                        <span class="n">txtdesc</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
+
+                <span class="n">event</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">getEvent</span><span class="p">(</span><span class="n">serviceref</span><span class="p">)</span>
+                <span class="n">extended_description</span> <span class="o">=</span> <span class="n">event</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">getExtendedDescription</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># NOQA</span>
+                <span class="k">if</span> <span class="n">extended_description</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="n">txtdesc</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="n">extended_description</span> <span class="o">=</span> <span class="n">txtdesc</span>
+                <span class="n">movie</span><span class="p">[</span><span class="s1">&#39;descriptionExtended&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unicode</span><span class="p">(</span>
+                    <span class="n">extended_description</span><span class="p">,</span> <span class="s1">&#39;utf_8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+                    <span class="s1">&#39;utf_8&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+                <span class="n">desc</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">getInfoString</span><span class="p">(</span>
+                    <span class="n">serviceref</span><span class="p">,</span> <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sDescription</span><span class="p">)</span>
+                <span class="n">movie</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unicode</span><span class="p">(</span>
+                    <span class="n">desc</span><span class="p">,</span> <span class="s1">&#39;utf_8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+                    <span class="s1">&#39;utf_8&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">fields</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="s1">&#39;size&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">sz</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">st_size</span>
+                    <span class="k">if</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1073741824</span><span class="p">:</span>
+                        <span class="n">sz</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">((</span><span class="n">size</span> <span class="o">/</span> <span class="mf">1073741824.</span><span class="p">),</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;GB&quot;</span><span class="p">))</span>
+                    <span class="k">elif</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1048576</span><span class="p">:</span>
+                        <span class="n">sz</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">((</span><span class="n">size</span> <span class="o">/</span> <span class="mf">1048576.</span><span class="p">),</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;MB&quot;</span><span class="p">))</span>
+                    <span class="k">elif</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1024</span><span class="p">:</span>
+                        <span class="n">sz</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">((</span><span class="n">size</span> <span class="o">/</span> <span class="mf">1024.</span><span class="p">),</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;kB&quot;</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+                <span class="n">movie</span><span class="p">[</span><span class="s1">&#39;filesize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">size</span>
+                <span class="n">movie</span><span class="p">[</span><span class="s1">&#39;filesize_readable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sz</span>
+
+            <span class="n">movieliste</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">movie</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">locations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;movies&quot;</span><span class="p">:</span> <span class="n">movieliste</span><span class="p">,</span>
+            <span class="s2">&quot;bookmarks&quot;</span><span class="p">:</span> <span class="n">bookmarklist</span><span class="p">,</span>
+            <span class="s2">&quot;directory&quot;</span><span class="p">:</span> <span class="n">directory</span>
+        <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;movies&quot;</span><span class="p">:</span> <span class="n">movieliste</span><span class="p">,</span>
+        <span class="s2">&quot;locations&quot;</span><span class="p">:</span> <span class="n">locations</span>
+    <span class="p">}</span></div>
+
+
+<span class="k">def</span> <span class="nf">getAllMovies</span><span class="p">():</span>
+    <span class="n">locations</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">movielist</span><span class="o">.</span><span class="n">videodirs</span><span class="o">.</span><span class="n">value</span><span class="p">[:]</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">getMovieList</span><span class="p">(</span><span class="n">locations</span><span class="o">=</span><span class="n">locations</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">removeMovie</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">sRef</span><span class="p">,</span> <span class="n">Force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">service</span> <span class="o">=</span> <span class="n">ServiceReference</span><span class="p">(</span><span class="n">sRef</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">deleted</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;service error&quot;</span>
+
+    <span class="k">if</span> <span class="n">service</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">serviceHandler</span> <span class="o">=</span> <span class="n">eServiceCenter</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+        <span class="n">offline</span> <span class="o">=</span> <span class="n">serviceHandler</span><span class="o">.</span><span class="n">offlineOperations</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">ref</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">serviceHandler</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">ref</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">info</span> <span class="ow">and</span> <span class="n">info</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">ref</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;this recording&quot;</span>
+
+    <span class="k">if</span> <span class="n">offline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">Force</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;force delete&quot;</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">usage</span><span class="p">,</span> <span class="s1">&#39;movielist_trashcan&#39;</span><span class="p">):</span>
+            <span class="n">fullpath</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">getPath</span><span class="p">()</span>
+            <span class="n">srcpath</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fullpath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+            <span class="c1"># TODO: check trash</span>
+            <span class="c1"># TODO: check enable trash default value</span>
+            <span class="k">if</span> <span class="s1">&#39;.Trash&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fullpath</span> \
+                    <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">usage</span><span class="o">.</span><span class="n">movielist_trashcan</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;trashcan&quot;</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="kn">import</span> <span class="nn">Tools.Trashcan</span>
+                    <span class="n">trash</span> <span class="o">=</span> <span class="n">Tools</span><span class="o">.</span><span class="n">Trashcan</span><span class="o">.</span><span class="n">createTrashFolder</span><span class="p">(</span><span class="n">srcpath</span><span class="p">)</span>
+                    <span class="n">MovieSelection</span><span class="o">.</span><span class="n">moveServiceFiles</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="n">trash</span><span class="p">)</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;The recording &#39;</span><span class="si">%s</span><span class="s2">&#39; has been successfully moved to trashcan&quot;</span> <span class="o">%</span> <span class="n">name</span>  <span class="c1"># NOQA</span>
+                <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;trashcan exception&quot;</span>
+                    <span class="k">pass</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">MLOG</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s2">&quot;Failed to move to .Trash folder: </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Failed to move to .Trash folder: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">deleted</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">usage</span><span class="p">,</span> <span class="s1">&#39;movielist_use_trash_dir&#39;</span><span class="p">):</span>
+            <span class="n">fullpath</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">getPath</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">TRASHDIRNAME</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fullpath</span> \
+                    <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">usage</span><span class="o">.</span><span class="n">movielist_use_trash_dir</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;trashdir&quot;</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="kn">from</span> <span class="nn">Screens.MovieSelection</span> <span class="k">import</span> <span class="n">getTrashDir</span>
+                    <span class="kn">from</span> <span class="nn">Components.FileTransfer</span> <span class="k">import</span> <span class="n">FileTransferJob</span>
+                    <span class="kn">from</span> <span class="nn">Components.Task</span> <span class="k">import</span> <span class="n">job_manager</span>
+                    <span class="n">trash_dir</span> <span class="o">=</span> <span class="n">getTrashDir</span><span class="p">(</span><span class="n">fullpath</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">trash_dir</span><span class="p">:</span>
+                        <span class="n">src_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fullpath</span><span class="p">)</span>
+                        <span class="n">dst_file</span> <span class="o">=</span> <span class="n">trash_dir</span>
+                        <span class="k">if</span> <span class="n">dst_file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+                            <span class="n">dst_file</span> <span class="o">=</span> <span class="n">trash_dir</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">text</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;remove&quot;</span><span class="p">)</span>
+                        <span class="n">job_manager</span><span class="o">.</span><span class="n">AddJob</span><span class="p">(</span>
+                            <span class="n">FileTransferJob</span><span class="p">(</span>
+                                <span class="n">src_file</span><span class="p">,</span> <span class="n">dst_file</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> : </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+                                <span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">src_file</span><span class="p">)))</span>
+                        <span class="c1"># No Result because of async job</span>
+                        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;The recording &#39;</span><span class="si">%s</span><span class="s2">&#39; has been successfully moved to trashcan&quot;</span> <span class="o">%</span> <span class="n">name</span>  <span class="c1"># NOQA</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">message</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span>
+                            <span class="s2">&quot;Delete failed, because there is no movie trash &quot;</span>
+                            <span class="s2">&quot;!</span><span class="se">\n</span><span class="s2">Disable movie trash in configuration to &quot;</span>
+                            <span class="s2">&quot;delete this item&quot;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;trashdir exception&quot;</span>
+                    <span class="k">pass</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">MLOG</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s2">&quot;Failed to move to trashdir: </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Failed to move to trashdir: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">deleted</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">deleted</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">offline</span><span class="o">.</span><span class="n">deleteFromDisk</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;no offline object&quot;</span>
+
+    <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Could not delete Movie &#39;</span><span class="si">%s</span><span class="s2">&#39; / </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The movie &#39;</span><span class="si">%s</span><span class="s2">&#39; has been deleted successfully&quot;</span> <span class="o">%</span> <span class="n">name</span>
+        <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_moveMovie</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">sRef</span><span class="p">,</span> <span class="n">destpath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">newname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">service</span> <span class="o">=</span> <span class="n">ServiceReference</span><span class="p">(</span><span class="n">sRef</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">errText</span> <span class="o">=</span> <span class="s1">&#39;unknown Error&#39;</span>
+
+    <span class="k">if</span> <span class="n">destpath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">destpath</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+        <span class="n">destpath</span> <span class="o">=</span> <span class="n">destpath</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+
+    <span class="k">if</span> <span class="n">service</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">serviceHandler</span> <span class="o">=</span> <span class="n">eServiceCenter</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">serviceHandler</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">ref</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">info</span> <span class="ow">and</span> <span class="n">info</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">ref</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;this recording&quot;</span>
+        <span class="n">fullpath</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">getPath</span><span class="p">()</span>
+        <span class="n">srcpath</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fullpath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+        <span class="n">fullfilename</span> <span class="o">=</span> <span class="n">fullpath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">fileName</span><span class="p">,</span> <span class="n">fileExt</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fullfilename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">newname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">newfullpath</span> <span class="o">=</span> <span class="n">srcpath</span> <span class="o">+</span> <span class="n">newname</span> <span class="o">+</span> <span class="n">fileExt</span>
+
+        <span class="c1"># TODO: check splitted recording</span>
+        <span class="c1"># TODO: use FileTransferJob</span>
+        <span class="k">def</span> <span class="nf">domove</span><span class="p">():</span>
+            <span class="n">exists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span>
+            <span class="n">move</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">rename</span>
+            <span class="n">errorlist</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">fileExt</span> <span class="o">==</span> <span class="s1">&#39;.ts&#39;</span><span class="p">:</span>
+                <span class="n">suffixes</span> <span class="o">=</span> <span class="s2">&quot;.ts.meta&quot;</span><span class="p">,</span> <span class="s2">&quot;.ts.cuts&quot;</span><span class="p">,</span> <span class="s2">&quot;.ts.ap&quot;</span><span class="p">,</span> <span class="s2">&quot;.ts.sc&quot;</span><span class="p">,</span> \
+                           <span class="s2">&quot;.eit&quot;</span><span class="p">,</span> <span class="s2">&quot;.ts&quot;</span><span class="p">,</span> <span class="s2">&quot;.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;.ts_mp.jpg&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">suffixes</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.ts.meta&quot;</span> <span class="o">%</span> <span class="n">fileExt</span><span class="p">,</span> \
+                           <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.cuts&quot;</span> <span class="o">%</span> <span class="n">fileExt</span><span class="p">,</span> <span class="n">fileExt</span><span class="p">,</span> <span class="s1">&#39;.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;.eit&#39;</span>
+
+            <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">suffixes</span><span class="p">:</span>
+                <span class="n">src</span> <span class="o">=</span> <span class="n">srcpath</span> <span class="o">+</span> <span class="n">fileName</span> <span class="o">+</span> <span class="n">suffix</span>
+                <span class="k">if</span> <span class="n">exists</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">newname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="c1"># rename title in meta file</span>
+                            <span class="k">if</span> <span class="n">suffix</span> <span class="o">==</span> <span class="s1">&#39;.ts.meta&#39;</span><span class="p">:</span>
+                                <span class="c1"># todo error handling</span>
+                                <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+                                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+                                    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fin</span><span class="p">:</span>
+                                        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                                <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">newname</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+                                <span class="n">lines</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+                                <span class="n">foutname</span> <span class="o">=</span> <span class="n">srcpath</span> <span class="o">+</span> <span class="n">newname</span> <span class="o">+</span> <span class="n">suffix</span>
+                                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">foutname</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+                                    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span>
+                                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">move</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">srcpath</span> <span class="o">+</span> <span class="n">newname</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">move</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">destpath</span> <span class="o">+</span> <span class="n">fileName</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">errorlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;I/O error(</span><span class="si">{0}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                        <span class="k">break</span>
+                    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">ose</span><span class="p">:</span>
+                        <span class="n">errorlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ose</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">errorlist</span>
+
+        <span class="c1"># MOVE</span>
+        <span class="k">if</span> <span class="n">newname</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">srcpath</span> <span class="o">==</span> <span class="n">destpath</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">errText</span> <span class="o">=</span> <span class="s1">&#39;Equal Source and Destination Path&#39;</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fullpath</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">errText</span> <span class="o">=</span> <span class="s1">&#39;File not exist&#39;</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">destpath</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">errText</span> <span class="o">=</span> <span class="s1">&#39;Destination Path not exist&#39;</span>
+            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">destpath</span> <span class="o">+</span> <span class="n">fullfilename</span><span class="p">):</span>
+                <span class="n">errText</span> <span class="o">=</span> <span class="s1">&#39;Destination File exist&#39;</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># rename</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fullpath</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">errText</span> <span class="o">=</span> <span class="s1">&#39;File not exist&#39;</span>
+            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">newfullpath</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">errText</span> <span class="o">=</span> <span class="s1">&#39;New File exist&#39;</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">errlist</span> <span class="o">=</span> <span class="n">domove</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">errlist</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">errText</span> <span class="o">=</span> <span class="n">errlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">etxt</span> <span class="o">=</span> <span class="s2">&quot;rename&quot;</span>
+    <span class="k">if</span> <span class="n">newname</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">etxt</span> <span class="o">=</span> <span class="s2">&quot;move&quot;</span>
+    <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Could not </span><span class="si">%s</span><span class="s2"> recording &#39;</span><span class="si">%s</span><span class="s2">&#39; Err: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">etxt</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">errText</span><span class="p">)}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;The recording &#39;</span><span class="si">%s</span><span class="s2">&#39; has been </span><span class="si">%s</span><span class="s2">d successfully&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span> <span class="n">etxt</span><span class="p">)}</span>
+
+
+<span class="k">def</span> <span class="nf">moveMovie</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">sRef</span><span class="p">,</span> <span class="n">destpath</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_moveMovie</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">sRef</span><span class="p">,</span> <span class="n">destpath</span><span class="o">=</span><span class="n">destpath</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">renameMovie</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">sRef</span><span class="p">,</span> <span class="n">newname</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_moveMovie</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">sRef</span><span class="p">,</span> <span class="n">newname</span><span class="o">=</span><span class="n">newname</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">getMovieTags</span><span class="p">(</span><span class="n">sRef</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">addtag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">deltag</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">sRef</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">service</span> <span class="o">=</span> <span class="n">ServiceReference</span><span class="p">(</span><span class="n">sRef</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">service</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fullpath</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">getPath</span><span class="p">()</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fullpath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="n">metafilename</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;.meta&#39;</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">metafilename</span><span class="p">):</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metafilename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
+                    <span class="n">meta</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+                    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+                    <span class="n">le</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+                    <span class="n">meta</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">le</span><span class="p">]</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">le</span><span class="p">]</span>
+                    <span class="n">oldtags</span> <span class="o">=</span> <span class="n">meta</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">addtag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">addtag</span> <span class="o">=</span> <span class="n">addtag</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">oldtags</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">addtag</span><span class="p">)</span>
+                        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                            <span class="n">oldtags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">addtag</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">deltag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">deltag</span> <span class="o">=</span> <span class="n">deltag</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">deltag</span> <span class="o">=</span> <span class="s1">&#39;dummy&#39;</span>
+                    <span class="n">newtags</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">oldtags</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">tag</span> <span class="o">!=</span> <span class="n">deltag</span><span class="p">:</span>
+                            <span class="n">newtags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+
+                    <span class="n">lines</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">newtags</span><span class="p">)</span>
+
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metafilename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span>
+
+                    <span class="n">result</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">return</span> <span class="p">{</span>
+                        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
+                        <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="n">newtags</span>
+                    <span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
+            <span class="s2">&quot;resulttext&quot;</span><span class="p">:</span> <span class="s2">&quot;Recording not found&quot;</span>
+        <span class="p">}</span>
+
+    <span class="n">tags</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">wr</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">MOVIETAGFILE</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">MOVIETAGFILE</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">deltag</span> <span class="o">!=</span> <span class="n">tag</span><span class="p">:</span>
+                    <span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="k">if</span> <span class="n">addtag</span> <span class="o">==</span> <span class="n">tag</span><span class="p">:</span>
+                    <span class="n">addtag</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">deltag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">wr</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">addtag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">addtag</span><span class="p">)</span>
+        <span class="n">wr</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">wr</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">MOVIETAGFILE</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tags</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="n">tags</span>
+    <span class="p">}</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

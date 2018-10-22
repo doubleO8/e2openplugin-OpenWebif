@@ -1,0 +1,892 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Utilities &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Models" href="model.html" />
+    <link rel="prev" title="Controller" href="controller.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Utilities</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/utilities.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-controllers.utilities">
+<span id="utilities"></span><span id="utilities-label"></span><h1>Utilities<a class="headerlink" href="#module-controllers.utilities" title="Permalink to this headline">¶</a></h1>
+<dl class="data">
+<dt id="controllers.utilities.NS">
+<code class="descclassname">controllers.utilities.</code><code class="descname">NS</code><em class="property"> = {'DVB-C': 4294901760, 'DVB-S': 12582912, 'DVB-T': 4008574976}</em><a class="headerlink" href="#controllers.utilities.NS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Namespace map</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Label</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.utilities.NS_DVB_C">
+<code class="descclassname">controllers.utilities.</code><code class="descname">NS_DVB_C</code><em class="property"> = 4294901760</em><a class="headerlink" href="#controllers.utilities.NS_DVB_C" title="Permalink to this definition">¶</a></dt>
+<dd><p>Namespace - DVB-C services</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.utilities.NS_DVB_S">
+<code class="descclassname">controllers.utilities.</code><code class="descname">NS_DVB_S</code><em class="property"> = 12582912</em><a class="headerlink" href="#controllers.utilities.NS_DVB_S" title="Permalink to this definition">¶</a></dt>
+<dd><p>Namespace - DVB-S services</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.utilities.NS_DVB_T">
+<code class="descclassname">controllers.utilities.</code><code class="descname">NS_DVB_T</code><em class="property"> = 4008574976</em><a class="headerlink" href="#controllers.utilities.NS_DVB_T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Namespace - DVB-T services</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.utilities.NS_LOOKUP">
+<code class="descclassname">controllers.utilities.</code><code class="descname">NS_LOOKUP</code><em class="property"> = {12582912: 'DVB-S', 4008574976: 'DVB-T', 4294901760: 'DVB-C'}</em><a class="headerlink" href="#controllers.utilities.NS_LOOKUP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Label lookup map</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Namespace</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.utilities.PATTERN_HOST_HEADER">
+<code class="descclassname">controllers.utilities.</code><code class="descname">PATTERN_HOST_HEADER</code><em class="property"> = '(\\[(?P&lt;ipv6_addr&gt;.+?)\\]|(?P&lt;hostname&gt;.+?))(\\:(?P&lt;port&gt;\\d+))?$'</em><a class="headerlink" href="#controllers.utilities.PATTERN_HOST_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>regular expression pattern for strings containing something resembling
+a hostname/port combination (<code class="docutils literal notranslate"><span class="pre">&lt;hostname&gt;:&lt;port&gt;</span></code>)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.utilities.add_expires_header">
+<code class="descclassname">controllers.utilities.</code><code class="descname">add_expires_header</code><span class="sig-paren">(</span><em>request</em>, <em>expires=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/utilities.html#add_expires_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.utilities.add_expires_header" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</li>
+<li><strong>expires</strong> – expiration in seconds or False for <em>imediately / no caching</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.utilities.build_url">
+<code class="descclassname">controllers.utilities.</code><code class="descname">build_url</code><span class="sig-paren">(</span><em>hostname</em>, <em>path=None</em>, <em>args=None</em>, <em>scheme='http'</em>, <em>port=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/utilities.html#build_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.utilities.build_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an URL based on parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>hostname</strong> – hostname portion</li>
+<li><strong>path</strong> – path portion</li>
+<li><strong>args</strong> – query parameters</li>
+<li><strong>scheme</strong> – scheme portion</li>
+<li><strong>port</strong> – port portion</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Generated URL</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">basestring</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">build_url</span><span class="p">(</span><span class="s2">&quot;some.host&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="p">{})</span>
+<span class="go">&#39;http://some.host/&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">build_url</span><span class="p">(</span><span class="s2">&quot;some.host&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<span class="go">&#39;http://some.host/&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">build_url</span><span class="p">(</span><span class="s2">&quot;some.host&quot;</span><span class="p">)</span>
+<span class="go">&#39;http://some.host&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">build_url</span><span class="p">(</span><span class="s2">&quot;some.host&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">27080</span><span class="p">)</span>
+<span class="go">&#39;http://some.host:27080&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">build_url</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">27080</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">empty hostname!</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">build_url</span><span class="p">(</span><span class="s2">&quot;some.host&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="go">&#39;http://some.host/x&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">build_url</span><span class="p">(</span><span class="s2">&quot;some.host&quot;</span><span class="p">,</span> <span class="s2">&quot;/x&quot;</span><span class="p">)</span>
+<span class="go">&#39;http://some.host/x&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">build_url</span><span class="p">(</span><span class="s2">&quot;some.host&quot;</span><span class="p">,</span> <span class="s2">&quot;/x/&quot;</span><span class="p">)</span>
+<span class="go">&#39;http://some.host/x/&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">build_url</span><span class="p">(</span><span class="s2">&quot;some.host&quot;</span><span class="p">,</span> <span class="s2">&quot;x/&quot;</span><span class="p">)</span>
+<span class="go">&#39;http://some.host/x/&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">build_url</span><span class="p">(</span><span class="s2">&quot;some.host&quot;</span><span class="p">,</span> <span class="s2">&quot;x/../&quot;</span><span class="p">)</span>
+<span class="go">&#39;http://some.host/x/../&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">build_url</span><span class="p">(</span><span class="s2">&quot;some.host&quot;</span><span class="p">,</span> <span class="s2">&quot;/:x/Ã¤Ã¶Ã¼-blabla/&quot;</span><span class="p">)</span>
+<span class="go">&#39;http://some.host/%3Ax/%C3%A4%C3%B6%C3%BC-blabla/&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">build_url</span><span class="p">(</span><span class="s2">&quot;some.host&quot;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;/:x/äöü-blabla/&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+<span class="go">&#39;http://some.host/%3Ax/%C3%A4%C3%B6%C3%BC-blabla/&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.utilities.create_servicereference">
+<code class="descclassname">controllers.utilities.</code><code class="descname">create_servicereference</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/utilities.html#create_servicereference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.utilities.create_servicereference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a (Enigma2 style) service reference string representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>args</strong><strong>[</strong><strong>0</strong><strong>]</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>) – Service Reference Parameter as dict</li>
+<li><strong>service_type</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Service Type</li>
+<li><strong>sid</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – SID</li>
+<li><strong>tsid</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – TSID</li>
+<li><strong>oid</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – OID</li>
+<li><strong>ns</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Enigma2 Namespace</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.utilities.get_config_attribute">
+<code class="descclassname">controllers.utilities.</code><code class="descname">get_config_attribute</code><span class="sig-paren">(</span><em>path</em>, <em>root_obj</em>, <em>head=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/utilities.html#get_config_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.utilities.get_config_attribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine attribute of <em>root_obj</em> to be accessed by <em>path</em> in a
+(somewhat) safe manner.
+This implementation will allow key and index based accessing too
+(e.g. <code class="docutils literal notranslate"><span class="pre">config.some_list[0]</span></code> or <code class="docutils literal notranslate"><span class="pre">config.some_dict['some_key']</span></code>)
+The <em>path</em> value needs to start with <em>head</em> (default=’config’).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> – character string specifying which attribute is to be accessed</li>
+<li><strong>root_obj</strong> – An object whose attributes are to be accessed.</li>
+<li><strong>head</strong> – Value of the first portion of <em>path</em></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Attribute of <em>root_obj</em></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ValueError</strong> – If <em>path</em> is invalid.</li>
+<li><strong>AttributeError</strong> – If attribute cannot be accessed</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.utilities.get_servicereference_portions">
+<code class="descclassname">controllers.utilities.</code><code class="descname">get_servicereference_portions</code><span class="sig-paren">(</span><em>value</em>, <em>raise_on_empty=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/utilities.html#get_servicereference_portions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.utilities.get_servicereference_portions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try to match possible portions of a servicereference in <em>value</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value</strong> (<em>basestring</em>) – a servicereference-like string</li>
+<li><strong>raise_on_empty</strong> (<em>boolean</em>) – If a ValueError should be raised</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">matched portions</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">list</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>ValueError</strong> – If result is empty list and <em>raise_on_empty</em> is True</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">deadbeef</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;de&#39;</span><span class="p">,</span> <span class="s1">&#39;ad&#39;</span><span class="p">,</span> <span class="s1">&#39;be&#39;</span><span class="p">,</span> <span class="s1">&#39;ef&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_servicereference_portions</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_servicereference_portions</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_servicereference_portions</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_servicereference_portions</span><span class="p">(</span><span class="s1">&#39;de:ad:be:ef&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">deadbeef</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_servicereference_portions</span><span class="p">(</span><span class="s1">&#39;de,ad$be_ef??&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">deadbeef</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_servicereference_portions</span><span class="p">(</span><span class="s1">&#39;-1:ad:be:ef:&#39;</span><span class="p">)</span>
+<span class="go">[&#39;1&#39;, &#39;ad&#39;, &#39;be&#39;, &#39;ef&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_servicereference_portions</span><span class="p">(</span><span class="s1">&#39;-^ghi&#39;</span><span class="p">,</span> <span class="n">raise_on_empty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">-^ghi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_servicereference_portions</span><span class="p">(</span><span class="s1">&#39;1:0:19:7C:6:85:FFFF0000:0:0:0:&#39;</span><span class="p">)</span>
+<span class="go">[&#39;1&#39;, &#39;0&#39;, &#39;19&#39;, &#39;7C&#39;, &#39;6&#39;, &#39;85&#39;, &#39;FFFF0000&#39;, &#39;0&#39;, &#39;0&#39;, &#39;0&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.utilities.lenient_decode">
+<code class="descclassname">controllers.utilities.</code><code class="descname">lenient_decode</code><span class="sig-paren">(</span><em>value</em>, <em>encoding=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/utilities.html#lenient_decode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.utilities.lenient_decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode an encoded string and convert it to an unicode string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value</strong> – input value</li>
+<li><strong>encoding</strong> – string encoding, defaults to utf-8</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">decoded value</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/functions.html#unicode" title="(in Python v2.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unicode</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lenient_decode</span><span class="p">(</span><span class="s2">&quot;Hallo&quot;</span><span class="p">)</span>
+<span class="go">u&#39;Hallo&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lenient_decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;Hallo&quot;</span><span class="p">)</span>
+<span class="go">u&#39;Hallo&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lenient_decode</span><span class="p">(</span><span class="s2">&quot;HällöÜ&quot;</span><span class="p">)</span>
+<span class="go">u&#39;H\xe4ll\xf6\xdc&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.utilities.lenient_force_utf_8">
+<code class="descclassname">controllers.utilities.</code><code class="descname">lenient_force_utf_8</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/utilities.html#lenient_force_utf_8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.utilities.lenient_force_utf_8" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – input value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#basestring" title="(in Python v2.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basestring</span></code></a> utf-8 encoded value</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">lenient_force_utf_8</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">basestring</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lenient_force_utf_8</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;Hallo&quot;</span><span class="p">)</span>
+<span class="go">&#39;Hallo&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lenient_force_utf_8</span><span class="p">(</span><span class="s2">&quot;HällöÜ&quot;</span><span class="p">)</span>
+<span class="go">&#39;H\xc3\xa4ll\xc3\xb6\xc3\x9c&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.utilities.mangle_host_header_port">
+<code class="descclassname">controllers.utilities.</code><code class="descname">mangle_host_header_port</code><span class="sig-paren">(</span><em>value=None</em>, <em>fallback_port='80'</em>, <em>fallback_hostname='localhost'</em>, <em>want_url=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/utilities.html#mangle_host_header_port"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.utilities.mangle_host_header_port" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value</strong> – header data</li>
+<li><strong>fallback_port</strong> – fallback value for port (default <code class="docutils literal notranslate"><span class="pre">80</span></code>)</li>
+<li><strong>fallback_hostname</strong> – fallback value for hostname (default <code class="docutils literal notranslate"><span class="pre">localhost</span></code>)</li>
+<li><strong>want_url</strong> – return an URL string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Mangled <em>port, proto</em> values</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">resi1</span> <span class="o">=</span> <span class="n">mangle_host_header_port</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resi1</span><span class="p">[</span><span class="s1">&#39;netloc&#39;</span><span class="p">]</span>
+<span class="go">&#39;localhost&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resi2</span> <span class="o">=</span> <span class="n">mangle_host_header_port</span><span class="p">(</span><span class="s2">&quot;localhost:80&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resi2</span><span class="p">[</span><span class="s1">&#39;netloc&#39;</span><span class="p">]</span>
+<span class="go">&#39;localhost&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resi3</span> <span class="o">=</span> <span class="n">mangle_host_header_port</span><span class="p">(</span><span class="s2">&quot;x:123&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resi3</span><span class="p">[</span><span class="s1">&#39;netloc&#39;</span><span class="p">]</span>
+<span class="go">&#39;x:123&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resi4</span> <span class="o">=</span> <span class="n">mangle_host_header_port</span><span class="p">(</span><span class="s2">&quot;haha:342111&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resi4</span><span class="p">[</span><span class="s1">&#39;netloc&#39;</span><span class="p">]</span>
+<span class="go">&#39;haha&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resi5</span> <span class="o">=</span> <span class="n">mangle_host_header_port</span><span class="p">(</span><span class="s2">&quot;haha:342111&quot;</span><span class="p">,</span> <span class="n">want_url</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resi5</span>
+<span class="go">&#39;http://haha&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resi6</span> <span class="o">=</span> <span class="n">mangle_host_header_port</span><span class="p">(</span><span class="s2">&quot;localhost:12345&quot;</span><span class="p">,</span> <span class="n">want_url</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resi6</span>
+<span class="go">&#39;http://localhost:12345&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mangle_host_header_port</span><span class="p">(</span><span class="s2">&quot;[2001:0db8:85a3:08d3::0370:7344]&quot;</span><span class="p">,</span> <span class="n">want_url</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># NOQA</span>
+<span class="go">&#39;http://[2001:0db8:85a3:08d3::0370:7344]&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mangle_host_header_port</span><span class="p">(</span><span class="s2">&quot;[2001:0db8:85a3:08d3::0370:7344]&quot;</span><span class="p">)[</span><span class="s1">&#39;netloc&#39;</span><span class="p">]</span>
+<span class="go">&#39;[2001:0db8:85a3:08d3::0370:7344]&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mangle_host_header_port</span><span class="p">(</span><span class="s2">&quot;[2001:0db8:85a3:08d3::0370:7344]:8080/&quot;</span><span class="p">,</span> <span class="n">want_url</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># NOQA</span>
+<span class="go">&#39;http://[2001:0db8:85a3:08d3::0370:7344]:8080/&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mangle_host_header_port</span><span class="p">(</span><span class="s2">&quot;[2001:0db8:85a3:08d3::0370:7344]:8080&quot;</span><span class="p">)[</span><span class="s1">&#39;netloc&#39;</span><span class="p">]</span>  <span class="c1"># NOQA</span>
+<span class="go">&#39;[2001:0db8:85a3:08d3::0370:7344]:8080&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.utilities.mangle_service_type_arg">
+<code class="descclassname">controllers.utilities.</code><code class="descname">mangle_service_type_arg</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/utilities.html#mangle_service_type_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.utilities.mangle_service_type_arg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate ‘tv’ or ‘radio’ to a set containing the needed service_type IDs.
+Other values of <em>item</em> are expected to be an integer value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>item</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – service_type value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">service_type IDs</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#set" title="(in Python v2.7)">set</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> – If a non-integer value was provided</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mangle_service_type_arg</span><span class="p">(</span><span class="s2">&quot;tv&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="nb">set</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">195</span><span class="p">,</span> <span class="mi">134</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">31</span><span class="p">])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mangle_service_type_arg</span><span class="p">(</span><span class="s2">&quot;radio&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="nb">set</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mangle_service_type_arg</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span> <span class="mi">16</span> <span class="p">}</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mangle_service_type_arg</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="mi">1</span><span class="p">}</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mangle_service_type_arg</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="mi">1</span><span class="p">}</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mangle_service_type_arg</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="mi">1</span><span class="p">}</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">invalid literal for int() with base 10: &#39;&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.utilities.mangle_snp">
+<code class="descclassname">controllers.utilities.</code><code class="descname">mangle_snp</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/utilities.html#mangle_snp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.utilities.mangle_snp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mangle service_name as suggested by SNP (Service Name Picons)</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><a class="reference external" href="https://github.com/picons/picons-source">https://github.com/picons/picons-source</a></li>
+<li><a class="reference external" href="https://github.com/OpenViX/enigma2/blob/master/lib/python/Components/Renderer/Picon.py#L88-L89">https://github.com/OpenViX/enigma2/blob/master/lib/python/Components/Renderer/Picon.py#L88-L89</a></li>
+</ul>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>basestring</em>) – service name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">normalised service name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mangle_snp</span><span class="p">(</span><span class="s1">&#39;?ANTENNE? BAYERN&#39;</span><span class="p">)</span>
+<span class="go">&#39;antennebayern&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mangle_snp</span><span class="p">(</span><span class="s1">&#39;?Sky? ?Cine?ma +?24?&#39;</span><span class="p">)</span>
+<span class="go">&#39;skycinemaplus24&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.utilities.parse_servicereference">
+<code class="descclassname">controllers.utilities.</code><code class="descname">parse_servicereference</code><span class="sig-paren">(</span><em>serviceref</em>, <em>separators=None</em>, <em>extended=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/utilities.html#parse_servicereference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.utilities.parse_servicereference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a Enigma2 style service reference string representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>serviceref</strong> – Enigma2 style service reference</li>
+<li><strong>separators</strong> – Allowed separators</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dict containing parsed values</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>ValueError</strong> – If <em>serviceref</em> is invalid.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sref</span> <span class="o">=</span> <span class="s1">&#39;1:0:1:300:7:85:00c00000:0:0:0:&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">parse_servicereference</span><span class="p">(</span><span class="n">sref</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span>
+<span class="go">{&#39;service_type&#39;: 1, &#39;oid&#39;: 133, &#39;tsid&#39;: 7, &#39;ns&#39;: 12582912, &#39;sid&#39;: 768}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sref_dashes</span> <span class="o">=</span> <span class="s1">&#39;1-0-1-300-7-85-00c00000-0-0-0-&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result_dashes</span> <span class="o">=</span> <span class="n">parse_servicereference</span><span class="p">(</span><span class="n">sref_dashes</span><span class="p">,</span> <span class="s1">&#39;:-&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">==</span> <span class="n">result_dashes</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sref_g</span> <span class="o">=</span> <span class="n">create_servicereference</span><span class="p">(</span><span class="o">**</span><span class="n">result</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sref_g</span>
+<span class="go">&#39;1:0:1:300:7:85:00c00000:0:0:0:&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sref_g2</span> <span class="o">=</span> <span class="n">create_servicereference</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sref_g2</span>
+<span class="go">&#39;1:0:1:300:7:85:00c00000:0:0:0:&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sref</span> <span class="o">==</span> <span class="n">sref_g</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sref2</span> <span class="o">=</span> <span class="s1">&#39;1:64:A:0:0:0:0:0:0:0::SKY Sport&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result2</span> <span class="o">=</span> <span class="n">parse_servicereference</span><span class="p">(</span><span class="n">sref2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result2</span>
+<span class="go">{&#39;service_type&#39;: 10, &#39;oid&#39;: 0, &#39;tsid&#39;: 0, &#39;ns&#39;: 0, &#39;sid&#39;: 0}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result2e</span> <span class="o">=</span> <span class="n">parse_servicereference</span><span class="p">(</span><span class="n">sref2</span><span class="p">,</span> <span class="n">extended</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result2e</span><span class="p">[</span><span class="s1">&#39;kind&#39;</span><span class="p">]</span>
+<span class="go">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sref3</span> <span class="o">=</span> <span class="s1">&#39;1:0:0:0:0:0:0:0:0:0:/media/hdd/movie/20170921 2055 - DASDING - DASDING Sprechstunde - .ts&#39;</span>  <span class="c1"># NOQA</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result3</span> <span class="o">=</span> <span class="n">parse_servicereference</span><span class="p">(</span><span class="n">sref3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result3</span>
+<span class="go">{&#39;service_type&#39;: 0, &#39;oid&#39;: 0, &#39;tsid&#39;: 0, &#39;ns&#39;: 0, &#39;sid&#39;: 0}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.utilities.parse_simple_index">
+<code class="descclassname">controllers.utilities.</code><code class="descname">parse_simple_index</code><span class="sig-paren">(</span><em>source</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/utilities.html#parse_simple_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.utilities.parse_simple_index" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">snp_index</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CONTRIB</span><span class="p">,</span> <span class="s1">&#39;picon-source/snp.index&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snp</span> <span class="o">=</span> <span class="n">parse_simple_index</span><span class="p">(</span><span class="n">snp_index</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">snp</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snp</span><span class="p">[</span><span class="s1">&#39;wdrduesseldorf&#39;</span><span class="p">]</span>
+<span class="go">&#39;wdr&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snp</span><span class="p">[</span><span class="s1">&#39;wdrdusseldorf&#39;</span><span class="p">]</span>
+<span class="go">&#39;wdr&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.utilities.require_valid_file_parameter">
+<code class="descclassname">controllers.utilities.</code><code class="descname">require_valid_file_parameter</code><span class="sig-paren">(</span><em>request</em>, <em>parameter_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/utilities.html#require_valid_file_parameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.utilities.require_valid_file_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</li>
+<li><strong>parameter_key</strong> – filename parameter key</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">existing filename</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">basestring</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ValueError</strong> – If <em>parameter_key</em> is missing.</li>
+<li><strong>IOError</strong> – If filename does not point to an existing file path</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.utilities.sanitise_filename_slashes">
+<code class="descclassname">controllers.utilities.</code><code class="descname">sanitise_filename_slashes</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/utilities.html#sanitise_filename_slashes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.utilities.sanitise_filename_slashes" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>basestring</em>) – input value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">value w/o multiple slashes</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">in_value</span> <span class="o">=</span> <span class="s2">&quot;///tmp/x/y/z&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">expected</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;^/+&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;///tmp/x/y/z&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sanitise_filename_slashes</span><span class="p">(</span><span class="n">in_value</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<span class="target" id="module-controllers.models.model_utilities"></span><dl class="function">
+<dt id="controllers.models.model_utilities.mangle_epg_text">
+<code class="descclassname">controllers.models.model_utilities.</code><code class="descname">mangle_epg_text</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/models/model_utilities.html#mangle_epg_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.models.model_utilities.mangle_epg_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove EPG data-specific utf-8 characters.
+Replace EPG specific newline character 0xc28a with <cite>newline</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#basestring" title="(in Python v2.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basestring</span></code></a>) – EPG text</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">mangled EPG text</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(<a class="reference external" href="https://docs.python.org/2/library/functions.html#basestring" title="(in Python v2.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basestring</span></code></a>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<span class="target" id="module-controllers.models.stream"></span><dl class="function">
+<dt id="controllers.models.stream.create_file_m3u">
+<code class="descclassname">controllers.models.stream.</code><code class="descname">create_file_m3u</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/models/stream.html#create_file_m3u"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.models.stream.create_file_m3u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create M3U contents for file streaming.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">M3U contents</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.models.stream.create_stream_m3u">
+<code class="descclassname">controllers.models.stream.</code><code class="descname">create_stream_m3u</code><span class="sig-paren">(</span><em>session</em>, <em>request</em>, <em>m3ufile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/models/stream.html#create_stream_m3u"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.models.stream.create_stream_m3u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create M3U contents for service streaming.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>session</strong> – enigma session object</li>
+<li><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</li>
+<li><strong>m3ufile</strong> – M3U filename</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">M3U contents</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.models.stream.create_transcoding_args">
+<code class="descclassname">controllers.models.stream.</code><code class="descname">create_transcoding_args</code><span class="sig-paren">(</span><em>machinebuild</em>, <em>for_phone</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/models/stream.html#create_transcoding_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.models.stream.create_transcoding_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create transcoding query parameters <cite>dict</cite> based on <em>machine build</em> and
+<em>is mobile device</em> option.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>machinebuild</strong> – machine build indicator</li>
+<li><strong>for_phone</strong> – for mobile device indicator</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">query parameters</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<span class="target" id="module-controllers.models.movies"></span><dl class="data">
+<dt id="controllers.models.movies.MOVIE_LIST_ROOT_FALLBACK">
+<code class="descclassname">controllers.models.movies.</code><code class="descname">MOVIE_LIST_ROOT_FALLBACK</code><em class="property"> = '/media'</em><a class="headerlink" href="#controllers.models.movies.MOVIE_LIST_ROOT_FALLBACK" title="Permalink to this definition">¶</a></dt>
+<dd><p>fallback value for ‘movie list root’</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.movies.MOVIE_LIST_SREF_ROOT">
+<code class="descclassname">controllers.models.movies.</code><code class="descname">MOVIE_LIST_SREF_ROOT</code><em class="property"> = '2:0:1:0:0:0:0:0:0:0:'</em><a class="headerlink" href="#controllers.models.movies.MOVIE_LIST_SREF_ROOT" title="Permalink to this definition">¶</a></dt>
+<dd><p>servicereference prefix for movie itmes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.models.movies.getMovieList">
+<code class="descclassname">controllers.models.movies.</code><code class="descname">getMovieList</code><span class="sig-paren">(</span><em>rargs=None</em>, <em>locations=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/models/movies.html#getMovieList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.models.movies.getMovieList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a <cite>dict</cite> containing movie items information.</p>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 0.86.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rargs</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) – request object’s args</li>
+<li><strong>locations</strong> (<em>list</em>) – paths where recordings might be stored</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">movie items</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.models.movies.getPosition">
+<code class="descclassname">controllers.models.movies.</code><code class="descname">getPosition</code><span class="sig-paren">(</span><em>cutfile</em>, <em>movie_len</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/models/movies.html#getPosition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.models.movies.getPosition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve ‘last watched’ position.</p>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 0.86.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cutfile</strong> (<em>basestring</em>) – movie’s cutfile path</li>
+<li><strong>movie_len</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – movie length in minutes</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">movie items</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="model.html" class="btn btn-neutral float-right" title="Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="controller.html" class="btn btn-neutral" title="Controller" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1064 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RESTful API &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Controller" href="controller.html" />
+    <link rel="prev" title="Enigma2 WebInterface API" href="e2webinterface_api.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">RESTful API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#restful-api-access-using-http">RESTful API access using HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recordings">Recordings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#timer-items">Timer Items</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#current-event-data">Current Event Data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>RESTful API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/restful_api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-controllers.rest">
+<span id="restful-api"></span><span id="restful-api-label"></span><h1>RESTful API<a class="headerlink" href="#module-controllers.rest" title="Permalink to this headline">¶</a></h1>
+<dl class="data">
+<dt id="controllers.rest.CORS_ALLOWED_CLIENT_HEADERS">
+<code class="descclassname">controllers.rest.</code><code class="descname">CORS_ALLOWED_CLIENT_HEADERS</code><em class="property"> = ['Content-Type']</em><a class="headerlink" href="#controllers.rest.CORS_ALLOWED_CLIENT_HEADERS" title="Permalink to this definition">¶</a></dt>
+<dd><p>CORS - HTTP headers the client may use</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.rest.CORS_ALLOWED_METHODS_DEFAULT">
+<code class="descclassname">controllers.rest.</code><code class="descname">CORS_ALLOWED_METHODS_DEFAULT</code><em class="property"> = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS']</em><a class="headerlink" href="#controllers.rest.CORS_ALLOWED_METHODS_DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd><p>CORS - HTTP methods the client may use</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.rest.CORS_DEFAULT">
+<code class="descclassname">controllers.rest.</code><code class="descname">CORS_DEFAULT</code><em class="property"> = {'Access-Control-Allow-Credentials': 'true', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS', 'Access-Control-Allow-Origin': '*', 'Access-Control-Max-Age': '86400'}</em><a class="headerlink" href="#controllers.rest.CORS_DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd><p>CORS - HTTP headers the server will send as part of OPTIONS response</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.rest.CORS_DEFAULT_ALLOW_ORIGIN">
+<code class="descclassname">controllers.rest.</code><code class="descname">CORS_DEFAULT_ALLOW_ORIGIN</code><em class="property"> = '*'</em><a class="headerlink" href="#controllers.rest.CORS_DEFAULT_ALLOW_ORIGIN" title="Permalink to this definition">¶</a></dt>
+<dd><p>CORS - default origin header value</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="controllers.rest.RESTControllerSkeleton">
+<em class="property">class </em><code class="descclassname">controllers.rest.</code><code class="descname">RESTControllerSkeleton</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest.html#RESTControllerSkeleton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest.RESTControllerSkeleton" title="Permalink to this definition">¶</a></dt>
+<dd><p>Skeleton implementation of a RESTful contoller class.</p>
+<dl class="method">
+<dt id="controllers.rest.RESTControllerSkeleton.error_response">
+<code class="descname">error_response</code><span class="sig-paren">(</span><em>request</em>, <em>response_code=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest.html#RESTControllerSkeleton.error_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest.RESTControllerSkeleton.error_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return an HTTP error response with data as JSON.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</li>
+<li><strong>response_code</strong> – HTTP Status Code (default is 500)</li>
+<li><strong>**kwargs</strong> – additional key/value pairs</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">JSON encoded data with appropriate HTTP headers</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.rest.RESTControllerSkeleton.render_GET">
+<code class="descname">render_GET</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest.html#RESTControllerSkeleton.render_GET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest.RESTControllerSkeleton.render_GET" title="Permalink to this definition">¶</a></dt>
+<dd><p>HTTP GET implementation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.rest.RESTControllerSkeleton.render_OPTIONS">
+<code class="descname">render_OPTIONS</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest.html#RESTControllerSkeleton.render_OPTIONS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest.RESTControllerSkeleton.render_OPTIONS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render response for an HTTP OPTIONS request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.rest.RESTControllerSkeleton.render_POST">
+<code class="descname">render_POST</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest.html#RESTControllerSkeleton.render_POST"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest.RESTControllerSkeleton.render_POST" title="Permalink to this definition">¶</a></dt>
+<dd><p>HTTP POST implementation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="controllers.rest.SimpleRootController">
+<em class="property">class </em><code class="descclassname">controllers.rest.</code><code class="descname">SimpleRootController</code><a class="reference internal" href="_modules/controllers/rest.html#SimpleRootController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest.SimpleRootController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple (Web) Root Controller.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.rest.json_response">
+<code class="descclassname">controllers.rest.</code><code class="descname">json_response</code><span class="sig-paren">(</span><em>request</em>, <em>data</em>, <em>indent=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest.html#json_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest.json_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a JSON representation for <em>data</em> and set HTTP headers indicating
+that JSON encoded data is returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</li>
+<li><strong>data</strong> – response content</li>
+<li><strong>indent</strong> – indentation level or None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">JSON representation of <em>data</em> with appropriate HTTP headers</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<span class="target" id="module-controllers.rest_api_controller"></span><div class="section" id="restful-api-access-using-http">
+<h2>RESTful API access using HTTP<a class="headerlink" href="#restful-api-access-using-http" title="Permalink to this headline">¶</a></h2>
+<p>This controller exposes the application programming interface (API) as
+implemented by the <a class="reference internal" href="e2webinterface_api.html#module-controllers.web" title="controllers.web"><code class="xref py py-class docutils literal notranslate"><span class="pre">controllers.web</span></code></a> and <code class="xref py py-class docutils literal notranslate"><span class="pre">controllers.ajax</span></code>
+controllers.</p>
+<p>The generated responses are returned as JSON data with appropriate HTTP
+headers. Output will be compressed using gzip if requested by client.</p>
+<p>A swagger v2 (<a class="reference external" href="https://swagger.io/">https://swagger.io/</a>) compatible API specification will be
+returned when accessing the /api/ endpoint. The API specification is consumable
+e.g. by a Swagger UI (<a class="reference external" href="https://swagger.io/swagger-ui/">https://swagger.io/swagger-ui/</a>) instance.</p>
+<dl class="data">
+<dt id="controllers.rest_api_controller.OWIF_PREFIX">
+<code class="descclassname">controllers.rest_api_controller.</code><code class="descname">OWIF_PREFIX</code><em class="property"> = 'P_'</em><a class="headerlink" href="#controllers.rest_api_controller.OWIF_PREFIX" title="Permalink to this definition">¶</a></dt>
+<dd><p>prefix for OpenWebif controller methods</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.rest_api_controller.SWAGGER_TEMPLATE">
+<code class="descclassname">controllers.rest_api_controller.</code><code class="descname">SWAGGER_TEMPLATE</code><em class="property"> = '/home/travis/build/doubleO8/e2openplugin-OpenWebif/pert_belly_hack-backend/plugin/controllers/swagger.json'</em><a class="headerlink" href="#controllers.rest_api_controller.SWAGGER_TEMPLATE" title="Permalink to this definition">¶</a></dt>
+<dd><p>OpenAPI specification source (swagger.json)</p>
+</dd></dl>
+
+</div>
+<span class="target" id="module-controllers.rest_recordings_controller"></span><div class="section" id="recordings">
+<h2>Recordings<a class="headerlink" href="#recordings" title="Permalink to this headline">¶</a></h2>
+<p>Listing of recordings on current device.
+Removing of recordings files including meta data.</p>
+<dl class="class">
+<dt id="controllers.rest_recordings_controller.RESTRecordingsController">
+<em class="property">class </em><code class="descclassname">controllers.rest_recordings_controller.</code><code class="descname">RESTRecordingsController</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_recordings_controller.html#RESTRecordingsController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_recordings_controller.RESTRecordingsController" title="Permalink to this definition">¶</a></dt>
+<dd><p>RESTful Controller for <code class="docutils literal notranslate"><span class="pre">/recordings</span></code> endpoint.</p>
+<dl class="method">
+<dt id="controllers.rest_recordings_controller.RESTRecordingsController.remove">
+<code class="descname">remove</code><span class="sig-paren">(</span><em>request</em>, <em>target_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_recordings_controller.html#RESTRecordingsController.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_recordings_controller.RESTRecordingsController.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove movie file including meta data files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</li>
+<li><strong>target_path</strong> (<em>basestring</em>) – Movie item to remove</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">HTTP response with headers</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.rest_recordings_controller.RESTRecordingsController.render_DELETE">
+<code class="descname">render_DELETE</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_recordings_controller.html#RESTRecordingsController.render_DELETE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_recordings_controller.RESTRecordingsController.render_DELETE" title="Permalink to this definition">¶</a></dt>
+<dd><p>HTTP DELETE request handler deleting a movie item</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="delete">
+<dt id="delete--recordings-basestring-path">
+<code class="descname">DELETE </code><code class="descname">/recordings/{basestring:path}</code><a class="headerlink" href="#delete--recordings-basestring-path" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.rest_recordings_controller.RESTRecordingsController.render_GET">
+<code class="descname">render_GET</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_recordings_controller.html#RESTRecordingsController.render_GET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_recordings_controller.RESTRecordingsController.render_GET" title="Permalink to this definition">¶</a></dt>
+<dd><p>HTTP GET request handler returning list of movies</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--recordings-basestring-path">
+<code class="descname">GET </code><code class="descname">/recordings/{basestring:path}</code><a class="headerlink" href="#get--recordings-basestring-path" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.3.2">301 Moved Permanently</a> – redirect</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--recording-basestring-path">
+<code class="descname">GET </code><code class="descname">/recording/{basestring:path}</code><a class="headerlink" href="#get--recording-basestring-path" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.rest_recordings_controller.RESTRecordingsController.render_path_listing">
+<code class="descname">render_path_listing</code><span class="sig-paren">(</span><em>request</em>, <em>root_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_recordings_controller.html#RESTRecordingsController.render_path_listing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_recordings_controller.RESTRecordingsController.render_path_listing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a list of movie items available on current device.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</li>
+<li><strong>root_path</strong> (<em>basestring</em>) – Movie item to remove</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">HTTP response with headers</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<span class="target" id="module-controllers.rest_timer_controller"></span><div class="section" id="timer-items">
+<h2>Timer Items<a class="headerlink" href="#timer-items" title="Permalink to this headline">¶</a></h2>
+<p>Listing of timer items on current device.
+(Removing of timer items, Altering of timer items)</p>
+<dl class="class">
+<dt id="controllers.rest_timer_controller.RESTTimerController">
+<em class="property">class </em><code class="descclassname">controllers.rest_timer_controller.</code><code class="descname">RESTTimerController</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_timer_controller.html#RESTTimerController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_timer_controller.RESTTimerController" title="Permalink to this definition">¶</a></dt>
+<dd><p>RESTful Controller for <code class="docutils literal notranslate"><span class="pre">/timers</span></code> endpoint.</p>
+<dl class="get">
+<dt id="get--timers-">
+<code class="descname">GET </code><code class="descname">/timers/</code><a class="headerlink" href="#get--timers-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – invalid</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--timers-basestring-service_reference-">
+<code class="descname">GET </code><code class="descname">/timers/{basestring:service_reference}/</code><a class="headerlink" href="#get--timers-basestring-service_reference-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – invalid</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--timers-basestring-service_reference-int-timer_id-">
+<code class="descname">GET </code><code class="descname">/timers/{basestring:service_reference}/{int:timer_id}/</code><a class="headerlink" href="#get--timers-basestring-service_reference-int-timer_id-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – invalid</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.rest_timer_controller.RESTTimerController.render_DELETE">
+<code class="descname">render_DELETE</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_timer_controller.html#RESTTimerController.render_DELETE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_timer_controller.RESTTimerController.render_DELETE" title="Permalink to this definition">¶</a></dt>
+<dd><p>HTTP DELETE implementation for removing a timer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="delete">
+<dt id="delete--timers-basestring-service_reference-int-timer_id-">
+<code class="descname">DELETE </code><code class="descname">/timers/{basestring:service_reference}/{int:timer_id}/</code><a class="headerlink" href="#delete--timers-basestring-service_reference-int-timer_id-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – invalid</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.rest_timer_controller.RESTTimerController.render_list_all">
+<code class="descname">render_list_all</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_timer_controller.html#RESTTimerController.render_list_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_timer_controller.RESTTimerController.render_list_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all timers</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.rest_timer_controller.RESTTimerController.render_list_item">
+<code class="descname">render_list_item</code><span class="sig-paren">(</span><em>request</em>, <em>service_reference</em>, <em>item_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_timer_controller.html#RESTTimerController.render_list_item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_timer_controller.RESTTimerController.render_list_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>List timer data for specific timer of service.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</li>
+<li><strong>service_reference</strong> (<em>basestring</em>) – Service reference string</li>
+<li><strong>item_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Timer ID</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">HTTP response with headers</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.rest_timer_controller.RESTTimerController.render_list_subset">
+<code class="descname">render_list_subset</code><span class="sig-paren">(</span><em>request</em>, <em>service_reference</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_timer_controller.html#RESTTimerController.render_list_subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_timer_controller.RESTTimerController.render_list_subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>List timers for specific service.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</li>
+<li><strong>service_reference</strong> (<em>basestring</em>) – Service reference string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">HTTP response with headers</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<span class="target" id="module-controllers.rest_current_event_controller"></span><div class="section" id="current-event-data">
+<h2>Current Event Data<a class="headerlink" href="#current-event-data" title="Permalink to this headline">¶</a></h2>
+<p>Retrieve current event data.</p>
+<dl class="class">
+<dt id="controllers.rest_current_event_controller.RESTCurrentEventController">
+<em class="property">class </em><code class="descclassname">controllers.rest_current_event_controller.</code><code class="descname">RESTCurrentEventController</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_current_event_controller.html#RESTCurrentEventController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_current_event_controller.RESTCurrentEventController" title="Permalink to this definition">¶</a></dt>
+<dd><p>RESTful Controller for <code class="docutils literal notranslate"><span class="pre">/current_event</span></code> endpoint.</p>
+<dl class="get">
+<dt id="get--current_event">
+<code class="descname">GET </code><code class="descname">/current_event</code><a class="headerlink" href="#get--current_event" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.5.4">503 Service Unavailable</a> – no currently playing service</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--current_event-basestring-service_reference-">
+<code class="descname">GET </code><code class="descname">/current_event/{basestring:service_reference}/</code><a class="headerlink" href="#get--current_event-basestring-service_reference-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.5.4">503 Service Unavailable</a> – no data</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.rest_current_event_controller.RESTCurrentEventController.render_list_all">
+<code class="descname">render_list_all</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_current_event_controller.html#RESTCurrentEventController.render_list_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_current_event_controller.RESTCurrentEventController.render_list_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return event data for currently playing service.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.rest_current_event_controller.RESTCurrentEventController.render_list_item">
+<code class="descname">render_list_item</code><span class="sig-paren">(</span><em>request</em>, <em>service_reference</em>, <em>item_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_current_event_controller.html#RESTCurrentEventController.render_list_item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_current_event_controller.RESTCurrentEventController.render_list_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Currently not supported.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.rest_current_event_controller.RESTCurrentEventController.render_list_subset">
+<code class="descname">render_list_subset</code><span class="sig-paren">(</span><em>request</em>, <em>service_reference</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_current_event_controller.html#RESTCurrentEventController.render_list_subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_current_event_controller.RESTCurrentEventController.render_list_subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return event data for specific service (if available).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</li>
+<li><strong>service_reference</strong> (<em>basestring</em>) – Service reference string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">HTTP response with headers</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="controllers.rest_current_event_controller.get_servicereference_name">
+<code class="descclassname">controllers.rest_current_event_controller.</code><code class="descname">get_servicereference_name</code><span class="sig-paren">(</span><em>some_ref</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_current_event_controller.html#get_servicereference_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_current_event_controller.get_servicereference_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try to dertermine service’s name for service reference <em>some_ref</em></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>some_ref</strong> – eServiceReference instance or basestring</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">service name or service reference string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<span class="target" id="module-controllers.rest_saveconfig_api"></span><p>RESTful Controller for <code class="docutils literal notranslate"><span class="pre">/api/saveconfig</span></code> endpoint.
+POST requests are proxied through
+<a class="reference internal" href="e2webinterface_api.html#controllers.web.WebController.P_saveconfig" title="controllers.web.WebController.P_saveconfig"><code class="xref py py-func docutils literal notranslate"><span class="pre">controllers.web.WebController.P_saveconfig()</span></code></a>.</p>
+<p>MISSING:</p>
+<blockquote>
+<div><ul class="simple">
+<li>sane implementation of POST request handling</li>
+<li>extend OpenAPI specification in swagger.json</li>
+</ul>
+</div></blockquote>
+<dl class="class">
+<dt id="controllers.rest_saveconfig_api.SaveConfigApiController">
+<em class="property">class </em><code class="descclassname">controllers.rest_saveconfig_api.</code><code class="descname">SaveConfigApiController</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_saveconfig_api.html#SaveConfigApiController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_saveconfig_api.SaveConfigApiController" title="Permalink to this definition">¶</a></dt>
+<dd><p>RESTful Controller for <code class="docutils literal notranslate"><span class="pre">/api/saveconfig</span></code> endpoint.</p>
+<dl class="method">
+<dt id="controllers.rest_saveconfig_api.SaveConfigApiController.render_GET">
+<code class="descname">render_GET</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_saveconfig_api.html#SaveConfigApiController.render_GET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_saveconfig_api.SaveConfigApiController.render_GET" title="Permalink to this definition">¶</a></dt>
+<dd><p>HTTP GET implementation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">twisted.web.server.Request</span></code></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--api-saveconfig">
+<code class="descname">GET </code><code class="descname">/api/saveconfig</code><a class="headerlink" href="#get--api-saveconfig" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="controllers.rest_saveconfig_api.SaveConfigApiController.render_POST">
+<code class="descname">render_POST</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_saveconfig_api.html#SaveConfigApiController.render_POST"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_saveconfig_api.SaveConfigApiController.render_POST" title="Permalink to this definition">¶</a></dt>
+<dd><p>HTTP POST implementation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">twisted.web.server.Request</span></code></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="post">
+<dt id="post--api-saveconfig">
+<code class="descname">POST </code><code class="descname">/api/saveconfig</code><a class="headerlink" href="#post--api-saveconfig" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> (<em>string</em>) – configuration key</li>
+<li><strong>value</strong> (<em>string</em>) – configuration value</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="controllers.rest_saveconfig_api.SaveConfigApiController.web_instance">
+<code class="descname">web_instance</code><em class="property"> = None</em><a class="headerlink" href="#controllers.rest_saveconfig_api.SaveConfigApiController.web_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>web controller instance</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-controllers.rest_eventlookup_api"></span><dl class="class">
+<dt id="controllers.rest_eventlookup_api.EventLookupApiController">
+<em class="property">class </em><code class="descclassname">controllers.rest_eventlookup_api.</code><code class="descname">EventLookupApiController</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_eventlookup_api.html#EventLookupApiController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_eventlookup_api.EventLookupApiController" title="Permalink to this definition">¶</a></dt>
+<dd><p>RESTful Controller for <code class="docutils literal notranslate"><span class="pre">/api/eventlookup</span></code> endpoint</p>
+<dl class="method">
+<dt id="controllers.rest_eventlookup_api.EventLookupApiController.render_GET">
+<code class="descname">render_GET</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_eventlookup_api.html#EventLookupApiController.render_GET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_eventlookup_api.EventLookupApiController.render_GET" title="Permalink to this definition">¶</a></dt>
+<dd><p>HTTP GET implementation.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><em>querytype</em> Parameter – <a class="reference internal" href="controller.html#event-lookup-parameters-label"><span class="std std-ref">Description of Parameters Related to Querytype</span></a></li>
+<li><em>flags</em> Parameter – <a class="reference internal" href="controller.html#event-format-label"><span class="std std-ref">Possible Values of the Format Field</span></a></li>
+</ul>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--api-eventlookup">
+<code class="descname">GET </code><code class="descname">/api/eventlookup</code><a class="headerlink" href="#get--api-eventlookup" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>service_reference</strong> (<em>basestring</em>) – service_reference</li>
+<li><strong>begin</strong> (<em>int</em>) – (optional) timestamp</li>
+<li><strong>minutes</strong> (<em>int</em>) – (optional) time range in minutes or event ID</li>
+<li><strong>querytype</strong> (<em>int</em>) – (optional) query type</li>
+<li><strong>flags</strong> (<em>basestring</em>) – (optional) fields to be returned</li>
+<li><strong>max_rows</strong> (<em>int</em>) – (optional) maximum number of result rows</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-controllers.rest_eventsearch_api"></span><dl class="class">
+<dt id="controllers.rest_eventsearch_api.EventSearchApiController">
+<em class="property">class </em><code class="descclassname">controllers.rest_eventsearch_api.</code><code class="descname">EventSearchApiController</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_eventsearch_api.html#EventSearchApiController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_eventsearch_api.EventSearchApiController" title="Permalink to this definition">¶</a></dt>
+<dd><p>RESTful Controller for <code class="docutils literal notranslate"><span class="pre">/api/eventsearch</span></code> endpoint</p>
+<dl class="method">
+<dt id="controllers.rest_eventsearch_api.EventSearchApiController.render_GET">
+<code class="descname">render_GET</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_eventsearch_api.html#EventSearchApiController.render_GET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_eventsearch_api.EventSearchApiController.render_GET" title="Permalink to this definition">¶</a></dt>
+<dd><p>HTTP GET implementation.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ul class="last simple">
+<li><em>querytype</em> Parameter – <a class="reference internal" href="controller.html#event-search-parameters-label"><span class="std std-ref">Description of Parameters Related to Search Querytype</span></a></li>
+<li><em>flags</em> Parameter – <a class="reference internal" href="controller.html#event-format-label"><span class="std std-ref">Possible Values of the Format Field</span></a></li>
+</ul>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--api-eventsearch">
+<code class="descname">GET </code><code class="descname">/api/eventsearch</code><a class="headerlink" href="#get--api-eventsearch" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>what</strong> (<em>basestring</em>) – search term</li>
+<li><strong>querytype</strong> (<em>int</em>) – (optional) query type</li>
+<li><strong>flags</strong> (<em>basestring</em>) – (optional) fields to be returned</li>
+<li><strong>max_rows</strong> (<em>int</em>) – (optional) maximum number of result rows</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-controllers.rest_services_controller"></span><dl class="class">
+<dt id="controllers.rest_services_controller.RESTServicesController">
+<em class="property">class </em><code class="descclassname">controllers.rest_services_controller.</code><code class="descname">RESTServicesController</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_services_controller.html#RESTServicesController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_services_controller.RESTServicesController" title="Permalink to this definition">¶</a></dt>
+<dd><p>RESTful Controller for <code class="docutils literal notranslate"><span class="pre">/services/</span></code> endpoint</p>
+<dl class="method">
+<dt id="controllers.rest_services_controller.RESTServicesController.render_GET">
+<code class="descname">render_GET</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/rest_services_controller.html#RESTServicesController.render_GET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.rest_services_controller.RESTServicesController.render_GET" title="Permalink to this definition">¶</a></dt>
+<dd><p>HTTP GET implementation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<a class="reference external" href="https://twistedmatrix.com/documents/16.2.0/api/twisted.web.server.Request.html" title="(in Twisted v2.0)"><em>twisted.web.server.Request</em></a>) – HTTP request object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">HTTP response with headers</td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--services-">
+<code class="descname">GET </code><code class="descname">/services/</code><a class="headerlink" href="#get--services-" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.5.1">500 Internal Server Error</a> – error(s)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--services-tv">
+<code class="descname">GET </code><code class="descname">/services/tv</code><a class="headerlink" href="#get--services-tv" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.5.1">500 Internal Server Error</a> – error(s)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--services-radio">
+<code class="descname">GET </code><code class="descname">/services/radio</code><a class="headerlink" href="#get--services-radio" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.5.1">500 Internal Server Error</a> – error(s)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--services-(int-service_type)">
+<code class="descname">GET </code><code class="descname">/services/</code><span class="sig-paren">(</span><em class="property">int: </em><em>service_type</em><span class="sig-paren">)</span><a class="headerlink" href="#get--services-(int-service_type)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – no error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.5.1">500 Internal Server Error</a> – error(s)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="controller.html" class="btn btn-neutral float-right" title="Controller" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="e2webinterface_api.html" class="btn btn-neutral" title="Enigma2 WebInterface API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

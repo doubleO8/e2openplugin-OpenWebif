@@ -1,0 +1,1161 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>controllers.models.timers &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>controllers.models.timers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for controllers.models.timers</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Timers</span>
+<span class="sd">------</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">##############################################################################</span>
+<span class="c1">#                        2011 - 2017 E2OpenPlugin                            #</span>
+<span class="c1">#                                                                            #</span>
+<span class="c1">#  This file is open source software; you can redistribute it and/or modify  #</span>
+<span class="c1">#     it under the terms of the GNU General Public License version 2 as      #</span>
+<span class="c1">#               published by the Free Software Foundation.                   #</span>
+<span class="c1">#                                                                            #</span>
+<span class="c1">##############################################################################</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">time</span><span class="p">,</span> <span class="n">strftime</span><span class="p">,</span> <span class="n">localtime</span><span class="p">,</span> <span class="n">mktime</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">unquote</span>
+
+<span class="kn">from</span> <span class="nn">enigma</span> <span class="k">import</span> <span class="n">eEPGCache</span><span class="p">,</span> <span class="n">eServiceReference</span>
+<span class="kn">from</span> <span class="nn">Components.UsageConfig</span> <span class="k">import</span> <span class="n">preferredTimerPath</span><span class="p">,</span> \
+    <span class="n">preferredInstantRecordPath</span>
+<span class="kn">from</span> <span class="nn">Components.config</span> <span class="k">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">Components.TimerSanityCheck</span> <span class="k">import</span> <span class="n">TimerSanityCheck</span>
+<span class="kn">from</span> <span class="nn">RecordTimer</span> <span class="k">import</span> <span class="n">RecordTimerEntry</span><span class="p">,</span> <span class="n">parseEvent</span><span class="p">,</span> <span class="n">AFTEREVENT</span>
+<span class="kn">from</span> <span class="nn">ServiceReference</span> <span class="k">import</span> <span class="n">ServiceReference</span>
+<span class="kn">from</span> <span class="nn">info</span> <span class="k">import</span> <span class="n">GetWithAlternative</span>
+<span class="kn">from</span> <span class="nn">..i18n</span> <span class="k">import</span> <span class="n">_</span>
+
+<span class="kn">from</span> <span class="nn">model_utilities</span> <span class="k">import</span> <span class="n">mangle_epg_text</span>
+<span class="kn">from</span> <span class="nn">events</span> <span class="k">import</span> <span class="n">KEY_SERVICE_REFERENCE</span>
+
+<span class="c1">#: Timer state lookup</span>
+<span class="n">TIMER_STATE_LOOKUP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;waiting&#39;</span><span class="p">,</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;prepared&#39;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;running&#39;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;ended&#39;</span>
+<span class="p">}</span>
+
+<span class="c1">#: Timer attributes with values in (0, 1) actually representing a boolean value</span>
+<span class="n">TIMER_FAKE_BOOLEAN</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;disabled&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;justplay&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;justremind&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;repeated&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;zapbeforerecord&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1">#: Timer attributes list</span>
+<span class="c1">#: Some attributes are using different keys in :py:obj:`TimerDict` objects</span>
+<span class="c1">#: thus attribute items may be a :py:obj:`tuple`.</span>
+<span class="n">TIMER_ATTRIBUTES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1"># &#39;PVRFilename&#39;,</span>
+    <span class="p">(</span><span class="s1">&#39;begin&#39;</span><span class="p">,</span> <span class="s1">&#39;start_time&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;cancelled&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;shortinfo&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;dirname&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;dirnameHadToFallback&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;disabled&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;dontSave&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s1">&#39;eit&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;end_time&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;first_try_prepare&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;is_timeshift&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;is_transformed_timeshift&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;justplay&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;justremind&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;log_entries&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">),</span>
+    <span class="c1"># &#39;notify_t&#39;,</span>
+    <span class="s1">&#39;prepare_time&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;pvrConvert&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;receiveRecordEvents&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;record_ecm&#39;</span><span class="p">,</span>
+    <span class="c1"># &#39;record_service&#39;,  # not JSON serializable</span>
+    <span class="s1">&#39;repeated&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;repeatedbegindate&#39;</span><span class="p">,</span>
+    <span class="c1"># &#39;service_ref&#39;,</span>
+    <span class="c1"># &#39;shutdown_t&#39;,</span>
+    <span class="c1"># &#39;standby_t&#39;,</span>
+    <span class="s1">&#39;start_prepare&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;state&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;tags&#39;</span><span class="p">,</span>
+    <span class="c1"># &#39;timer&#39;,</span>
+    <span class="c1"># &#39;virtual_video_dir&#39;,</span>
+    <span class="c1"># &#39;wakeup_t&#39;,</span>
+    <span class="s1">&#39;zapbeforerecord&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="TimerDict"><a class="viewcode-back" href="../../../model.html#controllers.models.timers.TimerDict">[docs]</a><span class="k">class</span> <span class="nc">TimerDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Timer data container object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="nb">dict</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">KEY_SERVICE_REFERENCE</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">service_ref</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">attr_data</span> <span class="ow">in</span> <span class="n">TIMER_ATTRIBUTES</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">source_k</span><span class="p">,</span> <span class="n">target_k</span> <span class="o">=</span> <span class="n">attr_data</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+                <span class="n">source_k</span> <span class="o">=</span> <span class="n">target_k</span> <span class="o">=</span> <span class="n">attr_data</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">source_k</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">source_k</span> <span class="ow">in</span> <span class="n">TIMER_FAKE_BOOLEAN</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">target_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;start_time&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;duration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;start_time&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;duration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TIMER_STATE_LOOKUP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">])</span></div>
+
+
+<span class="k">def</span> <span class="nf">getTimers</span><span class="p">(</span><span class="n">session</span><span class="p">):</span>
+    <span class="n">rt</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">RecordTimer</span>
+    <span class="n">timers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">timer</span> <span class="ow">in</span> <span class="n">rt</span><span class="o">.</span><span class="n">timer_list</span> <span class="o">+</span> <span class="n">rt</span><span class="o">.</span><span class="n">processed_timers</span><span class="p">:</span>
+        <span class="n">descriptionextended</span> <span class="o">=</span> <span class="s2">&quot;N/A&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">nextactivation</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">timer</span><span class="o">.</span><span class="n">eit</span> <span class="ow">and</span> <span class="n">timer</span><span class="o">.</span><span class="n">service_ref</span><span class="p">:</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span><span class="o">.</span><span class="n">lookupEvent</span><span class="p">(</span>
+                <span class="p">[</span><span class="s1">&#39;EX&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">service_ref</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="n">timer</span><span class="o">.</span><span class="n">eit</span><span class="p">)])</span>
+            <span class="k">if</span> <span class="n">event</span> <span class="ow">and</span> <span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">descriptionextended</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">timer</span><span class="o">.</span><span class="n">Filename</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">nextactivation</span> <span class="o">=</span> <span class="n">timer</span><span class="o">.</span><span class="n">next_activation</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">disabled</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">timer</span><span class="o">.</span><span class="n">disabled</span><span class="p">:</span>
+            <span class="n">disabled</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">justplay</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">timer</span><span class="o">.</span><span class="n">justplay</span><span class="p">:</span>
+            <span class="n">justplay</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">timer</span><span class="o">.</span><span class="n">dirname</span><span class="p">:</span>
+            <span class="n">dirname</span> <span class="o">=</span> <span class="n">timer</span><span class="o">.</span><span class="n">dirname</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+
+        <span class="n">dontSave</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">timer</span><span class="o">.</span><span class="n">dontSave</span><span class="p">:</span>
+            <span class="n">dontSave</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">toggledisabled</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">timer</span><span class="o">.</span><span class="n">disabled</span><span class="p">:</span>
+            <span class="n">toggledisabled</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">toggledisabledimg</span> <span class="o">=</span> <span class="s2">&quot;off&quot;</span>
+        <span class="k">if</span> <span class="n">timer</span><span class="o">.</span><span class="n">disabled</span><span class="p">:</span>
+            <span class="n">toggledisabledimg</span> <span class="o">=</span> <span class="s2">&quot;on&quot;</span>
+
+        <span class="n">asrefs</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">achannels</span> <span class="o">=</span> <span class="n">GetWithAlternative</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">service_ref</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">achannels</span><span class="p">:</span>
+            <span class="n">asrefs</span> <span class="o">=</span> <span class="n">achannels</span>
+
+        <span class="n">vpsplugin_enabled</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">vpsplugin_overwrite</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">vpsplugin_time</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="s2">&quot;vpsplugin_enabled&quot;</span><span class="p">):</span>
+            <span class="n">vpsplugin_enabled</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">timer</span><span class="o">.</span><span class="n">vpsplugin_enabled</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="s2">&quot;vpsplugin_overwrite&quot;</span><span class="p">):</span>
+            <span class="n">vpsplugin_overwrite</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">timer</span><span class="o">.</span><span class="n">vpsplugin_overwrite</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="s2">&quot;vpsplugin_time&quot;</span><span class="p">):</span>
+            <span class="n">vpsplugin_time</span> <span class="o">=</span> <span class="n">timer</span><span class="o">.</span><span class="n">vpsplugin_time</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">vpsplugin_time</span><span class="p">:</span>
+                <span class="n">vpsplugin_time</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="n">always_zap</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="s2">&quot;always_zap&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">timer</span><span class="o">.</span><span class="n">always_zap</span><span class="p">:</span>
+                <span class="n">always_zap</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">always_zap</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">timers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;serviceref&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span>
+                    <span class="n">timer</span><span class="o">.</span><span class="n">service_ref</span><span class="p">),</span>
+                <span class="s2">&quot;servicename&quot;</span><span class="p">:</span> <span class="n">mangle_epg_text</span><span class="p">(</span>
+                    <span class="n">timer</span><span class="o">.</span><span class="n">service_ref</span><span class="o">.</span><span class="n">getServiceName</span><span class="p">()),</span>
+                <span class="s2">&quot;eit&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">eit</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                <span class="s2">&quot;descriptionextended&quot;</span><span class="p">:</span> <span class="n">unicode</span><span class="p">(</span>
+                        <span class="n">descriptionextended</span><span class="p">,</span>
+                        <span class="s1">&#39;utf_8&#39;</span><span class="p">,</span>
+                        <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+                            <span class="s1">&#39;utf_8&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;ignore&#39;</span><span class="p">),</span>
+                <span class="s2">&quot;disabled&quot;</span><span class="p">:</span> <span class="n">disabled</span><span class="p">,</span>
+                <span class="s2">&quot;begin&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">begin</span><span class="p">,</span>
+                <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+                <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="n">timer</span><span class="o">.</span><span class="n">begin</span><span class="p">,</span>
+                <span class="s2">&quot;startprepare&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">start_prepare</span><span class="p">,</span>
+                <span class="s2">&quot;justplay&quot;</span><span class="p">:</span> <span class="n">justplay</span><span class="p">,</span>
+                <span class="s2">&quot;afterevent&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">afterEvent</span><span class="p">,</span>
+                <span class="s2">&quot;dirname&quot;</span><span class="p">:</span> <span class="n">dirname</span><span class="p">,</span>
+                <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">timer</span><span class="o">.</span><span class="n">tags</span><span class="p">),</span>
+                <span class="s2">&quot;logentries&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">log_entries</span><span class="p">,</span>
+                <span class="s2">&quot;backoff&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">backoff</span><span class="p">,</span>
+                <span class="s2">&quot;firsttryprepare&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">first_try_prepare</span><span class="p">,</span>
+                <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">state</span><span class="p">,</span>
+                <span class="s2">&quot;repeated&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">repeated</span><span class="p">,</span>
+                <span class="s2">&quot;dontsave&quot;</span><span class="p">:</span> <span class="n">dontSave</span><span class="p">,</span>
+                <span class="s2">&quot;cancelled&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">cancelled</span><span class="p">,</span>
+                <span class="s2">&quot;toggledisabled&quot;</span><span class="p">:</span> <span class="n">toggledisabled</span><span class="p">,</span>
+                <span class="s2">&quot;toggledisabledimg&quot;</span><span class="p">:</span> <span class="n">toggledisabledimg</span><span class="p">,</span>
+                <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span>
+                <span class="s2">&quot;nextactivation&quot;</span><span class="p">:</span> <span class="n">nextactivation</span><span class="p">,</span>
+                <span class="s2">&quot;realbegin&quot;</span><span class="p">:</span> <span class="n">strftime</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y %H:%M&quot;</span><span class="p">,</span>
+                    <span class="p">(</span><span class="n">localtime</span><span class="p">(</span>
+                        <span class="nb">float</span><span class="p">(</span>
+                            <span class="n">timer</span><span class="o">.</span><span class="n">begin</span><span class="p">)))),</span>
+                <span class="s2">&quot;realend&quot;</span><span class="p">:</span> <span class="n">strftime</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y %H:%M&quot;</span><span class="p">,</span>
+                    <span class="p">(</span><span class="n">localtime</span><span class="p">(</span>
+                        <span class="nb">float</span><span class="p">(</span>
+                            <span class="n">timer</span><span class="o">.</span><span class="n">end</span><span class="p">)))),</span>
+                <span class="s2">&quot;asrefs&quot;</span><span class="p">:</span> <span class="n">asrefs</span><span class="p">,</span>
+                <span class="s2">&quot;vpsplugin_enabled&quot;</span><span class="p">:</span> <span class="n">vpsplugin_enabled</span><span class="p">,</span>
+                <span class="s2">&quot;vpsplugin_overwrite&quot;</span><span class="p">:</span> <span class="n">vpsplugin_overwrite</span><span class="p">,</span>
+                <span class="s2">&quot;vpsplugin_time&quot;</span><span class="p">:</span> <span class="n">vpsplugin_time</span><span class="p">,</span>
+                <span class="s2">&quot;always_zap&quot;</span><span class="p">:</span> <span class="n">always_zap</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;timers&quot;</span><span class="p">:</span> <span class="n">timers</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">addTimer</span><span class="p">(</span>
+        <span class="n">session</span><span class="p">,</span>
+        <span class="n">serviceref</span><span class="p">,</span>
+        <span class="n">begin</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">,</span>
+        <span class="n">disabled</span><span class="p">,</span>
+        <span class="n">justplay</span><span class="p">,</span>
+        <span class="n">afterevent</span><span class="p">,</span>
+        <span class="n">dirname</span><span class="p">,</span>
+        <span class="n">tags</span><span class="p">,</span>
+        <span class="n">repeated</span><span class="p">,</span>
+        <span class="n">vpsinfo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">logentries</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">eit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">always_zap</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">rt</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">RecordTimer</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dirname</span><span class="p">:</span>
+        <span class="n">dirname</span> <span class="o">=</span> <span class="n">preferredTimerPath</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">timer</span> <span class="o">=</span> <span class="n">RecordTimerEntry</span><span class="p">(</span>
+            <span class="n">ServiceReference</span><span class="p">(</span><span class="n">serviceref</span><span class="p">),</span>
+            <span class="n">begin</span><span class="p">,</span>
+            <span class="n">end</span><span class="p">,</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">description</span><span class="p">,</span>
+            <span class="n">eit</span><span class="p">,</span>
+            <span class="n">disabled</span><span class="p">,</span>
+            <span class="n">justplay</span><span class="p">,</span>
+            <span class="n">afterevent</span><span class="p">,</span>
+            <span class="n">dirname</span><span class="o">=</span><span class="n">dirname</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+
+        <span class="n">timer</span><span class="o">.</span><span class="n">repeated</span> <span class="o">=</span> <span class="n">repeated</span>
+
+        <span class="k">if</span> <span class="n">logentries</span><span class="p">:</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">log_entries</span> <span class="o">=</span> <span class="n">logentries</span>
+
+        <span class="n">conflicts</span> <span class="o">=</span> <span class="n">rt</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">timer</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">conflicts</span><span class="p">:</span>
+            <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">conflictinfo</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">conflict</span> <span class="ow">in</span> <span class="n">conflicts</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conflict</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">conflictinfo</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;serviceref&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span>
+                            <span class="n">conflict</span><span class="o">.</span><span class="n">service_ref</span><span class="p">),</span>
+                        <span class="s2">&quot;servicename&quot;</span><span class="p">:</span> <span class="n">mangle_epg_text</span><span class="p">(</span>
+                            <span class="n">conflict</span><span class="o">.</span><span class="n">service_ref</span><span class="o">.</span><span class="n">getServiceName</span><span class="p">()),</span>
+                        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">conflict</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                        <span class="s2">&quot;begin&quot;</span><span class="p">:</span> <span class="n">conflict</span><span class="o">.</span><span class="n">begin</span><span class="p">,</span>
+                        <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="n">conflict</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+                        <span class="s2">&quot;realbegin&quot;</span><span class="p">:</span> <span class="n">strftime</span><span class="p">(</span>
+                            <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y %H:%M&quot;</span><span class="p">,</span>
+                            <span class="p">(</span><span class="n">localtime</span><span class="p">(</span>
+                                <span class="nb">float</span><span class="p">(</span>
+                                    <span class="n">conflict</span><span class="o">.</span><span class="n">begin</span><span class="p">)))),</span>
+                        <span class="s2">&quot;realend&quot;</span><span class="p">:</span> <span class="n">strftime</span><span class="p">(</span>
+                            <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y %H:%M&quot;</span><span class="p">,</span>
+                            <span class="p">(</span><span class="n">localtime</span><span class="p">(</span>
+                                <span class="nb">float</span><span class="p">(</span>
+                                    <span class="n">conflict</span><span class="o">.</span><span class="n">end</span><span class="p">))))})</span>
+
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Conflicting Timer(s) detected! </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">%</span>
+                <span class="s2">&quot; / &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">),</span>
+                <span class="s2">&quot;conflicts&quot;</span><span class="p">:</span> <span class="n">conflictinfo</span><span class="p">}</span>
+        <span class="c1"># VPS</span>
+        <span class="k">if</span> <span class="n">vpsinfo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">vpsplugin_enabled</span> <span class="o">=</span> <span class="n">vpsinfo</span><span class="p">[</span><span class="s2">&quot;vpsplugin_enabled&quot;</span><span class="p">]</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">vpsplugin_overwrite</span> <span class="o">=</span> <span class="n">vpsinfo</span><span class="p">[</span><span class="s2">&quot;vpsplugin_overwrite&quot;</span><span class="p">]</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">vpsplugin_time</span> <span class="o">=</span> <span class="n">vpsinfo</span><span class="p">[</span><span class="s2">&quot;vpsplugin_time&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">always_zap</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="s2">&quot;always_zap&quot;</span><span class="p">):</span>
+                <span class="n">timer</span><span class="o">.</span><span class="n">always_zap</span> <span class="o">=</span> <span class="n">always_zap</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="n">e</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Could not add timer &#39;</span><span class="si">%s</span><span class="s2">&#39;!&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">name</span>
+        <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Timer &#39;</span><span class="si">%s</span><span class="s2">&#39; added&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">name</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">addTimerByEventId</span><span class="p">(</span>
+        <span class="n">session</span><span class="p">,</span>
+        <span class="n">eventid</span><span class="p">,</span>
+        <span class="n">serviceref</span><span class="p">,</span>
+        <span class="n">justplay</span><span class="p">,</span>
+        <span class="n">dirname</span><span class="p">,</span>
+        <span class="n">tags</span><span class="p">,</span>
+        <span class="n">vpsinfo</span><span class="p">,</span>
+        <span class="n">always_zap</span><span class="p">):</span>
+    <span class="n">event</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span><span class="o">.</span><span class="n">lookupEventId</span><span class="p">(</span>
+        <span class="n">eServiceReference</span><span class="p">(</span><span class="n">serviceref</span><span class="p">),</span> <span class="n">eventid</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">event</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;EventId not found&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+
+    <span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">eit</span><span class="p">)</span> <span class="o">=</span> <span class="n">parseEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">addTimer</span><span class="p">(</span>
+        <span class="n">session</span><span class="p">,</span>
+        <span class="n">serviceref</span><span class="p">,</span>
+        <span class="n">begin</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">,</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">justplay</span><span class="p">,</span>
+        <span class="n">AFTEREVENT</span><span class="o">.</span><span class="n">AUTO</span><span class="p">,</span>
+        <span class="n">dirname</span><span class="p">,</span>
+        <span class="n">tags</span><span class="p">,</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">vpsinfo</span><span class="p">,</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">eit</span><span class="p">,</span>
+        <span class="n">always_zap</span>
+    <span class="p">)</span>
+
+<span class="c1"># NEW editTimer function to prevent delete + add on change</span>
+<span class="c1"># !!! This new function must be tested !!!!</span>
+
+
+<span class="k">def</span> <span class="nf">editTimer</span><span class="p">(</span>
+        <span class="n">session</span><span class="p">,</span>
+        <span class="n">serviceref</span><span class="p">,</span>
+        <span class="n">begin</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">,</span>
+        <span class="n">disabled</span><span class="p">,</span>
+        <span class="n">justplay</span><span class="p">,</span>
+        <span class="n">afterEvent</span><span class="p">,</span>
+        <span class="n">dirname</span><span class="p">,</span>
+        <span class="n">tags</span><span class="p">,</span>
+        <span class="n">repeated</span><span class="p">,</span>
+        <span class="n">channelOld</span><span class="p">,</span>
+        <span class="n">beginOld</span><span class="p">,</span>
+        <span class="n">endOld</span><span class="p">,</span>
+        <span class="n">vpsinfo</span><span class="p">,</span>
+        <span class="n">always_zap</span><span class="p">):</span>
+    <span class="c1"># TODO: exception handling</span>
+    <span class="n">channelOld_str</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">channelOld</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[:</span><span class="mi">11</span><span class="p">])</span>
+    <span class="n">rt</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">RecordTimer</span>
+    <span class="k">for</span> <span class="n">timer</span> <span class="ow">in</span> <span class="n">rt</span><span class="o">.</span><span class="n">timer_list</span> <span class="o">+</span> <span class="n">rt</span><span class="o">.</span><span class="n">processed_timers</span><span class="p">:</span>
+        <span class="n">needed_ref</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">service_ref</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[:</span><span class="mi">11</span><span class="p">])</span> <span class="o">==</span> <span class="n">channelOld_str</span>
+        <span class="k">if</span> <span class="n">needed_ref</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span>
+                <span class="n">timer</span><span class="o">.</span><span class="n">begin</span><span class="p">)</span> <span class="o">==</span> <span class="n">beginOld</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span>
+                <span class="n">timer</span><span class="o">.</span><span class="n">end</span><span class="p">)</span> <span class="o">==</span> <span class="n">endOld</span><span class="p">:</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">service_ref</span> <span class="o">=</span> <span class="n">ServiceReference</span><span class="p">(</span><span class="n">serviceref</span><span class="p">)</span>
+            <span class="c1"># TODO: start end time check</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">begin</span><span class="p">))</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">end</span><span class="p">))</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+            <span class="c1"># TODO : EIT</span>
+            <span class="c1"># timer.eit = eit</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="n">disabled</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">justplay</span> <span class="o">=</span> <span class="n">justplay</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">afterEvent</span> <span class="o">=</span> <span class="n">afterEvent</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">dirname</span> <span class="o">=</span> <span class="n">dirname</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">repeated</span> <span class="o">=</span> <span class="n">repeated</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">processRepeated</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">vpsinfo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">timer</span><span class="o">.</span><span class="n">vpsplugin_enabled</span> <span class="o">=</span> <span class="n">vpsinfo</span><span class="p">[</span><span class="s2">&quot;vpsplugin_enabled&quot;</span><span class="p">]</span>
+                <span class="n">timer</span><span class="o">.</span><span class="n">vpsplugin_overwrite</span> <span class="o">=</span> <span class="n">vpsinfo</span><span class="p">[</span><span class="s2">&quot;vpsplugin_overwrite&quot;</span><span class="p">]</span>
+                <span class="n">timer</span><span class="o">.</span><span class="n">vpsplugin_time</span> <span class="o">=</span> <span class="n">vpsinfo</span><span class="p">[</span><span class="s2">&quot;vpsplugin_time&quot;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">always_zap</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="s2">&quot;always_zap&quot;</span><span class="p">):</span>
+                    <span class="n">timer</span><span class="o">.</span><span class="n">always_zap</span> <span class="o">=</span> <span class="n">always_zap</span> <span class="o">==</span> <span class="mi">1</span>
+
+            <span class="c1"># TODO: multi tuner test</span>
+            <span class="n">sanity</span> <span class="o">=</span> <span class="n">TimerSanityCheck</span><span class="p">(</span><span class="n">rt</span><span class="o">.</span><span class="n">timer_list</span><span class="p">,</span> <span class="n">timer</span><span class="p">)</span>
+            <span class="n">conflicts</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">sanity</span><span class="o">.</span><span class="n">check</span><span class="p">():</span>
+                <span class="n">conflicts</span> <span class="o">=</span> <span class="n">sanity</span><span class="o">.</span><span class="n">getSimulTimerList</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">conflicts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">conflict</span> <span class="ow">in</span> <span class="n">conflicts</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">conflict</span><span class="o">.</span><span class="n">setAutoincreaseEnd</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
+                            <span class="n">rt</span><span class="o">.</span><span class="n">timeChanged</span><span class="p">(</span><span class="n">conflict</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">sanity</span><span class="o">.</span><span class="n">check</span><span class="p">():</span>
+                                <span class="n">conflicts</span> <span class="o">=</span> <span class="n">sanity</span><span class="o">.</span><span class="n">getSimulTimerList</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">conflicts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">rt</span><span class="o">.</span><span class="n">timeChanged</span><span class="p">(</span><span class="n">timer</span><span class="p">)</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Timer &#39;</span><span class="si">%s</span><span class="s2">&#39; changed&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">name</span>
+                <span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">conflictinfo</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">conflict</span> <span class="ow">in</span> <span class="n">conflicts</span><span class="p">:</span>
+                    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conflict</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                    <span class="n">conflictinfo</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;serviceref&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span>
+                                <span class="n">conflict</span><span class="o">.</span><span class="n">service_ref</span><span class="p">),</span>
+                            <span class="s2">&quot;servicename&quot;</span><span class="p">:</span> <span class="n">mangle_epg_text</span><span class="p">(</span>
+                                <span class="n">conflict</span><span class="o">.</span><span class="n">service_ref</span><span class="o">.</span><span class="n">getServiceName</span><span class="p">()),</span>
+                            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">conflict</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                            <span class="s2">&quot;begin&quot;</span><span class="p">:</span> <span class="n">conflict</span><span class="o">.</span><span class="n">begin</span><span class="p">,</span>
+                            <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="n">conflict</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+                            <span class="s2">&quot;realbegin&quot;</span><span class="p">:</span> <span class="n">strftime</span><span class="p">(</span>
+                                <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y %H:%M&quot;</span><span class="p">,</span>
+                                <span class="p">(</span><span class="n">localtime</span><span class="p">(</span>
+                                    <span class="nb">float</span><span class="p">(</span>
+                                        <span class="n">conflict</span><span class="o">.</span><span class="n">begin</span><span class="p">)))),</span>
+                            <span class="s2">&quot;realend&quot;</span><span class="p">:</span> <span class="n">strftime</span><span class="p">(</span>
+                                <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y %H:%M&quot;</span><span class="p">,</span>
+                                <span class="p">(</span><span class="n">localtime</span><span class="p">(</span>
+                                    <span class="nb">float</span><span class="p">(</span>
+                                        <span class="n">conflict</span><span class="o">.</span><span class="n">end</span><span class="p">))))})</span>
+
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Timer &#39;</span><span class="si">%s</span><span class="s2">&#39; not saved while Conflict&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">name</span><span class="p">,</span>
+                    <span class="s2">&quot;conflicts&quot;</span><span class="p">:</span> <span class="n">conflictinfo</span>
+                <span class="p">}</span>
+
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Could not find timer &#39;</span><span class="si">%s</span><span class="s2">&#39; with given start and end time!&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">name</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">removeTimer</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">serviceref</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+    <span class="n">serviceref_str</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">serviceref</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[:</span><span class="mi">11</span><span class="p">])</span>
+    <span class="n">rt</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">RecordTimer</span>
+    <span class="k">for</span> <span class="n">timer</span> <span class="ow">in</span> <span class="n">rt</span><span class="o">.</span><span class="n">timer_list</span> <span class="o">+</span> <span class="n">rt</span><span class="o">.</span><span class="n">processed_timers</span><span class="p">:</span>
+        <span class="n">needed_ref</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">service_ref</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span>
+                <span class="p">:</span><span class="mi">11</span><span class="p">])</span> <span class="o">==</span> <span class="n">serviceref_str</span>
+        <span class="k">if</span> <span class="n">needed_ref</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">begin</span><span class="p">)</span> <span class="o">==</span> <span class="n">begin</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">end</span><span class="p">)</span> <span class="o">==</span> <span class="n">end</span><span class="p">:</span>
+            <span class="n">rt</span><span class="o">.</span><span class="n">removeEntry</span><span class="p">(</span><span class="n">timer</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;The timer &#39;</span><span class="si">%s</span><span class="s2">&#39; has been deleted successfully&quot;</span><span class="p">)</span> <span class="o">%</span>
+                <span class="n">timer</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;No matching Timer found&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">toggleTimerStatus</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">serviceref</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+    <span class="n">serviceref</span> <span class="o">=</span> <span class="n">unquote</span><span class="p">(</span><span class="n">serviceref</span><span class="p">)</span>
+    <span class="n">serviceref_str</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">serviceref</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[:</span><span class="mi">11</span><span class="p">])</span>
+    <span class="n">rt</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">RecordTimer</span>
+    <span class="k">for</span> <span class="n">timer</span> <span class="ow">in</span> <span class="n">rt</span><span class="o">.</span><span class="n">timer_list</span> <span class="o">+</span> <span class="n">rt</span><span class="o">.</span><span class="n">processed_timers</span><span class="p">:</span>
+        <span class="n">needed_ref</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">service_ref</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span>
+                <span class="p">:</span><span class="mi">11</span><span class="p">])</span> <span class="o">==</span> <span class="n">serviceref_str</span>
+        <span class="k">if</span> <span class="n">needed_ref</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">begin</span><span class="p">)</span> <span class="o">==</span> <span class="n">begin</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">end</span><span class="p">)</span> <span class="o">==</span> <span class="n">end</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">timer</span><span class="o">.</span><span class="n">disabled</span><span class="p">:</span>
+                <span class="n">timer</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+                <span class="n">effect</span> <span class="o">=</span> <span class="s2">&quot;enabled&quot;</span>
+                <span class="n">sanity</span> <span class="o">=</span> <span class="n">TimerSanityCheck</span><span class="p">(</span><span class="n">rt</span><span class="o">.</span><span class="n">timer_list</span><span class="p">,</span> <span class="n">timer</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">sanity</span><span class="o">.</span><span class="n">check</span><span class="p">():</span>
+                    <span class="n">timer</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+                    <span class="k">return</span> <span class="p">{</span>
+                        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Timer &#39;</span><span class="si">%s</span><span class="s2">&#39; not enabled while Conflict&quot;</span><span class="p">)</span> <span class="o">%</span>
+                        <span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">name</span><span class="p">)}</span>
+                <span class="k">elif</span> <span class="n">sanity</span><span class="o">.</span><span class="n">doubleCheck</span><span class="p">():</span>
+                    <span class="n">timer</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+                    <span class="k">return</span> <span class="p">{</span>
+                        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Timer &#39;</span><span class="si">%s</span><span class="s2">&#39; already exists!&quot;</span><span class="p">)</span> <span class="o">%</span>
+                        <span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">name</span><span class="p">)}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">timer</span><span class="o">.</span><span class="n">isRunning</span><span class="p">():</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;The timer &#39;</span><span class="si">%s</span><span class="s2">&#39; now recorded! Not disabled!&quot;</span><span class="p">)</span> <span class="o">%</span> \
+                          <span class="n">timer</span><span class="o">.</span><span class="n">name</span>
+                    <span class="k">return</span> <span class="p">{</span>
+                        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">timer</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+                    <span class="n">effect</span> <span class="o">=</span> <span class="s2">&quot;disabled&quot;</span>
+            <span class="n">rt</span><span class="o">.</span><span class="n">timeChanged</span><span class="p">(</span><span class="n">timer</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;The timer &#39;</span><span class="si">%s</span><span class="s2">&#39; has been </span><span class="si">%s</span><span class="s2"> successfully&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                                  <span class="n">effect</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">,</span>
+                <span class="s2">&quot;disabled&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">disabled</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;No matching Timer found&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">cleanupTimer</span><span class="p">(</span><span class="n">session</span><span class="p">):</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">RecordTimer</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;List of Timers has been cleaned&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">writeTimerList</span><span class="p">(</span><span class="n">session</span><span class="p">):</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">RecordTimer</span><span class="o">.</span><span class="n">saveTimer</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;TimerList has been saved&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">recordNow</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">infinite</span><span class="p">):</span>
+    <span class="n">rt</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">RecordTimer</span>
+    <span class="n">serviceref</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">getCurrentlyPlayingServiceReference</span><span class="p">()</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">getCurrentService</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">()</span><span class="o">.</span><span class="n">getEvent</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">event</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">infinite</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;No event found! Not recording!&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">event</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">eit</span><span class="p">)</span> <span class="o">=</span> <span class="n">parseEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="n">begin</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Instant record for current Event started&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;instant record&quot;</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">eit</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">infinite</span><span class="p">:</span>
+        <span class="n">begin</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">begin</span> <span class="o">+</span> <span class="mi">3600</span> <span class="o">*</span> <span class="mi">10</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Infinite Instant recording started&quot;</span><span class="p">)</span>
+
+    <span class="n">timer</span> <span class="o">=</span> <span class="n">RecordTimerEntry</span><span class="p">(</span>
+        <span class="n">ServiceReference</span><span class="p">(</span><span class="n">serviceref</span><span class="p">),</span>
+        <span class="n">begin</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">,</span>
+        <span class="n">eit</span><span class="p">,</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="mi">0</span><span class="p">,</span>
+        <span class="n">dirname</span><span class="o">=</span><span class="n">preferredInstantRecordPath</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="n">timer</span><span class="o">.</span><span class="n">dontSave</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="n">rt</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">timer</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Timer conflict detected! Not recording!&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="n">nt</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;serviceref&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">service_ref</span><span class="p">),</span>
+        <span class="s2">&quot;servicename&quot;</span><span class="p">:</span> <span class="n">mangle_epg_text</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">service_ref</span><span class="o">.</span><span class="n">getServiceName</span><span class="p">()),</span>
+        <span class="s2">&quot;eit&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">eit</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="s2">&quot;begin&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">begin</span><span class="p">,</span>
+        <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+        <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="n">timer</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span>
+        <span class="n">timer</span><span class="o">.</span><span class="n">begin</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">,</span>
+        <span class="s2">&quot;newtimer&quot;</span><span class="p">:</span> <span class="n">nt</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">tvbrowser</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Unknown&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;description&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="s2">&quot;disabled&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;disabled&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">):</span>
+            <span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">justplay</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="s1">&#39;justplay&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;justplay&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">):</span>
+            <span class="n">justplay</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">afterevent</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="k">if</span> <span class="s1">&#39;afterevent&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;afterevent&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">):</span>
+            <span class="n">afterevent</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;afterevent&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">location</span> <span class="o">=</span> <span class="n">preferredTimerPath</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;dirname&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;dirname&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">location</span><span class="p">:</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="s2">&quot;/hdd/movie/&quot;</span>
+
+    <span class="n">begin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+        <span class="n">mktime</span><span class="p">(</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;syear&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;smonth&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span>
+                    <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;sday&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span>
+                        <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;shour&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span>
+                            <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;smin&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+        <span class="n">mktime</span><span class="p">(</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;syear&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;smonth&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span>
+                    <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;sday&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span>
+                        <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;ehour&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span>
+                            <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;emin&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="n">begin</span><span class="p">:</span>
+        <span class="n">end</span> <span class="o">+=</span> <span class="mi">86400</span>
+
+    <span class="n">repeated</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;repeated&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">repeated</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;mo&quot;</span><span class="p">,</span> <span class="s2">&quot;tu&quot;</span><span class="p">,</span> <span class="s2">&quot;we&quot;</span><span class="p">,</span> <span class="s2">&quot;th&quot;</span><span class="p">,</span> <span class="s2">&quot;fr&quot;</span><span class="p">,</span> <span class="s2">&quot;sa&quot;</span><span class="p">,</span> <span class="s2">&quot;su&quot;</span><span class="p">,</span> <span class="s2">&quot;ms&quot;</span><span class="p">,</span> <span class="s2">&quot;mf&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+                <span class="n">number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">element</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span>
+                <span class="k">del</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">element</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">repeated</span> <span class="o">=</span> <span class="n">repeated</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">repeated</span> <span class="o">&gt;</span> <span class="mi">127</span><span class="p">:</span>
+            <span class="n">repeated</span> <span class="o">=</span> <span class="mi">127</span>
+    <span class="n">repeated</span> <span class="o">=</span> <span class="n">repeated</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;sRef&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Missing requesteter: sRef&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">takeApart</span> <span class="o">=</span> <span class="n">unquote</span><span class="p">(</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;sRef&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span>
+            <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)</span>
+        <span class="n">sRef</span> <span class="o">=</span> <span class="n">takeApart</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">tags</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="s1">&#39;tags&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;tags&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">unquote</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;tags&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;add&quot;</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">addTimer</span><span class="p">(</span>
+            <span class="n">session</span><span class="p">,</span>
+            <span class="n">sRef</span><span class="p">,</span>
+            <span class="n">begin</span><span class="p">,</span>
+            <span class="n">end</span><span class="p">,</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">description</span><span class="p">,</span>
+            <span class="n">disabled</span><span class="p">,</span>
+            <span class="n">justplay</span><span class="p">,</span>
+            <span class="n">afterevent</span><span class="p">,</span>
+            <span class="n">location</span><span class="p">,</span>
+            <span class="n">tags</span><span class="p">,</span>
+            <span class="n">repeated</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;del&quot;</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">removeTimer</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">sRef</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;change&quot;</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">editTimer</span><span class="p">(</span>
+            <span class="n">session</span><span class="p">,</span>
+            <span class="n">sRef</span><span class="p">,</span>
+            <span class="n">begin</span><span class="p">,</span>
+            <span class="n">end</span><span class="p">,</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">description</span><span class="p">,</span>
+            <span class="n">disabled</span><span class="p">,</span>
+            <span class="n">justplay</span><span class="p">,</span>
+            <span class="n">afterevent</span><span class="p">,</span>
+            <span class="n">location</span><span class="p">,</span>
+            <span class="n">tags</span><span class="p">,</span>
+            <span class="n">repeated</span><span class="p">,</span>
+            <span class="n">begin</span><span class="p">,</span>
+            <span class="n">end</span><span class="p">,</span>
+            <span class="c1"># serviceref</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Unknown command: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">getSleepTimer</span><span class="p">(</span><span class="n">session</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="p">,</span> <span class="s2">&quot;SleepTimer&quot;</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Sleeptimer is disabled&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">SleepTimer</span><span class="o">.</span><span class="n">isActive</span><span class="p">():</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Sleeptimer is enabled&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">SleepTimer</span><span class="o">.</span><span class="n">isActive</span><span class="p">(),</span>
+                <span class="s2">&quot;minutes&quot;</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">SleepTimer</span><span class="o">.</span><span class="n">getCurrentSleepTime</span><span class="p">(),</span>
+                <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">SleepTimer</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;SleepTimer error&quot;</span><span class="p">)</span>
+            <span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># use powertimer , this works only if there is one of the standby OR</span>
+        <span class="c1"># deepstandby entries</span>
+        <span class="c1"># todo : do not use repeated entries</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">timer_list</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">PowerTimer</span><span class="o">.</span><span class="n">timer_list</span>
+            <span class="k">for</span> <span class="n">timer</span> <span class="ow">in</span> <span class="n">timer_list</span><span class="p">:</span>
+                <span class="n">timertype</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">timerType</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">timertype</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">]:</span>
+                    <span class="n">action</span> <span class="o">=</span> <span class="s2">&quot;standby&quot;</span>
+                    <span class="k">if</span> <span class="n">timertype</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+                        <span class="n">action</span> <span class="o">=</span> <span class="s2">&quot;shutdown&quot;</span>
+                    <span class="n">minutes</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">autosleepdelay</span><span class="p">)</span>
+                    <span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">disabled</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">enabled</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">if</span> <span class="n">enabled</span><span class="p">:</span>
+                        <span class="n">message</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Sleeptimer is enabled&quot;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">message</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Sleeptimer is disabled&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="p">{</span>
+                        <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="n">enabled</span><span class="p">,</span>
+                        <span class="s2">&quot;minutes&quot;</span><span class="p">:</span> <span class="n">minutes</span><span class="p">,</span>
+                        <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">action</span><span class="p">,</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;SleepTimer error&quot;</span><span class="p">)</span>
+            <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">setSleepTimer</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">enabled</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">action</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;shutdown&quot;</span><span class="p">,</span> <span class="s2">&quot;standby&quot;</span><span class="p">]:</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="s2">&quot;standby&quot;</span>
+
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="p">,</span> <span class="s2">&quot;SleepTimer&quot;</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">getSleepTimer</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+            <span class="kn">from</span> <span class="nn">Screens.Standby</span> <span class="k">import</span> <span class="n">inStandby</span>
+            <span class="k">if</span> <span class="n">inStandby</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;ERROR: Cannot set SleepTimer while device &quot;</span>
+                                   <span class="s2">&quot;is in Standby-Mode&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">ret</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span><span class="p">:</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">SleepTimer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">getSleepTimer</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+                <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Sleeptimer has been disabled&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">ret</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">SleepTimer</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">action</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">SleepTimer</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">SleepTimer</span><span class="o">.</span><span class="n">setSleepTime</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">getSleepTimer</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+            <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Sleeptimer set to </span><span class="si">%d</span><span class="s2"> minutes&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">time</span>
+            <span class="k">return</span> <span class="n">ret</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;SleepTimer Error&quot;</span><span class="p">)</span>
+            <span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># use powertimer</span>
+        <span class="c1"># todo activate powertimer</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">timer_list</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">PowerTimer</span><span class="o">.</span><span class="n">timer_list</span>
+            <span class="n">begin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">60</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">120</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">timer</span> <span class="ow">in</span> <span class="n">timer_list</span><span class="p">:</span>
+                <span class="n">timertype</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">timerType</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">timertype</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span> <span class="ow">and</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;standby&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span><span class="p">:</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">autosleepdelay</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="n">begin</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+                    <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="n">timertype</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span> <span class="ow">and</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;shutdown&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span><span class="p">:</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">autosleepdelay</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="n">begin</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+                    <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="n">timertype</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span> <span class="ow">and</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;standby&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span><span class="p">:</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">autosleepdelay</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">timerType</span> <span class="o">=</span> <span class="mi">2</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="n">begin</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+                    <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="n">timertype</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span> <span class="ow">and</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;shutdown&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span><span class="p">:</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">autosleepdelay</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">timerType</span> <span class="o">=</span> <span class="mi">3</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="n">begin</span>
+                        <span class="n">timer</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+                    <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Sleeptimer set to </span><span class="si">%d</span><span class="s2"> minutes&quot;</span><span class="p">)</span> <span class="o">%</span>
+                    <span class="n">time</span> <span class="k">if</span> <span class="n">enabled</span> <span class="k">else</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Sleeptimer has been disabled&quot;</span><span class="p">)}</span>
+            <span class="k">if</span> <span class="n">enabled</span><span class="p">:</span>
+                <span class="n">begin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">60</span><span class="p">)</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">120</span><span class="p">)</span>
+                <span class="n">timertype</span> <span class="o">=</span> <span class="mi">2</span>
+                <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;shutdown&quot;</span><span class="p">:</span>
+                    <span class="n">timertype</span> <span class="o">=</span> <span class="mi">3</span>
+                <span class="n">entry</span> <span class="o">=</span> <span class="n">PowerTimerEntry</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">timertype</span><span class="p">)</span>
+                <span class="n">entry</span><span class="o">.</span><span class="n">repeated</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">entry</span><span class="o">.</span><span class="n">autosleepdelay</span> <span class="o">=</span> <span class="n">time</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Sleeptimer set to </span><span class="si">%d</span><span class="s2"> minutes&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">time</span>
+                <span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Sleeptimer has been disabled&quot;</span><span class="p">)</span>
+                <span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;SleepTimer Error&quot;</span><span class="p">)</span>
+            <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">getVPSChannels</span><span class="p">(</span><span class="n">session</span><span class="p">):</span>
+    <span class="n">vpsfile</span> <span class="o">=</span> <span class="s2">&quot;/etc/enigma2/vps.xml&quot;</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">vpsfile</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">xml.etree.cElementTree</span>  <span class="c1"># nosec</span>
+            <span class="n">vpsfile</span> <span class="o">=</span> <span class="n">file</span><span class="p">(</span><span class="n">vpsfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">vpsdom</span> <span class="o">=</span> <span class="n">xml</span><span class="o">.</span><span class="n">etree</span><span class="o">.</span><span class="n">cElementTree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">vpsfile</span><span class="p">)</span>  <span class="c1"># nosec</span>
+            <span class="n">vpsfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">xmldata</span> <span class="o">=</span> <span class="n">vpsdom</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+            <span class="n">channels</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">xmldata</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;channel&quot;</span><span class="p">):</span>
+                <span class="n">channels</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s2">&quot;serviceref&quot;</span><span class="p">:</span> <span class="n">ch</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s2">&quot;serviceref&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;has_pdc&quot;</span><span class="p">:</span> <span class="n">ch</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s2">&quot;has_pdc&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;last_check&quot;</span><span class="p">:</span> <span class="n">ch</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s2">&quot;last_check&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;default_vps&quot;</span><span class="p">:</span> <span class="n">ch</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s2">&quot;default_vps&quot;</span><span class="p">]</span>
+                <span class="p">})</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;channels&quot;</span><span class="p">:</span> <span class="n">channels</span>
+            <span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Error parsing vps.xml&quot;</span><span class="p">)</span>
+            <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;VPS plugin not found&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>controllers.models.events &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>controllers.models.events</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for controllers.models.events</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Events</span>
+<span class="sd">------</span>
+
+<span class="sd">.. seealso::</span>
+
+<span class="sd">    :ref:`event_format-label`</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">model_utilities</span> <span class="k">import</span> <span class="n">mangle_epg_text</span>
+
+
+<span class="c1">#: constant for *event&#39;s service reference* key</span>
+<span class="n">KEY_SERVICE_REFERENCE</span> <span class="o">=</span> <span class="s2">&quot;service_reference&quot;</span>
+
+<span class="c1">#: constant for *event&#39;s service name* key</span>
+<span class="n">KEY_SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;service_name&quot;</span>
+
+<span class="c1">#: constant for *event start time* key</span>
+<span class="n">KEY_START_TIME</span> <span class="o">=</span> <span class="s2">&quot;start_time&quot;</span>
+
+<span class="c1">#: constant for *event ID* key</span>
+<span class="n">KEY_ID</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span>
+
+<span class="c1">#: constant for *event duration* key</span>
+<span class="n">KEY_DURATION</span> <span class="o">=</span> <span class="s2">&quot;duration&quot;</span>
+
+<span class="c1">#: constant for *event title* key</span>
+<span class="n">KEY_TITLE</span> <span class="o">=</span> <span class="s2">&quot;title&quot;</span>
+
+<span class="c1">#: constant for *event shortinfo* key</span>
+<span class="n">KEY_SHORTINFO</span> <span class="o">=</span> <span class="s2">&quot;shortinfo&quot;</span>
+
+<span class="c1">#: constant for *event longinfo* key</span>
+<span class="n">KEY_LONGINFO</span> <span class="o">=</span> <span class="s2">&quot;longinfo&quot;</span>
+
+<span class="c1">#: Begin</span>
+<span class="n">FLAG_BEGIN</span> <span class="o">=</span> <span class="s2">&quot;B&quot;</span>
+<span class="c1">#: Current Time</span>
+<span class="n">FLAG_CURRENT_TIME</span> <span class="o">=</span> <span class="s2">&quot;C&quot;</span>
+<span class="c1">#: Long Event Information</span>
+<span class="n">FLAG_LONGINFO</span> <span class="o">=</span> <span class="s2">&quot;E&quot;</span>
+<span class="c1">#: Duration</span>
+<span class="n">FLAG_DURATION</span> <span class="o">=</span> <span class="s2">&quot;D&quot;</span>
+<span class="c1">#: ID</span>
+<span class="n">FLAG_ITEM_ID</span> <span class="o">=</span> <span class="s2">&quot;I&quot;</span>
+<span class="c1">#: Service Name</span>
+<span class="n">FLAG_SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;N&quot;</span>
+<span class="c1">#: Short Service Name</span>
+<span class="n">FLAG_SHORT_SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;n&quot;</span>
+<span class="c1">#: Service Reference</span>
+<span class="n">FLAG_SERVICE_REFERENCE</span> <span class="o">=</span> <span class="s2">&quot;R&quot;</span>
+<span class="c1">#: Short Event Information</span>
+<span class="n">FLAG_SHORTINFO</span> <span class="o">=</span> <span class="s2">&quot;S&quot;</span>
+<span class="c1">#: Event Title</span>
+<span class="n">FLAG_TITLE</span> <span class="o">=</span> <span class="s2">&quot;T&quot;</span>
+
+<span class="c1">#: Event Flags including Current Time Field</span>
+<span class="n">FLAGS_FULL</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">FLAG_BEGIN</span><span class="p">,</span> <span class="n">FLAG_CURRENT_TIME</span><span class="p">,</span> <span class="n">FLAG_LONGINFO</span><span class="p">,</span> <span class="n">FLAG_DURATION</span><span class="p">,</span> <span class="n">FLAG_ITEM_ID</span><span class="p">,</span>
+     <span class="n">FLAG_SERVICE_NAME</span><span class="p">,</span> <span class="n">FLAG_SERVICE_REFERENCE</span><span class="p">,</span> <span class="n">FLAG_SHORTINFO</span><span class="p">,</span> <span class="n">FLAG_TITLE</span><span class="p">]))</span>
+
+<span class="c1">#: Event Flags without Current Time Field</span>
+<span class="n">FLAGS_ALL</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">FLAG_BEGIN</span><span class="p">,</span> <span class="n">FLAG_LONGINFO</span><span class="p">,</span> <span class="n">FLAG_DURATION</span><span class="p">,</span> <span class="n">FLAG_ITEM_ID</span><span class="p">,</span>
+     <span class="n">FLAG_SERVICE_NAME</span><span class="p">,</span> <span class="n">FLAG_SERVICE_REFERENCE</span><span class="p">,</span> <span class="n">FLAG_SHORTINFO</span><span class="p">,</span> <span class="n">FLAG_TITLE</span><span class="p">]))</span>
+
+<span class="c1">#: Event Flags as used in :py:class:`controllers.web`</span>
+<span class="n">FLAGS_WEB</span> <span class="o">=</span> <span class="s1">&#39;IBDCTSERN&#39;</span>
+
+<span class="c1">#: Services Key Map</span>
+<span class="n">SERVICES_KEY_MAP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">FLAGS_WEB</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">FLAG_ITEM_ID</span><span class="p">),</span>
+    <span class="s1">&#39;begin_timestamp&#39;</span><span class="p">:</span> <span class="n">FLAGS_WEB</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">FLAG_BEGIN</span><span class="p">),</span>
+    <span class="s1">&#39;duration_sec&#39;</span><span class="p">:</span> <span class="n">FLAGS_WEB</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">FLAG_DURATION</span><span class="p">),</span>
+    <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">FLAGS_WEB</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">FLAG_TITLE</span><span class="p">),</span>
+    <span class="s1">&#39;shortdesc&#39;</span><span class="p">:</span> <span class="n">FLAGS_WEB</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">FLAG_SHORTINFO</span><span class="p">),</span>
+    <span class="s1">&#39;longdesc&#39;</span><span class="p">:</span> <span class="n">FLAGS_WEB</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">FLAG_LONGINFO</span><span class="p">),</span>
+    <span class="s1">&#39;sref&#39;</span><span class="p">:</span> <span class="n">FLAGS_WEB</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">FLAG_SERVICE_REFERENCE</span><span class="p">),</span>
+    <span class="s1">&#39;sname&#39;</span><span class="p">:</span> <span class="n">FLAGS_WEB</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">FLAG_SERVICE_NAME</span><span class="p">),</span>
+    <span class="s1">&#39;now_timestamp&#39;</span><span class="p">:</span> <span class="n">FLAGS_WEB</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">FLAG_CURRENT_TIME</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="c1">#: Event Field Map</span>
+<span class="n">EVENT_FIELD_MAP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="s2">&quot;start_time&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;current_time&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;I&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="s2">&quot;duration&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;shortinfo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="s2">&quot;longinfo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="n">KEY_SERVICE_REFERENCE</span><span class="p">,</span>
+    <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="n">KEY_SERVICE_NAME</span><span class="p">,</span>
+    <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="s2">&quot;shortservice_name&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">mangle_event</span><span class="p">(</span><span class="n">event_obj</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">with_component_data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">start_time</span><span class="o">=</span><span class="n">event_obj</span><span class="o">.</span><span class="n">getBeginTime</span><span class="p">(),</span>
+        <span class="n">duration</span><span class="o">=</span><span class="n">event_obj</span><span class="o">.</span><span class="n">getDuration</span><span class="p">(),</span>
+        <span class="n">title</span><span class="o">=</span><span class="n">event_obj</span><span class="o">.</span><span class="n">getEventName</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="p">),</span>
+        <span class="n">shortinfo</span><span class="o">=</span><span class="n">event_obj</span><span class="o">.</span><span class="n">getShortDescription</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="p">),</span>
+        <span class="n">longinfo</span><span class="o">=</span><span class="n">event_obj</span><span class="o">.</span><span class="n">getExtendedDescription</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="p">),</span>
+        <span class="nb">id</span><span class="o">=</span><span class="n">event_obj</span><span class="o">.</span><span class="n">getEventId</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">with_component_data</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;component_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event_obj</span><span class="o">.</span><span class="n">getComponentData</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<div class="viewcode-block" id="EventDict"><a class="viewcode-back" href="../../../model.html#controllers.models.events.EventDict">[docs]</a><span class="k">class</span> <span class="nc">EventDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event data container object</span>
+
+<span class="sd">    &gt;&gt;&gt; dd_in = (123, 1506020400, 120*60, 1506020440, &quot;DASDING Sprechstunde&quot;, None, None, &quot;1:0:2:6F37:431:A401:FFFF0000:0:0:0:&quot;, &quot;DASDING&quot;)  # NOQA</span>
+<span class="sd">    &gt;&gt;&gt; sed = EventDict(dd_in)</span>
+<span class="sd">    &gt;&gt;&gt; sed[&#39;id&#39;]</span>
+<span class="sd">    123</span>
+<span class="sd">    &gt;&gt;&gt; sed[&#39;start_time&#39;]</span>
+<span class="sd">    1506020400</span>
+<span class="sd">    &gt;&gt;&gt; sed[&#39;duration&#39;]</span>
+<span class="sd">    7200</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">,</span> <span class="n">flag_string</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">dict</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">flag_string</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">flag_string</span> <span class="o">=</span> <span class="n">FLAGS_WEB</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">flag_string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">flag_key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">flags</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">EVENT_FIELD_MAP</span><span class="p">[</span><span class="n">flag_key</span><span class="p">]</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mangle</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_mangle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">text_keys</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;shortinfo&quot;</span><span class="p">,</span> <span class="s2">&quot;longinfo&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+                     <span class="n">KEY_SERVICE_NAME</span><span class="p">,</span> <span class="s2">&quot;shortservice_name&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tkey</span> <span class="ow">in</span> <span class="n">text_keys</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tkey</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">tkey</span><span class="p">]</span> <span class="o">=</span> <span class="n">mangle_epg_text</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">tkey</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="NoneEventDict"><a class="viewcode-back" href="../../../model.html#controllers.models.events.NoneEventDict">[docs]</a><span class="k">class</span> <span class="nc">NoneEventDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dummy event data container object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="nb">dict</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">KEY_SERVICE_REFERENCE</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;-1:0:0:0:0:0:0:0:0:0:&quot;</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">KEY_SERVICE_NAME</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;NONAME&quot;</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">KEY_START_TIME</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">KEY_ID</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">KEY_DURATION</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">KEY_TITLE</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">KEY_SHORTINFO</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">KEY_LONGINFO</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="ServicesEventDict"><a class="viewcode-back" href="../../../model.html#controllers.models.events.ServicesEventDict">[docs]</a><span class="k">class</span> <span class="nc">ServicesEventDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event data container object as used by EPG lookups in services.py</span>
+
+<span class="sd">    .. deprecated:: 0.31 replaced by :obj:`EventDict`</span>
+
+<span class="sd">    &gt;&gt;&gt; dd_in = (123, 1506020400, 120*60, 1506020440, &quot;DASDING Sprechstunde&quot;, None, None, &quot;1:0:2:6F37:431:A401:FFFF0000:0:0:0:&quot;, &quot;DASDING&quot;)  # NOQA</span>
+<span class="sd">    &gt;&gt;&gt; sed = ServicesEventDict(dd_in)</span>
+<span class="sd">    &gt;&gt;&gt; sed[&#39;id&#39;]</span>
+<span class="sd">    123</span>
+<span class="sd">    &gt;&gt;&gt; sed[&#39;begin_timestamp&#39;]</span>
+<span class="sd">    1506020400</span>
+<span class="sd">    &gt;&gt;&gt; sed[&#39;duration_sec&#39;]</span>
+<span class="sd">    7200</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">,</span> <span class="n">now_next_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mangle_html</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">dict</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">SERVICES_KEY_MAP</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">SERVICES_KEY_MAP</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">raw_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">mangle_html</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mangle_epg_text</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sname&#39;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">now_next_mode</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;begin_timestamp&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;duration_sec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;N/A&#39;</span>
+                <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;shortdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;longdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;now_timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;remaining&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">current_timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;now_timestamp&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">current_timestamp</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;begin_timestamp&#39;</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;remaining&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;begin_timestamp&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="p">[</span>
+                        <span class="s1">&#39;duration_sec&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">current_timestamp</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;remaining&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;duration_sec&#39;</span><span class="p">]</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+
+    <span class="p">(</span><span class="n">FAILED</span><span class="p">,</span> <span class="n">SUCCEEDED</span><span class="p">)</span> <span class="o">=</span> <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[doctest] SUCCEEDED/FAILED: </span><span class="si">{:d}</span><span class="s2">/</span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">,</span> <span class="n">FAILED</span><span class="p">))</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

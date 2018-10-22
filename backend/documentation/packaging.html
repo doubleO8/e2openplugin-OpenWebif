@@ -1,0 +1,329 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Packaging and Publication &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Models" href="model.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Packaging and Publication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-pert_belly_hack.packaging">Packaging utilily functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pert_belly_hack.harvesting">Publishing utilily functions</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Packaging and Publication</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/packaging.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pert_belly_hack.defaults">
+<span id="packaging-and-publication"></span><span id="packaging-label"></span><h1>Packaging and Publication<a class="headerlink" href="#module-pert_belly_hack.defaults" title="Permalink to this headline">¶</a></h1>
+<dl class="data">
+<dt id="pert_belly_hack.defaults.LATEST_OPK_PATH_REL">
+<code class="descclassname">pert_belly_hack.defaults.</code><code class="descname">LATEST_OPK_PATH_REL</code><em class="property"> = 'latest.opk'</em><a class="headerlink" href="#pert_belly_hack.defaults.LATEST_OPK_PATH_REL" title="Permalink to this definition">¶</a></dt>
+<dd><p>relative path to be used for the ‘latest opk’ symlink</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pert_belly_hack.defaults.OUTPUT_PATH">
+<code class="descclassname">pert_belly_hack.defaults.</code><code class="descname">OUTPUT_PATH</code><em class="property"> = 'pages_out'</em><a class="headerlink" href="#pert_belly_hack.defaults.OUTPUT_PATH" title="Permalink to this definition">¶</a></dt>
+<dd><p>path for github-pages</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pert_belly_hack.defaults.PACKAGE_META">
+<code class="descclassname">pert_belly_hack.defaults.</code><code class="descname">PACKAGE_META</code><em class="property"> = {'epoch': 1, 'package': 'enigma2-plugin-extensions-openwebif', 'target_root_path': 'OpenWebif', 'upstream_version': u'1.3.2'}</em><a class="headerlink" href="#pert_belly_hack.defaults.PACKAGE_META" title="Permalink to this definition">¶</a></dt>
+<dd><p>meta data for opkg</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pert_belly_hack.defaults.PACKAGE_OUTPUT_PATH">
+<code class="descclassname">pert_belly_hack.defaults.</code><code class="descname">PACKAGE_OUTPUT_PATH</code><em class="property"> = 'pack'</em><a class="headerlink" href="#pert_belly_hack.defaults.PACKAGE_OUTPUT_PATH" title="Permalink to this definition">¶</a></dt>
+<dd><p>path for package contents</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pert_belly_hack.defaults.TAG_PATH_REL">
+<code class="descclassname">pert_belly_hack.defaults.</code><code class="descname">TAG_PATH_REL</code><em class="property"> = 'public/tag.json'</em><a class="headerlink" href="#pert_belly_hack.defaults.TAG_PATH_REL" title="Permalink to this definition">¶</a></dt>
+<dd><p>relative path of build tag information file</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pert_belly_hack.defaults.TARGET_PATH_REL">
+<code class="descclassname">pert_belly_hack.defaults.</code><code class="descname">TARGET_PATH_REL</code><em class="property"> = 'usr/lib/enigma2/python/Plugins/Extensions'</em><a class="headerlink" href="#pert_belly_hack.defaults.TARGET_PATH_REL" title="Permalink to this definition">¶</a></dt>
+<dd><p>relative path on enigma2 device</p>
+</dd></dl>
+
+<div class="section" id="module-pert_belly_hack.packaging">
+<span id="packaging-utilily-functions"></span><h2>Packaging utilily functions<a class="headerlink" href="#module-pert_belly_hack.packaging" title="Permalink to this headline">¶</a></h2>
+<p>Helper functions for preparing OPKG package contents.</p>
+<dl class="function">
+<dt id="pert_belly_hack.packaging.compile_cheetah">
+<code class="descclassname">pert_belly_hack.packaging.</code><code class="descname">compile_cheetah</code><span class="sig-paren">(</span><em>target_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pert_belly_hack/packaging.html#compile_cheetah"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pert_belly_hack.packaging.compile_cheetah" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run cheetah template generator for <em>target_path</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>target_path</strong> (<em>basestring</em>) – cheetah template path</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pert_belly_hack.packaging.compile_locales">
+<code class="descclassname">pert_belly_hack.packaging.</code><code class="descname">compile_locales</code><span class="sig-paren">(</span><em>top='locale'</em>, <em>target_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pert_belly_hack/packaging.html#compile_locales"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pert_belly_hack.packaging.compile_locales" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run locale generator for <cite>.po</cite> files in <em>top</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>top</strong> – location of <cite>.po</cite> files</li>
+<li><strong>target_path</strong> (<em>basestring</em>) – (optional) path where generated <cite>.mo</cite> files will be stored  #NOQA</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pert_belly_hack.packaging.mkdir_intermediate">
+<code class="descclassname">pert_belly_hack.packaging.</code><code class="descname">mkdir_intermediate</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pert_belly_hack/packaging.html#mkdir_intermediate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pert_belly_hack.packaging.mkdir_intermediate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create intermediate folders of <em>path</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>basestring</em>) – full path</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pert_belly_hack.packaging.source_files">
+<code class="descclassname">pert_belly_hack.packaging.</code><code class="descname">source_files</code><span class="sig-paren">(</span><em>top</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pert_belly_hack/packaging.html#source_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pert_belly_hack.packaging.source_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator for paths of files to be included.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>top</strong> (<em>basestring</em>) – root path</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pert_belly_hack.harvesting">
+<span id="publishing-utilily-functions"></span><h2>Publishing utilily functions<a class="headerlink" href="#module-pert_belly_hack.harvesting" title="Permalink to this headline">¶</a></h2>
+<p>Helper functions and classes for preparing publication as
+<a class="reference external" href="https://pages.github.com/">github pages</a>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="model.html" class="btn btn-neutral" title="Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

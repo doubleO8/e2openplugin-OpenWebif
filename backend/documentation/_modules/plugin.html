@@ -1,0 +1,522 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>plugin &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>plugin</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for plugin</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1">##############################################################################</span>
+<span class="c1">#                         &lt;&lt;&lt; OpenWebif &gt;&gt;&gt;                                  #</span>
+<span class="c1">#                                                                            #</span>
+<span class="c1">#                        2011 E2OpenPlugins                                  #</span>
+<span class="c1">#                                                                            #</span>
+<span class="c1">#  This file is open source software; you can redistribute it and/or modify  #</span>
+<span class="c1">#     it under the terms of the GNU General Public License version 2 as      #</span>
+<span class="c1">#               published by the Free Software Foundation.                   #</span>
+<span class="c1">#                                                                            #</span>
+<span class="c1">##############################################################################</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># Authors: meo &lt;lupomeo@hotmail.com&gt;, skaman &lt;sandro@skanetwork.com&gt;</span>
+<span class="c1"># Graphics: .....</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">controllers.defaults</span> <span class="k">import</span> <span class="n">THEMES</span><span class="p">,</span> <span class="n">LOG_FILES_ROOT</span><span class="p">,</span> <span class="n">PLUGIN_WINDOW_TITLE</span>
+<span class="kn">from</span> <span class="nn">controllers.defaults</span> <span class="k">import</span> <span class="n">PLUGIN_NAME</span><span class="p">,</span> <span class="n">PLUGIN_DESCRIPTION</span>
+<span class="kn">from</span> <span class="nn">controllers.defaults</span> <span class="k">import</span> <span class="n">PLUGIN_ICON</span><span class="p">,</span> <span class="n">PLUGIN_ICON_HD</span>
+
+<span class="n">log_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> </span><span class="si">%(name)-60s</span><span class="s1"> </span><span class="si">%(levelname)-8s</span><span class="s1"> &#39;</span>
+           <span class="s1">&#39;</span><span class="si">%(funcName)-32s</span><span class="s1"> (#</span><span class="si">%(lineno)04d</span><span class="s1">): </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="n">datefmt</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">LOG_FILES_ROOT</span><span class="p">):</span>
+    <span class="n">log_args</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:s}</span><span class="s2">/</span><span class="si">{:s}</span><span class="s2">.log&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">LOG_FILES_ROOT</span><span class="p">,</span>
+                                                  <span class="n">PLUGIN_NAME</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="o">**</span><span class="n">log_args</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">Screens.Screen</span> <span class="k">import</span> <span class="n">Screen</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span> <span class="nn">Plugins.Plugin</span> <span class="k">import</span> <span class="n">PluginDescriptor</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span> <span class="nn">Components.ActionMap</span> <span class="k">import</span> <span class="n">ActionMap</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span> <span class="nn">Components.Label</span> <span class="k">import</span> <span class="n">Label</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span> <span class="nn">Components.ConfigList</span> <span class="k">import</span> <span class="n">ConfigListScreen</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span> <span class="nn">Components.config</span> <span class="k">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">getConfigListEntry</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span> <span class="nn">Components.config</span> <span class="k">import</span> <span class="n">ConfigSubsection</span><span class="p">,</span> <span class="n">ConfigSelection</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span> <span class="nn">Components.config</span> <span class="k">import</span> <span class="n">ConfigInteger</span><span class="p">,</span> <span class="n">ConfigYesNo</span><span class="p">,</span> <span class="n">ConfigText</span>  <span class="c1"># noqa: E402,E501</span>
+<span class="kn">from</span> <span class="nn">enigma</span> <span class="k">import</span> <span class="n">getDesktop</span>  <span class="c1"># noqa: E402</span>
+
+<span class="kn">from</span> <span class="nn">controllers.models.info</span> <span class="k">import</span> <span class="n">getInfo</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span> <span class="nn">httpserver</span> <span class="k">import</span> <span class="n">HttpdStart</span><span class="p">,</span> <span class="n">HttpdStop</span><span class="p">,</span> <span class="n">HttpdRestart</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span> <span class="nn">controllers.i18n</span> <span class="k">import</span> <span class="n">_</span>  <span class="c1"># noqa: E402</span>
+
+
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span> <span class="o">=</span> <span class="n">ConfigSubsection</span><span class="p">()</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">ConfigYesNo</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="n">ConfigYesNo</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">identifier_custom</span> <span class="o">=</span> <span class="n">ConfigYesNo</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">identifier_text</span> <span class="o">=</span> <span class="n">ConfigText</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">fixed_size</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">ConfigInteger</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">limits</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">65535</span><span class="p">))</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">streamport</span> <span class="o">=</span> <span class="n">ConfigInteger</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">8001</span><span class="p">,</span> <span class="n">limits</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">65535</span><span class="p">))</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">webcache</span> <span class="o">=</span> <span class="n">ConfigSubsection</span><span class="p">()</span>
+<span class="c1"># FIXME: anything better than a ConfigText?</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">webcache</span><span class="o">.</span><span class="n">collapsedmenus</span> <span class="o">=</span> <span class="n">ConfigText</span><span class="p">(</span>
+    <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">fixed_size</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">webcache</span><span class="o">.</span><span class="n">zapstream</span> <span class="o">=</span> <span class="n">ConfigYesNo</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">webcache</span><span class="o">.</span><span class="n">theme</span> <span class="o">=</span> <span class="n">ConfigSelection</span><span class="p">(</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;original-small-screen&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">THEMES</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">webcache</span><span class="o">.</span><span class="n">moviesort</span> <span class="o">=</span> <span class="n">ConfigSelection</span><span class="p">(</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;named&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;dated&#39;</span><span class="p">])</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">webcache</span><span class="o">.</span><span class="n">showchannelpicon</span> <span class="o">=</span> <span class="n">ConfigYesNo</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">webcache</span><span class="o">.</span><span class="n">mepgmode</span> <span class="o">=</span> <span class="n">ConfigInteger</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">limits</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># Use service name for stream</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">service_name_for_stream</span> <span class="o">=</span> <span class="n">ConfigYesNo</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># encoding of EPG data</span>
+<span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">epg_encoding</span> <span class="o">=</span> <span class="n">ConfigSelection</span><span class="p">(</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span>
+    <span class="n">choices</span><span class="o">=</span><span class="p">[</span>
+        <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;iso-8859-15&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;iso-8859-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;iso-8859-2&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;iso-8859-3&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;iso-8859-4&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;iso-8859-5&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;iso-8859-6&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;iso-8859-7&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;iso-8859-8&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;iso-8859-9&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;iso-8859-10&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;iso-8859-16&#39;</span><span class="p">])</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">imagedistro</span> <span class="o">=</span> <span class="n">getInfo</span><span class="p">()[</span><span class="s1">&#39;imagedistro&#39;</span><span class="p">]</span>
+<span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+    <span class="n">imagedistro</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
+
+<span class="n">CONFIG_SCREEN_XML</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;screen position=&quot;center,center&quot; size=&quot;700,340&quot;</span>
+<span class="s2">        title=&quot;OpenWebif Configuration&quot;&gt;</span>
+<span class="s2">        &lt;widget name=&quot;lab1&quot; position=&quot;10,30&quot; halign=&quot;center&quot; size=&quot;680,60&quot;</span>
+<span class="s2">            zPosition=&quot;1&quot; font=&quot;Regular;24&quot; valign=&quot;top&quot; transparent=&quot;1&quot; /&gt;</span>
+<span class="s2">        &lt;widget name=&quot;config&quot; position=&quot;10,100&quot; size=&quot;680,180&quot;</span>
+<span class="s2">            scrollbarMode=&quot;showOnDemand&quot; /&gt;</span>
+<span class="s2">        &lt;ePixmap position=&quot;140,290&quot; size=&quot;140,40&quot;</span>
+<span class="s2">            pixmap=&quot;skin_default/buttons/red.png&quot; alphatest=&quot;on&quot; /&gt;</span>
+<span class="s2">        &lt;widget name=&quot;key_red&quot; position=&quot;140,290&quot; zPosition=&quot;1&quot; size=&quot;140,40&quot;</span>
+<span class="s2">            font=&quot;Regular;20&quot; halign=&quot;center&quot; valign=&quot;center&quot;</span>
+<span class="s2">            backgroundColor=&quot;red&quot; transparent=&quot;1&quot; /&gt;</span>
+<span class="s2">        &lt;ePixmap position=&quot;420,290&quot; size=&quot;140,40&quot;</span>
+<span class="s2">            pixmap=&quot;skin_default/buttons/green.png&quot; alphatest=&quot;on&quot;</span>
+<span class="s2">            zPosition=&quot;1&quot; /&gt;</span>
+<span class="s2">        &lt;widget name=&quot;key_green&quot; position=&quot;420,290&quot; zPosition=&quot;2&quot;</span>
+<span class="s2">            size=&quot;140,40&quot; font=&quot;Regular;20&quot; halign=&quot;center&quot; valign=&quot;center&quot;</span>
+<span class="s2">            backgroundColor=&quot;green&quot; transparent=&quot;1&quot; /&gt;</span>
+<span class="s2">    &lt;/screen&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="OpenWebifConfig"><a class="viewcode-back" href="../plugin.html#plugin.OpenWebifConfig">[docs]</a><span class="k">class</span> <span class="nc">OpenWebifConfig</span><span class="p">(</span><span class="n">Screen</span><span class="p">,</span> <span class="n">ConfigListScreen</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enigma2 plugin configuration screen.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skin</span> <span class="o">=</span> <span class="n">CONFIG_SCREEN_XML</span>
+        <span class="n">Screen</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ConfigListScreen</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;key_red&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Cancel&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;key_green&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Save&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;lab1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;OpenWebif url: http://yourip:port&quot;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ActionMap</span><span class="p">([</span><span class="s2">&quot;WizardActions&quot;</span><span class="p">,</span> <span class="s2">&quot;ColorActions&quot;</span><span class="p">],</span>
+                                    <span class="p">{</span>
+                                        <span class="s2">&quot;red&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">keyCancel</span><span class="p">,</span>
+                                        <span class="s2">&quot;back&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">keyCancel</span><span class="p">,</span>
+                                        <span class="s2">&quot;green&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">keySave</span><span class="p">,</span>
+
+                                    <span class="p">},</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runSetup</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onLayoutFinish</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">runSetup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">getConfigListEntry</span><span class="p">(</span>
+                <span class="n">_</span><span class="p">(</span><span class="s2">&quot;OpenWebInterface Enabled&quot;</span><span class="p">),</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">enabled</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">enabled</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">getConfigListEntry</span><span class="p">(</span>
+                    <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Show box name in header&quot;</span><span class="p">),</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">identifier</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">getConfigListEntry</span><span class="p">(</span>
+                        <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Use custom box name&quot;</span><span class="p">),</span>
+                        <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">identifier_custom</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">identifier_custom</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">getConfigListEntry</span><span class="p">(</span>
+                            <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Custom box name&quot;</span><span class="p">),</span>
+                            <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">identifier_text</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">getConfigListEntry</span><span class="p">(</span>
+                    <span class="n">_</span><span class="p">(</span><span class="s2">&quot;HTTP port&quot;</span><span class="p">),</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">port</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">getConfigListEntry</span><span class="p">(</span>
+                    <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Add service name to stream information&quot;</span><span class="p">),</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">service_name_for_stream</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">imagedistro</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;VTi-Team Image&quot;</span><span class="p">,):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">getConfigListEntry</span><span class="p">(</span>
+                        <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Character encoding for EPG data&quot;</span><span class="p">),</span>
+                        <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">epg_encoding</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">l</span><span class="o">.</span><span class="n">setList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">setWindowTitle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="n">PLUGIN_WINDOW_TITLE</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">keyLeft</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ConfigListScreen</span><span class="o">.</span><span class="n">keyLeft</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runSetup</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">keyRight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ConfigListScreen</span><span class="o">.</span><span class="n">keyRight</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runSetup</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">keySave</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">enabled</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="n">HttpdRestart</span><span class="p">(</span><span class="n">global_session</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">HttpdStop</span><span class="p">(</span><span class="n">global_session</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">keyCancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="on_configure_plugin"><a class="viewcode-back" href="../plugin.html#plugin.on_configure_plugin">[docs]</a><span class="k">def</span> <span class="nf">on_configure_plugin</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plugin configured(?) callback function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        session: (?) Session instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;on_configure_plugin(</span><span class="si">{!r}</span><span class="s2">, </span><span class="si">{!r}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
+    <span class="c1"># LOG.debug(dir(session))</span>
+    <span class="c1"># [&#39;__doc__&#39;, &#39;__init__&#39;, &#39;__module__&#39;, &#39;close&#39;, &#39;create&#39;,</span>
+    <span class="c1">#  &#39;current_dialog&#39;, &#39;delay_timer&#39;, &#39;deleteDialog&#39;, &#39;desktop&#39;,</span>
+    <span class="c1">#  &#39;dialog_stack&#39;, &#39;doInstantiateDialog&#39;, &#39;execBegin&#39;, &#39;execDialog&#39;,</span>
+    <span class="c1">#  &#39;execEnd&#39;, &#39;in_exec&#39;, &#39;instantiateDialog&#39;, &#39;instantiateSummaryDialog&#39;,</span>
+    <span class="c1">#  &#39;nav&#39;, &#39;open&#39;, &#39;openWithCallback&#39;, &#39;popCurrent&#39;, &#39;popSummary&#39;,</span>
+    <span class="c1">#  &#39;processDelay&#39;, &#39;pushCurrent&#39;, &#39;pushSummary&#39;, &#39;screen&#39;, &#39;summary&#39;,</span>
+    <span class="c1">#  &#39;summary_desktop&#39;, &#39;summary_stack&#39;]</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">OpenWebifConfig</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="on_network_configuration_read"><a class="viewcode-back" href="../plugin.html#plugin.on_network_configuration_read">[docs]</a><span class="k">def</span> <span class="nf">on_network_configuration_read</span><span class="p">(</span><span class="n">reason</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Network interface callback function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        reason: Reason</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;on_network_configuration_read(</span><span class="si">{!r}</span><span class="s2">, </span><span class="si">{!r}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">reason</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">reason</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">HttpdStart</span><span class="p">(</span><span class="n">global_session</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">HttpdStop</span><span class="p">(</span><span class="n">global_session</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="on_start_session"><a class="viewcode-back" href="../plugin.html#plugin.on_start_session">[docs]</a><span class="k">def</span> <span class="nf">on_start_session</span><span class="p">(</span><span class="n">reason</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Start Session callback function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        reason: Reason</span>
+<span class="sd">        session: (?) Session instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;on_start_session(</span><span class="si">{!r}</span><span class="s2">, </span><span class="si">{!r}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reason</span><span class="p">,</span> <span class="n">session</span><span class="p">))</span>
+    <span class="c1"># LOG.debug(dir(session))</span>
+    <span class="k">global</span> <span class="n">global_session</span>
+    <span class="n">global_session</span> <span class="o">=</span> <span class="n">session</span></div>
+
+
+<span class="k">def</span> <span class="nf">on_main_menu</span><span class="p">(</span><span class="n">menuid</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;on_main_menu(</span><span class="si">{!r}</span><span class="s2">, </span><span class="si">{!r}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">menuid</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">menuid</span> <span class="o">==</span> <span class="s2">&quot;network&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">PLUGIN_NAME</span><span class="p">,</span> <span class="n">on_configure_plugin</span><span class="p">,</span> <span class="n">PLUGIN_NAME</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="mi">45</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+
+<div class="viewcode-block" id="Plugins"><a class="viewcode-back" href="../plugin.html#plugin.Plugins">[docs]</a><span class="k">def</span> <span class="nf">Plugins</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plugin loader(?)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">PluginDescriptor</span><span class="p">(</span>
+            <span class="n">where</span><span class="o">=</span><span class="p">[</span><span class="n">PluginDescriptor</span><span class="o">.</span><span class="n">WHERE_SESSIONSTART</span><span class="p">],</span>
+            <span class="n">fnc</span><span class="o">=</span><span class="n">on_start_session</span><span class="p">),</span>
+        <span class="n">PluginDescriptor</span><span class="p">(</span>
+            <span class="n">where</span><span class="o">=</span><span class="p">[</span><span class="n">PluginDescriptor</span><span class="o">.</span><span class="n">WHERE_NETWORKCONFIG_READ</span><span class="p">],</span>
+            <span class="n">fnc</span><span class="o">=</span><span class="n">on_network_configuration_read</span><span class="p">),</span>
+    <span class="p">]</span>
+    <span class="n">screenwidth</span> <span class="o">=</span> <span class="n">getDesktop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">width</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">imagedistro</span> <span class="o">==</span> <span class="s2">&quot;openatv&quot;</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">PluginDescriptor</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">PLUGIN_NAME</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="n">PLUGIN_DESCRIPTION</span><span class="p">),</span>
+                <span class="n">where</span><span class="o">=</span><span class="n">PluginDescriptor</span><span class="o">.</span><span class="n">WHERE_MENU</span><span class="p">,</span>
+                <span class="n">fnc</span><span class="o">=</span><span class="n">on_main_menu</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">screenwidth</span> <span class="ow">and</span> <span class="n">screenwidth</span> <span class="o">&gt;=</span> <span class="mi">1920</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">PluginDescriptor</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">PLUGIN_NAME</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="n">PLUGIN_DESCRIPTION</span><span class="p">),</span>
+                <span class="n">icon</span><span class="o">=</span><span class="n">PLUGIN_ICON_HD</span><span class="p">,</span>
+                <span class="n">where</span><span class="o">=</span><span class="p">[</span><span class="n">PluginDescriptor</span><span class="o">.</span><span class="n">WHERE_PLUGINMENU</span><span class="p">],</span>
+                <span class="n">fnc</span><span class="o">=</span><span class="n">on_configure_plugin</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">PluginDescriptor</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">PLUGIN_NAME</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="n">PLUGIN_DESCRIPTION</span><span class="p">),</span>
+                <span class="n">icon</span><span class="o">=</span><span class="n">PLUGIN_ICON</span><span class="p">,</span>
+                <span class="n">where</span><span class="o">=</span><span class="p">[</span><span class="n">PluginDescriptor</span><span class="o">.</span><span class="n">WHERE_PLUGINMENU</span><span class="p">],</span>
+                <span class="n">fnc</span><span class="o">=</span><span class="n">on_configure_plugin</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

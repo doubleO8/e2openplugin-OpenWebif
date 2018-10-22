@@ -1,0 +1,910 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>controllers.models.services &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../model.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>controllers.models.services</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for controllers.models.services</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1">##############################################################################</span>
+<span class="c1">#                        2011 E2OpenPlugins                                  #</span>
+<span class="c1">#                                                                            #</span>
+<span class="c1">#  This file is open source software; you can redistribute it and/or modify  #</span>
+<span class="c1">#     it under the terms of the GNU General Public License version 2 as      #</span>
+<span class="c1">#               published by the Free Software Foundation.                   #</span>
+<span class="c1">#                                                                            #</span>
+<span class="c1">##############################################################################</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">unicodedata</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">localtime</span><span class="p">,</span> <span class="n">strftime</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">quote</span><span class="p">,</span> <span class="n">unquote</span>
+
+<span class="kn">from</span> <span class="nn">..i18n</span> <span class="k">import</span> <span class="n">_</span><span class="p">,</span> <span class="n">tstrings</span>
+<span class="kn">from</span> <span class="nn">..defaults</span> <span class="k">import</span> <span class="n">PICON_EXT</span><span class="p">,</span> <span class="n">PICON_PATH</span>
+<span class="kn">from</span> <span class="nn">Components.Sources.ServiceList</span> <span class="k">import</span> <span class="n">ServiceList</span>
+<span class="kn">from</span> <span class="nn">Components.ParentalControl</span> <span class="k">import</span> <span class="n">parentalControl</span>
+<span class="kn">from</span> <span class="nn">Components.config</span> <span class="k">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">Components.NimManager</span> <span class="k">import</span> <span class="n">nimmanager</span>
+<span class="kn">from</span> <span class="nn">ServiceReference</span> <span class="k">import</span> <span class="n">ServiceReference</span>
+<span class="kn">from</span> <span class="nn">Screens.ChannelSelection</span> <span class="k">import</span> <span class="n">service_types_tv</span><span class="p">,</span> <span class="n">service_types_radio</span><span class="p">,</span> \
+    <span class="n">FLAG_SERVICE_NEW_FOUND</span>
+<span class="kn">from</span> <span class="nn">enigma</span> <span class="k">import</span> <span class="n">eServiceCenter</span><span class="p">,</span> <span class="n">eServiceReference</span><span class="p">,</span> \
+    <span class="n">iServiceInformation</span><span class="p">,</span> <span class="n">eEPGCache</span>
+<span class="kn">from</span> <span class="nn">info</span> <span class="k">import</span> <span class="n">GetWithAlternative</span>
+<span class="kn">from</span> <span class="nn">info</span> <span class="k">import</span> <span class="n">FALLBACK_PICON_LOCATION</span><span class="p">,</span> <span class="n">PICON_ENDPOINT_PATH</span>
+
+<span class="kn">from</span> <span class="nn">model_utilities</span> <span class="k">import</span> <span class="n">mangle_epg_text</span>
+<span class="kn">from</span> <span class="nn">events</span> <span class="k">import</span> <span class="n">FLAGS_WEB</span><span class="p">,</span> <span class="n">ServicesEventDict</span>
+
+<span class="n">SLOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;services&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">what</span><span class="p">):</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">getInfo</span><span class="p">(</span><span class="n">what</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;N/A&quot;</span>
+    <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">info</span><span class="o">.</span><span class="n">getInfoString</span><span class="p">(</span><span class="n">what</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">v</span>
+
+
+<span class="k">def</span> <span class="nf">getCurrentService</span><span class="p">(</span><span class="n">session</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">getCurrentService</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">mangle_epg_text</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">getName</span><span class="p">()),</span>
+            <span class="s2">&quot;namespace&quot;</span><span class="p">:</span> <span class="n">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span>
+                                              <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sNamespace</span><span class="p">),</span>
+            <span class="s2">&quot;aspect&quot;</span><span class="p">:</span> <span class="n">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sAspect</span><span class="p">),</span>
+            <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="n">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span>
+                                             <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sProvider</span><span class="p">),</span>
+            <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="n">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span>
+                                          <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sVideoWidth</span><span class="p">),</span>
+            <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="n">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span>
+                                           <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sVideoHeight</span><span class="p">),</span>
+            <span class="s2">&quot;apid&quot;</span><span class="p">:</span> <span class="n">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sAudioPID</span><span class="p">),</span>
+            <span class="s2">&quot;vpid&quot;</span><span class="p">:</span> <span class="n">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sVideoPID</span><span class="p">),</span>
+            <span class="s2">&quot;pcrpid&quot;</span><span class="p">:</span> <span class="n">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sPCRPID</span><span class="p">),</span>
+            <span class="s2">&quot;pmtpid&quot;</span><span class="p">:</span> <span class="n">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sPMTPID</span><span class="p">),</span>
+            <span class="s2">&quot;txtpid&quot;</span><span class="p">:</span> <span class="n">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sTXTPID</span><span class="p">),</span>
+            <span class="s2">&quot;tsid&quot;</span><span class="p">:</span> <span class="n">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sTSID</span><span class="p">),</span>
+            <span class="s2">&quot;onid&quot;</span><span class="p">:</span> <span class="n">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sONID</span><span class="p">),</span>
+            <span class="s2">&quot;sid&quot;</span><span class="p">:</span> <span class="n">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sSID</span><span class="p">),</span>
+            <span class="s2">&quot;ref&quot;</span><span class="p">:</span> <span class="n">quote</span><span class="p">(</span>
+                <span class="n">getServiceInfoString</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sServiceref</span><span class="p">),</span>
+                <span class="n">safe</span><span class="o">=</span><span class="s1">&#39; ~@#$&amp;()*!+=:;,.?/</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">),</span>
+            <span class="s2">&quot;iswidescreen&quot;</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">getInfo</span><span class="p">(</span><span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sAspect</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mh">0xB</span><span class="p">,</span> <span class="mh">0xC</span><span class="p">,</span> <span class="mh">0xF</span><span class="p">,</span> <span class="mh">0x10</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;aspect&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;apid&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;vpid&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;pcrpid&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;pmtpid&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;txtpid&quot;</span><span class="p">:</span> <span class="s2">&quot;N/A&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tsid&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;onid&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;sid&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;ref&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;iswidescreen&quot;</span><span class="p">:</span> <span class="kc">False</span>
+        <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">getBouquets</span><span class="p">(</span><span class="n">stype</span><span class="p">):</span>
+    <span class="n">s_type</span> <span class="o">=</span> <span class="n">service_types_tv</span>
+    <span class="n">s_type2</span> <span class="o">=</span> <span class="s2">&quot;bouquets.tv&quot;</span>
+    <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s2">&quot;radio&quot;</span><span class="p">:</span>
+        <span class="n">s_type</span> <span class="o">=</span> <span class="n">service_types_radio</span>
+        <span class="n">s_type2</span> <span class="o">=</span> <span class="s2">&quot;bouquets.radio&quot;</span>
+    <span class="n">serviceHandler</span> <span class="o">=</span> <span class="n">eServiceCenter</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">serviceHandler</span><span class="o">.</span><span class="n">list</span><span class="p">(</span>
+        <span class="n">eServiceReference</span><span class="p">(</span>
+            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> FROM BOUQUET &quot;</span><span class="si">%s</span><span class="s1">&quot; ORDER BY bouquet&#39;</span> <span class="o">%</span>
+            <span class="p">(</span><span class="n">s_type</span><span class="p">,</span> <span class="n">s_type2</span><span class="p">)))</span>
+    <span class="n">bouquets</span> <span class="o">=</span> <span class="n">services</span> <span class="ow">and</span> <span class="n">services</span><span class="o">.</span><span class="n">getContent</span><span class="p">(</span><span class="s2">&quot;SN&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">bouquets</span> <span class="o">=</span> <span class="n">removeHiddenBouquets</span><span class="p">(</span><span class="n">bouquets</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;bouquets&quot;</span><span class="p">:</span> <span class="n">bouquets</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">removeHiddenBouquets</span><span class="p">(</span><span class="n">bouquetList</span><span class="p">):</span>
+    <span class="n">bouquets</span> <span class="o">=</span> <span class="n">bouquetList</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">eServiceReference</span><span class="p">,</span> <span class="s1">&#39;isInvisible&#39;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">bouquet</span> <span class="ow">in</span> <span class="n">bouquetList</span><span class="p">:</span>
+            <span class="n">flags</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bouquet</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">flags</span> <span class="o">&amp;</span> <span class="n">eServiceReference</span><span class="o">.</span><span class="n">isInvisible</span> <span class="ow">and</span> <span class="n">bouquet</span> <span class="ow">in</span> <span class="n">bouquets</span><span class="p">:</span>
+                <span class="n">bouquets</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">bouquet</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bouquets</span>
+
+
+<span class="k">def</span> <span class="nf">getSatellites</span><span class="p">(</span><span class="n">stype</span><span class="p">):</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">s_type</span> <span class="o">=</span> <span class="n">service_types_tv</span>
+    <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s2">&quot;radio&quot;</span><span class="p">:</span>
+        <span class="n">s_type</span> <span class="o">=</span> <span class="n">service_types_radio</span>
+    <span class="n">refstr</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> FROM SATELLITES ORDER BY satellitePosition&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">s_type</span><span class="p">)</span>
+    <span class="n">ref</span> <span class="o">=</span> <span class="n">eServiceReference</span><span class="p">(</span><span class="n">refstr</span><span class="p">)</span>
+    <span class="n">serviceHandler</span> <span class="o">=</span> <span class="n">eServiceCenter</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    <span class="n">servicelist</span> <span class="o">=</span> <span class="n">serviceHandler</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">servicelist</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">service</span> <span class="o">=</span> <span class="n">servicelist</span><span class="o">.</span><span class="n">getNext</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">service</span><span class="o">.</span><span class="n">valid</span><span class="p">():</span>
+                <span class="k">break</span>
+            <span class="n">unsigned_orbpos</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">getUnsignedData</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span>
+            <span class="n">orbpos</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span>
+            <span class="k">if</span> <span class="n">orbpos</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">orbpos</span> <span class="o">+=</span> <span class="mi">3600</span>
+            <span class="k">if</span> <span class="n">service</span><span class="o">.</span><span class="n">getPath</span><span class="p">()</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;FROM PROVIDER&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># service_type = _(&quot;Providers&quot;)</span>
+                <span class="k">continue</span>
+            <span class="k">elif</span> <span class="n">service</span><span class="o">.</span><span class="n">getPath</span><span class="p">()</span><span class="o">.</span><span class="n">find</span><span class="p">(</span>
+                            <span class="s2">&quot;flags == </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">FLAG_SERVICE_NEW_FOUND</span><span class="p">))</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">service_type</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;New&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">service_type</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Services&quot;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">service_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">nimmanager</span><span class="o">.</span><span class="n">getSatDescription</span><span class="p">(</span><span class="n">orbpos</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">unsigned_orbpos</span> <span class="o">==</span> <span class="mh">0xFFFF</span><span class="p">:</span>  <span class="c1"># Cable</span>
+                    <span class="n">service_name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Cable&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">unsigned_orbpos</span> <span class="o">==</span> <span class="mh">0xEEEE</span><span class="p">:</span>  <span class="c1"># Terrestrial</span>
+                    <span class="n">service_name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Terrestrial&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">orbpos</span> <span class="o">&gt;</span> <span class="mi">1800</span><span class="p">:</span>  <span class="c1"># west</span>
+                        <span class="n">orbpos</span> <span class="o">=</span> <span class="mi">3600</span> <span class="o">-</span> <span class="n">orbpos</span>
+                        <span class="n">h</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;W&quot;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">h</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;E&quot;</span><span class="p">)</span>
+                    <span class="n">service_name</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="n">orbpos</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span> <span class="n">orbpos</span> <span class="o">%</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="n">service</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">service_name</span><span class="p">,</span> <span class="n">service_type</span><span class="p">))</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;service&quot;</span><span class="p">:</span> <span class="n">service</span><span class="o">.</span><span class="n">toString</span><span class="p">(),</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">service</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span>
+            <span class="p">})</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">sortSatellites</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;satellites&quot;</span><span class="p">:</span> <span class="n">ret</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">sortSatellites</span><span class="p">(</span><span class="n">satList</span><span class="p">):</span>
+    <span class="n">sortDict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">satList</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+            <span class="s2">&quot;[(]\s*satellitePosition\s*==\s*(\d+)\s*[)]&quot;</span><span class="p">,</span>
+            <span class="n">k</span><span class="p">[</span><span class="s2">&quot;service&quot;</span><span class="p">],</span>
+            <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">satList</span>
+        <span class="n">orb</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">orb</span> <span class="o">&gt;</span> <span class="mi">3600</span><span class="p">:</span>
+            <span class="n">orb</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">orb</span> <span class="o">&gt;</span> <span class="mi">1800</span><span class="p">:</span>
+            <span class="n">orb</span> <span class="o">-=</span> <span class="mi">3600</span>
+        <span class="k">if</span> <span class="n">orb</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sortDict</span><span class="p">:</span>
+            <span class="n">sortDict</span><span class="p">[</span><span class="n">orb</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sortDict</span><span class="p">[</span><span class="n">orb</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">outList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">sortDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">sortDict</span><span class="p">[</span><span class="n">l</span><span class="p">]:</span>
+            <span class="n">outList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">satList</span><span class="p">[</span><span class="n">v</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">outList</span>
+
+
+<span class="k">def</span> <span class="nf">getServices</span><span class="p">(</span><span class="n">sRef</span><span class="p">,</span> <span class="n">showAll</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">showHidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">sRef</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">sRef</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> FROM BOUQUET &quot;bouquets.tv&quot; ORDER BY bouquet&#39;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">service_types_tv</span><span class="p">)</span>
+
+    <span class="n">servicelist</span> <span class="o">=</span> <span class="n">ServiceList</span><span class="p">(</span><span class="n">eServiceReference</span><span class="p">(</span><span class="n">sRef</span><span class="p">))</span>
+    <span class="n">slist</span> <span class="o">=</span> <span class="n">servicelist</span><span class="o">.</span><span class="n">getServicesAsList</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">sitem</span> <span class="ow">in</span> <span class="n">slist</span><span class="p">:</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sitem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">sitem</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">7</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;1:832:D&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">st</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">st</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)):</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">st</span> <span class="o">&amp;</span> <span class="mi">512</span> <span class="ow">or</span> <span class="n">showHidden</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">showAll</span> <span class="ow">or</span> <span class="n">st</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">service</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">service</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="p">(</span><span class="n">st</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="k">else</span> <span class="n">pos</span>
+                <span class="n">service</span><span class="p">[</span><span class="s1">&#39;servicereference&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unicode</span><span class="p">(</span>
+                    <span class="n">sitem</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;utf_8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+                    <span class="s1">&#39;utf_8&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+                <span class="n">service</span><span class="p">[</span><span class="s1">&#39;program&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+                    <span class="n">service</span><span class="p">[</span><span class="s1">&#39;servicereference&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+                <span class="n">service</span><span class="p">[</span><span class="s1">&#39;servicename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unicode</span><span class="p">(</span>
+                    <span class="n">sitem</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;utf_8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+                    <span class="s1">&#39;utf_8&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+                <span class="n">services</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">service</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="n">services</span><span class="p">,</span> <span class="s2">&quot;pos&quot;</span><span class="p">:</span> <span class="n">pos</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">getAllServices</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">type</span> <span class="o">=</span> <span class="s2">&quot;tv&quot;</span>
+    <span class="n">bouquets</span> <span class="o">=</span> <span class="n">getBouquets</span><span class="p">(</span><span class="nb">type</span><span class="p">)[</span><span class="s2">&quot;bouquets&quot;</span><span class="p">]</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">bouquet</span> <span class="ow">in</span> <span class="n">bouquets</span><span class="p">:</span>
+        <span class="n">sv</span> <span class="o">=</span> <span class="n">getServices</span><span class="p">(</span><span class="n">bouquet</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+        <span class="n">services</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;servicereference&quot;</span><span class="p">:</span> <span class="n">bouquet</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;servicename&quot;</span><span class="p">:</span> <span class="n">bouquet</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">&quot;subservices&quot;</span><span class="p">:</span> <span class="n">sv</span><span class="p">[</span><span class="s2">&quot;services&quot;</span><span class="p">]</span>
+        <span class="p">})</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">sv</span><span class="p">[</span><span class="s2">&quot;pos&quot;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="n">services</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">getPlayableServices</span><span class="p">(</span><span class="n">sRef</span><span class="p">,</span> <span class="n">sRefPlaying</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">sRef</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">sRef</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> FROM BOUQUET &quot;bouquets.tv&quot; ORDER BY bouquet&#39;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">service_types_tv</span><span class="p">)</span>
+
+    <span class="n">services</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">servicecenter</span> <span class="o">=</span> <span class="n">eServiceCenter</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    <span class="n">servicelist</span> <span class="o">=</span> <span class="n">servicecenter</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">eServiceReference</span><span class="p">(</span><span class="n">sRef</span><span class="p">))</span>
+    <span class="n">servicelist2</span> <span class="o">=</span> <span class="n">servicelist</span> <span class="ow">and</span> <span class="n">servicelist</span><span class="o">.</span><span class="n">getContent</span><span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">servicelist2</span><span class="p">:</span>
+        <span class="c1"># 512 is hidden service on sifteam image. Doesn&#39;t affect other images</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">:</span>
+            <span class="n">service2</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">service2</span><span class="p">[</span><span class="s1">&#39;servicereference&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">service</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="n">servicecenter</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">eServiceReference</span><span class="p">(</span><span class="n">service</span><span class="p">))</span>
+            <span class="n">service2</span><span class="p">[</span><span class="s1">&#39;isplayable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">isPlayable</span><span class="p">(</span>
+                <span class="n">eServiceReference</span><span class="p">(</span><span class="n">service</span><span class="p">),</span> <span class="n">eServiceReference</span><span class="p">(</span><span class="n">sRefPlaying</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="n">services</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">service2</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="n">services</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">getPlayableService</span><span class="p">(</span><span class="n">sRef</span><span class="p">,</span> <span class="n">sRefPlaying</span><span class="p">):</span>
+    <span class="n">servicecenter</span> <span class="o">=</span> <span class="n">eServiceCenter</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">servicecenter</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">eServiceReference</span><span class="p">(</span><span class="n">sRef</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;service&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;servicereference&quot;</span><span class="p">:</span> <span class="n">sRef</span><span class="p">,</span>
+            <span class="s2">&quot;isplayable&quot;</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">isPlayable</span><span class="p">(</span>
+                <span class="n">eServiceReference</span><span class="p">(</span><span class="n">sRef</span><span class="p">),</span>
+                <span class="n">eServiceReference</span><span class="p">(</span><span class="n">sRefPlaying</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">}}</span>
+
+
+<span class="k">def</span> <span class="nf">getSubServices</span><span class="p">(</span><span class="n">session</span><span class="p">):</span>
+    <span class="c1"># TODO: duplicated .. stream/getStreamSubservices</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">service</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">nav</span><span class="o">.</span><span class="n">getCurrentService</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">service</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">services</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;servicereference&quot;</span><span class="p">:</span> <span class="n">service</span><span class="o">.</span><span class="n">info</span><span class="p">()</span><span class="o">.</span><span class="n">getInfoString</span><span class="p">(</span>
+            <span class="n">iServiceInformation</span><span class="o">.</span><span class="n">sServiceref</span><span class="p">),</span>
+            <span class="s2">&quot;servicename&quot;</span><span class="p">:</span> <span class="n">service</span><span class="o">.</span><span class="n">info</span><span class="p">()</span><span class="o">.</span><span class="n">getName</span><span class="p">()})</span>
+        <span class="n">subservices</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">subServices</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">subservices</span> <span class="ow">and</span> <span class="n">subservices</span><span class="o">.</span><span class="n">getNumberOfSubservices</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">SLOG</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;subservices.getNumberOfSubservices() yielded </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">subservices</span><span class="o">.</span><span class="n">getNumberOfSubservices</span><span class="p">()))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">subservices</span><span class="o">.</span><span class="n">getNumberOfSubservices</span><span class="p">()):</span>
+                <span class="n">sub</span> <span class="o">=</span> <span class="n">subservices</span><span class="o">.</span><span class="n">getSubservice</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">services</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s2">&quot;servicereference&quot;</span><span class="p">:</span> <span class="n">sub</span><span class="o">.</span><span class="n">toString</span><span class="p">(),</span>
+                    <span class="s2">&quot;servicename&quot;</span><span class="p">:</span> <span class="n">sub</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span>
+                <span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">services</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;servicereference&quot;</span><span class="p">:</span> <span class="s2">&quot;N/A&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;servicename&quot;</span><span class="p">:</span> <span class="s2">&quot;N/A&quot;</span>
+        <span class="p">})</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="n">services</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">getEvent</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">idev</span><span class="p">):</span>
+    <span class="n">epgcache</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">epgcache</span><span class="o">.</span><span class="n">lookupEvent</span><span class="p">([</span><span class="s1">&#39;IBDTSENRX&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">idev</span><span class="p">))])</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+        <span class="n">info</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">info</span><span class="p">[</span><span class="s1">&#39;begin_str&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">localtime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+        <span class="n">info</span><span class="p">[</span><span class="s1">&#39;begin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">info</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">localtime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">event</span><span class="p">[</span><span class="mi">2</span><span class="p">])))</span>
+        <span class="n">info</span><span class="p">[</span><span class="s1">&#39;duration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">info</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mangle_epg_text</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">info</span><span class="p">[</span><span class="s1">&#39;shortdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">info</span><span class="p">[</span><span class="s1">&#39;longdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">info</span><span class="p">[</span><span class="s1">&#39;channel&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mangle_epg_text</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+        <span class="n">info</span><span class="p">[</span><span class="s1">&#39;sref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+        <span class="k">break</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;event&#39;</span><span class="p">:</span> <span class="n">info</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">getChannelEpg</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">begintime</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">endtime</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ev</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">use_empty_ev</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">ref</span><span class="p">:</span>
+        <span class="n">ref</span> <span class="o">=</span> <span class="n">unquote</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+
+        <span class="c1"># When quering EPG we dont need URL, also getPicon doesn&#39;t like URL</span>
+        <span class="k">if</span> <span class="s2">&quot;://&quot;</span> <span class="ow">in</span> <span class="n">ref</span><span class="p">:</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[:</span><span class="mi">10</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;::&quot;</span> <span class="o">+</span> <span class="n">ref</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">picon</span> <span class="o">=</span> <span class="n">getPicon</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+        <span class="n">epgcache</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">epgcache</span><span class="o">.</span><span class="n">lookupEvent</span><span class="p">(</span>
+            <span class="p">[</span><span class="s1">&#39;IBDTSENC&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">begintime</span><span class="p">,</span> <span class="n">endtime</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">events</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+                <span class="n">ev</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;picon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">picon</span>
+                <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tstrings</span><span class="p">[(</span>
+                        <span class="s2">&quot;day_&quot;</span> <span class="o">+</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%w&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">localtime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]))))],</span>
+                                            <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y&quot;</span><span class="p">,</span>
+                                                     <span class="p">(</span><span class="n">localtime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]))))</span>
+                    <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;begin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">localtime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+                    <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;begin_timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;duration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">60</span><span class="p">)</span>
+                    <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;duration_sec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">strftime</span><span class="p">(</span>
+                        <span class="s2">&quot;%H:%M&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">localtime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">event</span><span class="p">[</span><span class="mi">2</span><span class="p">])))</span>
+                    <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mangle_epg_text</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                    <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;shortdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+                    <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;longdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+                    <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;sref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref</span>
+                    <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;sname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mangle_epg_text</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+                    <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;tleft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(((</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">event</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">-</span> <span class="n">event</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span> <span class="o">/</span> <span class="mi">60</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;duration_sec&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;progress&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;progress&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+                            <span class="p">((</span><span class="n">event</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">-</span> <span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">event</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
+                    <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;now_timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+                    <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ev</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">use_empty_ev</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;sref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">use_empty_ev</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;sref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">use_empty_ev</span><span class="p">:</span>
+        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;begin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;begin_timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;duration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;duration_sec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;N/A&quot;</span>
+        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;shortdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;sname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;longdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;tleft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;progress&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;now_timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ev</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">ret</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">getBouquetEpg</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">begintime</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">endtime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mangle_html</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">eServiceCenter</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">eServiceReference</span><span class="p">(</span><span class="n">ref</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">services</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">ret</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+
+    <span class="n">search</span> <span class="o">=</span> <span class="p">[</span><span class="n">FLAGS_WEB</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">services</span><span class="o">.</span><span class="n">getContent</span><span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">endtime</span><span class="p">:</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">service</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">begintime</span><span class="p">,</span> <span class="n">endtime</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">service</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">begintime</span><span class="p">))</span>
+
+    <span class="n">epgcache</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">epgcache</span><span class="o">.</span><span class="n">lookupEvent</span><span class="p">(</span><span class="n">search</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">events</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">raw_data</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ServicesEventDict</span><span class="p">(</span>
+            <span class="n">raw_data</span><span class="p">,</span> <span class="n">now_next_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mangle_html</span><span class="o">=</span><span class="n">mangle_html</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">ret</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">getServicesNowNextEpg</span><span class="p">(</span><span class="n">sList</span><span class="p">,</span> <span class="n">mangle_html</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sList</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">ret</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+
+    <span class="n">sRefList</span> <span class="o">=</span> <span class="n">sList</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+    <span class="n">search</span> <span class="o">=</span> <span class="p">[</span><span class="n">FLAGS_WEB</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">sRefList</span><span class="p">:</span>
+        <span class="n">search</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">service</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">search</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">service</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">epgcache</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">epgcache</span><span class="o">.</span><span class="n">lookupEvent</span><span class="p">(</span><span class="n">search</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">events</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">raw_data</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ServicesEventDict</span><span class="p">(</span>
+            <span class="n">raw_data</span><span class="p">,</span> <span class="n">now_next_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mangle_html</span><span class="o">=</span><span class="n">mangle_html</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">ret</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">getBouquetNowNextEpg</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">servicetype</span><span class="p">,</span> <span class="n">mangle_html</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">eServiceCenter</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">eServiceReference</span><span class="p">(</span><span class="n">ref</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">services</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">ret</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+
+    <span class="n">search</span> <span class="o">=</span> <span class="p">[</span><span class="n">FLAGS_WEB</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">servicetype</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">services</span><span class="o">.</span><span class="n">getContent</span><span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">):</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">service</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">service</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">services</span><span class="o">.</span><span class="n">getContent</span><span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">):</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">service</span><span class="p">,</span> <span class="n">servicetype</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">epgcache</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">epgcache</span><span class="o">.</span><span class="n">lookupEvent</span><span class="p">(</span><span class="n">search</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">events</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">raw_data</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+        <span class="n">e_data</span> <span class="o">=</span> <span class="n">ServicesEventDict</span><span class="p">(</span>
+            <span class="n">raw_data</span><span class="p">,</span> <span class="n">now_next_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mangle_html</span><span class="o">=</span><span class="n">mangle_html</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">e_data</span><span class="p">[</span><span class="s1">&#39;sref&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">achannels</span> <span class="o">=</span> <span class="n">GetWithAlternative</span><span class="p">(</span><span class="n">e_data</span><span class="p">[</span><span class="s1">&#39;sref&#39;</span><span class="p">],</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">achannels</span><span class="p">:</span>
+                <span class="n">e_data</span><span class="p">[</span><span class="s1">&#39;asrefs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">achannels</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e_data</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">ret</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">getNowNextEpg</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">servicetype</span><span class="p">,</span> <span class="n">mangle_html</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">epgcache</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">epgcache</span><span class="o">.</span><span class="n">lookupEvent</span><span class="p">([</span><span class="n">FLAGS_WEB</span><span class="p">,</span> <span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">servicetype</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">events</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">raw_data</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ServicesEventDict</span><span class="p">(</span>
+            <span class="n">raw_data</span><span class="p">,</span> <span class="n">now_next_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mangle_html</span><span class="o">=</span><span class="n">mangle_html</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">ret</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="getSearchEpg"><a class="viewcode-back" href="../../../web_controller.html#controllers.models.services.getSearchEpg">[docs]</a><span class="k">def</span> <span class="nf">getSearchEpg</span><span class="p">(</span><span class="n">sstr</span><span class="p">,</span> <span class="n">endtime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fulldesc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bouquetsonly</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Search for EPG events.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sstr (basestring): search term</span>
+<span class="sd">        endtime (int): timetamp</span>
+<span class="sd">        fulldesc (bool): search in event&#39;s description field too</span>
+<span class="sd">        bouquetsonly (bool): limit results to services in known bouquets</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: event datasets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bsref</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">epgcache</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    <span class="n">search_type</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">PARTIAL_TITLE_SEARCH</span>
+
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">epg_encoding</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sstr</span> <span class="o">=</span> <span class="n">sstr</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">OpenWebif</span><span class="o">.</span><span class="n">epg_encoding</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">UnicodeEncodeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">if</span> <span class="n">fulldesc</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">eEPGCache</span><span class="p">,</span> <span class="s1">&#39;FULL_DESCRIPTION_SEARCH&#39;</span><span class="p">):</span>
+            <span class="n">search_type</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">FULL_DESCRIPTION_SEARCH</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">epgcache</span><span class="o">.</span><span class="n">search</span><span class="p">((</span><span class="s1">&#39;IBDTSENR&#39;</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">search_type</span><span class="p">,</span> <span class="n">sstr</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">results</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">bouquetsonly</span><span class="p">:</span>
+            <span class="c1"># collect service references from TV bouquets</span>
+            <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">getAllServices</span><span class="p">(</span><span class="s1">&#39;tv&#39;</span><span class="p">)[</span><span class="s1">&#39;services&#39;</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">service2</span> <span class="ow">in</span> <span class="n">service</span><span class="p">[</span><span class="s1">&#39;subservices&#39;</span><span class="p">]:</span>
+                    <span class="n">bsref</span><span class="p">[</span><span class="n">service2</span><span class="p">[</span><span class="s1">&#39;servicereference&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">bsref</span><span class="p">[</span><span class="n">service</span><span class="p">[</span><span class="s1">&#39;servicereference&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">bouquetsonly</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">event</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="ow">in</span> <span class="n">bsref</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">day_val</span> <span class="o">=</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%w&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">localtime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+            <span class="n">date_val</span> <span class="o">=</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">localtime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+            <span class="n">ev</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tstrings</span><span class="p">[(</span><span class="s2">&quot;day_&quot;</span> <span class="o">+</span> <span class="n">day_val</span><span class="p">)],</span> <span class="n">date_val</span><span class="p">)</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;begin_timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;begin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">localtime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;duration_sec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;duration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">60</span><span class="p">)</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">localtime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">event</span><span class="p">[</span><span class="mi">2</span><span class="p">])))</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mangle_epg_text</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;shortdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;longdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;sref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;sname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mangle_epg_text</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;picon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">getPicon</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;now_timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">endtime</span><span class="p">:</span>
+                <span class="c1"># don&#39;t show events if begin is after endtime</span>
+                <span class="k">if</span> <span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">endtime</span><span class="p">:</span>
+                    <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ev</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ev</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">events</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span></div>
+
+
+<span class="k">def</span> <span class="nf">getSearchSimilarEpg</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">eventid</span><span class="p">):</span>
+    <span class="n">ref</span> <span class="o">=</span> <span class="n">unquote</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">epgcache</span> <span class="o">=</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">epgcache</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+        <span class="p">(</span><span class="s1">&#39;IBDTSENR&#39;</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">eEPGCache</span><span class="o">.</span><span class="n">SIMILAR_BROADCASTINGS_SEARCH</span><span class="p">,</span>
+         <span class="n">ref</span><span class="p">,</span> <span class="n">eventid</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">events</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+            <span class="n">day_val</span> <span class="o">=</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%w&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">localtime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+            <span class="n">date_val</span> <span class="o">=</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">localtime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+            <span class="n">ev</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tstrings</span><span class="p">[(</span><span class="s2">&quot;day_&quot;</span> <span class="o">+</span> <span class="n">day_val</span><span class="p">)],</span> <span class="n">date_val</span><span class="p">)</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;begin_timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;begin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">localtime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;duration_sec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;duration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">60</span><span class="p">)</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">localtime</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">event</span><span class="p">[</span><span class="mi">2</span><span class="p">])))</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;shortdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;longdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;sref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;sname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mangle_epg_text</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;picon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">getPicon</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+            <span class="n">ev</span><span class="p">[</span><span class="s1">&#39;now_timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ev</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">ret</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">getPicon</span><span class="p">(</span><span class="n">sname</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">PICON_PATH</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">FALLBACK_PICON_LOCATION</span>
+
+    <span class="c1"># remove URL part</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;://&quot;</span> <span class="ow">in</span> <span class="n">sname</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;%3a//&quot;</span> <span class="ow">in</span> <span class="n">sname</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;%3A//&quot;</span> <span class="ow">in</span> <span class="n">sname</span><span class="p">):</span>
+        <span class="n">sname</span> <span class="o">=</span> <span class="n">unquote</span><span class="p">(</span><span class="n">sname</span><span class="p">)</span>
+        <span class="n">sname</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[:</span><span class="mi">10</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;::&quot;</span> <span class="o">+</span> <span class="n">sname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">sname</span> <span class="o">=</span> <span class="n">GetWithAlternative</span><span class="p">(</span><span class="n">sname</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">sname</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">FALLBACK_PICON_LOCATION</span>
+
+    <span class="n">cname</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">pos</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">cname</span> <span class="o">=</span> <span class="n">ServiceReference</span><span class="p">(</span><span class="n">sname</span><span class="p">[:</span><span class="n">pos</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">getServiceName</span><span class="p">()</span>
+        <span class="n">sname</span> <span class="o">=</span> <span class="n">sname</span><span class="p">[:</span><span class="n">pos</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">PICON_EXT</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">PICON_PATH</span> <span class="o">+</span> <span class="n">sname</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">PICON_ENDPOINT_PATH</span> <span class="o">+</span> <span class="n">sname</span>
+
+    <span class="n">fields</span> <span class="o">=</span> <span class="n">sname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">7</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">fields</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;0000&quot;</span><span class="p">):</span>
+        <span class="c1"># remove &quot;sub-network&quot; from namespace</span>
+        <span class="n">fields</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="mi">6</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;0000&quot;</span>
+        <span class="n">sname</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">PICON_PATH</span> <span class="o">+</span> <span class="n">sname</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">PICON_ENDPOINT_PATH</span> <span class="o">+</span> <span class="n">sname</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">fields</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+        <span class="c1"># fallback to 1 for other reftypes</span>
+        <span class="n">fields</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+        <span class="n">sname</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">PICON_PATH</span> <span class="o">+</span> <span class="n">sname</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">PICON_ENDPOINT_PATH</span> <span class="o">+</span> <span class="n">sname</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">fields</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+        <span class="c1"># fallback to 1 for tv services with nonstandard servicetypes</span>
+        <span class="n">fields</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+        <span class="n">sname</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">PICON_PATH</span> <span class="o">+</span> <span class="n">sname</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">PICON_ENDPOINT_PATH</span> <span class="o">+</span> <span class="n">sname</span>
+
+    <span class="k">if</span> <span class="n">cname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># picon by channel name</span>
+        <span class="n">cname1</span> <span class="o">=</span> <span class="n">mangle_epg_text</span><span class="p">(</span><span class="n">cname</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">PICON_PATH</span> <span class="o">+</span> <span class="n">cname1</span> <span class="o">+</span> <span class="n">PICON_EXT</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">PICON_ENDPOINT_PATH</span> <span class="o">+</span> <span class="n">cname1</span> <span class="o">+</span> <span class="n">PICON_EXT</span>
+
+        <span class="n">cname</span> <span class="o">=</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span>
+            <span class="s1">&#39;NFKD&#39;</span><span class="p">,</span> <span class="n">unicode</span><span class="p">(</span><span class="n">cname</span><span class="p">,</span> <span class="s1">&#39;utf_8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+            <span class="s1">&#39;ASCII&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+        <span class="n">cname</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
+            <span class="s1">&#39;[^a-z0-9]&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="n">cname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&amp;&#39;</span><span class="p">,</span> <span class="s1">&#39;and&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;plus&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;star&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cname</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">PICON_PATH</span> <span class="o">+</span> <span class="n">cname</span> <span class="o">+</span> <span class="n">PICON_EXT</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">PICON_ENDPOINT_PATH</span> <span class="o">+</span> <span class="n">cname</span> <span class="o">+</span> <span class="n">PICON_EXT</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cname</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">cname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span>
+                <span class="s1">&#39;hd&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">PICON_PATH</span> <span class="o">+</span> <span class="n">cname</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">PICON_EXT</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">PICON_ENDPOINT_PATH</span> <span class="o">+</span> <span class="n">cname</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">PICON_EXT</span>
+
+
+<span class="k">def</span> <span class="nf">getParentalControlList</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">ParentalControl</span><span class="o">.</span><span class="n">configured</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
+    <span class="n">parentalControl</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">ParentalControl</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;whitelist&quot;</span><span class="p">:</span>
+        <span class="n">tservices</span> <span class="o">=</span> <span class="n">parentalControl</span><span class="o">.</span><span class="n">whitelist</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tservices</span> <span class="o">=</span> <span class="n">parentalControl</span><span class="o">.</span><span class="n">blacklist</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">tservices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">tservices</span><span class="p">:</span>
+            <span class="n">tservice</span> <span class="o">=</span> <span class="n">ServiceReference</span><span class="p">(</span><span class="n">service</span><span class="p">)</span>
+            <span class="n">services</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;servicereference&quot;</span><span class="p">:</span> <span class="n">service</span><span class="p">,</span>
+                <span class="s2">&quot;servicename&quot;</span><span class="p">:</span> <span class="n">tservice</span><span class="o">.</span><span class="n">getServiceName</span><span class="p">()</span>
+            <span class="p">})</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">ParentalControl</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="n">services</span>
+    <span class="p">}</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

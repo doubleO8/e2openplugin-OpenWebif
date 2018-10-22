@@ -1,0 +1,442 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Models &mdash; pert_belly_hack_backend 1.3.0+5.g2f249f9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Packaging and Publication" href="packaging.html" />
+    <link rel="prev" title="Utilities" href="utilities.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pert_belly_hack_backend
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0+5.g2f249f9
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="plugin.html">Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_controller.html">Web Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="e2webinterface_api.html">Enigma2 WebInterface API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="restful_api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#events">Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#timers">Timers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="packaging.html">Packaging and Publication</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pert_belly_hack_backend</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/model.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-controllers.models.events">
+<span id="models"></span><span id="model-label"></span><h1>Models<a class="headerlink" href="#module-controllers.models.events" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="events">
+<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="controller.html#event-format-label"><span class="std std-ref">Possible Values of the Format Field</span></a></p>
+</div>
+<dl class="data">
+<dt id="controllers.models.events.EVENT_FIELD_MAP">
+<code class="descclassname">controllers.models.events.</code><code class="descname">EVENT_FIELD_MAP</code><em class="property"> = {'B': 'start_time', 'C': 'current_time', 'D': 'duration', 'E': 'longinfo', 'I': 'id', 'N': 'service_name', 'R': 'service_reference', 'S': 'shortinfo', 'T': 'title', 'n': 'shortservice_name'}</em><a class="headerlink" href="#controllers.models.events.EVENT_FIELD_MAP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event Field Map</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="controllers.models.events.EventDict">
+<em class="property">class </em><code class="descclassname">controllers.models.events.</code><code class="descname">EventDict</code><span class="sig-paren">(</span><em>raw_data</em>, <em>flag_string=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/models/events.html#EventDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.models.events.EventDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event data container object</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dd_in</span> <span class="o">=</span> <span class="p">(</span><span class="mi">123</span><span class="p">,</span> <span class="mi">1506020400</span><span class="p">,</span> <span class="mi">120</span><span class="o">*</span><span class="mi">60</span><span class="p">,</span> <span class="mi">1506020440</span><span class="p">,</span> <span class="s2">&quot;DASDING Sprechstunde&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;1:0:2:6F37:431:A401:FFFF0000:0:0:0:&quot;</span><span class="p">,</span> <span class="s2">&quot;DASDING&quot;</span><span class="p">)</span>  <span class="c1"># NOQA</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sed</span> <span class="o">=</span> <span class="n">EventDict</span><span class="p">(</span><span class="n">dd_in</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sed</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+<span class="go">123</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sed</span><span class="p">[</span><span class="s1">&#39;start_time&#39;</span><span class="p">]</span>
+<span class="go">1506020400</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sed</span><span class="p">[</span><span class="s1">&#39;duration&#39;</span><span class="p">]</span>
+<span class="go">7200</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.FLAGS_ALL">
+<code class="descclassname">controllers.models.events.</code><code class="descname">FLAGS_ALL</code><em class="property"> = 'BDEINRST'</em><a class="headerlink" href="#controllers.models.events.FLAGS_ALL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event Flags without Current Time Field</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.FLAGS_FULL">
+<code class="descclassname">controllers.models.events.</code><code class="descname">FLAGS_FULL</code><em class="property"> = 'BCDEINRST'</em><a class="headerlink" href="#controllers.models.events.FLAGS_FULL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event Flags including Current Time Field</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.FLAGS_WEB">
+<code class="descclassname">controllers.models.events.</code><code class="descname">FLAGS_WEB</code><em class="property"> = 'IBDCTSERN'</em><a class="headerlink" href="#controllers.models.events.FLAGS_WEB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event Flags as used in <a class="reference internal" href="e2webinterface_api.html#module-controllers.web" title="controllers.web"><code class="xref py py-class docutils literal notranslate"><span class="pre">controllers.web</span></code></a></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.FLAG_BEGIN">
+<code class="descclassname">controllers.models.events.</code><code class="descname">FLAG_BEGIN</code><em class="property"> = 'B'</em><a class="headerlink" href="#controllers.models.events.FLAG_BEGIN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Begin</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.FLAG_CURRENT_TIME">
+<code class="descclassname">controllers.models.events.</code><code class="descname">FLAG_CURRENT_TIME</code><em class="property"> = 'C'</em><a class="headerlink" href="#controllers.models.events.FLAG_CURRENT_TIME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Current Time</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.FLAG_DURATION">
+<code class="descclassname">controllers.models.events.</code><code class="descname">FLAG_DURATION</code><em class="property"> = 'D'</em><a class="headerlink" href="#controllers.models.events.FLAG_DURATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duration</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.FLAG_ITEM_ID">
+<code class="descclassname">controllers.models.events.</code><code class="descname">FLAG_ITEM_ID</code><em class="property"> = 'I'</em><a class="headerlink" href="#controllers.models.events.FLAG_ITEM_ID" title="Permalink to this definition">¶</a></dt>
+<dd><p>ID</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.FLAG_LONGINFO">
+<code class="descclassname">controllers.models.events.</code><code class="descname">FLAG_LONGINFO</code><em class="property"> = 'E'</em><a class="headerlink" href="#controllers.models.events.FLAG_LONGINFO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Long Event Information</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.FLAG_SERVICE_NAME">
+<code class="descclassname">controllers.models.events.</code><code class="descname">FLAG_SERVICE_NAME</code><em class="property"> = 'N'</em><a class="headerlink" href="#controllers.models.events.FLAG_SERVICE_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Service Name</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.FLAG_SERVICE_REFERENCE">
+<code class="descclassname">controllers.models.events.</code><code class="descname">FLAG_SERVICE_REFERENCE</code><em class="property"> = 'R'</em><a class="headerlink" href="#controllers.models.events.FLAG_SERVICE_REFERENCE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Service Reference</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.FLAG_SHORTINFO">
+<code class="descclassname">controllers.models.events.</code><code class="descname">FLAG_SHORTINFO</code><em class="property"> = 'S'</em><a class="headerlink" href="#controllers.models.events.FLAG_SHORTINFO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short Event Information</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.FLAG_SHORT_SERVICE_NAME">
+<code class="descclassname">controllers.models.events.</code><code class="descname">FLAG_SHORT_SERVICE_NAME</code><em class="property"> = 'n'</em><a class="headerlink" href="#controllers.models.events.FLAG_SHORT_SERVICE_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short Service Name</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.FLAG_TITLE">
+<code class="descclassname">controllers.models.events.</code><code class="descname">FLAG_TITLE</code><em class="property"> = 'T'</em><a class="headerlink" href="#controllers.models.events.FLAG_TITLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event Title</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.KEY_DURATION">
+<code class="descclassname">controllers.models.events.</code><code class="descname">KEY_DURATION</code><em class="property"> = 'duration'</em><a class="headerlink" href="#controllers.models.events.KEY_DURATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>constant for <em>event duration</em> key</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.KEY_ID">
+<code class="descclassname">controllers.models.events.</code><code class="descname">KEY_ID</code><em class="property"> = 'id'</em><a class="headerlink" href="#controllers.models.events.KEY_ID" title="Permalink to this definition">¶</a></dt>
+<dd><p>constant for <em>event ID</em> key</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.KEY_LONGINFO">
+<code class="descclassname">controllers.models.events.</code><code class="descname">KEY_LONGINFO</code><em class="property"> = 'longinfo'</em><a class="headerlink" href="#controllers.models.events.KEY_LONGINFO" title="Permalink to this definition">¶</a></dt>
+<dd><p>constant for <em>event longinfo</em> key</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.KEY_SERVICE_NAME">
+<code class="descclassname">controllers.models.events.</code><code class="descname">KEY_SERVICE_NAME</code><em class="property"> = 'service_name'</em><a class="headerlink" href="#controllers.models.events.KEY_SERVICE_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>constant for <em>event’s service name</em> key</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.KEY_SERVICE_REFERENCE">
+<code class="descclassname">controllers.models.events.</code><code class="descname">KEY_SERVICE_REFERENCE</code><em class="property"> = 'service_reference'</em><a class="headerlink" href="#controllers.models.events.KEY_SERVICE_REFERENCE" title="Permalink to this definition">¶</a></dt>
+<dd><p>constant for <em>event’s service reference</em> key</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.KEY_SHORTINFO">
+<code class="descclassname">controllers.models.events.</code><code class="descname">KEY_SHORTINFO</code><em class="property"> = 'shortinfo'</em><a class="headerlink" href="#controllers.models.events.KEY_SHORTINFO" title="Permalink to this definition">¶</a></dt>
+<dd><p>constant for <em>event shortinfo</em> key</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.KEY_START_TIME">
+<code class="descclassname">controllers.models.events.</code><code class="descname">KEY_START_TIME</code><em class="property"> = 'start_time'</em><a class="headerlink" href="#controllers.models.events.KEY_START_TIME" title="Permalink to this definition">¶</a></dt>
+<dd><p>constant for <em>event start time</em> key</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.KEY_TITLE">
+<code class="descclassname">controllers.models.events.</code><code class="descname">KEY_TITLE</code><em class="property"> = 'title'</em><a class="headerlink" href="#controllers.models.events.KEY_TITLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>constant for <em>event title</em> key</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="controllers.models.events.NoneEventDict">
+<em class="property">class </em><code class="descclassname">controllers.models.events.</code><code class="descname">NoneEventDict</code><span class="sig-paren">(</span><em>title=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/models/events.html#NoneEventDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.models.events.NoneEventDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dummy event data container object.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.events.SERVICES_KEY_MAP">
+<code class="descclassname">controllers.models.events.</code><code class="descname">SERVICES_KEY_MAP</code><em class="property"> = {'begin_timestamp': 1, 'duration_sec': 2, 'id': 0, 'longdesc': 6, 'now_timestamp': 3, 'shortdesc': 5, 'sname': 8, 'sref': 7, 'title': 4}</em><a class="headerlink" href="#controllers.models.events.SERVICES_KEY_MAP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Services Key Map</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="controllers.models.events.ServicesEventDict">
+<em class="property">class </em><code class="descclassname">controllers.models.events.</code><code class="descname">ServicesEventDict</code><span class="sig-paren">(</span><em>raw_data</em>, <em>now_next_mode=False</em>, <em>mangle_html=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/models/events.html#ServicesEventDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.models.events.ServicesEventDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event data container object as used by EPG lookups in services.py</p>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 0.31: </span>replaced by <a class="reference internal" href="#controllers.models.events.EventDict" title="controllers.models.events.EventDict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EventDict</span></code></a></p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dd_in</span> <span class="o">=</span> <span class="p">(</span><span class="mi">123</span><span class="p">,</span> <span class="mi">1506020400</span><span class="p">,</span> <span class="mi">120</span><span class="o">*</span><span class="mi">60</span><span class="p">,</span> <span class="mi">1506020440</span><span class="p">,</span> <span class="s2">&quot;DASDING Sprechstunde&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;1:0:2:6F37:431:A401:FFFF0000:0:0:0:&quot;</span><span class="p">,</span> <span class="s2">&quot;DASDING&quot;</span><span class="p">)</span>  <span class="c1"># NOQA</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sed</span> <span class="o">=</span> <span class="n">ServicesEventDict</span><span class="p">(</span><span class="n">dd_in</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sed</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+<span class="go">123</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sed</span><span class="p">[</span><span class="s1">&#39;begin_timestamp&#39;</span><span class="p">]</span>
+<span class="go">1506020400</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sed</span><span class="p">[</span><span class="s1">&#39;duration_sec&#39;</span><span class="p">]</span>
+<span class="go">7200</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<span class="target" id="module-controllers.models.timers"></span><div class="section" id="timers">
+<h2>Timers<a class="headerlink" href="#timers" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="controllers.models.timers.TIMER_ATTRIBUTES">
+<code class="descclassname">controllers.models.timers.</code><code class="descname">TIMER_ATTRIBUTES</code><em class="property"> = [('begin', 'start_time'), 'cancelled', ('description', 'shortinfo'), 'dirname', 'dirnameHadToFallback', 'disabled', 'dontSave', ('eit', 'id'), ('end', 'end_time'), 'first_try_prepare', 'is_timeshift', 'is_transformed_timeshift', 'justplay', 'justremind', 'log_entries', ('name', 'title'), 'prepare_time', 'pvrConvert', 'receiveRecordEvents', 'record_ecm', 'repeated', 'repeatedbegindate', 'start_prepare', 'state', 'tags', 'zapbeforerecord']</em><a class="headerlink" href="#controllers.models.timers.TIMER_ATTRIBUTES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Timer attributes list
+Some attributes are using different keys in <a class="reference internal" href="#controllers.models.timers.TimerDict" title="controllers.models.timers.TimerDict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimerDict</span></code></a> objects
+thus attribute items may be a <a class="reference external" href="https://docs.python.org/2/library/functions.html#tuple" title="(in Python v2.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.timers.TIMER_FAKE_BOOLEAN">
+<code class="descclassname">controllers.models.timers.</code><code class="descname">TIMER_FAKE_BOOLEAN</code><em class="property"> = ['disabled', 'justplay', 'justremind', 'repeated', 'zapbeforerecord']</em><a class="headerlink" href="#controllers.models.timers.TIMER_FAKE_BOOLEAN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Timer attributes with values in (0, 1) actually representing a boolean value</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="controllers.models.timers.TIMER_STATE_LOOKUP">
+<code class="descclassname">controllers.models.timers.</code><code class="descname">TIMER_STATE_LOOKUP</code><em class="property"> = {0: 'waiting', 1: 'prepared', 2: 'running', 3: 'ended'}</em><a class="headerlink" href="#controllers.models.timers.TIMER_STATE_LOOKUP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Timer state lookup</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="controllers.models.timers.TimerDict">
+<em class="property">class </em><code class="descclassname">controllers.models.timers.</code><code class="descname">TimerDict</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/controllers/models/timers.html#TimerDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#controllers.models.timers.TimerDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Timer data container object</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="packaging.html" class="btn btn-neutral float-right" title="Packaging and Publication" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="utilities.html" class="btn btn-neutral" title="Utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, nobody@localhost
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
